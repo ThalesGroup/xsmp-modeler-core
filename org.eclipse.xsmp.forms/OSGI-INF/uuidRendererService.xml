@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.xsmp.forms.renderer.uuid.rendererservice">
+   <implementation class="org.eclipse.xsmp.forms.renderer.UuidControlSWTRendererService"/>
+   <service>
+      <provide interface="org.eclipse.emfforms.spi.swt.core.di.EMFFormsDIRendererService"/>
+   </service>
+   <reference bind="setEMFFormsDatabinding" cardinality="1..1" interface="org.eclipse.emfforms.spi.core.services.databinding.EMFFormsDatabinding" name="EMFFormsDatabinding" policy="static"/>
+   <reference bind="setReportService" cardinality="1..1" interface="org.eclipse.emfforms.spi.common.report.ReportService" name="ReportService" policy="static"/>
+</scr:component>

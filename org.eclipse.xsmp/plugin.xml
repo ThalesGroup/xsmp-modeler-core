@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!-- Copyright (C) 2021 THALES ALENIA SPACE FRANCE. All rights reserved -->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Xcatalogue -->
+      <package
+            uri="http://org.eclipse.xsmp/xcatalogue"
+            class="org.eclipse.xsmp.xcatalogue.XcataloguePackage"
+            genModel="model/Xcatalogue.genmodel"/>
+   </extension>
+
+</plugin>

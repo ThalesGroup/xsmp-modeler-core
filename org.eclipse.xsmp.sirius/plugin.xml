@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <extension point="org.eclipse.sirius.componentization">
+    <component class="org.eclipse.xsmp.sirius.Activator"
+               id="org.eclipse.xsmp.sirius"
+	       name="xsmp">
+    </component>
+  </extension>
+ <!-- <extension
+        point="org.eclipse.eef.ide.ui.eefLifecycleManagerProvider">
+     <descriptor
+           class="org.eclipse.xsmp.sirius.XtextReferenceLifecycleManagerProvider"
+           description="description"
+           id="org.eclipse.xsmp.widget.reference"
+           label="XtextReferenceWidget">
+     </descriptor>
+  </extension>-->
+  <extension
+        point="org.eclipse.eef.properties.ui.eefTabDescriptorFilter">
+     <descriptor
+           class="org.eclipse.xsmp.sirius.EEFTabDescriptorFilter"
+           description="description"
+           id="org.eclipse.xsmp.sirius.tabFilter"
+           label="Filter legacy tabs">
+     </descriptor>
+  </extension>
+  <extension
+        point="org.eclipse.eef.properties.ui.eefTabDescriptorProvider">
+     <descriptor
+           class="org.eclipse.xsmp.sirius.EEFTabDescriptorProvider"
+           description="description"
+           id="org.eclipse.xsmp.sirius.tabEditor"
+           label="EMF Forms editor">
+     </descriptor>
+  </extension>
+</plugin>

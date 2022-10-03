@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_v9XC4FvOEeuYBrSMUc-xNA" name="Model">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Model"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_Ckl_sA74EeyduKt4DWXoeQ" name="Type" id="Type"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_j7dG0Ga8EeuLIpDa9hvT2A" name="Control Abstract">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_nXPRMGa8EeuLIpDa9hvT2A">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Component/abstract"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_v9YREFvOEeuYBrSMUc-xNA" name="Control base">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_v9YREVvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Component/base"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_v9YRDlvOEeuYBrSMUc-xNA" name="Control interface">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_v9YRD1vOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Component/interface"/>
+    </domainModelReference>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

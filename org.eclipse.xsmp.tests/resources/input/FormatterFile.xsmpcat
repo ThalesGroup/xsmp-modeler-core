@@ -1,0 +1,242 @@
+    /**
+    
+    
+ *       Catalogue Test     	
+ 
+ 
+  	 	 
+      hello
+     *     @creator                     vrousoc  	 	 	 
+ @date           2021-10-07T13:02:14Z
+ 
+ 
+ 
+ * @title   Test(1)
+             */
+             
+             
+           catalogue          Test     import             Smp.Int16
+           
+           
+     import      namespace     TasMdk
+import     Smp.Duration /**
+ * My namespace     	    
+ *  			    with multi line
+ desc
+ */
+         namespace      ns1{/**Model
+         
+         
+         
+         
+	 * @uuid 425d5361-34c3-4ccc-bc2b-56ba42d78ec1
+	 */
+	   public               model                name
+	
+	
+	     /*
+	bloc of
+	             commented code
+	
+	
+	test*/
+	
+	    //       single line comment     f't    
+	    //       single line comment     that should wrap on the lext line aaa aaaa aaaa aaaa aaaa aaaa aaaa aaa aaaa aaaa aaa aaaa aaaa aaaa aaa aaaa aaa aaaa aaaa aaaa aaaa
+	
+	{public   constant           Smp.Int32     num     =       1       +5
+
+
+/**
+ a
+ 
+ 
+ 
+ documentation
+ 
+ 
+ with empty
+ 
+ 
+ lines
+    */
+
+
+		constant      Int32             num2= 2     +(       -     3         )
+	}	/**
+	 * @uuid 5ee769ff-23d4-4cc8-9dbf-c3e2a7b03314
+	 */
+public using      arraytest 
+
+=     Int16   [              4]
+	/**   @uuid 3c6c0da4-46c8-4504-ac33-157824ef340d     */
+	private       struct    mystruct{}
+
+
+
+
+	/**
+	 * @uuid 11bceb41-86d0-4b81-8207-752c43be3871
+	 */
+	class        MYCLASS      extends         CannotDelete
+{
+association     DateTime      sqdd
+		field  Float32  fielddd
+
+
+
+
+					public   			property       Smp.DateTime        gdfgg
+	public   	constant           Smp.Float64   cste=   4.6000000
+
+
+
+public    association    Float32       qsdq}
+
+	/**
+	 * @uuid fe9c66f2-bda3-4922-9100-da0efa69dedb
+	 */
+	public   class        helloworld
+	{
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+
+	/**
+	 * @uuid 34d64d4a-d808-4b1c-af5c-31dea6aadd8a
+	 */interface        testinterface{
+	}
+
+	/** 
+	 * 
+	 * @uuid 4028143f-ea06-43fb-8325-7678f681aa8a
+	 */
+	         public                exception   myexception {
+	}
+	/** 
+	 * 
+	 * 
+	 * @uuid dd5a7374-e88f-4c3d-a61b-04cb3a4793b4
+	 */
+public   	attribute  Int16      attr    =     6
+
+}
+
+
+
+
+
+ 				namespace    Toto
+
+
+{/**
+	 * @uuid 058cfc11-0315-4132-baea-029109ede356
+	 */
+public   	interface     interf     extends     Publication.IArrayType   ,      Publication.IClassType{
+		/*
+		 * test comment
+		 * 
+		 */}
+		 
+		 
+		 
+}
+
+    namespace Tata{namespace Tatata{}	/** 
+	 * 
+	 * 
+	 * @uuid 1a6c012c-63c7-4f68-9cab-e60a521ca5d4
+	 */
+	
+	
+	
+	public       attribute  Bool       ss  =    !     false
+	
+	
+	
+	/**
+	 * @uuid 29cfdf92-d6b5-42bf-ad1b-d1f66af707b4
+	 */public
+	         enum myenum{
+		test    =5  +     -   3    * 12      ,test2=    01    ,
+		test3   =     9      - 4    +   10
+	}	/**
+	 * @uuid 01b49f4c-d272-49db-a631-3af0277f1814
+	 */
+	public   abstract			model    modelTest          extends     Model      implements      IAggregate   ,        Publication.IArrayType{constant   Bool b =  false
+		constant    Int32      i    =      3
+public   field     Float32      thefloat    =   5.+$   PI    +     $   E   +$   abs    ( -    5     )
+public     field  ns1.arraytest   collectionliteral = {    4,   2 ,   3  ,0    ,   }
+
+		association    String8     assoc 
+
+
+					property     Float32     propertyBool    get    throws    CannotDelete  ,     CannotRestore    set    throws      InvalidArrayIndex,Services.EntryPointAlreadySubscribed->thefloat
+
+
+										container       modelTest[   1        ...     8]     test=modelTest
+		reference    IAggregate      r1
+		reference    IAggregate   ?   r2
+		reference    IAggregate   [    ]   r3
+		reference    IAggregate   [ *   ]   r4
+		reference    IAggregate   [ +   ]   r5
+		reference    IAggregate   [ 0   +   5    ...    *    ]   r6
+		reference    IAggregate   [   4 + 5   ]   r7
+		reference    IAggregate   [  0    + 8 /  7     ...   2*    7    ]   r8
+
+		entrypoint     et
+		eventsink   VoidEvent  esink
+
+
+		      eventsource  VoidEvent esource
+
+@Virtual
+	public   	def    Int64     hello  (   @Const       @ByPointer Bool     test     ,       Bool    test2    )
+
+		}
+
+
+	      namespace ns
+	 {/** 
+ * 
+ * @uuid af2f3f68-c7a2-4591-ae90-d4c7aa6c1295
+ */
+public   native      tesst
+
+				
+
+		/**
+		 * @uuid 2315eb62-c868-43e0-85ea-0f2df6879a68
+		 */
+		public   using     usingtest =   Char8 [   9 ]   
+
+		/**
+		 * @uuid 47c2221a-eeb0-4447-aeed-10307f04e4be
+		 */
+		public   		event   eventttt    extends     Float32
+
+		/**
+		 * @uuid 2123b24c-4b3e-4376-b8ed-f243cc813355
+		 */public   float    floatname    extends    Float32 
+		in    4   ...     5
+
+
+		/**
+						 * @uuid 2af65563-2799-46e3-9596-ea896ce9a080
+						 */
+	public   	integer    integername    
+		  								 extends   Int64    in modelTest.i ... modelTest.i
+	/**
+					 * @uuid 8f24b9d8-620a-41ed-afe9-4521c31727a5
+ */
+public   string        stringname  [     9     ]
+	}
+}
+
+

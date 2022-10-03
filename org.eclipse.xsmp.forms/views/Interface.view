@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_v1drIFvOEeuYBrSMUc-xNA" name="Interface">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Interface"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="__MATQA73EeyduKt4DWXoeQ" name="Type" id="Type"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_v1eSPlvOEeuYBrSMUc-xNA" name="Control base">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_v1eSP1vOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Interface/base"/>
+    </domainModelReference>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

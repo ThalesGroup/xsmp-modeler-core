@@ -1,0 +1,7 @@
+src-gen
+xtend-gen
+emf-gen
+target
+bin
+/workspace
+/build

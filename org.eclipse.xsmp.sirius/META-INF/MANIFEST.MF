@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.sirius
+Bundle-SymbolicName: org.eclipse.xsmp.sirius;singleton:=true
+Bundle-Version: 1.1.0.qualifier
+Bundle-Activator: org.eclipse.xsmp.sirius.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.sirius,
+ org.eclipse.sirius.common.acceleo.aql,
+ org.eclipse.eef.properties.ui,
+ org.eclipse.emf.ecp.ui.view.swt,
+ org.eclipse.xsmp,
+ com.google.guava,
+ org.eclipse.sirius.properties.core,
+ org.eclipse.xtext,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.workbench.texteditor
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Vendor: Thales Alenia Space
+Automatic-Module-Name: org.eclipse.xsmp.sirius

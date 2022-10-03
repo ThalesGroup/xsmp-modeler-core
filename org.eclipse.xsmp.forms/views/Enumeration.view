@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.table.model="http://org/eclipse/emf/ecp/view/table/model/150" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_ugBiMFvOEeuYBrSMUc-xNA" name="Enumeration">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Enumeration"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_rJfAIA73EeyduKt4DWXoeQ" name="Type" id="Type"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.table.model:TableControl" xmi:id="_-OTRsFy6EeuNpNdW_3tTyQ" name="Literals" moveUpDownDisabled="false" detailEditing="WithDialog">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.table.model:TableDomainModelReference" xmi:id="_D1Od8Fy7EeuNpNdW_3tTyQ">
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_J03FIFy7EeuNpNdW_3tTyQ">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/name"/>
+      </columnDomainModelReferences>
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_LUZlQFy7EeuNpNdW_3tTyQ">
+        <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//EnumerationLiteral/value"/>
+      </columnDomainModelReferences>
+      <columnDomainModelReferences xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_M_X5UFy7EeuNpNdW_3tTyQ">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/description"/>
+      </columnDomainModelReferences>
+      <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_D1Od8Vy7EeuNpNdW_3tTyQ">
+        <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Enumeration/literal"/>
+      </domainModelReference>
+    </domainModelReference>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

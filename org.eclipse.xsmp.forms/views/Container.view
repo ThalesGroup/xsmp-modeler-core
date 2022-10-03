@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.horizontal.model="http://org/eclipse/emf/ecp/view/horizontal/model" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_wtoCMFvOEeuYBrSMUc-xNA" name="Container">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Container"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_3s0ucA8DEeyA1-mZGuFzTg" name="NamedElement" id="NamedElement"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wtpQVlvOEeuYBrSMUc-xNA" name="Control type">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wtpQV1vOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Container/type"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wtpQWFvOEeuYBrSMUc-xNA" name="Control defaultComponent">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wtpQWVvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Container/defaultComponent"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.horizontal.model:HorizontalLayout" xmi:id="_a7KkEA_LEeyIJNAwjoj9_A">
+    <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wtpQWlvOEeuYBrSMUc-xNA" name="Control lower">
+      <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wtpQW1vOEeuYBrSMUc-xNA">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Container/lower"/>
+      </domainModelReference>
+    </children>
+    <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wtpQXFvOEeuYBrSMUc-xNA" name="Control upper">
+      <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wtpQXVvOEeuYBrSMUc-xNA">
+        <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Container/upper"/>
+      </domainModelReference>
+    </children>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

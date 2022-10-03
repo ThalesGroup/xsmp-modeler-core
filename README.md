@@ -1,46 +1,32 @@
-# Thales Open Source Template Project
 
-Template for creating a new project in the [Thales GitHub organization](https://github.com/ThalesGroup). 
-
-Each Thales OSS project repository **MUST** contain the following files at the root:
-
-- a `LICENSE` which has been chosen in accordance with legal department depending on your needs 
-
-- a `README.md` outlining the project goals, sponsoring sig, and community contact information, [GitHub tips about README.md](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-readmes)
-
-- a `CONTRIBUTING.md` outlining how to contribute to the project, how to submit a pull request and an issue
-
-- a `SECURITY.md` outlining how the security concerns are handled, [GitHub tips about SECURITY.md](https://docs.github.com/en/github/managing-security-vulnerabilities/adding-a-security-policy-to-your-repository)
-
-Below is an example of the common structure and information expected in a README.
-
-**Please keep this structure as is and only fill the content for each section according to your project.**
-
-If you need assistance or have question, please contact oss@thalesgroup.com 
-
-
+# Eclipse Xsmp-Core
 
 ## Get started
 
-XXX project purpose it to ...
+Xsmp-Core is an Eclipse framework for development of SMDL (Simulation Model Definition Language) as defined in [ECSS SMP standard](https://ecss.nl/standard/ecss-e-st-40-07c-simulation-modelling-platform-2-march-2020/). 
+Xsmp-Core is built on the [Xtext](https://www.eclipse.org/Xtext/) framework.
 
-**Please also add the description into the About section (Description field)**
+Xsmp-Core comes with an integrated Text Editor with coloring, auto-completion, formatting, hover information, outline, quick fix and validation.
+Xsmp-Core provides the skeleton of a customizable C++ code generator to convert the SMDL Catalogue to C++ source files.
+
+Xsmp-Core can be customized for a specific environment / MDK via an extension mechanism.
+
+This initial release does not provides ECSS SMP catalogue import/export (smpcat, smppkg) due to license issue. This functionality will be provided as soon as the ECSS SMP Standard will be released with a public license.
+
+
+### How To Build
+
+Check out and run `maven build`.
 
 ## Documentation
 
-Documentation is available at [xxx/docs](https://xxx/docs/).
-
-You can use [GitHub pages](https://guides.github.com/features/pages/) to create your documentation.
-
-See an example here : https://github.com/ThalesGroup/ThalesGroup.github.io
-
-**Please also add the documentation URL into the About section (Website field)**
+Documentation is available [here](/doc/).
 
 ## Contributing
 
-If you are interested in contributing to the XXX project, start by reading the [Contributing guide](/CONTRIBUTING.md).
+If you are interested in contributing to the Xsmp-Core project, start by reading the [Contributing guide](/CONTRIBUTING.md).
 
 ## License
 
-The chosen license in accordance with legal department must be defined into an explicit [LICENSE](https://github.com/ThalesGroup/template-project/blob/master/LICENSE) file at the root of the repository
-You can also link this file in this README section.
+Xsmp-Core is released under the EPL 2.0, see [LICENSE](/LICENSE) file at the root of the repository
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_w0amsFvOEeuYBrSMUc-xNA" name="EntryPoint">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//EntryPoint"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_8FYqIA8DEeyA1-mZGuFzTg" name="NamedElement" id="NamedElement"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_w0b01VvOEeuYBrSMUc-xNA" name="Control input">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_w0b01lvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//EntryPoint/input"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_w0b011vOEeuYBrSMUc-xNA" name="Control output">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_w0b02FvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//EntryPoint/output"/>
+    </domainModelReference>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

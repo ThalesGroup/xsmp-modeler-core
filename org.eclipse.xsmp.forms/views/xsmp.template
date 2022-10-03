@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.template.model:ViewTemplate xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.emf.ecp.view.template.model="http://org/eclipse/emf/ecp/view/template/model" xmlns:org.eclipse.emf.ecp.view.template.selector.viewmodelelement.model="http://www.eclipse.org/emf/ecp/view/template/selector/viewmodelelement/model" xmlns:org.eclipse.emf.ecp.view.template.style.mandatory.model="http://www.eclipse.org/emf/ecp/view/template/style/mandatory/model" xmlns:org.eclipse.emf.ecp.view.template.style.reference.model="http://www.eclipse.org/emf/ecp/view/template/style/reference/model">
+  <styles>
+    <selector xsi:type="org.eclipse.emf.ecp.view.template.selector.viewmodelelement.model:ViewModelElementSelector" selectSubclasses="true">
+      <classType href="http://org/eclipse/emf/ecp/view/model/1180#//Control"/>
+    </selector>
+    <properties xsi:type="org.eclipse.emf.ecp.view.template.style.reference.model:ReferenceStyleProperty" showCreateAndLinkButtonForCrossReferences="false" showLinkButtonForContainmentReferences="false"/>
+    <properties xsi:type="org.eclipse.emf.ecp.view.template.style.mandatory.model:MandatoryStyleProperty"/>
+  </styles>
+  <referencedEcores>/org.eclipse.xsmp/model/Xcatalogue.ecore</referencedEcores>
+</org.eclipse.emf.ecp.view.template.model:ViewTemplate>

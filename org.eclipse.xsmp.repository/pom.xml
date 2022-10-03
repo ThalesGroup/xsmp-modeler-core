@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.xsmp</groupId>
+		<artifactId>org.eclipse.xsmp.parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.eclipse.xsmp.repository</artifactId>
+	<packaging>eclipse-repository</packaging>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-clean-plugin
+										</artifactId>
+										<versionRange>
+											[2.5,)
+										</versionRange>
+										<goals>
+											<goal>clean</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<!-- Prevent default deployment -->
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+				</configuration>
+			</plugin>
+			<!-- Upload the repository -->
+			<plugin>
+				<groupId>com.thalesaleniaspace</groupId>
+				<artifactId>magicartifactory-maven-plugin</artifactId>
+				<version>1.2.0</version>
+				<executions>
+					<execution>
+						<id>deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy-repository</goal>
+							<goal>create-composite</goal>
+							<goal>upload-composite</goal>
+						</goals>
+						<configuration>
+							<serverId>ccsl.p2</serverId>
+							<serverUrl>https://repo.aes.alcatel.fr:8443/artifactory/</serverUrl>
+							<snapshotRepositoryId>genp2-ccsl-snapshots-local</snapshotRepositoryId>
+							<releaseRepositoryId>genp2-ccsl-releases-local</releaseRepositoryId>
+							<repositoryPath>com/thalesaleniaspace/xsmp</repositoryPath>
+							<repositoryName>xsmp-core</repositoryName>
+							<forceUpdateRelease>true</forceUpdateRelease>
+							<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies></dependencies>
+</project>

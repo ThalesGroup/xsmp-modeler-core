@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_FCkXgFvOEeuYBrSMUc-xNA" name="Catalogue">
+  <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Catalogue"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_wwMTgA8DEeyA1-mZGuFzTg" name="NamedElement" id="NamedElement"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_FDBqhlvOEeuYBrSMUc-xNA" name="Control title">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_FDBqh1vOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Document/title"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_FDBqiFvOEeuYBrSMUc-xNA" name="Control date">
+    <attachments xsi:type="org.eclipse.emf.ecp.view.model:DateTimeDisplayAttachment" xmi:id="__FbF0GC-Eeu_IdnefgEFOQ"/>
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_FDBqiVvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Document/date"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_FDBqilvOEeuYBrSMUc-xNA" name="Control creator">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_FDBqi1vOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Document/creator"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_FDBqjFvOEeuYBrSMUc-xNA" name="Control version">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_FDBqjVvOEeuYBrSMUc-xNA">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//Document/version"/>
+    </domainModelReference>
+  </children>
+  <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
+</org.eclipse.emf.ecp.view.model:View>

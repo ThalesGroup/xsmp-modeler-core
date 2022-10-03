@@ -1,0 +1,100 @@
+/*******************************************************************************
+* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
+module org.eclipse.xsmp.xsmpcat.GenerateXsmpcat
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+import org.eclipse.xtext.ui.generator.*
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.mwe.utils.*
+
+var rootPath = ".."
+var runtimeProjectName = "org.eclipse.xsmp"
+var projectPath = "${rootPath}/${runtimeProjectName}"
+
+Workflow {
+
+	bean = ResourceSetImpl : resourceSet {}
+	bean = StandaloneSetup {
+		resourceSet = resourceSet
+		platformUri = "${rootPath}"
+		scanClassPath = true
+	}
+	component = DirectoryCleaner {
+		directory = "${projectPath}/emf-gen"
+	}
+
+	component = XtextGenerator {
+		configuration = {
+			project = StandardProjectConfig {
+				baseName = "org.eclipse.xsmp"
+				rootPath = rootPath
+				runtimeTest = {
+					enabled = true
+				}
+				eclipsePlugin = {
+					enabled = true
+				}
+				eclipsePluginTest = {
+					enabled = true
+				}
+				createEclipseMetaData = true
+			}
+			code = {
+				encoding = "UTF-8"
+				lineDelimiter = "\n"
+				fileHeader =
+				"/*******************************************************************************\n* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.\n*\n* All rights reserved. This program and the accompanying materials\n* are made available under the terms of the Eclipse Public License 2.0\n* which accompanies this distribution, and is available at\n* https://www.eclipse.org/legal/epl-2.0/\n*\n* SPDX-License-Identifier: EPL-2.0\n******************************************************************************/\n"
+				preferXtendStubs = false
+			}
+		}
+		language = StandardLanguage {
+			name = "org.eclipse.xsmp.Xsmpcat"
+			fileExtensions = "xsmpcat"
+			referencedResource = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
+			serializer = {
+				generateStub = false
+			}
+
+			validator = {
+				composedCheck = "org.eclipse.xsmp.validation.UniqueElementValidator"// Generates checks for @Deprecated grammar annotations, an IssueProvider and a corresponding PropertyPage
+				generateDeprecationValidation = false
+			}
+			qualifiedNamesProvider = {}
+
+			scopeProvider = {
+				generateStub = true
+			}
+
+			fragment = ui.codemining.CodeMiningFragment {
+				generateStub = true
+			}
+
+			formatter = {
+				generateStub = true
+				generateXtendStub = false
+			}
+
+			junitSupport = {
+				junitVersion = "5"
+			}
+			projectWizard = {
+				pluginProject = true
+				generate = true
+			}
+
+		}
+	}
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator auto-inject {
+		genModel = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
+		srcPath = "platform:/resource/${runtimeProjectName}/src"
+	}
+}
