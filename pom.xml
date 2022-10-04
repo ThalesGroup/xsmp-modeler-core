@@ -372,16 +372,7 @@
 	<!-- ==== DISTRIBUTION Management ==== -->
 	<!-- ================================= -->
 	<distributionManagement>
-		<repository>
-			<id>repo.ccsl.releases</id>
-			<name>TAS ARTIFACTORY Deploy Releases</name>
-			<url>https://repo.aes.alcatel.fr:8443/artifactory/m2-ccsl-releases-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>repo.ccsl.snapshots</id>
-			<name>TAS ARTIFACTORY Deploy Snapshot</name>
-			<url>https://repo.aes.alcatel.fr:8443/artifactory/m2-ccsl-snapshots-local</url>
-		</snapshotRepository>
+
 	</distributionManagement>
 
 </project>
