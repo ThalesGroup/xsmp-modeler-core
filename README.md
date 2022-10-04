@@ -16,7 +16,7 @@ This initial release does not provides ECSS SMP catalogue import/export (smpcat,
 
 ### How To Build
 
-Check out and run `maven build`.
+Check out and run `mvn install`.
 
 ## Documentation
 
