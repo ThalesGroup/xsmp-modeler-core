@@ -62,33 +62,6 @@
 					<includeAllDependencies>true</includeAllDependencies>
 				</configuration>
 			</plugin>
-			<!-- Upload the repository -->
-			<plugin>
-				<groupId>com.thalesaleniaspace</groupId>
-				<artifactId>magicartifactory-maven-plugin</artifactId>
-				<version>1.2.0</version>
-				<executions>
-					<execution>
-						<id>deploy</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>deploy-repository</goal>
-							<goal>create-composite</goal>
-							<goal>upload-composite</goal>
-						</goals>
-						<configuration>
-							<serverId>ccsl.p2</serverId>
-							<serverUrl>https://repo.aes.alcatel.fr:8443/artifactory/</serverUrl>
-							<snapshotRepositoryId>genp2-ccsl-snapshots-local</snapshotRepositoryId>
-							<releaseRepositoryId>genp2-ccsl-releases-local</releaseRepositoryId>
-							<repositoryPath>com/thalesaleniaspace/xsmp</repositoryPath>
-							<repositoryName>xsmp-core</repositoryName>
-							<forceUpdateRelease>true</forceUpdateRelease>
-							<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
