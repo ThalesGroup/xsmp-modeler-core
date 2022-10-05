@@ -456,7 +456,7 @@
 	</extension>
 	<extension
 		point="org.eclipse.ui.newWizards">
-		<category id="org.eclipse.xsmp.ui.category" name="Xsmpcat">
+		<category id="org.eclipse.xsmp.ui.category" name="Xsmp">
 		</category>
 		<wizard
 			category="org.eclipse.xsmp.ui.category"
