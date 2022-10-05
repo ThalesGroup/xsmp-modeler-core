@@ -3,5 +3,5 @@
    <feature id="org.eclipse.xsmp.feature" version="0.0.0">
       <category name="main"/>
    </feature>
-   <category-def name="main" label="Xsmpcat"/>
+   <category-def name="main" label="Xsmp"/>
 </site>
