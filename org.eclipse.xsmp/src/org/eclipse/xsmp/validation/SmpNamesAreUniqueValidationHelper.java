@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.validation;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.Operation;
@@ -26,7 +27,6 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
   @Override
   public void checkUniqueNames(Context context, ValidationMessageAcceptor acceptor)
   {
-
     doCheckUniqueNames(context, acceptor);
   }
 
@@ -58,16 +58,12 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
     // parameters inside the same operation must have different names
     else if (first instanceof Parameter && second instanceof Parameter)
     {
-      result = description.getEObjectOrProxy().eContainer() == candidate.getEObjectOrProxy()
-              .eContainer();
+      result = first.eContainer() == EcoreUtil.resolve(second, first).eContainer();
     }
-    else if (first instanceof Parameter || second instanceof Parameter)
-    {
-      result = false;
-    }
+    // ignore parameters
     else
     {
-      result = true;
+      result = !(first instanceof Parameter) && !(second instanceof Parameter);
     }
 
     return result;
