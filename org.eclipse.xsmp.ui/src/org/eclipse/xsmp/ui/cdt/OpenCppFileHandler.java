@@ -27,6 +27,7 @@ import org.eclipse.cdt.internal.core.model.ext.ICElementHandle;
 import org.eclipse.cdt.internal.ui.viewsupport.CElementLabels;
 import org.eclipse.cdt.internal.ui.viewsupport.IndexUI;
 import org.eclipse.cdt.ui.CDTUITools;
+import org.eclipse.cdt.ui.CUIPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -107,6 +108,7 @@ public class OpenCppFileHandler extends OpenOppositeFileHandler
     }
     catch (final Exception e)
     {
+      // ignore
     }
   }
 
@@ -120,24 +122,29 @@ public class OpenCppFileHandler extends OpenOppositeFileHandler
 
       index = CCorePlugin.getIndexManager().getIndex(project);
       index.acquireReadLock();
-
-      target = EcoreUtil2.getContainerOfType(target, NamedElement.class);
-      // collect the opener for the selected target.
-      // if no opener found, try with the parent object
-      while (target != null && !collectOpeners(project, index, target, acceptor))
+      try
       {
-        target = EcoreUtil2.getContainerOfType(target.eContainer(), NamedElement.class);
+        target = EcoreUtil2.getContainerOfType(target, NamedElement.class);
+        // collect the opener for the selected target.
+        // if no opener found, try with the parent object
+        while (target != null && !collectOpeners(project, index, target, acceptor))
+        {
+          target = EcoreUtil2.getContainerOfType(target.eContainer(), NamedElement.class);
+        }
       }
-    }
-    catch (CoreException | InterruptedException e1)
-    {
-    }
-    finally
-    {
-      if (index != null)
+      finally
       {
         index.releaseReadLock();
+
       }
+    }
+    catch (final CoreException e)
+    {
+      CUIPlugin.log(e);
+    }
+    catch (final InterruptedException e)
+    {
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -180,13 +187,6 @@ public class OpenCppFileHandler extends OpenOppositeFileHandler
 
     if (target instanceof Document)
     {
-      // TODO return the generated package
-
-      // final var doc = (Document) target;
-
-      // final var handle = project.findSourceRoot(new
-      // org.eclipse.core.runtime.Path(doc.getName() + ".h"));
-      // acceptor.accept(new ElementOpener(handle));
       return true;
     }
 
@@ -245,6 +245,7 @@ public class OpenCppFileHandler extends OpenOppositeFileHandler
       }
       catch (PartInitException | CModelException e)
       {
+        CUIPlugin.log(e);
       }
     }
 

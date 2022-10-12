@@ -48,11 +48,6 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
     this.editingDomain = editingDomain;
   }
 
-  public void refresh()
-  {
-
-  }
-
   @Override
   public void createControl(Composite parent)
   {
@@ -62,13 +57,6 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
     viewForm.marginWidth = 0;
     viewForm.verticalSpacing = 0;
     viewForm.setBorderVisible(false);
-    // toolBar = new ToolBar(viewForm, SWT.FLAT | SWT.WRAP);
-    // ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
-
-    // Image hoverImage = WorkbenchImages.getImage(IWorkbenchGraphicConstants.IMG_LCL_VIEW_MENU);
-    // toolItem.setImage(hoverImage);
-
-    // viewForm.setTopRight(toolBar);
 
     viewMessage = new CLabel(viewForm, SWT.NONE);
 
@@ -86,7 +74,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
 
     scroll.setMinHeight(500);
     scroll.setLayout(new GridLayout(1, false));
-    // container = scroll;
+
     final var container = new Composite(scroll, SWT.NULL);
     final var layout = new GridLayout();
     container.setLayout(layout);
@@ -116,6 +104,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
   @Override
   public void setActionBars(IActionBars actionBars)
   {
+    // ignore
   }
 
   @Override
@@ -149,7 +138,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
               .adapt(eObject, IItemLabelProvider.class);
       if (labelProvider != null)
       {
-        viewMessage.setText(eObject.eClass().getName() /* +" " + labelProvider.getText(eObject) */);
+        viewMessage.setText(eObject.eClass().getName());
         viewMessage.setImage(
                 ExtendedImageRegistry.getInstance().getImage(labelProvider.getImage(eObject)));
       }
@@ -177,6 +166,11 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
         detailManager.render(modelContext, ECPSWTViewRenderer.INSTANCE::render);
       }
     }
+  }
+
+  public void refresh()
+  {
+    // ignore
   }
 
 }

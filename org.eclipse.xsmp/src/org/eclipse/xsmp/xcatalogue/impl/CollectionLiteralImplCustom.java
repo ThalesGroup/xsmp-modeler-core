@@ -12,6 +12,7 @@ package org.eclipse.xsmp.xcatalogue.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 import org.eclipse.xsmp.util.ExpressionSolver;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
@@ -31,7 +32,7 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
     final var c = duplicateEObject(XcatalogueFactory.eINSTANCE.createCollectionLiteral(),
             (CollectionLiteral) this);
     ((CollectionLiteral) this).getElements().stream().map(elem -> elem.solve(acceptor))
-            .filter(e -> e != null).forEachOrdered(c.getElements()::add);
+            .filter(Objects::nonNull).forEachOrdered(c.getElements()::add);
     return c;
   }
 
@@ -45,10 +46,13 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
       case 1:
         return getElements().get(0).doGetBoolean(acceptor);
       default:
-        acceptor.acceptError("Expecting only one element, got " + getElements().size(),
-                ExpressionSolver.getTarget(this), null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-                (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting only one element, got " + getElements().size(),
+                  ExpressionSolver.getTarget(this), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
+                  (String[]) null);
+        }
         return null;
     }
   }
@@ -63,10 +67,13 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
       case 1:
         return getElements().get(0).doGetDecimal(acceptor);
       default:
-        acceptor.acceptError("Expecting only one element, got " + getElements().size(),
-                ExpressionSolver.getTarget(this), null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-                (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting only one element, got " + getElements().size(),
+                  ExpressionSolver.getTarget(this), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
+                  (String[]) null);
+        }
         return null;
     }
   }
@@ -81,10 +88,13 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
       case 1:
         return getElements().get(0).doGetInteger(acceptor);
       default:
-        acceptor.acceptError("Expecting only one element, got " + getElements().size(),
-                ExpressionSolver.getTarget(this), null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-                (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting only one element, got " + getElements().size(),
+                  ExpressionSolver.getTarget(this), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
+                  (String[]) null);
+        }
         return null;
     }
   }
@@ -99,10 +109,13 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
       case 1:
         return getElements().get(0).doGetString(acceptor);
       default:
-        acceptor.acceptError("Expecting only one element, got " + getElements().size(),
-                ExpressionSolver.getTarget(this), null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-                (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting only one element, got " + getElements().size(),
+                  ExpressionSolver.getTarget(this), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
+                  (String[]) null);
+        }
         return null;
     }
   }
@@ -117,10 +130,13 @@ public class CollectionLiteralImplCustom extends CollectionLiteralImpl
       case 1:
         return getElements().get(0).doGetEnum(acceptor);
       default:
-        acceptor.acceptError("Expecting only one element, got " + getElements().size(),
-                ExpressionSolver.getTarget(this), null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-                (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting only one element, got " + getElements().size(),
+                  ExpressionSolver.getTarget(this), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
+                  (String[]) null);
+        }
         return null;
     }
   }

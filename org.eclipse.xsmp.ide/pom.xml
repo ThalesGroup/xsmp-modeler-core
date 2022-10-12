@@ -9,6 +9,10 @@
 	<artifactId>org.eclipse.xsmp.ide</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<properties>
+		<sonar.sources>src</sonar.sources>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>

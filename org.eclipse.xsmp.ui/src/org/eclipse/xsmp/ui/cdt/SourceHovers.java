@@ -109,14 +109,19 @@ public class SourceHovers
     {
       index = CCorePlugin.getIndexManager().getIndex(project);
       index.acquireReadLock();
-
-      // find bindings for name
-      final var bindings = index.findBindings(getPatterns(target), IndexFilter.ALL,
-              new NullProgressMonitor());
-      // find references for each binding
-      for (final IIndexBinding b : bindings)
+      try
       {
-        // Convert bindings to CElements.
+        // find bindings for name
+        final var bindings = index.findBindings(getPatterns(target), IndexFilter.ALL,
+                new NullProgressMonitor());
+        if (bindings.length == 0)
+        {
+          return null;
+        }
+        // find references for the binding
+        final var b = bindings[0];
+
+        // Convert binding to CElement.
 
         IName[] declNames = index.findDefinitions(b);
 
@@ -130,15 +135,18 @@ public class SourceHovers
         return res;
 
       }
+      finally
+      {
+        index.releaseReadLock();
+      }
     }
-    catch (CoreException |
-
-            InterruptedException e1)
+    catch (final CoreException e)
     {
+      CUIPlugin.log(e);
     }
-    finally
+    catch (final InterruptedException e)
     {
-      index.releaseReadLock();
+      Thread.currentThread().interrupt();
     }
 
     return null;
@@ -147,9 +155,13 @@ public class SourceHovers
   private char[][] getPatterns(NamedElement target)
   {
     final var qfn = qualifiedNameProvider.getFullyQualifiedName(target);
-
-    final var result = new char[qfn.getSegmentCount()][];
-    for (var i = 0; i < qfn.getSegmentCount(); ++i)
+    if (qfn == null)
+    {
+      return new char[0][];
+    }
+    final var count = qfn.getSegmentCount();
+    final var result = new char[count][];
+    for (var i = 0; i < count; ++i)
     {
       result[i] = qfn.getSegment(i).toCharArray();
     }
@@ -168,107 +180,85 @@ public class SourceHovers
     var nodeOffset = fileLocation.getNodeOffset();
     var nodeLength = fileLocation.getNodeLength();
     final var fileName = fileLocation.getFileName();
-    // if (DEBUG)
-    // System.out.println("[CSourceHover] Computing source for " + name + " in " + fileName);
-    // //$NON-NLS-1$//$NON-NLS-2$
+
     var location = Path.fromOSString(fileName);
     var locationKind = LocationKind.LOCATION;
-    if (/* name instanceof IASTName && !name.isReference() */true)
+
+    // Try to resolve path to a resource for proper encoding (bug 221029)
+    final var file = EditorUtility.getWorkspaceFileAtLocation(location, tUnit);
+    if (file != null)
     {
-      // final var astName = (IASTName) name;
-      // if (astName.getTranslationUnit().getFilePath().equals(fileName)) {
-      // int hoverOffset = fTextRegion.getOffset();
-      // if (hoverOffset <= nodeOffset && nodeOffset < hoverOffset + fTextRegion.getLength()
-      // || hoverOffset >= nodeOffset && hoverOffset < nodeOffset + nodeLength) {
-      // // Bug 359352 - don't show source if its the same we are hovering on.
-      // return computeHoverForDeclaration(astName);
-      // }
-      // if (fTU.getResource() != null) {
-      // // Reuse editor buffer for names local to the translation unit
-      // location = fTU.getResource().getFullPath();
-      // locationKind = LocationKind.IFILE;
-      // }
-      // }
-      // } else
+      location = file.getFullPath();
+      locationKind = LocationKind.IFILE;
+      if (name instanceof IIndexName)
       {
-        // Try to resolve path to a resource for proper encoding (bug 221029)
-        final var file = EditorUtility.getWorkspaceFileAtLocation(location, tUnit);
-        if (file != null)
+        // Need to adjust index offsets to current offsets
+        // in case file has been modified since last index time.
+        final var indexName = (IIndexName) name;
+        final var timestamp = indexName.getFile().getTimestamp();
+        final var converter = CCorePlugin.getPositionTrackerManager().findPositionConverter(file,
+                timestamp);
+        if (converter != null)
         {
-          location = file.getFullPath();
-          locationKind = LocationKind.IFILE;
-          if (name instanceof IIndexName)
-          {
-            // Need to adjust index offsets to current offsets
-            // in case file has been modified since last index time.
-            final var indexName = (IIndexName) name;
-            final var timestamp = indexName.getFile().getTimestamp();
-            final var converter = CCorePlugin.getPositionTrackerManager()
-                    .findPositionConverter(file, timestamp);
-            if (converter != null)
-            {
-              final var currentLocation = converter
-                      .historicToActual(new Region(nodeOffset, nodeLength));
-              nodeOffset = currentLocation.getOffset();
-              nodeLength = currentLocation.getLength();
-            }
-          }
+          final var currentLocation = converter
+                  .historicToActual(new Region(nodeOffset, nodeLength));
+          nodeOffset = currentLocation.getOffset();
+          nodeLength = currentLocation.getLength();
         }
       }
-      final var mgr = FileBuffers.getTextFileBufferManager();
-      mgr.connect(location, locationKind, fMonitor);
-      final var buffer = mgr.getTextFileBuffer(location, locationKind);
-      try
+    }
+
+    final var mgr = FileBuffers.getTextFileBufferManager();
+    mgr.connect(location, locationKind, fMonitor);
+    final var buffer = mgr.getTextFileBuffer(location, locationKind);
+    try
+    {
+      final IRegion nameRegion = new Region(nodeOffset, nodeLength);
+      final var nameOffset = nameRegion.getOffset();
+      final int sourceStart;
+      final int sourceEnd;
+      final var doc = buffer.getDocument();
+      if (nameOffset >= doc.getLength() || nodeLength <= 0)
       {
-        final IRegion nameRegion = new Region(nodeOffset, nodeLength);
-        final var nameOffset = nameRegion.getOffset();
-        final int sourceStart;
-        final int sourceEnd;
-        final var doc = buffer.getDocument();
-        if (nameOffset >= doc.getLength() || nodeLength <= 0)
+        return null;
+      }
+      if (binding instanceof IMacroBinding)
+      {
+        final var partition = TextUtilities.getPartition(doc, ICPartitions.C_PARTITIONING,
+                nameOffset, false);
+        if (!ICPartitions.C_PREPROCESSOR.equals(partition.getType()))
         {
           return null;
         }
-        if (binding instanceof IMacroBinding)
-        {
-          final var partition = TextUtilities.getPartition(doc, ICPartitions.C_PARTITIONING,
-                  nameOffset, false);
-          if (!ICPartitions.C_PREPROCESSOR.equals(partition.getType()))
-          {
-            return null;
-          }
-          final var directiveStart = partition.getOffset();
-          // final var commentStart = searchCommentBackward(doc, directiveStart, -1);
-          // if (commentStart >= 0) {
-          // sourceStart = commentStart;
-          // } else {
-          sourceStart = directiveStart;
-          // }
-          sourceEnd = directiveStart + partition.getLength();
-        }
-        else
-        {
-          // Expand source range to include preceding comment, if any
-          final var isKnR = isKnRSource(name);
-          sourceStart = computeSourceStart(doc, nameOffset, binding, isKnR);
-          if (sourceStart == CHeuristicScanner.NOT_FOUND)
-          {
-            return null;
-          }
-          sourceEnd = computeSourceEnd(doc, nameOffset + nameRegion.getLength(), binding,
-                  name.isDefinition(), isKnR);
-        }
-        return buffer.getDocument().get(sourceStart, sourceEnd - sourceStart);
+        final var directiveStart = partition.getOffset();
+
+        sourceStart = directiveStart;
+
+        sourceEnd = directiveStart + partition.getLength();
       }
-      catch (final BadLocationException e)
+      else
       {
-        CUIPlugin.log(e);
+        // Expand source range to include preceding comment, if any
+        final var isKnR = isKnRSource(name);
+        sourceStart = computeSourceStart(doc, nameOffset, binding, isKnR);
+        if (sourceStart == CHeuristicScanner.NOT_FOUND)
+        {
+          return null;
+        }
+        sourceEnd = computeSourceEnd(doc, nameOffset + nameRegion.getLength(), binding,
+                name.isDefinition(), isKnR);
       }
-      finally
-      {
-        mgr.disconnect(location, LocationKind.LOCATION, fMonitor);
-      }
+      return buffer.getDocument().get(sourceStart, sourceEnd - sourceStart);
     }
+    catch (final BadLocationException e)
+    {
+      CUIPlugin.log(e);
+    }
+    finally
+    {
+      mgr.disconnect(location, LocationKind.LOCATION, fMonitor);
+    }
+
     return null;
   }
 
@@ -395,10 +385,7 @@ public class SourceHovers
         commentBound = -1; // unbound
       }
       sourceStart = Math.min(sourceStart, doc.getLineOffset(nameLine));
-      // int commentStart = searchCommentBackward(doc, sourceStart, commentBound);
-      // if (commentStart >= 0) {
-      // sourceStart = commentStart;
-      // } else {
+
       final var nextNonWS = scanner.findNonWhitespaceForward(commentBound + 1, sourceStart);
       if (nextNonWS != CHeuristicScanner.NOT_FOUND)
       {

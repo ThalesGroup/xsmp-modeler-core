@@ -41,6 +41,7 @@ import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Type;
+import org.eclipse.xtext.ui.IImageHelper;
 
 import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
@@ -51,6 +52,9 @@ public class GenericItemProvider extends ItemProviderAdapter implements IItemLab
 
   @Inject
   protected XsmpcatReferenceProposalCreator referenceProposalCreator;
+
+  @Inject
+  protected IImageHelper imageHelper;
 
   public GenericItemProvider(AdapterFactory adapterFactory)
   {
@@ -296,8 +300,8 @@ public class GenericItemProvider extends ItemProviderAdapter implements IItemLab
   {
     try
     {
-      return overlayImage(object, getResourceLocator()
-              .getImage("full/obj16/" + ((EObject) object).eClass().getName() + ".png"));
+      return overlayImage(object,
+              imageHelper.getImage("full/obj16/" + ((EObject) object).eClass().getName() + ".png"));
     }
     catch (final Exception e)
     {

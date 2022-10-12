@@ -56,11 +56,11 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
     createLanguageSetting(project, subMonitor.newChild(1));
   }
 
-  private void createLanguageSetting(IProject project, SubMonitor newChild)
+  protected void createLanguageSetting(IProject project, SubMonitor newChild)
   {
   }
 
-  private void createCproject(IProject project, SubMonitor newChild)
+  protected void createCproject(IProject project, SubMonitor newChild)
   {
   }
 

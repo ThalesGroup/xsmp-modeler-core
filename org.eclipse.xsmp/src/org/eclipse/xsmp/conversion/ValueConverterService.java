@@ -53,25 +53,25 @@ public class ValueConverterService extends AbstractDeclarativeValueConverterServ
   }
 
   @Inject
-  private INTEGER_LITERALValueConverter integerLiteralValueConverter;
+  private IntegerLiteralValueConverter integerLiteralValueConverter;
 
   /**
    * @return the INTEGER_LITERAL value converter
    */
   @ValueConverter(rule = "INTEGER_LITERAL")
-  public IValueConverter<String> INTEGER_LITERAL()
+  public IValueConverter<String> getIntegerLiteralConverter()
   {
     return integerLiteralValueConverter;
   }
 
   @Inject
-  private INTEGER_LITERALValueConverter terminalsIntegerLiteralValueConverter;
+  private IntegerLiteralValueConverter terminalsIntegerLiteralValueConverter;
 
   /**
    * @return the INTEGER_LITERAL value converter
    */
   @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcat.INTEGER_LITERAL")
-  public IValueConverter<String> TerminalsINTEGER_LITERAL()
+  public IValueConverter<String> getTerminalsIntegerLiteralConverter()
   {
     return terminalsIntegerLiteralValueConverter;
   }
@@ -83,7 +83,7 @@ public class ValueConverterService extends AbstractDeclarativeValueConverterServ
    * @return the ID value converter
    */
   @ValueConverter(rule = "ID")
-  public IValueConverter<String> ID()
+  public IValueConverter<String> getIdConverter()
   {
     return idValueConverter;
   }
@@ -95,7 +95,7 @@ public class ValueConverterService extends AbstractDeclarativeValueConverterServ
    * @return the ID value converter
    */
   @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcat.ID")
-  public IValueConverter<String> TerminalsID()
+  public IValueConverter<String> getTerminalsIdConverter()
   {
     return terminalsIdValueConverter;
   }

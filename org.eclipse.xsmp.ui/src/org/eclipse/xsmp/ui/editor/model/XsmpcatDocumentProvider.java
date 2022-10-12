@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.impl.XMLTypeFactoryImpl;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
@@ -98,32 +99,16 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
     final boolean isModified = document.readOnly(state -> {
 
       var modified = false;
-      final var cat = (Document) state.getContents().get(0);
-
       // update document date
       if (saveActionsPreferenceAccess.isUpdateDocumentDate(project))
       {
-        serializer.addModification(cat, r -> r.setDate(
+        serializer.addModification((Document) state.getContents().get(0), r -> r.setDate(
                 factory.createDateTime(Instant.now().truncatedTo(ChronoUnit.SECONDS).toString())));
         modified = true;
       }
 
       // generate missing UUIDs
-      final var it = cat.eAllContents();
-      while (it.hasNext())
-      {
-        final var obj = it.next();
-        if (obj instanceof Type)
-        {
-          final var t = (Type) obj;
-          if (t.getUuid() == null)
-          {
-            serializer.addModification(t, r -> r.setUuid(UUID.randomUUID().toString()));
-            modified = true;
-          }
-          it.prune();
-        }
-      }
+      modified |= generateMissingUUIDs(serializer, state);
 
       // organize imports
       if (saveActionsPreferenceAccess.isOrganizeImports(project))
@@ -133,55 +118,85 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
 
       return modified;
     });
-
     if (isModified)
     {
-
-      final var converter = changeConverterFactory.create("Updating Document", null, issueAcceptor);
-
-      serializer.applyModifications(converter);
-      final var change = converter.getChange();
-      if (change != null)
-      {
-        change.initializeValidationData(monitor);
-        try
-        {
-          change.perform(monitor);
-        }
-        catch (final CoreException e)
-        {
-          e.printStackTrace();
-        }
-        change.dispose();
-      }
+      applyModifications(monitor, serializer);
     }
     if (saveActionsPreferenceAccess.isFormatSourceCode(project))
     {
-      monitor.beginTask("Format document", 10);
-      DocumentRewriteSession rewriteSession = null;
+      formatSourceCode(monitor, document);
+    }
+  }
+
+  protected boolean generateMissingUUIDs(IChangeSerializer serializer, Resource resource)
+  {
+    var modified = false;
+    final var it = resource.getAllContents();
+    while (it.hasNext())
+    {
+      final var obj = it.next();
+      if (obj instanceof Type)
+      {
+        final var t = (Type) obj;
+        if (t.getUuid() == null)
+        {
+          serializer.addModification(t, r -> r.setUuid(UUID.randomUUID().toString()));
+          modified = true;
+        }
+        it.prune();
+      }
+    }
+    return modified;
+  }
+
+  protected void applyModifications(IProgressMonitor monitor, IChangeSerializer serializer)
+  {
+
+    final var converter = changeConverterFactory.create("Updating Document", null, issueAcceptor);
+
+    serializer.applyModifications(converter);
+    final var change = converter.getChange();
+    if (change != null)
+    {
+      change.initializeValidationData(monitor);
+      try
+      {
+        change.perform(monitor);
+      }
+      catch (final CoreException e)
+      {
+        e.printStackTrace();
+      }
+      change.dispose();
+    }
+  }
+
+  protected void formatSourceCode(IProgressMonitor monitor, IXtextDocument document)
+  {
+    monitor.beginTask("Format document", 10);
+    DocumentRewriteSession rewriteSession = null;
+    if (document instanceof IDocumentExtension4)
+    {
+      final var extension = (IDocumentExtension4) document;
+      final var type = document.getLength() > 1000 ? DocumentRewriteSessionType.SEQUENTIAL
+              : DocumentRewriteSessionType.UNRESTRICTED_SMALL;
+      rewriteSession = extension.startRewriteSession(type);
+    }
+
+    try
+    {
+      formatter.format(document, new Region(0, document.getLength()));
+    }
+    finally
+    {
       if (document instanceof IDocumentExtension4)
       {
         final var extension = (IDocumentExtension4) document;
-        final var type = document.getLength() > 1000 ? DocumentRewriteSessionType.SEQUENTIAL
-                : DocumentRewriteSessionType.UNRESTRICTED_SMALL;
-        rewriteSession = extension.startRewriteSession(type);
+        extension.stopRewriteSession(rewriteSession);
       }
-
-      try
-      {
-        formatter.format(document, new Region(0, document.getLength()));
-      }
-      finally
-      {
-        if (document instanceof IDocumentExtension4)
-        {
-          final var extension = (IDocumentExtension4) document;
-          extension.stopRewriteSession(rewriteSession);
-        }
-      }
-
-      monitor.done();
     }
+
+    monitor.done();
   }
 
 }

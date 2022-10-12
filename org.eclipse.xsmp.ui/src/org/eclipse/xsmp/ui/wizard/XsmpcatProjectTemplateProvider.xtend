@@ -30,7 +30,7 @@ class XsmpcatProjectTemplateProvider implements IProjectTemplateProvider {
 	}
 }
 
-@ProjectTemplate(label="Catalogue Project", icon="project_template.png", description="<p><b>Create a new Catalogue Project</b></p>")
+@ProjectTemplate(label="Default Catalogue Project", icon="project_template.png", description="<p><b>Create a new Default Catalogue Project</b></p>")
 final class CatalogueProject {
 	val advancedGroup = group("Properties")
 

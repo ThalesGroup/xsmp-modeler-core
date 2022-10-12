@@ -369,6 +369,8 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
                         nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.WARNING));
               }
               break;
+            default:
+              break;
           }
         }
         else

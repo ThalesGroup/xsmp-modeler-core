@@ -49,8 +49,7 @@ public class XsmpcatQuickfixProvider
               final var feature = e.eClass().getEStructuralFeature(issue.getData()[1]);
               final var elem = (EObject) e.eGet(feature);
 
-              if (elem instanceof VisibilityElement && !elem.eIsProxy()) // TODO check if elem
-                                                                         // resource is editable ?
+              if (elem instanceof VisibilityElement && !elem.eIsProxy())
               {
                 ((VisibilityElement) elem)
                         .setVisibility(VisibilityKind.getByName(issue.getData()[2]));

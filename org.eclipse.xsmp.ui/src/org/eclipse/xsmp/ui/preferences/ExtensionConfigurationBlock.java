@@ -40,7 +40,7 @@ public class ExtensionConfigurationBlock extends OptionsConfigurationBlock
 
   protected static final int INDENT_AMOUNT = 32;
 
-  public static final String SETTINGS_SECTION_NAME = "BuilderConfigurationBlock"; //$NON-NLS-1$
+  public static final String SETTINGS_SECTION_NAME = "XsmpcatBuilderConfigurationBlock"; //$NON-NLS-1$
 
   public static final String PROPERTY_PREFIX = "BuilderConfiguration";
 

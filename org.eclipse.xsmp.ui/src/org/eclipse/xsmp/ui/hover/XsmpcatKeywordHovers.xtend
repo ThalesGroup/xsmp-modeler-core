@@ -1,13 +1,13 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
-*
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License 2.0
-* which accompanies this distribution, and is available at
-* https://www.eclipse.org/legal/epl-2.0/
-*
-* SPDX-License-Identifier: EPL-2.0
-******************************************************************************/
+ * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ ******************************************************************************/
 package org.eclipse.xsmp.ui.hover
 
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess
@@ -18,18 +18,18 @@ class XsmpcatKeywordHovers {
 
 	@Inject XsmpcatGrammarAccess ga;
 
-def multiplicity()
-{
-	'''
-	multiplicity:
-	 - empty : 1 element
-	 - ? : 0 or 1 element
-	 - [] | [*] : 0 to infinitite
-	 - [ expr ] : expr elements
-	 - [ expr ... * ] : expr to infinitite
-	 - [ expr1 ... expr2 ] : expr1 to expr2
-	'''
-}
+	def multiplicity() {
+		'''
+			multiplicity:
+			 - empty : 1 element
+			 - ? : 0 or 1 element
+			 - [] | [*] : 0 to infinitite
+			 - [ expr ] : expr elements
+			 - [ expr ... * ] : expr to infinitite
+			 - [ expr1 ... expr2 ] : expr1 to expr2
+		'''
+	}
+
 	def hoverText(Keyword k) {
 		val result = switch (k) {
 			case ga.catalogueAccess.catalogueKeyword_1: '''
@@ -39,7 +39,8 @@ def multiplicity()
 				<p>It contains namespaces as a primary ordering mechanism.
 				<br />The names of these namespaces need to be unique within the catalogue.</p>
 			'''
-			case ga.namespaceDeclarationAccess.namespaceKeyword_0: '''
+			case ga.namespaceMemberAccess.namespaceKeyword_3_0_1,
+			case ga.namespaceAccess.namespaceKeyword_4: '''
 				<p><code><strong><span style="color: #7f0055;">namespace</span></strong> <em>name</em> { } </code></p>
 				<br/>
 				A <b>Namespace</b> is a primary ordering mechanism. <br />
@@ -47,7 +48,7 @@ def multiplicity()
 				<br />In SMDL, namespaces are contained within a <b>Catalogue</b> (either directly, or within another namespace in a catalogue).
 				<br />All sub-elements of a namespace (namespaces and types) must have unique names.</p>
 			'''
-			case ga.structureDeclarationAccess.structKeyword_1: '''
+			case ga.namespaceMemberAccess.structKeyword_3_1_2: '''
 				<p><code><strong><span style="color: #7f0055;">struct</span></strong> <em>name</em> { } </code></p>
 				<br/>
 				A <b>Structure</b> type collects an arbitrary number of <b>Fields</b> representing the state of the structure.
@@ -55,7 +56,7 @@ def multiplicity()
 				<br />In order to arrive at semantically correct (data) type definitions, a structure type may not be recursive, i.e. a structure may not have a field that is typed by the structure itself.
 				<br />A structure can also serve as a namespace to define an arbitrary number of <b>Constants</b>.</p>
 			'''
-			case ga.classDeclarationAccess.classKeyword_1: '''
+			case ga.namespaceMemberAccess.classKeyword_3_2_2: '''
 				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">class</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
 				<br/>
 				<p>The <b>Class</b> metaclass is derived from <b>Structure</b>. 
@@ -63,14 +64,14 @@ def multiplicity()
 				<br />As the Class metaclass is derived from Structure it can contain constants and fields. 
 				<br />Further, it can have arbitrary numbers of properties (Property elements), operations (<b>Operation</b> elements), and associations (<b>Association</b> elements).</p>
 			'''
-			case ga.exceptionDeclarationAccess.exceptionKeyword_1: '''
+			case ga.namespaceMemberAccess.exceptionKeyword_3_3_2: '''
 				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">exception</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
 				<br/>
 				<p>An <b>Exception</b> represents a non-recoverable error that can occur when calling into an <b>Operation</b> or <b>Property</b> getter/setter (within an <b>Operation</b> this is represented by the <b>RaisedException</b> links and within a <b>Property</b> this is represented by the <b>GetRaises</b> and <b>SetRaises</b> links, respectively).
 				<br />An Exception can contain constants and fields (from <b>Structure</b>) as well as operations, properties and associations (from <b>Class</b>). The fields represent the state variables of the exception which carry additional information when the exception is raised.
 				<br />Furthermore, an <b>Exception</b> may be <b>Abstract</b> (from <b>Class</b>), and it may inherit from a single base exception (implementation inheritance), which is represented by the Base link (from <b>Class</b>).</p>
 			'''
-			case ga.interfaceDeclarationAccess.interfaceKeyword_1: '''
+			case ga.namespaceMemberAccess.interfaceKeyword_3_4_2: '''
 				<p><code><strong><span style="color: #7f0055;">interface</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>An <b>Interface</b> is a reference type that serves as a contract in a loosely coupled architecture. It has the ability to contain constants, properties and operations (from ReferenceType). 
@@ -82,7 +83,7 @@ def multiplicity()
 				     : It is strongly recommended to only use value types, references and other interfaces in the properties and operations of an interface (i.e. not to use models). Otherwise, a dependency between a model implementing the interface, and other models referenced by this interface is introduced, which is against the idea of interface-based or component-based design. 
 				  </xhtml:p></p>
 			'''
-			case ga.modelDeclarationAccess.modelKeyword_1: '''
+			case ga.namespaceMemberAccess.modelKeyword_3_5_2: '''
 				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">model</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>The <b>Model</b> metaclass is a component and hence inherits all component mechanisms.
@@ -96,15 +97,15 @@ def multiplicity()
 				<br />For a dataflow-based design, the fields of a <b>Model</b> can be tagged as Input or Output fields.
 				<br />In addition, a <b>Model</b> may have <b>Association</b> elements to express associations to other models or fields of other models.</p>
 			'''
-			case ga.serviceDeclarationAccess.serviceKeyword_1: '''
+			case ga.namespaceMemberAccess.serviceKeyword_3_6_2: '''
 				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">service</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>The Service metaclass is a component and hence inherits all component mechanisms. 
 				<br />A Service can reference one or more interfaces via the <b>Interface</b> links (inherited from Component), where at least one of them must be derived from Smp::IService, which qualifies it as a service interface.</p>
 			'''
 			// Array
-			case ga.arrayDeclarationAccess.arrayKeyword_1_0_0_0,
-			case ga.arrayDeclarationAccess.usingKeyword_1_0_0_1: '''
+			case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0_0_0,
+			case ga.namespaceMemberAccess.usingKeyword_3_7_2_0_0_1: '''
 				<p><code><strong><span style="color: #7f0055;">array</span></strong> <em>name</em> = <em>type</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
 				<br/>
 				<p>An <b>Array</b> type defines a fixed-size array of identically typed elements, where ItemType defines the type of the array items, and Size defines the number of array items.
@@ -118,19 +119,19 @@ def multiplicity()
 				  </xhtml:p></p>
 			'''
 			// ValueReference
-			case ga.valueReferenceDeclarationAccess.usingKeyword_1: '''
+			case ga.namespaceMemberAccess.usingKeyword_3_8_2: '''
 				<p><code><strong><span style="color: #7f0055;">using</span></strong> <em>name</em> = <em>type</em> *</code></p>
 				<br/>
 				<p>A <b>ValueReference</b> is a type that references a specific value type. It is the "missing link" between value types and reference types.</p>
 			'''
-			case ga.integerDeclarationAccess.integerKeyword_1: '''
+			case ga.namespaceMemberAccess.integerKeyword_3_9_2: '''
 				<p><code><strong><span style="color: #7f0055;">integer</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Int8|Int16|Int32|Int64|UInt8|UInt16|UInt32|UInt64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|integralExpression) ... (*|integralExpression)</em>]</code></p>
 				<br/>
 				<p>An <b>Integer</b> type represents integer values with a given range of valid values (via the Minimum and Maximum attributes). 
 				<br />The Unit element can hold a physical unit that can be used by applications to ensure physical unit integrity across models.
 				<br />Optionally, the <b>PrimitiveType</b> used to encode the integer value may be specified (one of <b>Int8</b>, <b>Int16</b>, <b>Int32</b>, <b>Int64</b>, <b>UIn8</b>, <b>UInt16</b>, <b>UInt32</b>, <b>UInt64</b>, where the default is <b>Int32</b>).</p>
 			'''
-			case ga.floatDeclarationAccess.floatKeyword_1: '''
+			case ga.namespaceMemberAccess.floatKeyword_3_10_2: '''
 				<p><code><strong><span style="color: #7f0055;">float</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Float32|Float64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|decimalExpression) ... (*|decimalExpression)</em>]</code></p>
 				<br/>
 				<p>A <b>Float</b> type represents floating-point values with a given range of valid values (via the Minimum and Maximum attributes). 
@@ -138,20 +139,20 @@ def multiplicity()
 				<br />The Unit element can hold a physical unit that can be used by applications to ensure physical unit integrity across models.
 				<br />Optionally, the <b>PrimitiveType</b> used to encode the floating-point value may be specified (one of <b>Float32</b> or <b>Float64</b>, where the default is <b>Float64</b>).</p>
 			'''
-			case ga.eventDeclarationAccess.eventKeyword_1: '''
+			case ga.namespaceMemberAccess.eventKeyword_3_11_2: '''
 				<p><code><strong><span style="color: #7f0055;">event</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>simpleType</em>]</code></p>
 				<br/>
 				<p>An <b>Event</b> Type is used to specify the type of an event. 
 				<br />This can be used not only to give a meaningful name to an event type, but also to link it to an existing simple type (via the EventArgs attribute) that is passed as an argument with every invocation of the event.</p>
 			'''
-			case ga.stringDeclarationAccess.stringKeyword_1: '''
+			case ga.namespaceMemberAccess.stringKeyword_3_12_2: '''
 				<p><code><strong><span style="color: #7f0055;">string</span></strong> <em>name</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
 				<br/>
 				<p>A <b>String</b> type represents fixed Length string values base on <b>Char8</b>.
 				<br />The <b>String</b> language element defines an <b>Array</b> of <b>Char8</b> values, but allows a more natural handling of it, e.g. by storing a string value as one string, not as an array of individual characters.
 				<br />As with arrays, SMDL does not allow defining variable-sized strings, as these have the same problems as dynamic arrays (e.g. their size is not know up-front, and their use requires memory allocation).</p>
 			'''
-			case ga.primitiveDeclarationAccess.primitiveKeyword_1: '''
+			case ga.namespaceMemberAccess.primitiveKeyword_3_13_2: '''
 				A number of pre-defined types are needed in order to bootstrap the type system. 
 				<br/>
 				<p>These pre-defined value types are represented by instances of the metaclass <b>PrimitiveType</b>.
@@ -159,17 +160,18 @@ def multiplicity()
 				<br />This is an important restriction, as all values of primitive types may be held in a <b>SimpleValue</b>. 
 				<br />The metaclasses derived from <b>SimpleValue</b>, however, are pre-defined and cannot be extended.</p>
 			'''
-			case ga.nativeDeclarationAccess.nativeKeyword_1: '''
+			case ga.namespaceMemberAccess.nativeKeyword_3_14_2: '''
 				A <b>Native</b> Type specifies a type with any number of platform mappings. It is used to anchor existing or user-defined types into different target platforms. 
 				<p>This mechanism is used within the specification to define the SMDL primitive types with respect to the Metamodel, but it can also be used to define native types within an arbitrary SMDL catalogue for use by models.
 				<br />In the latter case, native types are typically used to bind a model to some external library or existing Application Programming <b>Interface</b> (API).</p>
 			'''
-			case ga.attributeTypeDeclarationAccess.attributeKeyword_1: '''
+			case ga.namespaceMemberAccess.attributeKeyword_3_15_2,
+			case ga.namespaceMemberAccess.attributeKeyword_3_17_2: '''
 				An <b>Attribute</b> Type defines a new type available for adding attributes to elements. 
 				<p><br />The AllowMultiple attribute specifies if a corresponding Attribute may be attached more than once to a language element, while the Usage element defines to which language elements attributes of this type can be attached. 
 				<br />An attribute type always references a value type, and specifies a Default value.</p>
 			'''
-			case ga.enumerationDeclarationAccess.enumKeyword_1: '''
+			case ga.namespaceMemberAccess.enumKeyword_3_16_2: '''
 				<p><code><strong><span style="color: #7f0055;">enum</span></strong> <em>name</em> { }</code></p>
 				<br/>
 				An <b>Enumeration</b> type represents one of a number of pre-defined enumeration literals. 
@@ -188,7 +190,6 @@ def multiplicity()
 				<br />The Input and Output attributes define whether the field value is an input for internal calculations (i.e. needed in order to perform these calculations), or an output of internal calculations (i.e. modified when performing these calculations). 
 				<br />These flags default to false, but can be changed from their default value to support dataflow-based design.</p>
 			'''
-			
 			case ga.constantDeclarationAccess.constantKeyword_1: '''
 				<p><code><strong><span style="color: #7f0055;">constant</span></strong> <em>type name</em>  = valueExpression</code></p>
 				<br/>

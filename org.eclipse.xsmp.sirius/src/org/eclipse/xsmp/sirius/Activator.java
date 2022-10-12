@@ -26,59 +26,27 @@ public class Activator extends AbstractUIPlugin
   // The plug-in ID
   public static final String PLUGIN_ID = "org.eclipse.xsmp.sirius";
 
-  // The shared instance
-  private static Activator plugin;
+  private final Set<Viewpoint> viewpoints = new HashSet<>();
 
-  private static Set<Viewpoint> viewpoints;
-
-  /**
-   * The constructor
-   */
-  public Activator()
-  {
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-   */
   @Override
   public void start(BundleContext context) throws Exception
   {
     super.start(context);
-    plugin = this;
-    viewpoints = new HashSet<>();
     viewpoints.addAll(ViewpointRegistry.getInstance()
             .registerFromPlugin(PLUGIN_ID + "/description/xsmp.odesign"));
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop(BundleContext context) throws Exception
   {
-    plugin = null;
-    if (viewpoints != null)
+
+    for (final Viewpoint viewpoint : viewpoints)
     {
-      for (final Viewpoint viewpoint : viewpoints)
-      {
-        ViewpointRegistry.getInstance().disposeFromPlugin(viewpoint);
-      }
-      viewpoints.clear();
-      viewpoints = null;
+      ViewpointRegistry.getInstance().disposeFromPlugin(viewpoint);
     }
+    viewpoints.clear();
+
     super.stop(context);
   }
 
-  /**
-   * Returns the shared instance
-   *
-   * @return the shared instance
-   */
-  public static Activator getDefault()
-  {
-    return plugin;
-  }
 }

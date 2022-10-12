@@ -49,11 +49,16 @@ class FormatterTest
     Files.write(formatted.getBytes(), out);
 
     final InputStream inputStream = new ByteArrayInputStream(formatted.getBytes());
-    final var br_formatted = new BufferedReader(new InputStreamReader(inputStream));
+    final var referenceStream = getClass().getResource("/reference/FormatterFile.xsmpcat")
+            .openStream();
 
-    final var ref = getClass().getResource("/reference/FormatterFile.xsmpcat").openStream();
-    final var br_ref = new BufferedReader(new InputStreamReader(ref));
+    try (final var br_formatted = new BufferedReader(new InputStreamReader(inputStream)))
+    {
+      try (final var br_ref = new BufferedReader(new InputStreamReader(referenceStream)))
+      {
+        assertLinesMatch(br_ref.lines(), br_formatted.lines());
+      }
+    }
 
-    assertLinesMatch(br_ref.lines(), br_formatted.lines());
   }
 }

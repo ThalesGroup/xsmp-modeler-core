@@ -192,10 +192,10 @@ public class OperationItemProvider extends VisibilityElementItemProvider
     final var ope = (Operation) object;
     if (ope.eContainer() != null)
     {
-      return getResourceLocator().getImage("full/obj16/" + ope.eClass().getName() + "_"
+      return imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_"
               + ope.getRealVisibility().getLiteral() + ".png");
     }
-    return getResourceLocator().getImage("full/obj16/" + ope.eClass().getName() + "_public.png");
+    return imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_public.png");
   }
 
   protected String getParameterType(Parameter p)

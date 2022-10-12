@@ -51,7 +51,7 @@ public class SaveActionsPreferenceAccess
   public boolean isFormatSourceCode(Object context)
   {
     final var preferenceStore = preferenceStoreAccess.getContextPreferenceStore(context);
-    return preferenceStore.contains(PREF_FORMAT) ? preferenceStore.getBoolean(PREF_FORMAT) : true;
+    return !preferenceStore.contains(PREF_FORMAT) || preferenceStore.getBoolean(PREF_FORMAT);
   }
 
   public void setFormatSourceCode(Object context, boolean enabled)
@@ -63,9 +63,8 @@ public class SaveActionsPreferenceAccess
   public boolean isOrganizeImports(Object context)
   {
     final var preferenceStore = preferenceStoreAccess.getContextPreferenceStore(context);
-    return preferenceStore.contains(PREF_ORGANIZE_IMPORTS)
-            ? preferenceStore.getBoolean(PREF_ORGANIZE_IMPORTS)
-            : true;
+    return !preferenceStore.contains(PREF_ORGANIZE_IMPORTS)
+            || preferenceStore.getBoolean(PREF_ORGANIZE_IMPORTS);
   }
 
   public void setOrganizeImports(Object context, boolean enabled)
@@ -77,9 +76,8 @@ public class SaveActionsPreferenceAccess
   public boolean isUpdateDocumentDate(Object context)
   {
     final var preferenceStore = preferenceStoreAccess.getContextPreferenceStore(context);
-    return preferenceStore.contains(PREF_UPDATE_DOCUMENT_DATE)
-            ? preferenceStore.getBoolean(PREF_UPDATE_DOCUMENT_DATE)
-            : true;
+    return !preferenceStore.contains(PREF_UPDATE_DOCUMENT_DATE)
+            || preferenceStore.getBoolean(PREF_UPDATE_DOCUMENT_DATE);
   }
 
   public void setUpdateDocumentDate(Object context, boolean enabled)

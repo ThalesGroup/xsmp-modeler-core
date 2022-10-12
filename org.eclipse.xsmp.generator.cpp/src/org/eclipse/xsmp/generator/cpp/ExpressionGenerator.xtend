@@ -86,11 +86,11 @@ class ExpressionGenerator {
 
 		switch (expectedType.primitiveType ) {
 			// convert DateTime and Duration to a number of ns
-			case DateTime: {
+			case DATE_TIME: {
 				val i = Instant.parse(XsmpUtil.getString(t))
 				'''«i.epochSecond * 1_000_000_000 + i.nano»UL'''
 			}
-			case Duration: {
+			case DURATION: {
 				val i = Duration.parse(XsmpUtil.getString(t))
 				'''«i.seconds * 1_000_000_000 + i.nano»UL'''
 			}

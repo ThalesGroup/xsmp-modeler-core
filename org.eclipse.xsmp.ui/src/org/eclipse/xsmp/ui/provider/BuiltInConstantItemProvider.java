@@ -58,7 +58,7 @@ public class BuiltInConstantItemProvider extends BuiltInExpressionItemProvider
   @Override
   public Object getImage(Object object)
   {
-    return overlayImage(object, getResourceLocator().getImage("full/obj16/BuiltInConstant"));
+    return overlayImage(object, imageHelper.getImage("full/obj16/BuiltInConstant"));
   }
 
   /**

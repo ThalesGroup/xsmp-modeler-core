@@ -77,8 +77,11 @@ public class FloatingLiteralImplCustom extends FloatingLiteralImpl
     }
     catch (final NumberFormatException e)
     {
-      acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-              XcataloguePackage.Literals.FLOATING_LITERAL__TEXT, -1, "NumberFormatException");
+      if (acceptor != null)
+      {
+        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
+                XcataloguePackage.Literals.FLOATING_LITERAL__TEXT, -1, "NumberFormatException");
+      }
       return null;
     }
   }
@@ -106,8 +109,11 @@ public class FloatingLiteralImplCustom extends FloatingLiteralImpl
     }
     catch (final NumberFormatException e)
     {
-      acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-              XcataloguePackage.Literals.FLOATING_LITERAL__TEXT, -1, "NumberFormatException");
+      if (acceptor != null)
+      {
+        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
+                XcataloguePackage.Literals.FLOATING_LITERAL__TEXT, -1, "NumberFormatException");
+      }
       return null;
     }
 

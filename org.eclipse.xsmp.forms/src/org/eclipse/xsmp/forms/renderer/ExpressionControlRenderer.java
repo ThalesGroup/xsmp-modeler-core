@@ -49,7 +49,7 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
         implements FocusListener
 {
 
-  private final static String RESOURCESET_KEY = "RESOURCESET_KEY";
+  private static final String RESOURCESET_KEY = "RESOURCESET_KEY";
 
   /**
    * Default constructor.
@@ -244,7 +244,6 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
     }
     catch (final DatabindingFailedException e1)
     {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
 
@@ -253,14 +252,6 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
   @Override
   protected Binding[] createBindings(Control control) throws DatabindingFailedException
   {
-    /*
-     * final IObservableValue value = SWTObservables.observeText(getText(), SWT.FocusOut); final
-     * NumericalTargetToModelUpdateStrategy targetToModelStrategy = new
-     * NumericalTargetToModelUpdateStrategy(); final NumericalModelToTargetUpdateStrategy
-     * modelToTargetStrategy = new NumericalModelToTargetUpdateStrategy(); final Binding binding =
-     * getDataBindingContext().bindValue(value, getModelValue(), targetToModelStrategy,
-     * modelToTargetStrategy);
-     */
     return new Binding[]{};
   }
 

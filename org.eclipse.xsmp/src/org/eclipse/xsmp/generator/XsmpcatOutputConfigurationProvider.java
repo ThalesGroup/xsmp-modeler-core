@@ -14,12 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.extension.IExtensionConfigurationProvider;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
-
-import com.google.inject.Inject;
 
 /**
  * Default configuration for output folders used in the generator
@@ -29,8 +26,8 @@ import com.google.inject.Inject;
 public class XsmpcatOutputConfigurationProvider extends OutputConfigurationProvider
 {
 
-  @Inject(optional = true)
-  private IExtensionConfigurationProvider extensionProvider;
+  // @Inject(optional = true)
+  // private IExtensionConfigurationProvider extensionProvider;
 
   @Override
   public Set<OutputConfiguration> getOutputConfigurations()
@@ -55,10 +52,8 @@ public class XsmpcatOutputConfigurationProvider extends OutputConfigurationProvi
   @Override
   public Set<OutputConfiguration> getOutputConfigurations(Resource context)
   {
-    extensionProvider.getOutputConfigurationProviders(context);// .forEach(g ->
-                                                               // g.doGenerate(resource, fsa,
-                                                               // context));
-    // TODO merge conf
+    // extensionProvider.getOutputConfigurationProviders(context);
+
     return super.getOutputConfigurations(context);
   }
 

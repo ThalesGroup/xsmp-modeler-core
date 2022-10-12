@@ -399,6 +399,10 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       }
       ctx = ctx.eContainer();
     }
+    if (expectedType == null)
+    {
+      return;
+    }
     for (var i = parents.size() - 1; i >= 0; i--)
     {
       final var parent = parents.get(i);
@@ -419,7 +423,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
             }
           }
           final var field = structure.getMember().stream().filter(Field.class::isInstance)
-                  .map(Field.class::cast).skip(index).findFirst().get();
+                  .map(Field.class::cast).skip(index).findFirst().orElse(null);
           if (field != null)
           {
             expectedType = field.getType();

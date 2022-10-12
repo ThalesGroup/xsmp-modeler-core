@@ -44,8 +44,6 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
   @Inject
   private IDialogSettings dialogSettings;
 
-  private PixelConverter fPixelConverter;
-
   @Override
   public void setProject(IProject project)
   {
@@ -56,7 +54,7 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
   @Override
   protected Control doCreateContents(Composite parent)
   {
-    fPixelConverter = new PixelConverter(parent);
+    final var pixelConverter = new PixelConverter(parent);
     setShell(parent.getShell());
 
     final var mainComp = new Composite(parent, SWT.NONE);
@@ -68,7 +66,7 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
 
     final var commonComposite = createStyleTabContent(mainComp);
     final var gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-    gridData.heightHint = fPixelConverter.convertHeightInCharsToPixels(20);
+    gridData.heightHint = pixelConverter.convertHeightInCharsToPixels(20);
     commonComposite.setLayoutData(gridData);
     validateSettings(null, null, null);
     registerKey(getIsProjectSpecificPropertyKey(getPropertyPrefix()));
@@ -97,15 +95,13 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
     description.setLayoutData(
             new GridData(GridData.BEGINNING, GridData.CENTER, true, false, nColumns - 1, 1));
 
-    // fillSettingsPage(composite, nColumns, 0);
-    // addAdditionalComponentsToSettingsPage(composite, nColumns, 0);
     addCheckBox(composite, "Format source code", SaveActionsPreferenceAccess.PREF_FORMAT,
             BOOLEAN_VALUES, 0);
     addCheckBox(composite, "Organize imports", SaveActionsPreferenceAccess.PREF_ORGANIZE_IMPORTS,
             BOOLEAN_VALUES, 0);
     addCheckBox(composite, "Update document date",
             SaveActionsPreferenceAccess.PREF_UPDATE_DOCUMENT_DATE, BOOLEAN_VALUES, 0);
-    new Label(composite, SWT.NONE); // TODO what's this?
+    new Label(composite, SWT.NONE);
     restoreSectionExpansionStates(getDialogSettings());
     return sc1;
   }
@@ -120,15 +116,13 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
   @Override
   protected Job getBuildJob(IProject project)
   {
-
     return null;
   }
 
   @Override
   protected String[] getFullBuildDialogStrings(boolean workspaceSettings)
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new String[0];
   }
 
   protected IDialogSettings getDialogSettings()
@@ -148,6 +142,7 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
   @Override
   protected void validateSettings(String changedKey, String oldValue, String newValue)
   {
+    // ignore
   }
 
   @Override

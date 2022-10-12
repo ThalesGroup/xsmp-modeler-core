@@ -26,6 +26,12 @@ import org.eclipse.xtext.validation.ValidationMessageAcceptor;
  */
 public class ModifierValidator
 {
+  public static final String PUBLIC_MODIFIER = "public";
+
+  public static final String PROTECTED_MODIFIER = "protected";
+
+  public static final String PRIVATE_MODIFIER = "private";
+
   private final Set<String> allowedModifiers;
 
   private final String allowedModifiersAsString;
@@ -61,38 +67,38 @@ public class ModifierValidator
         error("Illegal modifier for the " + memberName + allowedModifiersAsString, member, i,
                 acceptor);
       }
-      if (seenModifiers.contains(modifier))
+      if (!seenModifiers.add(modifier))
       {
         error("Duplicate modifier '" + modifier + "' for the " + memberName, member, i, acceptor);
+        continue;
       }
-      else
-      {
-        seenModifiers.add(modifier);
 
-        switch (modifier)
-        {
-          case "public":
-          case "protected":
-          case "private":
-            if (visibilitySeen)
-            {
-              error("The " + memberName + " can only set one of public / protected / private",
-                      member, i, acceptor);
-            }
-            visibilitySeen = true;
-            break;
-          case "readWrite":
-          case "readOnly":
-          case "writeOnly":
-            if (accessSeen)
-            {
-              error("The " + memberName + " can only set one of readWrite / readOnly / writeOnly",
-                      member, i, acceptor);
-            }
-            accessSeen = true;
-            break;
-        }
+      switch (modifier)
+      {
+        case PUBLIC_MODIFIER:
+        case PROTECTED_MODIFIER:
+        case PRIVATE_MODIFIER:
+          if (visibilitySeen)
+          {
+            error("The " + memberName + " can only set one of public / protected / private", member,
+                    i, acceptor);
+          }
+          visibilitySeen = true;
+          break;
+        case "readWrite":
+        case "readOnly":
+        case "writeOnly":
+          if (accessSeen)
+          {
+            error("The " + memberName + " can only set one of readWrite / readOnly / writeOnly",
+                    member, i, acceptor);
+          }
+          accessSeen = true;
+          break;
+        default:
+          break;
       }
+
     }
   }
 

@@ -138,17 +138,17 @@ public class FieldItemProvider extends VisibilityElementItemProvider
     final var elem = (Field) object;
 
     final List<Object> images = new ArrayList<>(2);
-    images.add(getResourceLocator()
+    images.add(imageHelper
             .getImage("full/obj16/Field_" + elem.getRealVisibility().getLiteral() + ".png"));
 
     if (elem.isInput())
     {
-      images.add(getResourceLocator().getImage("full/ovr16/input.png"));
+      images.add(imageHelper.getImage("full/ovr16/input.png"));
     }
 
     if (elem.isOutput())
     {
-      images.add(getResourceLocator().getImage("full/ovr16/output.png"));
+      images.add(imageHelper.getImage("full/ovr16/output.png"));
     }
 
     return new ComposedImage(images);

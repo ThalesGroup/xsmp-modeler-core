@@ -37,7 +37,8 @@ import com.google.inject.Singleton;
 public class XsmpcatCrossReferenceTemplateVariableResolver
         extends CrossReferenceTemplateVariableResolver
 {
-  private static final Logger log = Logger.getLogger(CrossReferenceTemplateVariableResolver.class);
+  private static final Logger log = Logger
+          .getLogger(XsmpcatCrossReferenceTemplateVariableResolver.class);
 
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;

@@ -120,13 +120,16 @@ public class DefaultValidator extends AbstractXsmpcatValidator
           "virtual", "void", "volatile", "wchar_t", "while", "xor", "xor_eq").build();
 
   private final ModifierValidator associationElementModifierValidator = new ModifierValidator(
-          newArrayList("public", "protected", "private"));
+          newArrayList(ModifierValidator.PUBLIC_MODIFIER, ModifierValidator.PROTECTED_MODIFIER,
+                  ModifierValidator.PRIVATE_MODIFIER));
 
   private final ModifierValidator classModifierValidator = new ModifierValidator(
-          newArrayList("public", "protected", "private", "abstract"));
+          newArrayList(ModifierValidator.PUBLIC_MODIFIER, ModifierValidator.PROTECTED_MODIFIER,
+                  ModifierValidator.PRIVATE_MODIFIER, "abstract"));
 
   private final ModifierValidator constantElementModifierValidator = new ModifierValidator(
-          newArrayList("public", "protected", "private"));
+          newArrayList(ModifierValidator.PUBLIC_MODIFIER, ModifierValidator.PROTECTED_MODIFIER,
+                  ModifierValidator.PRIVATE_MODIFIER));
 
   private final ModifierValidator constantInInterfaceOrStructureElementModifierValidator = new ModifierValidator(
           newArrayList());
@@ -649,8 +652,8 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     {
       switch (kind)
       {
-        case Float64:
-        case Float32:
+        case FLOAT64:
+        case FLOAT32:
           break;
         default:
           error("Expecting a Floating Point Type, got " + kind.name() + ".",
@@ -698,35 +701,35 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     {
       switch (kind)
       {
-        case Int16:
+        case INT16:
           baseTypeMin = ExpressionValidator.INT16_MIN;
           baseTypeMax = ExpressionValidator.INT16_MAX;
           break;
-        case Int32:
+        case INT32:
           baseTypeMin = ExpressionValidator.INT32_MIN;
           baseTypeMax = ExpressionValidator.INT32_MAX;
           break;
-        case Int64:
+        case INT64:
           baseTypeMin = ExpressionValidator.INT64_MIN;
           baseTypeMax = ExpressionValidator.INT64_MAX;
           break;
-        case Int8:
+        case INT8:
           baseTypeMin = ExpressionValidator.INT8_MIN;
           baseTypeMax = ExpressionValidator.INT8_MAX;
           break;
-        case UInt16:
+        case UINT16:
           baseTypeMin = ExpressionValidator.UINT16_MIN;
           baseTypeMax = ExpressionValidator.UINT16_MAX;
           break;
-        case UInt32:
+        case UINT32:
           baseTypeMin = ExpressionValidator.UINT32_MIN;
           baseTypeMax = ExpressionValidator.UINT32_MAX;
           break;
-        case UInt64:
+        case UINT64:
           baseTypeMin = ExpressionValidator.UINT64_MIN;
           baseTypeMax = ExpressionValidator.UINT64_MAX;
           break;
-        case UInt8:
+        case UINT8:
           baseTypeMin = ExpressionValidator.UINT8_MIN;
           baseTypeMax = ExpressionValidator.UINT8_MAX;
           break;

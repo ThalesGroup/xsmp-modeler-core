@@ -299,6 +299,8 @@ public class XsmpcatdocContentAccess
         case '>':
           rep = "&gt;"; //$NON-NLS-1$
           break;
+        default:
+          break;
       }
       if (rep != null)
       {

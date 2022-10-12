@@ -28,11 +28,10 @@ ImportDeclaration:
 	| 'namespace' importedNamespace=[Namespace|QualifiedName]);
 
 Attribute:
-    AttributeDeclaration (=>'(' value=Expression? ')')?;
+	AttributeDeclaration (=>'(' value=Expression? ')')?;
 
 fragment AttributeDeclaration * hidden(ML_COMMENT, SL_COMMENT):
 	'@' (type=[Type|QualifiedName] | WS);
-
 
 Metadatum:
 	{Metadatum}
@@ -43,123 +42,32 @@ Namespace returns ecore::EObject:
 	{Metadatum}
 	documentation=ML_DOCUMENTATION?
 	metadata+=Attribute*
-	{Namespace.metadatum=current} NamespaceDeclaration;
-
-enum RangeKind:
-	Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
-
-
-fragment NamespaceDeclaration *:
-	'namespace' name=ValidID
+	{Namespace.metadatum=current} 'namespace' name=ValidID
 	'{'
 	member+=NamespaceMember*
 	'}';
 
-fragment StructureDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'struct' name=ValidID
-	StructBody;
+enum RangeKind:
+	Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
 
 fragment StructBody *:
 	'{'
 	member+=StructMember*
 	'}';
 
-fragment ClassDeclaration *:
-	modifiers+=ClassModifiers*
-	'class' name=ValidID (=>'extends' base=[Type|QualifiedName])?
-	ClassBody;
-
 fragment ClassBody *:
 	'{'
 	member+=ClassMember*
 	'}';
-
-fragment ExceptionDeclaration *:
-	modifiers+=ClassModifiers*
-	'exception' name=ValidID (=>'extends' base=[Type|QualifiedName])?
-	ClassBody;
-
-fragment InterfaceDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'interface' name=ValidID (=>'extends' base+=[Type|QualifiedName] (=>',' base+=[Type|QualifiedName])*)?
-	InterfaceBody;
 
 fragment InterfaceBody *:
 	'{'
 	member+=InterfaceMember*
 	'}';
 
-fragment ModelDeclaration *:
-	modifiers+=ClassModifiers*
-	'model' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (=>','
-	interface+=[Type|QualifiedName])*)?
-	ComponentBody;
-
 fragment ComponentBody *:
 	'{'
 	member+=ComponentMember*
-	'}';
-
-fragment ServiceDeclaration *:
-	modifiers+=ClassModifiers*
-	'service' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (=>','
-	interface+=[Type|QualifiedName])*)?
-	ComponentBody;
-
-fragment ArrayDeclaration *:
-	modifiers+=VisibilityModifiers*
-	(=>('array' | 'using') name=ValidID '='
-	itemType=[Type|QualifiedName] '[') size=Expression? ']';
-
-fragment ValueReferenceDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'using' name=ValidID '=' type=[Type|QualifiedName] '*';
-
-fragment IntegerDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'integer' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*') '...'
-	(maximum=Expression | '*'))?;
-
-fragment FloatDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'float' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*')
-	range=RangeKind (maximum=Expression | '*'))?;
-
-fragment EventDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'event' name=ValidID (=>'extends' eventArgs=[Type|QualifiedName])?;
-
-fragment StringDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'string' name=ValidID '[' length=Expression? ']';
-
-fragment PrimitiveDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'primitive' name=ValidID;
-
-fragment NativeDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'native' name=ValidID;
-
-// This rule is deprecated and will be removed in a future release.
-// use AttributeTypeDeclaration
-// TODO to be removed
-fragment AttributeTypeDeclarationDeprecated *:
-    modifiers+=VisibilityModifiers*
-    'attribute' name=ValidID
-    '{'
-    type=[ValueType|QualifiedName] ValidID '?'? ('=' default=Expression)?
-    '}';
-fragment AttributeTypeDeclaration *:
-    modifiers+=VisibilityModifiers*
-    'attribute' modifiers+=VisibilityModifiers* type=[ValueType|QualifiedName] name=ValidID (=>'=' default=Expression)?;
-    
-fragment EnumerationDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'enum' name=ValidID
-	'{'
-	(literal+=EnumerationLiteral (',' literal+=EnumerationLiteral)* (',')?)?
 	'}';
 
 fragment ConstantDeclaration *:
@@ -170,42 +78,83 @@ NamespaceMember returns ecore::EObject:
 	{Metadatum}
 	documentation=ML_DOCUMENTATION?
 	metadata+=Attribute*
-	({Namespace.metadatum=current} NamespaceDeclaration
+	({Namespace.metadatum=current} 'namespace' name=ValidID
+	'{'
+	member+=NamespaceMember*
+	'}'
 	|
-	{Structure.metadatum=current} StructureDeclaration
+	{Structure.metadatum=current} modifiers+=VisibilityModifiers*
+	'struct' name=ValidID
+	StructBody
 	|
-	{Class.metadatum=current} ClassDeclaration
+	{Class.metadatum=current} modifiers+=ClassModifiers*
+	'class' name=ValidID (=>'extends' base=[Type|QualifiedName])?
+	ClassBody
 	|
-	{Exception.metadatum=current} ExceptionDeclaration
+	{Exception.metadatum=current} modifiers+=ClassModifiers*
+	'exception' name=ValidID (=>'extends' base=[Type|QualifiedName])?
+	ClassBody
 	|
-	{Interface.metadatum=current} InterfaceDeclaration
+	{Interface.metadatum=current} modifiers+=VisibilityModifiers*
+	'interface' name=ValidID (=>'extends' base+=[Type|QualifiedName] (=>',' base+=[Type|QualifiedName])*)?
+	InterfaceBody
 	|
-	{Model.metadatum=current} ModelDeclaration
+	{Model.metadatum=current} modifiers+=ClassModifiers*
+	'model' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (=>','
+	interface+=[Type|QualifiedName])*)?
+	ComponentBody
 	|
-	{Service.metadatum=current} ServiceDeclaration
+	{Service.metadatum=current} modifiers+=ClassModifiers*
+	'service' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (
+	=>','
+	interface+=[Type|QualifiedName])*)?
+	ComponentBody
 	|
-	{Array.metadatum=current} ArrayDeclaration
+	{Array.metadatum=current} modifiers+=VisibilityModifiers*
+	(=>('array' | 'using') name=ValidID '='
+	itemType=[Type|QualifiedName] '[') size=Expression? ']'
 	|
-	{ValueReference.metadatum=current} ValueReferenceDeclaration
+	{ValueReference.metadatum=current} modifiers+=VisibilityModifiers*
+	'using' name=ValidID '=' type=[Type|QualifiedName] '*'
 	|
-	{Integer.metadatum=current} IntegerDeclaration
+	{Integer.metadatum=current} modifiers+=VisibilityModifiers*
+	'integer' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*') '...'
+	(maximum=Expression | '*'))?
 	|
-	{Float.metadatum=current} FloatDeclaration
+	{Float.metadatum=current} modifiers+=VisibilityModifiers*
+	'float' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*')
+	range=RangeKind (maximum=Expression | '*'))?
 	|
-	{EventType.metadatum=current} EventDeclaration
+	{EventType.metadatum=current} modifiers+=VisibilityModifiers*
+	'event' name=ValidID (=>'extends' eventArgs=[Type|QualifiedName])?
 	|
-	{String.metadatum=current} StringDeclaration
+	{String.metadatum=current} modifiers+=VisibilityModifiers*
+	'string' name=ValidID '[' length=Expression? ']'
 	|
-	{PrimitiveType.metadatum=current} PrimitiveDeclaration
+	{PrimitiveType.metadatum=current} modifiers+=VisibilityModifiers*
+	'primitive' name=ValidID
 	|
-	{NativeType.metadatum=current} NativeDeclaration
+	{NativeType.metadatum=current} modifiers+=VisibilityModifiers*
+	'native' name=ValidID
 	|
-	{AttributeType.metadatum=current} AttributeTypeDeclaration
+	{AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
+	'attribute' modifiers+=VisibilityModifiers* type=[ValueType|QualifiedName] name=ValidID (=>'=' default=Expression)?
 	|
-	{Enumeration.metadatum=current} EnumerationDeclaration
-	 |
-	 // TODO to be removed in a future release
-	{AttributeType.metadatum=current} AttributeTypeDeclarationDeprecated);
+	{Enumeration.metadatum=current} modifiers+=VisibilityModifiers*
+	'enum' name=ValidID
+	'{'
+	(literal+=EnumerationLiteral (',' literal+=EnumerationLiteral)* (',')?)?
+	'}'
+	|
+// This rule is deprecated and will be removed in a future release.
+// use AttributeTypeDeclaration
+// TODO to be removed
+	{AttributeType.metadatum=current}
+	modifiers+=VisibilityModifiers*
+	'attribute' name=ValidID
+	'{'
+	type=[ValueType|QualifiedName] ValidID '?'? ('=' default=Expression)?
+	'}');
 
 fragment PropertyDeclaration *:
 	modifiers+=PropertyModifiers*
@@ -330,12 +279,12 @@ EnumerationLiteral:
 	metadatum=Metadatum
 	name=ValidID '=' value=Expression;
 
-ParameterMetadatum returns Metadatum: 
-    {Metadatum}
-    // do not provide documentation at parameter level( see @param tag in operation)
-    // documentation=ML_DOCUMENTATION?
-    metadata+=Attribute*;
-    
+ParameterMetadatum returns Metadatum:
+	{Metadatum}
+	// do not provide documentation at parameter level( see @param tag in operation)
+	// documentation=ML_DOCUMENTATION?
+	metadata+=Attribute*;
+
 ReturnParameter returns Parameter:
 	metadatum=ParameterMetadatum
 	type=[Type|QualifiedName] name=ValidID?;
@@ -358,10 +307,8 @@ ValidID:
 QualifiedName:
 	ValidID (=>'.' ValidID)*;
 
-
 Expression:
 	OrExpression;
-
 
 OrExpression returns Expression:
 	AndExpression (=>({BinaryOperation.leftOperand=current} feature=OpOr) rightOperand=AndExpression)*;
@@ -604,7 +551,6 @@ terminal fragment SCHAR:
 	!('"' | '\\' | '\r' | '\n')
 	| ESCAPESEQUENCE
 	| UNIVERSAL_CHARACTER_NAME;
-
 
 terminal WS:
 	(' ' | '\t' | NEW_LINE)+;

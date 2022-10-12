@@ -115,6 +115,7 @@ public class XsmpcatSemanticHighlightingCalculator extends DefaultSemanticHighli
       }
       catch (final Exception e)
       {
+        // ignore
       }
     }
   }

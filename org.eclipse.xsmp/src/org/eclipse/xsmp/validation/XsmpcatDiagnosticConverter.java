@@ -100,10 +100,14 @@ public class XsmpcatDiagnosticConverter extends DiagnosticConverterImpl
                 .skip(index > 0 ? index : 0).findFirst().orElseGet(() -> null);
         if (tag == null)
         {
-          return super.getLocationData(obj, structuralFeature, index);
+          continue;
         }
         final var offset = tag.getStartPosition() + node.getTotalOffset();
         final var length = tag.getLength();
+        if (length == 0)
+        {
+          continue;
+        }
 
         final var result = new IssueLocation();
         result.offset = offset;

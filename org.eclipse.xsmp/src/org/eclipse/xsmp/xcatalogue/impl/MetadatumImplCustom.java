@@ -44,7 +44,8 @@ public class MetadatumImplCustom extends MetadatumImpl
   @Override
   public String getDocumentation()
   {
-    return xsmpcatdoc.toString();
+    final var result = xsmpcatdoc.toString();
+    return result.isEmpty() ? null : result;
   }
 
 } // MetadatumImplCustom

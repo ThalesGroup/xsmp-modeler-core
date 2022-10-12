@@ -73,24 +73,24 @@ public class DefaultValueProvider
       case XcataloguePackage.PRIMITIVE_TYPE:
         switch (typeUtil.getPrimitiveType((PrimitiveType) t))
         {
-          case Bool:
+          case BOOL:
             return "false";
-          case Float32:
-          case Float64:
+          case FLOAT32:
+          case FLOAT64:
             return "0.0";
-          case DateTime:
-          case Duration:
-          case Int16:
-          case Int32:
-          case Int64:
-          case Int8:
-          case UInt16:
-          case UInt32:
-          case UInt64:
-          case UInt8:
+          case DATE_TIME:
+          case DURATION:
+          case INT16:
+          case INT32:
+          case INT64:
+          case INT8:
+          case UINT16:
+          case UINT32:
+          case UINT64:
+          case UINT8:
             return "0";
-          case Char8:
-          case String8:
+          case CHAR8:
+          case STRING8:
             return "\"\"";
           default:
             break;

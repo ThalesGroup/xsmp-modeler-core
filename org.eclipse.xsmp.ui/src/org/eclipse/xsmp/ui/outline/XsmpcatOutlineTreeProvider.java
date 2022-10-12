@@ -13,9 +13,9 @@ package org.eclipse.xsmp.ui.outline;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
@@ -33,12 +33,6 @@ public class XsmpcatOutlineTreeProvider extends DefaultOutlineTreeProvider
 
     createEStructuralFeatureNode(parentNode, doc, XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
             imageDispatcher.invoke(doc), textDispatcher.invoke(doc), true);
-
-    /*
-     * do not show imports in outline final ImportSection imports = doc.getImportSection(); if
-     * (imports != null) { for (final EObject m : imports.getImportDeclarations()) {
-     * createNode(parentNode, m); } }
-     */
 
     for (final EObject m : doc.getMember())
     {

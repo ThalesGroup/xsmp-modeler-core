@@ -84,8 +84,11 @@ public class IntegerLiteralImplCustom extends IntegerLiteralImpl
     }
     catch (final NumberFormatException e)
     {
-      acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-              XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
+      if (acceptor != null)
+      {
+        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
+                XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
+      }
       return null;
     }
   }
@@ -99,8 +102,11 @@ public class IntegerLiteralImplCustom extends IntegerLiteralImpl
     }
     catch (final NumberFormatException e)
     {
-      acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-              XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
+      if (acceptor != null)
+      {
+        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
+                XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
+      }
       return null;
     }
   }

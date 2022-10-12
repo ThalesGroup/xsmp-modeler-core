@@ -100,7 +100,7 @@ public class ConstantItemProvider extends VisibilityElementItemProvider
 
     final var elem = (VisibilityElement) object;
 
-    return getResourceLocator()
+    return imageHelper
             .getImage("full/obj16/Constant_" + elem.getRealVisibility().getLiteral() + ".png");
   }
 

@@ -65,24 +65,24 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
 	override Publish(Field element) {
 		if (element.type instanceof PrimitiveType)
 			switch (xsmpUtil.getPrimitiveType(element.type as PrimitiveType)) {
-				case Bool,
-				case Char8,
-				case Float32,
-				case Float64,
-				case Int16,
-				case Int32,
-				case Int64,
-				case Int8,
-				case UInt16,
-				case UInt32,
-				case UInt64,
-				case UInt8: {
+				case BOOL,
+				case CHAR8,
+				case FLOAT32,
+				case FLOAT64,
+				case INT16,
+				case INT32,
+				case INT64,
+				case INT8,
+				case UINT16,
+				case UINT32,
+				case UINT64,
+				case UINT8: {
 					'''
 						// Publish field «element.name»
 						receiver->PublishField("«element.name»", «element.description()», &«element.name»,  «element.viewKind», «!element.transient», «element.input», «element.output»);
 					'''
 				}
-				case String8: {
+				case STRING8: {
 					'''
 						// Publish field «element.name»
 						/* There is no publishing call for String8 as it relies on dynamically allocated memory areas, hence cannot be published like the other primitive types. */

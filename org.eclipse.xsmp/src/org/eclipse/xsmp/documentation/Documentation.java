@@ -23,13 +23,9 @@ public class Documentation
     other.tags.forEach(t -> tags.add(new TagElement(t)));
   }
 
-  /**
-   * @test @deprecated
-   * @param text
-   */
   public Documentation(String text)
   {
-    if (text == null)
+    if (text == null || text.isEmpty())
     {
       return;
     }
@@ -184,10 +180,6 @@ public class Documentation
     return offset;
   }
 
-  /**
-   * totto
-   * titi
-   */
   @Override
   public String toString()
   {
@@ -196,7 +188,7 @@ public class Documentation
 
     if (tags.isEmpty())
     {
-      return null;
+      return "";
     }
     sb.append("/**");
     final var multiline = tags.size() > 1 || tags.get(0).fragments().size() > 1;

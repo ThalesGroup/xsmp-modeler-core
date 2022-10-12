@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.xsmp</groupId>
 	<version>1.1.0-SNAPSHOT</version>
@@ -13,19 +12,26 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>2.6.0</tycho-version>
+		<tycho-version>2.7.5</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
 		<systemProperties></systemProperties>
 		<additionalTestArguments></additionalTestArguments>
+
+
+		<jacoco-version>0.8.8</jacoco-version>
+		<sonar.organization>thalesgroup</sonar.organization>
+		<sonar.projectName>xsmp-modeler-core</sonar.projectName>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/org.eclipse.xsmp.report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<modules>
 		<module>org.eclipse.xsmp.feature</module>
 		<module>org.eclipse.xsmp.repository</module>
 		<module>org.eclipse.xsmp.target</module>
 		<module>org.eclipse.xsmp</module>
-        <module>org.eclipse.xsmp.generator.cpp</module>
+		<module>org.eclipse.xsmp.generator.cpp</module>
 		<module>org.eclipse.xsmp.lib</module>
 		<module>org.eclipse.xsmp.forms</module>
 		<module>org.eclipse.xsmp.ide</module>
@@ -33,6 +39,7 @@
 		<module>org.eclipse.xsmp.tests</module>
 		<module>org.eclipse.xsmp.ui</module>
 		<module>org.eclipse.xsmp.ui.tests</module>
+		<module>org.eclipse.xsmp.report</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -64,18 +71,11 @@
 							<goal>plugin-source</goal>
 						</goals>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
 					<execution>
 						<id>source-feature</id>
 						<phase>package</phase>
 						<goals>
-							<goal>source-feature</goal>
+							<goal>feature-source</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -84,15 +84,6 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>attach-p2-metadata</id>
-						<phase>package</phase>
-						<goals>
-							<goal>p2-metadata</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -155,9 +146,33 @@
 					</dependency-resolution>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration></configuration>
+				<executions>
+					<execution>
+						<id>prepare</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-version}</version>
+				</plugin>
 				<plugin>
 					<groupId>org.eclipse.xtend</groupId>
 					<artifactId>xtend-maven-plugin</artifactId>
@@ -175,6 +190,7 @@
 					<configuration>
 						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
 						<testOutputDirectory>${basedir}/xtend-gen</testOutputDirectory>
+						<showEmptyDirWarning>false</showEmptyDirWarning>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -365,14 +381,39 @@
 				<moduleProperties>--add-modules=ALL-SYSTEM</moduleProperties>
 			</properties>
 		</profile>
+
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<!-- This will be set by Jacoco prepare-agent goal -->
+				<additionalTestArguments>${tycho.testArgLine}</additionalTestArguments>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-version}</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>report-aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
-	<dependencies>
-	</dependencies>
+	<dependencies></dependencies>
 	<!-- ================================= -->
 	<!-- ==== DISTRIBUTION Management ==== -->
 	<!-- ================================= -->
-	<distributionManagement>
-
-	</distributionManagement>
+	<distributionManagement></distributionManagement>
 
 </project>

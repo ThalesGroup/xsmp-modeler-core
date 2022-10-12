@@ -40,7 +40,7 @@ public class MdkConfigurationBlock extends OptionsConfigurationBlock
 
   protected static final int INDENT_AMOUNT = 32;
 
-  public static final String SETTINGS_SECTION_NAME = "BuilderConfigurationBlock"; //$NON-NLS-1$
+  public static final String SETTINGS_SECTION_NAME = "XsmpcatBuilderConfigurationBlock"; //$NON-NLS-1$
 
   public static final String PROPERTY_PREFIX = "BuilderConfiguration";
 
@@ -82,12 +82,6 @@ public class MdkConfigurationBlock extends OptionsConfigurationBlock
 
     final var composite = pageContent.getBody();
     composite.setLayout(layout);
-    // final var label = Messages.BuilderConfigurationBlock_GeneralSection_Label;
-    // final var excomposite = createStyleSection(composite, label, columns);
-
-    // final var othersComposite = new Composite(excomposite, SWT.NONE);
-    // excomposite.setClient(othersComposite);
-    // othersComposite.setLayout(new GridLayout(columns, false));
 
     createGeneralSectionItems(composite);
 
@@ -152,6 +146,7 @@ public class MdkConfigurationBlock extends OptionsConfigurationBlock
   @Override
   protected void validateSettings(String changedKey, String oldValue, String newValue)
   {
+    // ignore
   }
 
   @Override

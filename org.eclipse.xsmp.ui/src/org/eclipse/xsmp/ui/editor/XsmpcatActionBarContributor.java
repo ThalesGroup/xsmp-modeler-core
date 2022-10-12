@@ -75,7 +75,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
       }
       catch (final PartInitException exception)
       {
-        // XsmpUIPlugin.getInstance().log(exception);
+        XsmpcatUIPlugin.getInstance().getLog().error("PartInitException", exception);
       }
     }
   };

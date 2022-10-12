@@ -13,7 +13,6 @@ package org.eclipse.xsmp.ui.mdk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -22,20 +21,20 @@ import com.google.inject.Injector;
 
 public class MdkHelper
 {
-  public static MdkHelper INSTANCE = new MdkHelper();
+  public static final MdkHelper INSTANCE = new MdkHelper();
 
-  private final String MDK_SETTING = "mdk";
+  private static final String MDK_SETTING = "mdk";
 
-  private final IConfigurationElement[] MDK_EXTENSIONS;
+  private final IConfigurationElement[] extensions;
 
   private final Map<String, Injector> extensionMap = new HashMap<>();
 
   private MdkHelper()
   {
-    MDK_EXTENSIONS = Platform.getExtensionRegistry()
+    extensions = Platform.getExtensionRegistry()
             .getConfigurationElementsFor("org.eclipse.xsmp.ui.mdk");
 
-    for (final IConfigurationElement e : MDK_EXTENSIONS)
+    for (final IConfigurationElement e : extensions)
     {
       try
       {
@@ -60,7 +59,7 @@ public class MdkHelper
 
   public IConfigurationElement[] getExtensions()
   {
-    return MDK_EXTENSIONS;
+    return extensions;
   }
 
   public String getDefaultValue()
@@ -87,12 +86,6 @@ public class MdkHelper
       return defaultInstance;
     }
     return ext.getInstance(clazz);
-  }
-
-  public String getTitle(IProject project)
-  {
-    return MDK_SETTING;
-
   }
 
 }

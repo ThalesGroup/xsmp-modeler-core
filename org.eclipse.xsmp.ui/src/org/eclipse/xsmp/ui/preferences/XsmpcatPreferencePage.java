@@ -107,7 +107,6 @@ public class XsmpcatPreferencePage extends PropertyAndPreferencePage
   @Override
   protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings)
   {
-    // super.enableProjectSpecificSettings(useProjectSpecificSettings);
     if (mdkConfigurationBlock != null)
     {
       mdkConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
@@ -158,13 +157,12 @@ public class XsmpcatPreferencePage extends PropertyAndPreferencePage
   private void scheduleCleanerJobIfNecessary(IPreferencePageContainer preferencePageContainer)
   {
     final var changes = mdkConfigurationBlock.getPreferenceChanges();
-    for (final String key : changes.keySet())
+    for (final var entry : changes.entrySet())
     {
-      if (key.matches("^" + EclipseOutputConfigurationProvider.OUTPUT_PREFERENCE_TAG + "\\.\\w+\\."
-              + EclipseOutputConfigurationProvider.OUTPUT_DIRECTORY + "$"))
+      if (entry.getKey().matches("^" + EclipseOutputConfigurationProvider.OUTPUT_PREFERENCE_TAG
+              + "\\.\\w+\\." + EclipseOutputConfigurationProvider.OUTPUT_DIRECTORY + "$"))
       {
-        final var difference = changes.get(key);
-        scheduleCleanerJob(preferencePageContainer, difference.rightValue());
+        scheduleCleanerJob(preferencePageContainer, entry.getValue().rightValue());
       }
     }
   }

@@ -52,14 +52,14 @@ public class XsmpcatReferenceProposalCreator extends ReferenceProposalCreator
 {
 
   private static final Set<PrimitiveTypeKind> floatingPointPrimitiveSet = ImmutableSet
-          .<PrimitiveTypeKind> builder().add(PrimitiveTypeKind.Float32, PrimitiveTypeKind.Float64)
+          .<PrimitiveTypeKind> builder().add(PrimitiveTypeKind.FLOAT32, PrimitiveTypeKind.FLOAT64)
           .build();
 
   private static final Set<PrimitiveTypeKind> integerPrimitiveSet = ImmutableSet
           .<PrimitiveTypeKind> builder()
-          .add(PrimitiveTypeKind.Int8, PrimitiveTypeKind.Int16, PrimitiveTypeKind.Int32,
-                  PrimitiveTypeKind.Int64, PrimitiveTypeKind.UInt8, PrimitiveTypeKind.UInt16,
-                  PrimitiveTypeKind.UInt32, PrimitiveTypeKind.UInt64)
+          .add(PrimitiveTypeKind.INT8, PrimitiveTypeKind.INT16, PrimitiveTypeKind.INT32,
+                  PrimitiveTypeKind.INT64, PrimitiveTypeKind.UINT8, PrimitiveTypeKind.UINT16,
+                  PrimitiveTypeKind.UINT32, PrimitiveTypeKind.UINT64)
           .build();
 
   @Inject
@@ -138,7 +138,7 @@ public class XsmpcatReferenceProposalCreator extends ReferenceProposalCreator
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.VALUE_REFERENCE__TYPE, p))
           .put(XcataloguePackage.Literals.FIELD__TYPE,
-                  model -> p -> PrimitiveTypeKind.String8 != XsmpUtil.getPrimitiveType(p)
+                  model -> p -> PrimitiveTypeKind.STRING8 != XsmpUtil.getPrimitiveType(p)
                           && isValidTypeReference(model, XcataloguePackage.Literals.FIELD__TYPE, p))
           .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT,
                   model -> p -> isValidTypeReference(model,

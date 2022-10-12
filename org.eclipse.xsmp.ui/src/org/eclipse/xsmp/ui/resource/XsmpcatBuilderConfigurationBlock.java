@@ -10,9 +10,10 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.resource;
 
+import org.eclipse.xtext.builder.preferences.BuilderConfigurationBlock;
+
 @SuppressWarnings("restriction")
-public class BuilderConfigurationBlock
-        extends org.eclipse.xtext.builder.preferences.BuilderConfigurationBlock
+public class XsmpcatBuilderConfigurationBlock extends BuilderConfigurationBlock
 {
 
 }

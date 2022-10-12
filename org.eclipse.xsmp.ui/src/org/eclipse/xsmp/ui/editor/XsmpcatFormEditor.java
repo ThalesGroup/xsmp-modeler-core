@@ -321,7 +321,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         dispatching = true;
         getSite().getShell().getDisplay().asyncExec(() -> {
           dispatching = false;
-          updateProblemIndication();
+          doUpdateProblemIndication();
         });
       }
     }
@@ -513,19 +513,19 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       }
 
       updateProblemIndication = true;
-      updateProblemIndication();
+      doUpdateProblemIndication();
     }
   }
 
   /**
    * Updates the problems indication with the information described in the specified diagnostic.
    */
-  protected void updateProblemIndication()
+  protected void doUpdateProblemIndication()
   {
     if (updateProblemIndication)
     {
-      final var diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.xsmp.editor",
-              0, null, new Object[]{editingDomain.getResourceSet() });
+      final var diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.xsmp.editor", 0, null,
+              new Object[]{editingDomain.getResourceSet() });
       for (final Diagnostic childDiagnostic : resourceToDiagnosticMap.values())
       {
         if (childDiagnostic.getSeverity() != Diagnostic.OK)
@@ -883,8 +883,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     if (hasErrors || !resource.getWarnings().isEmpty())
     {
       final var basicDiagnostic = new BasicDiagnostic(
-              hasErrors ? Diagnostic.ERROR : Diagnostic.WARNING,
-              "org.eclipse.xsmp.editor", 0,
+              hasErrors ? Diagnostic.ERROR : Diagnostic.WARNING, "org.eclipse.xsmp.editor", 0,
               getString("_UI_CreateModelError_message", resource.getURI()),
               new Object[]{exception == null ? (Object) resource : exception });
       basicDiagnostic.merge(EcoreUtil.computeDiagnostic(resource, true));
@@ -970,7 +969,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       }
     });
 
-    getSite().getShell().getDisplay().asyncExec(this::updateProblemIndication);
+    getSite().getShell().getDisplay().asyncExec(this::doUpdateProblemIndication);
   }
 
   /**
@@ -1234,7 +1233,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     }
 
     updateProblemIndication = true;
-    updateProblemIndication();
+    doUpdateProblemIndication();
   }
 
   /**
@@ -1301,14 +1300,18 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       ((BasicCommandStack) editingDomain.getCommandStack()).saveIsDone();
       firePropertyChange(IEditorPart.PROP_DIRTY);
     }
+    catch (final InterruptedException e)
+    {
+      Thread.currentThread().interrupt();
+    }
     catch (final Exception exception)
     {
       // Something went wrong that shouldn't.
       //
-      // XsmpUIPlugin.getInstance().log(exception);
+      // XsmpcatUIPlugin.getInstance().getLog().error("Unable to save file", exception);
     }
     updateProblemIndication = true;
-    updateProblemIndication();
+    doUpdateProblemIndication();
   }
 
   /**

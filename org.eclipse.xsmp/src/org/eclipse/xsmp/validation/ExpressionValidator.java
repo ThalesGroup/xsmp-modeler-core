@@ -116,9 +116,12 @@ public class ExpressionValidator
         catch (final Exception ex)
         {
 
-          acceptor.acceptError("Invalid DateTime format: " + ex.getMessage(),
-                  ExpressionSolver.getTarget(e), null,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          if (acceptor != null)
+          {
+            acceptor.acceptError("Invalid DateTime format: " + ex.getMessage(),
+                    ExpressionSolver.getTarget(e), null,
+                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          }
         }
         break;
       default:
@@ -165,9 +168,12 @@ public class ExpressionValidator
         catch (final Exception ex)
         {
 
-          acceptor.acceptError("Invalid Duration format: " + ex.getMessage(),
-                  ExpressionSolver.getTarget(e), null,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          if (acceptor != null)
+          {
+            acceptor.acceptError("Invalid Duration format: " + ex.getMessage(),
+                    ExpressionSolver.getTarget(e), null,
+                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          }
         }
         break;
       default:
@@ -181,9 +187,8 @@ public class ExpressionValidator
   {
 
     final var literal = e.getEnum(acceptor);
-    if (literal != null && literal.eContainer() != type)
+    if (literal != null && literal.eContainer() != type && acceptor != null)
     {
-
       acceptor.acceptError("Incompatible enumeration Type: expecting " + type.getName(),
               ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
               "invalid_type", (String[]) null);
@@ -206,9 +211,12 @@ public class ExpressionValidator
                 e, acceptor);
         break;
       default:
-        acceptor.acceptError("Expecting a Decimal value, got " + e.eClass().getName() + ".",
-                ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "invalid_type", (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting a Decimal value, got " + e.eClass().getName() + ".",
+                  ExpressionSolver.getTarget(e), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+        }
 
     }
   }
@@ -249,9 +257,12 @@ public class ExpressionValidator
       case XcataloguePackage.STRING_LITERAL:
         break;
       default:
-        acceptor.acceptError("Expecting a String value, got " + e.eClass().getName() + ".",
-                ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "invalid_type", (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting a String value, got " + e.eClass().getName() + ".",
+                  ExpressionSolver.getTarget(e), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+        }
 
     }
   }
@@ -280,7 +291,7 @@ public class ExpressionValidator
 
           final var value = translateEscapes(XsmpUtil.getString((StringLiteral) e));
 
-          if (value.length() > size.intValue())
+          if (value.length() > size.intValue() && acceptor != null)
           {
             acceptor.acceptError(
                     "The String length cannot exceed " + size + ", got " + value.length()
@@ -291,9 +302,12 @@ public class ExpressionValidator
 
           break;
         default:
-          acceptor.acceptError("Expecting a String Literal, got " + e.eClass().getName() + ".",
-                  ExpressionSolver.getTarget(e), null,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          if (acceptor != null)
+          {
+            acceptor.acceptError("Expecting a String Literal, got " + e.eClass().getName() + ".",
+                    ExpressionSolver.getTarget(e), null,
+                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          }
 
       }
     }
@@ -455,29 +469,32 @@ public class ExpressionValidator
             values.getElements().stream()
                     .forEach(j -> checkSolvedExpression(type.getItemType(), j, acceptor));
 
-            if (s != values.getElements().size() && values.getElements().size() != 0)
+            if (s != values.getElements().size() && !values.getElements().isEmpty()
+                    && acceptor != null)
             {
               acceptor.acceptInfo("Partial initialization.", ExpressionSolver.getTarget(e), null,
                       ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type",
                       (String[]) null);
             }
           }
-          else
+          else if (acceptor != null)
           {
-
             acceptor.acceptError(
                     "Expecting " + s + " elements, got " + values.getElements().size()
                             + " value(s).",
                     ExpressionSolver.getTarget(e), null,
                     ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
-
           }
 
           break;
         default:
-          acceptor.acceptError("Expecting a Collection Literal, got " + e.eClass().getName() + ".",
-                  ExpressionSolver.getTarget(e), null,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          if (acceptor != null)
+          {
+            acceptor.acceptError(
+                    "Expecting a Collection Literal, got " + e.eClass().getName() + ".",
+                    ExpressionSolver.getTarget(e), null,
+                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+          }
 
       }
     }
@@ -497,9 +514,12 @@ public class ExpressionValidator
         checkIntegralRange(getMin(type), getMax(type), e, acceptor);
         break;
       default:
-        acceptor.acceptError("Expecting an Integral value, got " + e.eClass().getName() + ".",
-                ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "invalid_type", (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting an Integral value, got " + e.eClass().getName() + ".",
+                  ExpressionSolver.getTarget(e), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+        }
 
     }
   }
@@ -509,49 +529,49 @@ public class ExpressionValidator
   {
     switch (typeUtil.getPrimitiveType(type))
     {
-      case Bool:
+      case BOOL:
         checkBool(e, acceptor);
         break;
-      case Char8:
+      case CHAR8:
         checkChar(e, acceptor);
         break;
-      case DateTime:
+      case DATE_TIME:
         checkDateTime(e, acceptor);
         break;
-      case Duration:
+      case DURATION:
         checkDuration(e, acceptor);
         break;
-      case Float32:
+      case FLOAT32:
         checkDecimalRange(FLOAT32_MIN, FLOAT32_MAX, true, true, e, acceptor);
         break;
-      case Float64:
+      case FLOAT64:
         checkDecimalRange(FLOAT64_MIN, FLOAT64_MAX, true, true, e, acceptor);
         break;
-      case Int16:
+      case INT16:
         checkIntegralRange(INT16_MIN, INT16_MAX, e, acceptor);
         break;
-      case Int32:
+      case INT32:
         checkIntegralRange(INT32_MIN, INT32_MAX, e, acceptor);
         break;
-      case Int64:
+      case INT64:
         checkIntegralRange(INT64_MIN, INT64_MAX, e, acceptor);
         break;
-      case Int8:
+      case INT8:
         checkIntegralRange(INT8_MIN, INT8_MAX, e, acceptor);
         break;
-      case String8:
+      case STRING8:
         checkString(e, acceptor);
         break;
-      case UInt16:
+      case UINT16:
         checkIntegralRange(UINT16_MIN, UINT16_MAX, e, acceptor);
         break;
-      case UInt32:
+      case UINT32:
         checkIntegralRange(UINT32_MIN, UINT32_MAX, e, acceptor);
         break;
-      case UInt64:
+      case UINT64:
         checkIntegralRange(UINT64_MIN, UINT64_MAX, e, acceptor);
         break;
-      case UInt8:
+      case UINT8:
         checkIntegralRange(UINT8_MIN, UINT8_MAX, e, acceptor);
         break;
       default:
@@ -590,9 +610,12 @@ public class ExpressionValidator
         break;
 
       default:
-        acceptor.acceptError("Unsupported Type " + type.eClass().getName(),
-                ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "invalid_type", (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Unsupported Type " + type.eClass().getName(),
+                  ExpressionSolver.getTarget(e), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+        }
         break;
     }
   }
@@ -620,14 +643,14 @@ public class ExpressionValidator
           {
             checkSolvedExpression(fields.get(i).getType(), values.getElements().get(i), acceptor);
           }
-          if (size != fields.size() && size != 0)
+          if (size != fields.size() && size != 0 && acceptor != null)
           {
             acceptor.acceptInfo("Partial initialization. Expecting " + fields.size() + " elements.",
                     ExpressionSolver.getTarget(e), null,
                     ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
           }
         }
-        else
+        else if (acceptor != null)
         {
           acceptor.acceptError(
                   "Expecting " + fields.size() + " elements, got " + size + " value(s).",
@@ -637,9 +660,12 @@ public class ExpressionValidator
 
         break;
       default:
-        acceptor.acceptError("Expecting a Collection Literal, got " + e.eClass().getName() + ".",
-                ExpressionSolver.getTarget(e), null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "invalid_type", (String[]) null);
+        if (acceptor != null)
+        {
+          acceptor.acceptError("Expecting a Collection Literal, got " + e.eClass().getName() + ".",
+                  ExpressionSolver.getTarget(e), null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type", (String[]) null);
+        }
 
     }
 
@@ -654,21 +680,21 @@ public class ExpressionValidator
 
     switch (typeUtil.getPrimitiveType(type))
     {
-      case Int16:
+      case INT16:
         return INT16_MAX;
-      case Int32:
+      case INT32:
         return INT32_MAX;
-      case Int64:
+      case INT64:
         return INT64_MAX;
-      case Int8:
+      case INT8:
         return INT8_MAX;
-      case UInt16:
+      case UINT16:
         return UINT16_MAX;
-      case UInt32:
+      case UINT32:
         return UINT32_MAX;
-      case UInt64:
+      case UINT64:
         return UINT64_MAX;
-      case UInt8:
+      case UINT8:
         return UINT8_MAX;
       default:
         return null;
@@ -684,18 +710,18 @@ public class ExpressionValidator
 
     switch (typeUtil.getPrimitiveType(type))
     {
-      case Int16:
+      case INT16:
         return INT16_MIN;
-      case Int32:
+      case INT32:
         return INT32_MIN;
-      case Int64:
+      case INT64:
         return INT64_MIN;
-      case Int8:
+      case INT8:
         return INT8_MIN;
-      case UInt16:
-      case UInt32:
-      case UInt64:
-      case UInt8:
+      case UINT16:
+      case UINT32:
+      case UINT64:
+      case UINT8:
         return UINT16_MIN;
       default:
 

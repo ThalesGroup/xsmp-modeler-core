@@ -184,7 +184,7 @@ public class PropertyItemProvider extends VisibilityElementItemProvider
     final List<Object> images = new ArrayList<>(2);
     if (ope.eContainer() != null)
     {
-      images.add(getResourceLocator().getImage("full/obj16/" + ope.eClass().getName() + "_"
+      images.add(imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_"
               + ope.getRealVisibility().getLiteral() + ".png"));
     }
     else
@@ -196,14 +196,14 @@ public class PropertyItemProvider extends VisibilityElementItemProvider
     switch (ope.getAccess())
     {
       case READ_ONLY:
-        images.add(getResourceLocator().getImage("full/ovr16/read.png"));
+        images.add(imageHelper.getImage("full/ovr16/read.png"));
         break;
       case WRITE_ONLY:
-        images.add(getResourceLocator().getImage("full/ovr16/write.png"));
+        images.add(imageHelper.getImage("full/ovr16/write.png"));
         break;
       default:
-        images.add(getResourceLocator().getImage("full/ovr16/read.png"));
-        images.add(getResourceLocator().getImage("full/ovr16/write.png"));
+        images.add(imageHelper.getImage("full/ovr16/read.png"));
+        images.add(imageHelper.getImage("full/ovr16/write.png"));
         break;
     }
     return new ComposedImage(images);

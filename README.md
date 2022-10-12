@@ -30,3 +30,4 @@ If you are interested in contributing to the Xsmp-Core project, start by reading
 
 Xsmp-Core is released under the EPL 2.0, see [LICENSE](/LICENSE) file at the root of the repository
 
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=ThalesGroup_xsmp-modeler-core)

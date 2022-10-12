@@ -12,6 +12,7 @@ package org.eclipse.xsmp.util;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -58,32 +59,30 @@ public class XsmpUtil
   private IQualifiedNameConverter qualifiedNameConverter;
 
   /**
-   * Enum witrh SMP primitive type kinds
-   *
-   * @author daveluy
+   * Enumeration with SMP primitive type kinds
    */
   public enum PrimitiveTypeKind
   {
-    Bool, Char8, DateTime, Duration, Float32, Float64, Int16, Int32, Int64, Int8, String8, UInt16, UInt32, UInt64, UInt8;
+    BOOL, CHAR8, DATE_TIME, DURATION, FLOAT32, FLOAT64, INT8, INT16, INT32, INT64, STRING8, UINT8, UINT16, UINT32, UINT64;
   }
 
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
           .<QualifiedName, PrimitiveTypeKind> builder()
-          .put(QualifiedName.create("Smp", "Char8"), PrimitiveTypeKind.Char8)
-          .put(QualifiedName.create("Smp", "String8"), PrimitiveTypeKind.String8)
-          .put(QualifiedName.create("Smp", "Float32"), PrimitiveTypeKind.Float32)
-          .put(QualifiedName.create("Smp", "Float64"), PrimitiveTypeKind.Float64)
-          .put(QualifiedName.create("Smp", "Int8"), PrimitiveTypeKind.Int8)
-          .put(QualifiedName.create("Smp", "UInt8"), PrimitiveTypeKind.UInt8)
-          .put(QualifiedName.create("Smp", "Int16"), PrimitiveTypeKind.Int16)
-          .put(QualifiedName.create("Smp", "UInt16"), PrimitiveTypeKind.UInt16)
-          .put(QualifiedName.create("Smp", "Int32"), PrimitiveTypeKind.Int32)
-          .put(QualifiedName.create("Smp", "UInt32"), PrimitiveTypeKind.UInt32)
-          .put(QualifiedName.create("Smp", "Int64"), PrimitiveTypeKind.Int64)
-          .put(QualifiedName.create("Smp", "UInt64"), PrimitiveTypeKind.UInt64)
-          .put(QualifiedName.create("Smp", "Bool"), PrimitiveTypeKind.Bool)
-          .put(QualifiedName.create("Smp", "DateTime"), PrimitiveTypeKind.DateTime)
-          .put(QualifiedName.create("Smp", "Duration"), PrimitiveTypeKind.Duration).build();
+          .put(QualifiedName.create("Smp", "Char8"), PrimitiveTypeKind.CHAR8)
+          .put(QualifiedName.create("Smp", "String8"), PrimitiveTypeKind.STRING8)
+          .put(QualifiedName.create("Smp", "Float32"), PrimitiveTypeKind.FLOAT32)
+          .put(QualifiedName.create("Smp", "Float64"), PrimitiveTypeKind.FLOAT64)
+          .put(QualifiedName.create("Smp", "Int8"), PrimitiveTypeKind.INT8)
+          .put(QualifiedName.create("Smp", "UInt8"), PrimitiveTypeKind.UINT8)
+          .put(QualifiedName.create("Smp", "Int16"), PrimitiveTypeKind.INT16)
+          .put(QualifiedName.create("Smp", "UInt16"), PrimitiveTypeKind.UINT16)
+          .put(QualifiedName.create("Smp", "Int32"), PrimitiveTypeKind.INT32)
+          .put(QualifiedName.create("Smp", "UInt32"), PrimitiveTypeKind.UINT32)
+          .put(QualifiedName.create("Smp", "Int64"), PrimitiveTypeKind.INT64)
+          .put(QualifiedName.create("Smp", "UInt64"), PrimitiveTypeKind.UINT64)
+          .put(QualifiedName.create("Smp", "Bool"), PrimitiveTypeKind.BOOL)
+          .put(QualifiedName.create("Smp", "DateTime"), PrimitiveTypeKind.DATE_TIME)
+          .put(QualifiedName.create("Smp", "Duration"), PrimitiveTypeKind.DURATION).build();
 
   public static PrimitiveTypeKind getPrimitiveType(IEObjectDescription d)
   {
@@ -145,10 +144,10 @@ public class XsmpUtil
       try
       {
         return VisibilityKind.valueOf(o.getUserData("visibility"));
-
       }
       catch (final Exception e)
       {
+        // ignore
       }
     }
     else if (obj instanceof VisibilityElement)
@@ -167,10 +166,10 @@ public class XsmpUtil
       try
       {
         return Boolean.parseBoolean(o.getUserData("deprecated"));
-
       }
       catch (final Exception e)
       {
+        // ignore
       }
     }
     else if (obj instanceof NamedElement)
@@ -227,10 +226,7 @@ public class XsmpUtil
       {
         return VisibilityKind.PROTECTED;
       }
-      else
-      {
-        return VisibilityKind.PUBLIC;
-      }
+      return VisibilityKind.PUBLIC;
 
     }
 
@@ -330,9 +326,9 @@ public class XsmpUtil
       case XcataloguePackage.INTEGER:
         return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Integer) type);
       case XcataloguePackage.ENUMERATION:
-        return PrimitiveTypeKind.Int32;
+        return PrimitiveTypeKind.INT32;
       case XcataloguePackage.STRING:
-        return PrimitiveTypeKind.String8;
+        return PrimitiveTypeKind.STRING8;
       default:
         return null;
     }
@@ -348,7 +344,7 @@ public class XsmpUtil
   {
 
     final var primitiveType = type.getPrimitiveType();
-    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.Float64;
+    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.FLOAT64;
 
   }
 
@@ -356,7 +352,7 @@ public class XsmpUtil
   {
 
     final var primitiveType = type.getPrimitiveType();
-    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.Int32;
+    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.INT32;
 
   }
 
@@ -399,9 +395,13 @@ public class XsmpUtil
         {
           value = value.substring(1);
         }
+        break;
       case 'U':
       case 'L':
         value = value.substring(1);
+        break;
+      default:
+        break;
     }
     // remove quotes
     return value.substring(1, value.length() - 1);
@@ -437,21 +437,10 @@ public class XsmpUtil
     });
     // current Catalogue is not a dependency
     dependencies.remove(t);
+    final Comparator<String> c = Comparator.nullsFirst(String::compareTo);
     // Remove ecss_smp_smp and sort dependencies by name
     return dependencies.stream().filter(it -> it != null && !"ecss_smp_smp".equals(it.getName()))
-            .sorted((a, b) -> {
-              final var c1 = a.getName();
-              final var c2 = b.getName();
-              if (c1 == c2)
-              {
-                return 0;
-              }
-              if (c1 != null)
-              {
-                return c1.compareTo(c2);
-              }
-              return -c2.compareTo(c1);
-            }).collect(Collectors.toList());
+            .sorted((a, b) -> c.compare(a.getName(), b.getName())).collect(Collectors.toList());
   }
 
   public static int year(Document doc)

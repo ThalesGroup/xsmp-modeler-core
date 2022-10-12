@@ -7,7 +7,11 @@
 	</parent>
 	<artifactId>org.eclipse.xsmp.generator.cpp</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
+	
+	<properties>
+		<sonar.sources>src</sonar.sources>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>

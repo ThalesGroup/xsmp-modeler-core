@@ -9,7 +9,11 @@
 	</parent>
 	<artifactId>org.eclipse.xsmp.forms</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
+	
+	<properties>
+		<sonar.sources>src</sonar.sources>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>

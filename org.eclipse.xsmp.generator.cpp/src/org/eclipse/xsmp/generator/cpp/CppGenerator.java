@@ -53,6 +53,14 @@ public class CppGenerator extends AbstractGenerator
   @Inject
   protected IGenerationStrategy generationStrategy;
 
+  private static final String SRC_GEN_CFG = "SRC-GEN";
+
+  private static final String INCLUDE_GEN_CFG = "INCLUDE-GEN";
+
+  private static final String SRC_CFG = "SRC";
+
+  private static final String INCLUDE_CFG = "INCLUDE";
+
   @Override
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
@@ -65,6 +73,11 @@ public class CppGenerator extends AbstractGenerator
 
   }
 
+  /**
+   * @param input
+   *          the input resource
+   * @return the formatter options
+   */
   protected Map<String, String> formatterOptions(Resource input)
   {
     final var options = DefaultCodeFormatterOptions.getKandRSettings();
@@ -84,13 +97,13 @@ public class CppGenerator extends AbstractGenerator
 
     final var path = ext.fqn(cat).toString("/");
 
-    generateFile(fsa, path + ".cpp", "SRC-GEN",
+    generateFile(fsa, path + ".cpp", SRC_GEN_CFG,
             catalogueGenerator.generateSourceGen(cat, false, acceptor, cat));
 
-    generateFile(fsa, path + ".h", "INCLUDE-GEN",
+    generateFile(fsa, path + ".h", INCLUDE_GEN_CFG,
             catalogueGenerator.generateHeaderGen(cat, false, acceptor, cat));
 
-    generateFile(fsa, path + ".pkg.cpp", "SRC-GEN",
+    generateFile(fsa, path + ".pkg.cpp", SRC_GEN_CFG,
             catalogueGenerator.generatePkgFile(cat, false, acceptor, cat));
 
     cat.getMember().stream().filter(Namespace.class::isInstance)
@@ -135,20 +148,21 @@ public class CppGenerator extends AbstractGenerator
     if (useGenerationGapPattern)
     {
       // generate header in include directory if file does not exist
-      if (!fsa.isFile(includePath, "INCLUDE"))
+      if (!fsa.isFile(includePath, INCLUDE_CFG))
       {
-        generateFile(fsa, includePath, "INCLUDE", typeGenerator.generateHeader(type, cat));
+        generateFile(fsa, includePath, INCLUDE_CFG, typeGenerator.generateHeader(type, cat));
       }
       // generate source in src directory if file does not exist
-      if (!fsa.isFile(sourcePath, "SRC"))
+      if (!fsa.isFile(sourcePath, SRC_CFG))
       {
-        generateFile(fsa, sourcePath, "SRC", typeGenerator.generateSource(type, cat));
+        generateFile(fsa, sourcePath, SRC_CFG, typeGenerator.generateSource(type, cat));
       }
 
     }
     // if files already exist in src/include directories, use the generation gap
     // pattern
-    useGenerationGapPattern |= fsa.isFile(includePath, "INCLUDE") || fsa.isFile(sourcePath, "SRC");
+    useGenerationGapPattern |= fsa.isFile(includePath, INCLUDE_CFG)
+            || fsa.isFile(sourcePath, SRC_CFG);
 
     if (useGenerationGapPattern)
     {
@@ -157,11 +171,11 @@ public class CppGenerator extends AbstractGenerator
     }
 
     // generate header in include-gen directory
-    generateFile(fsa, includePath, "INCLUDE-GEN",
+    generateFile(fsa, includePath, INCLUDE_GEN_CFG,
             typeGenerator.generateHeaderGen(type, useGenerationGapPattern, acceptor, cat));
 
     // generate source in src-gen directory
-    generateFile(fsa, sourcePath, "SRC-GEN",
+    generateFile(fsa, sourcePath, SRC_GEN_CFG,
             typeGenerator.generateSourceGen(type, useGenerationGapPattern, acceptor, cat));
   }
 
@@ -252,7 +266,7 @@ public class CppGenerator extends AbstractGenerator
       }
       catch (final MalformedTreeException | BadLocationException e)
       {
-        // LOG.error(e);
+        // ignore
       }
     }
     return content;

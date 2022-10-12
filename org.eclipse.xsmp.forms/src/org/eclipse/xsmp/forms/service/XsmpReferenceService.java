@@ -36,18 +36,16 @@ import com.google.common.collect.Iterables;
 
 public class XsmpReferenceService implements org.eclipse.emf.ecp.edit.spi.ReferenceService
 {
-  // private final EObjectSelectionStrategy eobjectSelectionStrategy =
-  // EObjectSelectionStrategy.NULL;
 
-  private final CreateNewModelElementStrategy createNewModelElementStrategy = CreateNewModelElementStrategy.DEFAULT;
+  private static final CreateNewModelElementStrategy createNewModelElementStrategy = CreateNewModelElementStrategy.DEFAULT;
 
-  private final AttachmentStrategy attachmentStrategy = AttachmentStrategy.DEFAULT;
+  private static final AttachmentStrategy attachmentStrategy = AttachmentStrategy.DEFAULT;
 
-  private final ReferenceStrategy referenceStrategy = ReferenceStrategy.DEFAULT;
+  private static final ReferenceStrategy referenceStrategy = ReferenceStrategy.DEFAULT;
 
-  private final OpenInNewContextStrategy openInNewContextStrategy = OpenInNewContextStrategy.DEFAULT;
+  private static final OpenInNewContextStrategy openInNewContextStrategy = OpenInNewContextStrategy.DEFAULT;
 
-  private final SelectionCompositeStrategy selectionCompositeStrategy = SelectionCompositeStrategy.DEFAULT;
+  private static final SelectionCompositeStrategy selectionCompositeStrategy = SelectionCompositeStrategy.DEFAULT;
 
   @Override
   public void instantiate(ViewModelContext context)
@@ -134,7 +132,6 @@ public class XsmpReferenceService implements org.eclipse.emf.ecp.edit.spi.Refere
 
     Iterables.transform(filteredCandidates, p -> EcoreUtil.resolve(p.getEObjectOrProxy(), eObject))
             .forEach(elements::add);
-    // ECPControlHelper.removeExistingReferences(eObject, eReference, elements);
 
     final var selectionComposite = selectionCompositeStrategy.getSelectionViewer(eObject,
             eReference, elements);
