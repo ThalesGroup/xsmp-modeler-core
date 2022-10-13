@@ -18,25 +18,21 @@
 		<moduleProperties></moduleProperties>
 		<systemProperties></systemProperties>
 		<additionalTestArguments></additionalTestArguments>
-
-
 		<jacoco-version>0.8.8</jacoco-version>
-		<sonar.organization>thalesgroup</sonar.organization>
-		<sonar.projectName>xsmp-modeler-core</sonar.projectName>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/org.eclipse.xsmp.report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<modules>
 		<module>org.eclipse.xsmp.feature</module>
 		<module>org.eclipse.xsmp.repository</module>
 		<module>org.eclipse.xsmp.target</module>
 		<module>org.eclipse.xsmp</module>
+		<module>org.eclipse.xsmp.tests</module>
+		<module>org.eclipse.xsmp.cli</module>
+		<module>org.eclipse.xsmp.cli.tests</module>
 		<module>org.eclipse.xsmp.generator.cpp</module>
 		<module>org.eclipse.xsmp.lib</module>
 		<module>org.eclipse.xsmp.forms</module>
 		<module>org.eclipse.xsmp.ide</module>
 		<module>org.eclipse.xsmp.sirius</module>
-		<module>org.eclipse.xsmp.tests</module>
 		<module>org.eclipse.xsmp.ui</module>
 		<module>org.eclipse.xsmp.ui.tests</module>
 		<module>org.eclipse.xsmp.report</module>
@@ -390,6 +386,10 @@
 			<properties>
 				<!-- This will be set by Jacoco prepare-agent goal -->
 				<additionalTestArguments>${tycho.testArgLine}</additionalTestArguments>
+				<sonar.organization>thalesgroup</sonar.organization>
+				<sonar.projectName>xsmp-modeler-core</sonar.projectName>
+				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+				<sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/org.eclipse.xsmp.report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 			</properties>
 			<build>
 				<plugins>

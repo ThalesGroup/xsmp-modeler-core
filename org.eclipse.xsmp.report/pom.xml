@@ -9,7 +9,6 @@
 	<artifactId>org.eclipse.xsmp.report</artifactId>
 	<packaging>pom</packaging>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
@@ -19,9 +18,21 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.ui</artifactId>
+			<artifactId>org.eclipse.xsmp.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.cli</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.cli.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
@@ -43,9 +54,9 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.tests</artifactId>
+			<artifactId>org.eclipse.xsmp.ui</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>

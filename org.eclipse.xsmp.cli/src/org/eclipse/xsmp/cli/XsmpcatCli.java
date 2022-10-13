@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.generator;
+package org.eclipse.xsmp.cli;
 
 import java.io.IOException;
 import java.math.RoundingMode;
@@ -30,7 +30,6 @@ import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.XsmpcatStandaloneSetup;
-import org.eclipse.xsmp.lib.ECSSModelLibrary;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -110,7 +109,7 @@ public class XsmpcatCli
   protected void loadEcssSmpLibrary(ResourceSet rs)
   {
 
-    final var url = ECSSModelLibrary.XSMPCAT_URL;
+    final var url = XsmpcatCli.class.getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat");
 
     URI uri;
 
