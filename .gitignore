@@ -3,5 +3,5 @@ xtend-gen
 emf-gen
 target
 bin
-/workspace
+workspace
 /build
