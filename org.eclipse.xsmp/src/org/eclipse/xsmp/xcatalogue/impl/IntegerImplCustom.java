@@ -51,4 +51,4 @@ public class IntegerImplCustom extends IntegerImpl
         return super.getFeature(name);
     }
   }
-} // IntegerImpl
+} // IntegerImplCustom

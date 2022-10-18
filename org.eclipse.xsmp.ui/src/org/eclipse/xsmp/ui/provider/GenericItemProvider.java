@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.UniqueEList;
@@ -39,6 +40,7 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
+import org.eclipse.xsmp.ui.labeling.XsmpcatLabelProvider;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xtext.ui.IImageHelper;
@@ -295,19 +297,27 @@ public class GenericItemProvider extends ItemProviderAdapter implements IItemLab
     return UnexecutableCommand.INSTANCE;
   }
 
+  @Inject
+  private XsmpcatLabelProvider labelProvider;
+
   @Override
-  public Object getImage(Object object)
+  public final Object getImage(Object object)
   {
     try
     {
-      return overlayImage(object,
-              imageHelper.getImage("full/obj16/" + ((EObject) object).eClass().getName() + ".png"));
+      return overlayImage(object, labelProvider.getImage(object));
     }
     catch (final Exception e)
     {
       log.warn("Image not found", e);
       return null;
     }
+  }
+
+  @Override
+  protected final Object overlayImage(Object object, Object image)
+  {
+    return super.overlayImage(object, image);
   }
 
   /**
@@ -317,5 +327,11 @@ public class GenericItemProvider extends ItemProviderAdapter implements IItemLab
   public final ResourceLocator getResourceLocator()
   {
     return XsmpcatUIPlugin.getInstance();
+  }
+
+  @Override
+  public void notifyChanged(Notification notification)
+  {
+    updateChildren(notification);
   }
 }

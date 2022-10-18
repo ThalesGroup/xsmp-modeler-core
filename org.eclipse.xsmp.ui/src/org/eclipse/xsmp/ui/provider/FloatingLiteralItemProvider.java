@@ -10,11 +10,12 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral;
@@ -47,24 +48,24 @@ public class FloatingLiteralItemProvider extends ExpressionItemProvider
     {
       super.getPropertyDescriptors(object);
 
-      // addValuePropertyDescriptor(object);
+      addTextPropertyDescriptor(object);
     }
     return itemPropertyDescriptors;
   }
 
-  // /**
-  // * This adds a property descriptor for the Value feature.
-  // */
-  // protected void addValuePropertyDescriptor(Object object)
-  // {
-  // itemPropertyDescriptors.add(createItemPropertyDescriptor(
-  // ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-  // getResourceLocator(), getString("_UI_DecimalLiteral_value_feature"),
-  // getString("_UI_PropertyDescriptor_description", "_UI_DecimalLiteral_value_feature",
-  // "_UI_DecimalLiteral_type"),
-  // XcataloguePackage.Literals.FLOATING_LITERAL__VALUE, true, false, false,
-  // ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-  // }
+  /**
+   * This adds a property descriptor for the Value feature.
+   */
+  protected void addTextPropertyDescriptor(Object object)
+  {
+    itemPropertyDescriptors.add(createItemPropertyDescriptor(
+            ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+            getResourceLocator(), getString("_UI_FloatingLiteral_value_feature"),
+            getString("_UI_PropertyDescriptor_description", "_UI_FloatingLiteral_value_feature",
+                    "_UI_FloatingLiteral_type"),
+            XcataloguePackage.Literals.FLOATING_LITERAL__TEXT, true, false, false,
+            ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+  }
 
   /**
    * This returns the label text for the adapted class.
@@ -85,11 +86,12 @@ public class FloatingLiteralItemProvider extends ExpressionItemProvider
     final var styledLabel = new StyledString();
     if (label == null || label.length() == 0)
     {
-      styledLabel.append(getString("_UI_DecimalLiteral_type"), StyledString.Style.QUALIFIER_STYLER);
+      styledLabel.append(getString("_UI_FloatingLiteral_type"),
+              StyledString.Style.QUALIFIER_STYLER);
     }
     else
     {
-      styledLabel.append(getString("_UI_DecimalLiteral_type"), StyledString.Style.QUALIFIER_STYLER)
+      styledLabel.append(getString("_UI_FloatingLiteral_type"), StyledString.Style.QUALIFIER_STYLER)
               .append(" " + label);
     }
     return styledLabel;
@@ -102,28 +104,17 @@ public class FloatingLiteralItemProvider extends ExpressionItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(FloatingLiteral.class))
     {
       case XcataloguePackage.FLOATING_LITERAL__TEXT:
-        // case XcataloguePackage.FLOATING_LITERAL__VALUE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

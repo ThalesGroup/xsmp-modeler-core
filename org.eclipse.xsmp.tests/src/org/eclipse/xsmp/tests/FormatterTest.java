@@ -39,7 +39,7 @@ class FormatterTest
   @Test
   void formatter() throws Exception
   {
-    final var in = getClass().getResource("/input/FormatterFile.xsmpcat");
+    final var in = getClass().getResource("/org/eclipse/xsmp/tests/input/FormatterFile.xsmpcat");
     final var cat = catalogueParseHelper.parse(in.openStream(), URI.createFileURI(in.getFile()),
             null, resourceSetProvider.get());
 
@@ -49,8 +49,8 @@ class FormatterTest
     Files.write(formatted.getBytes(), out);
 
     final InputStream inputStream = new ByteArrayInputStream(formatted.getBytes());
-    final var referenceStream = getClass().getResource("/reference/FormatterFile.xsmpcat")
-            .openStream();
+    final var referenceStream = getClass()
+            .getResource("/org/eclipse/xsmp/tests/reference/FormatterFile.xsmpcat").openStream();
 
     try (final var br_formatted = new BufferedReader(new InputStreamReader(inputStream)))
     {

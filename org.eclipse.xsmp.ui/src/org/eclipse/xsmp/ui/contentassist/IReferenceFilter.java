@@ -15,7 +15,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Predicate;
+import com.google.inject.ImplementedBy;
 
+@ImplementedBy(XsmpcatReferenceFilter.class)
 public interface IReferenceFilter
 {
   Predicate<IEObjectDescription> getFilter(EObject model, EReference reference);

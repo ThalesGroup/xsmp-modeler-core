@@ -29,6 +29,7 @@ import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.service.SingletonBinding;
+import org.eclipse.xtext.validation.CompositeEValidator;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 import org.eclipse.xtext.validation.impl.ConcreteSyntaxEValidator;
@@ -48,6 +49,12 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
     binder.bind(IScopeProvider.class)
             .annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
             .to(XsmpcatImportedNamespaceScopeProvider.class);
+  }
+
+  public void configureValidators(Binder binder)
+  {
+    binder.bind(Boolean.class).annotatedWith(Names.named(CompositeEValidator.USE_EOBJECT_VALIDATOR))
+            .toInstance(true);
   }
 
   @Override

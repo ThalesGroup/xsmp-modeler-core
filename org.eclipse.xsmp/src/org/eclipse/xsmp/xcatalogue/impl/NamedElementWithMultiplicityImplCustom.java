@@ -12,47 +12,15 @@
  */
 package org.eclipse.xsmp.xcatalogue.impl;
 
+import org.eclipse.xsmp.util.Solver;
+import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
+
 /**
  * @author daveluy
  */
 public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMultiplicityImpl
 {
-  /*
-   * long parseLong(String text)
-   * {
-   * var withoutUnderscore = text.replace("'", "");
-   * // remove trailing suffix
-   * if (withoutUnderscore.endsWith("ll") || withoutUnderscore.endsWith("LL"))
-   * {
-   * withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 2);
-   * }
-   * else if (withoutUnderscore.endsWith("l") || withoutUnderscore.endsWith("L"))
-   * {
-   * withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 1);
-   * }
-   * if (withoutUnderscore.endsWith("u") || withoutUnderscore.endsWith("U"))
-   * {
-   * withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 1);
-   * }
-   * if (withoutUnderscore.startsWith("0x") || withoutUnderscore.startsWith("0X"))
-   * {
-   * return new BigInteger(withoutUnderscore.substring(2), 16).longValue();
-   * }
-   * if (withoutUnderscore.startsWith("0b") || withoutUnderscore.startsWith("0B"))
-   * {
-   * return new BigInteger(withoutUnderscore.substring(2), 2).longValue();
-   * }
-   * if (withoutUnderscore.startsWith("0"))
-   * {
-   * return new BigInteger(withoutUnderscore, 8).longValue();
-   * }
-   * return new BigInteger(withoutUnderscore).longValue();
-   * }
-   */
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public long getLower()
   {
@@ -68,7 +36,7 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     {
       return multiplicity.isAux() ? 1 : 0;
     }
-    return multiplicity.getLower().getInteger(null).longValue();
+    return Solver.INSTANCE.getInteger(multiplicity.getLower()).longValue();
   }
 
   /**
@@ -87,52 +55,78 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     }
     if (multiplicity.getUpper() == null)
     {
-      return multiplicity.isAux() ? -1 : multiplicity.getLower().getInteger(null).longValue();
+      return multiplicity.isAux() ? -1
+              : Solver.INSTANCE.getInteger(multiplicity.getLower()).longValue();
     }
-    return multiplicity.getUpper().getInteger(null).longValue();
+    return Solver.INSTANCE.getInteger(multiplicity.getUpper()).longValue();
   }
-  /*
-   * private void set(long lower, long upper)
-   * {
-   * if (upper == 1)
-   * {
-   * if (lower == 0)
-   * {
-   * // --> ?
-   * setMultiplicity(null);
-   * setOptional(true);
-   * }
-   * else
-   * {
-   * if (lower == 1)
-   * {
-   * // --> empty
-   * setMultiplicity(null);
-   * }
-   * setOptional(false);
-   * }
-   * }
-   * else if (upper == -1)
-   * {
-   * if (lower == 0 || lower == 1)
-   * {
-   * // --> [*] or []
-   * }
-   * else
-   * {
-   * // --> [lower ... *]
-   * }
-   * }
-   * else if (upper == lower)
-   * {
-   * // --> [lower]
-   * }
-   * else
-   * {
-   * // --> [lower ... upper]
-   * }
-   * throw new UnsupportedOperationException();
-   * }
-   */
+
+  private void setMultiplicity(long lower, long upper)
+  {
+
+    if (lower == 0 && upper == 1)
+    {
+      setOptional(true);
+      setMultiplicity(null);
+    }
+    else if (lower == 1 && upper == 1)
+    {
+      setOptional(false);
+      setMultiplicity(null);
+    }
+    else if (lower == upper)
+    {
+      setOptional(false);
+      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
+      final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      l.setText(Long.toString(lower));
+      multiplicity.setLower(l);
+    }
+    else if (upper < 0)
+    {
+      setOptional(false);
+      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
+      if (lower == 0)
+      {
+
+        multiplicity.setAux(false);
+      }
+      else if (lower == 1)
+      {
+        multiplicity.setAux(true);
+      }
+      else
+      {
+        multiplicity.setAux(true);
+        final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+        l.setText(Long.toString(lower));
+        multiplicity.setLower(l);
+      }
+    }
+    else
+    {
+      setOptional(false);
+      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
+      final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      l.setText(Long.toString(lower));
+      multiplicity.setLower(l);
+      final var u = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      u.setText(Long.toString(upper));
+      multiplicity.setUpper(u);
+    }
+
+  }
+
+  @Override
+  public void setLower(long lower)
+  {
+    setMultiplicity(lower, getUpper());
+  }
+
+  @Override
+  public void setUpper(long upper)
+  {
+    setMultiplicity(getLower(), upper);
+  }
 
 } // NamedElementWithMultiplicityImplCustom

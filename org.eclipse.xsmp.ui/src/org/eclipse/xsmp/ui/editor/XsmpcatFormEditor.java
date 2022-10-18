@@ -67,7 +67,6 @@ import org.eclipse.emf.edit.ui.provider.DelegatingStyledCellLabelProvider;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
 import org.eclipse.emf.edit.ui.provider.UnwrappingSelectionProvider;
 import org.eclipse.emf.edit.ui.util.EditUIMarkerHelper;
-import org.eclipse.emf.edit.ui.util.EditUIUtil;
 import org.eclipse.emf.edit.ui.util.FindAndReplaceTarget;
 import org.eclipse.emf.edit.ui.util.IRevertablePart;
 import org.eclipse.jface.action.IMenuListener;
@@ -80,6 +79,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -101,6 +101,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -119,22 +120,26 @@ import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
 import org.eclipse.xsmp.ui.mdk.IMdkConfigurationUIProvider;
 import org.eclipse.xsmp.ui.provider.XcatalogueItemProviderAdapterFactory;
+import org.eclipse.xsmp.xcatalogue.util.XcatalogueAdapterFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
-/**
- * This is an example of a Xsmp model editor.
- *
- * @generated
- */
 public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDomainProvider,
         ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker, IRevertablePart
 {
+
+  @Inject
+  private XcatalogueItemProviderAdapterFactory xcatalogueItemProviderAdapterFactory;
+
+  @Inject
+  private Injector defaultInjector;
+
   /**
    * This keeps track of the editing domain that is used to track all changes to the model. <!--
    * begin-user-doc -->
    */
-  protected AdapterFactoryEditingDomain editingDomain;
+  protected XtextAdapterFactoryEditingDomain editingDomain;
 
   /**
    * This is the one adapter factory used for providing views of the model.
@@ -558,7 +563,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         }
         catch (final PartInitException exception)
         {
-          // XsmpUIPlugin.getInstance().log(exception);
+          XsmpcatUIPlugin.getInstance().getLog().error("", exception);
         }
       }
 
@@ -570,7 +575,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         }
         catch (final CoreException exception)
         {
-          // XsmpUIPlugin.getInstance().log(exception);
+          XsmpcatUIPlugin.getInstance().getLog().error("", exception);
         }
       }
     }
@@ -592,8 +597,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
    * This creates a model editor.
    */
 
-  // @Inject
-  public XsmpcatFormEditor(/* XcatalogueItemProviderAdapterFactory xsmpItemProviderAdapterFactory */)
+  public XsmpcatFormEditor()
   {
     // Create an adapter factory that yields item providers.
     //
@@ -601,7 +605,6 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
             ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
     adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-    // adapterFactory.addAdapterFactory(xsmpItemProviderAdapterFactory);
     adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
     // Create the command stack that will notify this editor as commands are executed.
@@ -653,7 +656,6 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     // Create the editing domain with a special command stack.
     //
     editingDomain = new XtextAdapterFactoryEditingDomain(adapterFactory, commandStack);
-
   }
 
   /**
@@ -828,8 +830,21 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
             new EditingDomainViewerDropAdapter(editingDomain, viewer));
   }
 
-  @Inject
-  private XcatalogueItemProviderAdapterFactory xcatalogueItemProviderAdapterFactory;
+  private void initializeEditingDomain(IEditorInput input)
+  {
+    if (input instanceof IFileEditorInput)
+    {
+      final var injector = mdkProvider
+              .getInjector(((IFileEditorInput) input).getFile().getProject());
+      if (injector != null)
+      {
+        injector.injectMembers(editingDomain);
+        return;
+      }
+    }
+
+    defaultInjector.injectMembers(editingDomain);
+  }
 
   /**
    * This is the method called to load a resource into the editing domain's resource set based on
@@ -837,20 +852,18 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
    */
   public void createModel()
   {
-    final var resourceURI = EditUIUtil.getURI(getEditorInput(),
-            editingDomain.getResourceSet().getURIConverter());
+    final var input = getEditorInput();
+    initializeEditingDomain(input);
+
+    final var resource = editingDomain.createResource(input);
     Exception exception = null;
-    Resource resource = null;
     try
     {
-      // Load the resource through the editing domain.
-      //
-      resource = editingDomain.getResourceSet().getResource(resourceURI, true);
+      resource.load(editingDomain.getResourceSet().getLoadOptions());
     }
-    catch (final Exception e)
+    catch (final IOException e)
     {
       exception = e;
-      resource = editingDomain.getResourceSet().getResource(resourceURI, false);
     }
 
     final var diagnostic = analyzeResourceProblems(resource, exception);
@@ -861,8 +874,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     editingDomain.getResourceSet().eAdapters().add(problemIndicationAdapter);
 
     // add the specific adapter factory according to the selected MDK
-    final var adapter = mdkProvider.getInstance(resource,
-            XcatalogueItemProviderAdapterFactory.class);
+    final var adapter = mdkProvider.getInstance(resource, XcatalogueAdapterFactory.class);
     if (adapter != null)
     {
       adapterFactory.addAdapterFactory(adapter);
@@ -898,6 +910,9 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     return Diagnostic.OK_INSTANCE;
   }
 
+  @Inject
+  private ILabelProvider labelProvider;
+
   /**
    * This is the method used by the framework to install your own controls.
    */
@@ -924,15 +939,17 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       selectionViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
       selectionViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
               new DecoratingColumLabelProvider.StyledLabelProvider(
-                      new AdapterFactoryLabelProvider.StyledLabelProvider(adapterFactory,
-                              selectionViewer),
+                      /*
+                       * new AdapterFactoryLabelProvider.StyledLabelProvider(adapterFactory,
+                       * selectionViewer)
+                       */ labelProvider,
                       new DiagnosticDecorator.Styled(editingDomain, selectionViewer,
                               XsmpcatUIPlugin.getInstance().getDialogSettings()))));
 
-      final var catResource = editingDomain.getResourceSet().getResources().get(0);
-      EcoreUtil.resolveAll(catResource);
-      selectionViewer.setInput(catResource);
-      selectionViewer.setSelection(new StructuredSelection(catResource.getContents().get(0)), true);
+      final var resource = editingDomain.getResourceSet().getResources().get(0);
+
+      selectionViewer.setInput(resource);
+      selectionViewer.setSelection(new StructuredSelection(resource.getContents().get(0)), true);
 
       new AdapterFactoryTreeEditor(selectionViewer.getTree(), adapterFactory);
       new ColumnViewerInformationControlToolTipSupport(selectionViewer,
@@ -1128,11 +1145,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
    */
   public IPropertySheetPage getPropertySheetPage()
   {
-    propertySheetPage = new EMFFormsPropertySheetPage(
-            editingDomain/*
-                          * editingDomain, ExtendedPropertySheetPage .Decoration.LIVE, XsmpUIPlugin.
-                          * getInstance( ). getDialogSettings( ), 0, false
-                          */) {
+    propertySheetPage = new EMFFormsPropertySheetPage(editingDomain) {
 
       @Override
       public void setActionBars(IActionBars actionBars)
@@ -1141,8 +1154,6 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       }
 
     };
-    // propertySheetPage.setPropertySourceProvider(new
-    // AdapterFactoryContentProvider(adapterFactory));
 
     return propertySheetPage;
   }
@@ -1265,8 +1276,6 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         final List<Resource> resources = editingDomain.getResourceSet().getResources();
         for (final Resource resource : resources)
         {
-          // if ((first || !resource.getContents().isEmpty() || isPersisted(resource))
-          // && !editingDomain.isReadOnly(resource))
           if (first && !editingDomain.isReadOnly(resource))
           {
             try
@@ -1300,15 +1309,18 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       ((BasicCommandStack) editingDomain.getCommandStack()).saveIsDone();
       firePropertyChange(IEditorPart.PROP_DIRTY);
     }
-    catch (final InterruptedException e)
+    catch (final InterruptedException exception)
     {
+      // Something went wrong that shouldn't.
+      //
+      XsmpcatUIPlugin.getInstance().getLog().error("", exception);
       Thread.currentThread().interrupt();
     }
     catch (final Exception exception)
     {
       // Something went wrong that shouldn't.
       //
-      // XsmpcatUIPlugin.getInstance().getLog().error("Unable to save file", exception);
+      XsmpcatUIPlugin.getInstance().getLog().error("", exception);
     }
     updateProblemIndication = true;
     doUpdateProblemIndication();

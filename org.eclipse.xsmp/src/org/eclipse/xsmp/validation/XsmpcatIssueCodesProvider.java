@@ -22,7 +22,7 @@ public class XsmpcatIssueCodesProvider extends ConfigurableIssueCodesProvider
   public static final String DUPLICATE_ENUMERATION_VALUE = ISSUE_CODE_PREFIX
           + "invalid_enumeration_value";
 
-  public static final String INVALID_MEMBER_TYPE = ISSUE_CODE_PREFIX + "invalid_member_type";
+  public static final String INVALID_TYPE_REFERENCE = ISSUE_CODE_PREFIX + "invalid_member_type";
 
   public static final String INVALID_MODIFIER = ISSUE_CODE_PREFIX + "invalid_modifier";
 
@@ -32,6 +32,15 @@ public class XsmpcatIssueCodesProvider extends ConfigurableIssueCodesProvider
 
   public static final String NAME_IS_RESERVED_KEYWORD = ISSUE_CODE_PREFIX
           + "name_is_reserved_keyword";
+
+  public static final String NAME_IS_INVALID = ISSUE_CODE_PREFIX + "name_is_invalid";
+
+  public static final String NARROWING_CONVERSION = ISSUE_CODE_PREFIX + "narrowing_convertion";
+
+  public static final String INVALID_VALUE_CONVERSION = ISSUE_CODE_PREFIX
+          + "invalid_value_convertion";
+
+  public static final String INVALID_VALUE_RANGE = ISSUE_CODE_PREFIX + "invalid_value_range";
 
   public static final String DUPLICATE_SERVICE_NAME = ISSUE_CODE_PREFIX + "duplicate_service_name";
 

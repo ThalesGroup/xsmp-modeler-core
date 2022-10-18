@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -18,6 +17,7 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.xsmp.xcatalogue.Integer;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
 import com.google.inject.Inject;
@@ -88,13 +88,11 @@ public class IntegerItemProvider extends SimpleTypeItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
-    switch (notification.getFeatureID(org.eclipse.xsmp.xcatalogue.Integer.class))
+    switch (notification.getFeatureID(Integer.class))
     {
-      case XcataloguePackage.INTEGER__UNIT:
-      case XcataloguePackage.INTEGER__MINIMUM:
-      case XcataloguePackage.INTEGER__MAXIMUM:
+      case XcataloguePackage.INTEGER__PRIMITIVE_TYPE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
@@ -102,15 +100,4 @@ public class IntegerItemProvider extends SimpleTypeItemProvider
         super.notifyChanged(notification);
     }
   }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-  }
-
 }

@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.xcatalogue.impl;
 
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -37,7 +37,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
    * {@inheritDoc}
    */
   @Override
-  public XMLGregorianCalendar getDate()
+  public Date getDate()
   {
     return getFeature(XcataloguePackage.Literals.DOCUMENT__DATE, DATE_EDEFAULT);
   }
@@ -64,7 +64,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
    * {@inheritDoc}
    */
   @Override
-  public void setDate(XMLGregorianCalendar newDate)
+  public void setDate(Date newDate)
   {
     setFeature(XcataloguePackage.Literals.DOCUMENT__DATE, newDate);
   }

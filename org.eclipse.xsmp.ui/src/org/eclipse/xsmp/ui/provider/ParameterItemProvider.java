@@ -124,27 +124,21 @@ public class ParameterItemProvider extends NamedElementItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Parameter.class))
     {
       case XcataloguePackage.PARAMETER__DIRECTION:
+      case XcataloguePackage.PARAMETER__TYPE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
+        // update the operation too
+        fireNotifyChanged(new ViewerNotification(notification,
+                ((EObject) notification.getNotifier()).eContainer(), false, true));
         return;
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

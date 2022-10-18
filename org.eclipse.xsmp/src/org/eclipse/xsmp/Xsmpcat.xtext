@@ -30,7 +30,7 @@ ImportDeclaration:
 Attribute:
 	AttributeDeclaration (=>'(' value=Expression? ')')?;
 
-fragment AttributeDeclaration * hidden(ML_COMMENT, SL_COMMENT):
+fragment AttributeDeclaration returns Attribute hidden(ML_COMMENT, SL_COMMENT):
 	'@' (type=[Type|QualifiedName] | WS);
 
 Metadatum:
@@ -221,7 +221,7 @@ fragment ReferenceDeclaration *:
 fragment EntryPointDeclaration *:
 	'entrypoint' name=ValidID
 	('{'
-	('->' input+=[Field|QualifiedName] | '<-' output+=[Field|QualifiedName])*
+	('in' input+=[Field|QualifiedName] | 'out' output+=[Field|QualifiedName])*
 	'}')?;
 
 fragment EventSinkDeclaration *:
@@ -277,7 +277,7 @@ FieldModifiers:
 
 EnumerationLiteral:
 	metadatum=Metadatum
-	name=ValidID '=' value=Expression;
+	name=ValidID (=>'=' value=Expression?)?;
 
 ParameterMetadatum returns Metadatum:
 	{Metadatum}
@@ -337,8 +337,8 @@ OpBitwiseXor:
 	'^';
 
 BitwiseAndExpression returns Expression:
-	EqualityExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseAnd) rightOperand=EqualityExpression)*
-;
+	EqualityExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseAnd)
+	rightOperand=EqualityExpression)*;
 
 OpBitwiseAnd:
 	'&';
@@ -351,8 +351,9 @@ OpEquality:
 	'==' | '!=';
 
 RelationalExpression returns Expression:
-	AdditiveExpression
+	BitwiseExpression
 	(=>({BinaryOperation.leftOperand=current} feature=OpCompare) rightOperand=BitwiseExpression)*;
+	
 
 OpCompare:
 	'>=' | '<=' | '>' | '<';

@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.documentation;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.util.ExpressionSolver;
+import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
@@ -47,7 +47,7 @@ public class XsmpcatEObjectDocumentationProvider extends MultiLineCommentDocumen
     {
       final var cst = (BuiltInConstant) o;
 
-      final var mapping = ExpressionSolver.constantMappings.get(cst.getName());
+      final var mapping = Solver.constantMappings.get(cst.getName());
 
       if (mapping != null)
       {
@@ -58,7 +58,7 @@ public class XsmpcatEObjectDocumentationProvider extends MultiLineCommentDocumen
     {
       final var cst = (BuiltInFunction) o;
 
-      final var mapping = ExpressionSolver.functionMappings.get(cst.getName());
+      final var mapping = Solver.functionMappings.get(cst.getName());
 
       if (mapping != null)
       {

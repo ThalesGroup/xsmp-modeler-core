@@ -10,16 +10,12 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -149,12 +145,12 @@ public class PropertyItemProvider extends VisibilityElementItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Property.class))
     {
       case XcataloguePackage.PROPERTY__ACCESS:
-      case XcataloguePackage.PROPERTY__CATEGORY:
+      case XcataloguePackage.PROPERTY__TYPE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
@@ -163,59 +159,4 @@ public class PropertyItemProvider extends VisibilityElementItemProvider
     }
   }
 
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-  }
-
-  /**
-   * This returns Operation.gif.
-   */
-  @Override
-  public Object getImage(Object object)
-  {
-    final var ope = (Property) object;
-
-    final List<Object> images = new ArrayList<>(2);
-    if (ope.eContainer() != null)
-    {
-      images.add(imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_"
-              + ope.getRealVisibility().getLiteral() + ".png"));
-    }
-    else
-    {
-      images.add(getResourceLocator()
-              .getImage("full/obj16/" + ope.eClass().getName() + "_public.png"));
-    }
-
-    switch (ope.getAccess())
-    {
-      case READ_ONLY:
-        images.add(imageHelper.getImage("full/ovr16/read.png"));
-        break;
-      case WRITE_ONLY:
-        images.add(imageHelper.getImage("full/ovr16/write.png"));
-        break;
-      default:
-        images.add(imageHelper.getImage("full/ovr16/read.png"));
-        images.add(imageHelper.getImage("full/ovr16/write.png"));
-        break;
-    }
-    return new ComposedImage(images);
-  }
-
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var elem = (Property) object;
-    return text(elem, elem.getType());
-  }
 }

@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,11 +17,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Association;
+import org.eclipse.xsmp.xcatalogue.Constant;
+import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
@@ -94,11 +94,11 @@ public class ClassItemProvider extends StructureItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(org.eclipse.xsmp.xcatalogue.Class.class))
     {
       case XcataloguePackage.CLASS__ABSTRACT:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
@@ -138,37 +138,9 @@ public class ClassItemProvider extends StructureItemProvider
     if (feature == XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER)
     {
       return value instanceof Operation || value instanceof Association || value instanceof Property
-              || super.canContain(owner, feature, value);
+              || value instanceof Constant || value instanceof Field;
     }
     return super.canContain(owner, feature, value);
-  }
-
-  @Override
-  protected Object overlayImage(Object object, Object image)
-  {
-    final var cls = (org.eclipse.xsmp.xcatalogue.Class) object;
-
-    final List<Object> images = new ArrayList<>(3);
-    images.add(image);
-    if (cls.eContainer() != null)
-    {
-      switch (cls.getRealVisibility())
-      {
-        case PRIVATE:
-        case PROTECTED:
-          images.add(getResourceLocator()
-                  .getImage("full/ovr16/" + cls.getRealVisibility().getLiteral() + ".png"));
-          break;
-        default:
-          break;
-
-      }
-    }
-    if (cls.isAbstract())
-    {
-      images.add(getResourceLocator().getImage("full/ovr16/abstract.png"));
-    }
-    return new ComposedImage(images);
   }
 
 }

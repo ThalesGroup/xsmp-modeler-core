@@ -29,6 +29,7 @@ import org.eclipse.emfforms.spi.core.services.databinding.DatabindingFailedExcep
 import org.eclipse.emfforms.spi.core.services.databinding.EMFFormsDatabinding;
 import org.eclipse.emfforms.spi.core.services.editsupport.EMFFormsEditSupport;
 import org.eclipse.emfforms.spi.core.services.label.EMFFormsLabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
@@ -97,11 +98,14 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
   @Override
   protected Control createSWTControl(Composite parent)
   {
+    // final var composite = new Composite(parent, SWT.NONE);
+    // GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).applyTo(composite);
 
     final var resource = (XtextResource) getViewModelContext().getDomainModel().eResource();
 
     // get or create a resourceSet shared between all EmbeddedEditor
     var resourceSet = (ResourceSet) getViewModelContext().getContextValue(RESOURCESET_KEY);
+
     if (resourceSet == null)
     {
       final var resourceSetProvider = resource.getResourceServiceProvider()
@@ -122,7 +126,8 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
     // create the editor
     final var factory = editorResource.getResourceServiceProvider()
             .get(EmbeddedEditorFactory.class);
-    editor = factory.newEditor(() -> toto).showErrorAndWarningAnnotations().withParent(parent);
+    editor = factory.newEditor(() -> toto).showErrorAndWarningAnnotations()
+            .withStyle(SWT.SINGLE | SWT.BORDER).withParent(parent);
     editor.getViewer().getTextWidget().addFocusListener(this);
 
     partialEditor = editor.createPartialEditor(true);
@@ -184,9 +189,9 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
 
       }
     }
-    catch (final DatabindingFailedException e)
+    catch (final Exception e)
     {
-      e.printStackTrace();
+      getReportService().report(new RenderingFailedReport(e));
     }
   }
 
@@ -216,7 +221,7 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
 
   @SuppressWarnings("unchecked")
   @Override
-  public void focusLost(FocusEvent e)
+  public void focusLost(FocusEvent event)
   {
     try
     {
@@ -242,9 +247,9 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
         getModelValue().setValue(EcoreUtil.copy(value));
       }
     }
-    catch (final DatabindingFailedException e1)
+    catch (final Exception e)
     {
-      e1.printStackTrace();
+      getReportService().report(new RenderingFailedReport(e));
     }
 
   }

@@ -1,16 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.viewproxy.model="http://org/eclipse/emf/ecp/view/viewproxy/model" xmi:id="_wUGu8FvOEeuYBrSMUc-xNA" name="Constant">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.categorization.model="http://org/eclipse/emf/ecp/view/categorization/model" xmlns:org.eclipse.emf.ecp.view.horizontal.model="http://org/eclipse/emf/ecp/view/horizontal/model" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/1180" xmlns:org.eclipse.emf.ecp.view.rule.model="http://org/eclipse/emf/ecp/view/rule/model" xmlns:org.eclipse.emf.ecp.view.vertical.model="http://org/eclipse/emf/ecp/view/vertical/model" xmi:id="_wUGu8FvOEeuYBrSMUc-xNA" name="Constant">
   <rootEClass href="http://org.eclipse.xsmp/xcatalogue#//Constant"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.viewproxy.model:ViewProxy" xmi:id="_GuD20A71EeyduKt4DWXoeQ" name="VisibilityElement" id="VisibilityElement"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wUH9GlvOEeuYBrSMUc-xNA" name="Control type">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wUH9G1vOEeuYBrSMUc-xNA">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Constant/type"/>
-    </domainModelReference>
-  </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wUH9HFvOEeuYBrSMUc-xNA" name="Control value">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wUH9HVvOEeuYBrSMUc-xNA">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Constant/value"/>
-    </domainModelReference>
+  <children xsi:type="org.eclipse.emf.ecp.view.categorization.model:CategorizationElement" xmi:id="_0bPZAFEzEe2w9-b5YNMcIg" mainCategoryDepth="1">
+    <categorizations xsi:type="org.eclipse.emf.ecp.view.categorization.model:Category" xmi:id="_1iSgoFEzEe2w9-b5YNMcIg" name="Main">
+      <composite xsi:type="org.eclipse.emf.ecp.view.horizontal.model:HorizontalLayout" xmi:id="_2sK50FEzEe2w9-b5YNMcIg">
+        <children xsi:type="org.eclipse.emf.ecp.view.vertical.model:VerticalLayout" xmi:id="_3SiWQFEzEe2w9-b5YNMcIg">
+          <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_V6AuUFESEe2w9-b5YNMcIg" name="Control Name">
+            <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_V6AuUVESEe2w9-b5YNMcIg">
+              <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/name"/>
+            </domainModelReference>
+          </children>
+          <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_V6AuUlESEe2w9-b5YNMcIg" name="Control Description">
+            <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_V6AuU1ESEe2w9-b5YNMcIg">
+              <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/description"/>
+            </domainModelReference>
+          </children>
+        </children>
+        <children xsi:type="org.eclipse.emf.ecp.view.vertical.model:VerticalLayout" xmi:id="_40bm0FEzEe2w9-b5YNMcIg">
+          <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_V6AuVFESEe2w9-b5YNMcIg" name="Control Visibility">
+            <attachments xsi:type="org.eclipse.emf.ecp.view.rule.model:ShowRule" xmi:id="_V6AuVVESEe2w9-b5YNMcIg">
+              <condition xsi:type="org.eclipse.emf.ecp.view.rule.model:LeafCondition" xmi:id="_V6AuVlESEe2w9-b5YNMcIg" expectedValue="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001">
+                <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_V6AuV1ESEe2w9-b5YNMcIg">
+                  <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//VisibilityElement/useVisibility"/>
+                </domainModelReference>
+              </condition>
+            </attachments>
+            <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_V6AuWFESEe2w9-b5YNMcIg">
+              <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//VisibilityElement/visibility"/>
+            </domainModelReference>
+          </children>
+          <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wUH9GlvOEeuYBrSMUc-xNA" name="Control Type">
+            <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wUH9G1vOEeuYBrSMUc-xNA">
+              <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Constant/type"/>
+            </domainModelReference>
+          </children>
+          <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_wUH9HFvOEeuYBrSMUc-xNA" name="Control Value">
+            <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_wUH9HVvOEeuYBrSMUc-xNA">
+              <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Constant/value"/>
+            </domainModelReference>
+          </children>
+        </children>
+      </composite>
+    </categorizations>
+    <categorizations xsi:type="org.eclipse.emf.ecp.view.categorization.model:Category" xmi:id="_7x7SsFEzEe2w9-b5YNMcIg" name="Advanced">
+      <composite xsi:type="org.eclipse.emf.ecp.view.vertical.model:VerticalLayout" xmi:id="_9XrIgFEzEe2w9-b5YNMcIg">
+        <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_sWpzUFE6Ee2w9-b5YNMcIg" name="Control Deprecated">
+          <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_sWpzUVE6Ee2w9-b5YNMcIg">
+            <domainModelEFeature xsi:type="ecore:EAttribute" href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/deprecated"/>
+          </domainModelReference>
+        </children>
+        <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_sWpzUlE6Ee2w9-b5YNMcIg" name="Control Attributes">
+          <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_sWpzU1E6Ee2w9-b5YNMcIg">
+            <domainModelEFeature xsi:type="ecore:EReference" href="http://org.eclipse.xsmp/xcatalogue#//Metadatum/metadata"/>
+            <domainModelEReferencePath href="http://org.eclipse.xsmp/xcatalogue#//NamedElement/metadatum"/>
+          </domainModelReference>
+        </children>
+      </composite>
+    </categorizations>
   </children>
   <ecorePaths>/org.eclipse.xsmp/model/Xcatalogue.ecore</ecorePaths>
 </org.eclipse.emf.ecp.view.model:View>

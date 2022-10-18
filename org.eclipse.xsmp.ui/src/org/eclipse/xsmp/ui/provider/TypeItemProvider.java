@@ -10,10 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
@@ -63,27 +61,6 @@ public class TypeItemProvider extends VisibilityElementItemProvider
                     "_UI_Type_type"),
             XcataloguePackage.Literals.TYPE__UUID, true, false, false,
             ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-  }
-
-  /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-   */
-  @Override
-  public void notifyChanged(Notification notification)
-  {
-    updateChildren(notification);
-    super.notifyChanged(notification);
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

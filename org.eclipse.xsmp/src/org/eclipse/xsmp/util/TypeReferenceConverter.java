@@ -56,7 +56,7 @@ public class TypeReferenceConverter
           .put(XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION,
                   XcataloguePackage.Literals.EXCEPTION)
           .put(XcataloguePackage.Literals.PARAMETER__TYPE, XcataloguePackage.Literals.LANGUAGE_TYPE)
-          .put(XcataloguePackage.Literals.PROPERTY__TYPE, XcataloguePackage.Literals.LANGUAGE_TYPE)
+          .put(XcataloguePackage.Literals.PROPERTY__TYPE, XcataloguePackage.Literals.VALUE_TYPE)
           .put(XcataloguePackage.Literals.PROPERTY__SET_RAISES,
                   XcataloguePackage.Literals.EXCEPTION)
           .put(XcataloguePackage.Literals.PROPERTY__GET_RAISES,

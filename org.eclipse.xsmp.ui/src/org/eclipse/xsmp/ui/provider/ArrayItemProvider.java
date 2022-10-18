@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -72,11 +71,12 @@ public class ArrayItemProvider extends ValueTypeItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Array.class))
     {
+      case XcataloguePackage.ARRAY__ITEM_TYPE:
       case XcataloguePackage.ARRAY__SIZE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
@@ -84,15 +84,4 @@ public class ArrayItemProvider extends ValueTypeItemProvider
         super.notifyChanged(notification);
     }
   }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-  }
-
 }

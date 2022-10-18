@@ -12,6 +12,7 @@ package org.eclipse.xsmp.ui.editor.model;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.CoreException;
@@ -99,15 +100,15 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
     final boolean isModified = document.readOnly(state -> {
 
       var modified = false;
-      // update document date
+      // update the document date
       if (saveActionsPreferenceAccess.isUpdateDocumentDate(project))
       {
-        serializer.addModification((Document) state.getContents().get(0), r -> r.setDate(
-                factory.createDateTime(Instant.now().truncatedTo(ChronoUnit.SECONDS).toString())));
+        serializer.addModification((Document) state.getContents().get(0), r -> r
+                .setDate(new Date(Instant.now().truncatedTo(ChronoUnit.SECONDS).toEpochMilli())));
         modified = true;
       }
 
-      // generate missing UUIDs
+      // generate the missing UUIDs
       modified |= generateMissingUUIDs(serializer, state);
 
       // organize imports

@@ -15,12 +15,10 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
-import org.eclipse.emf.edit.ui.action.ControlAction;
 import org.eclipse.emf.edit.ui.action.CreateChildAction;
 import org.eclipse.emf.edit.ui.action.CreateSiblingAction;
 import org.eclipse.emf.edit.ui.action.EditingDomainActionBarContributor;
 import org.eclipse.emf.edit.ui.action.FindAction;
-import org.eclipse.emf.edit.ui.action.LoadResourceAction;
 import org.eclipse.emf.edit.ui.action.RevertAction;
 import org.eclipse.emf.edit.ui.action.ValidateAction;
 import org.eclipse.emf.edit.ui.provider.DiagnosticDecorator;
@@ -139,11 +137,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   public XsmpcatActionBarContributor()
   {
     super(ADDITIONS_LAST_STYLE);
-    loadResourceAction = new LoadResourceAction();
     validateAction = new ValidateAction();
     liveValidationAction = new DiagnosticDecorator.LiveValidator.LiveValidationAction(
             XsmpcatUIPlugin.getInstance().getDialogSettings());
-    controlAction = new ControlAction();
     findAction = FindAction.create();
     revertAction = new RevertAction();
   }
