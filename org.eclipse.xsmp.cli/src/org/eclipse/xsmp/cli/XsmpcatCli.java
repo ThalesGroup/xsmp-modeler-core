@@ -27,6 +27,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.XsmpcatStandaloneSetup;
@@ -46,6 +47,8 @@ import com.google.inject.Provider;
 
 public class XsmpcatCli
 {
+  protected static final Logger LOG = Logger.getLogger(XsmpcatCli.class);
+
   static
   {
     @SuppressWarnings("unused")
@@ -111,18 +114,13 @@ public class XsmpcatCli
 
     final var url = XsmpcatCli.class.getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat");
 
-    URI uri;
+    if (url == null)
+    {
+      LOG.fatal("Unable to load ecss.smp.xsmpcat");
+      return;
+    }
 
-    // for rsrc, convert the opaque part to fragment
-    if ("rsrc".equals(url.getProtocol()))
-    {
-      uri = URI.createHierarchicalURI(url.getProtocol(), null, null, url.getFile().split("/"), null,
-              null);
-    }
-    else
-    {
-      uri = URI.createURI(url.toString());
-    }
+    final var uri = URI.createURI(url.toString());
 
     final var resource = resourceFactory.createResource(uri);
     try
@@ -132,7 +130,7 @@ public class XsmpcatCli
     }
     catch (final IOException e)
     {
-      e.printStackTrace();
+      LOG.fatal("Unable to load ecss.smp.xsmpcat", e);
     }
 
   }
@@ -160,8 +158,8 @@ public class XsmpcatCli
     }
     catch (final ParseException e)
     {
-      System.err.println(e.getLocalizedMessage());
       printHelp(options);
+      LOG.fatal("Invalid argument", e);
       return;
     }
     if (cmd.hasOption("h"))
@@ -171,9 +169,9 @@ public class XsmpcatCli
     }
     final var rs = resourceSetProvider.get();
 
-    System.out.print("Loading ECSS SMP library ... ");
+    LOG.info("Loading ECSS SMP library ... ");
     loadEcssSmpLibrary(rs);
-    System.out.println("Done.");
+    LOG.info("Done.");
 
     // load files from context
     final var context = cmd.getOptionValues("context");
@@ -192,9 +190,9 @@ public class XsmpcatCli
               if (resourceServiceProvider.canHandle(uri))
               {
                 // Load the context resource
-                System.out.print("Loading " + uri.toFileString() + " ... ");
+                LOG.info("Loading " + uri.toFileString() + " ... ");
                 rs.getResource(uri, true);
-                System.out.println("Done.");
+                LOG.info("Done.");
               }
               return super.visitFile(file, attrs);
             }
@@ -213,7 +211,7 @@ public class XsmpcatCli
         }
         catch (final IOException e)
         {
-          System.err.println("Invalid context:" + e.getLocalizedMessage());
+          LOG.error("Invalid context:" + e.getLocalizedMessage());
         }
       }
     }
@@ -247,28 +245,28 @@ public class XsmpcatCli
             // Validate the resource
             if (validate)
             {
-              System.out.print("Validating " + uri.toFileString() + " ... ");
+              LOG.info("Validating " + uri.toFileString() + " ... ");
               final var list = validator.validate(resource, CheckMode.ALL,
                       CancelIndicator.NullImpl);
               if (!list.isEmpty())
               {
-                System.out.println("Failed.");
+                LOG.error("Failed.");
                 for (final Issue issue : list)
                 {
-                  System.err.println(issue);
+                  LOG.error(issue);
                 }
                 return FileVisitResult.CONTINUE;
               }
-              System.out.println("Done.");
+              LOG.info("Done.");
             }
             // start the generator
             if (generate)
             {
-              System.out.print("Generating " + uri.toFileString() + " ... ");
+              LOG.info("Generating " + uri.toFileString() + " ... ");
               final var context = new GeneratorContext();
               context.setCancelIndicator(CancelIndicator.NullImpl);
               generator.generate(resource, fileAccess, context);
-              System.out.println("Done.");
+              LOG.info("Done.");
             }
           }
           return super.visitFile(file, attrs);
@@ -277,11 +275,11 @@ public class XsmpcatCli
     }
     catch (final IOException e)
     {
-      e.printStackTrace();
+      LOG.fatal(e);
     }
     final var df = new DecimalFormat("##.##");
     df.setRoundingMode(RoundingMode.DOWN);
 
-    System.out.println("Executed in " + df.format((System.nanoTime() - ns) / 1000000000.) + " s");
+    LOG.info("Executed in " + df.format((System.nanoTime() - ns) / 1000000000.) + " s");
   }
 }
