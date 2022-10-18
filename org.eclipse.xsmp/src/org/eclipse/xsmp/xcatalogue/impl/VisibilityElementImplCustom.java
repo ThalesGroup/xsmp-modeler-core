@@ -41,11 +41,11 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
           return VisibilityKind.PUBLIC;
 
         default:
-          break;
+          return VisibilityKind.PRIVATE;
       }
     }
 
-    return VisibilityKind.PRIVATE;
+    return VisibilityKind.PUBLIC;
   }
 
   @Override

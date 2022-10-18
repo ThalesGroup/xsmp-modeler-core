@@ -10,12 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-
 import com.google.inject.Inject;
 
 /**
@@ -31,42 +25,6 @@ public class ServiceItemProvider extends ComponentItemProvider
   public ServiceItemProvider(XcatalogueItemProviderAdapterFactory adapterFactory)
   {
     super(adapterFactory);
-  }
-
-  /**
-   * This returns the property descriptors for the adapted class.
-   */
-  @Override
-  public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object)
-  {
-    if (itemPropertyDescriptors == null)
-    {
-      super.getPropertyDescriptors(object);
-
-    }
-    return itemPropertyDescriptors;
-  }
-
-  /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-   */
-  @Override
-  public void notifyChanged(Notification notification)
-  {
-    updateChildren(notification);
-    super.notifyChanged(notification);
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-
   }
 
 }

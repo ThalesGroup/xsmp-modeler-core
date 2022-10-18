@@ -12,6 +12,7 @@ package org.eclipse.xsmp.validation;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,10 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.xsmp.util.ElementUtil;
+import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
@@ -45,6 +49,7 @@ import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.EventSink;
 import org.eclipse.xsmp.xcatalogue.EventSource;
 import org.eclipse.xsmp.xcatalogue.EventType;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
@@ -54,6 +59,7 @@ import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
+import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
@@ -69,6 +75,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ComposedChecks;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -87,6 +94,9 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   {
     // do not register this validator. job is done in XsmpcatValidator
   }
+
+  // regex for named element name
+  public static final Pattern VALID_ID_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*");
 
   private static final Set<String> reservedKeywordsSet = ImmutableSet.<String> builder().add(
 
@@ -141,10 +151,9 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected ElementUtil elementUtil;
 
   @Inject
-  protected ExpressionValidator expressionValidator;
-
-  @Inject
   private TypeReferenceConverter typeReferenceConverter;
+
+  protected Solver solver = new Solver(this);
 
   private final ModifierValidator fieldElementModifierValidator = new ModifierValidator(
           newArrayList("public", "protected", "private", "input", "output", "transient"));
@@ -176,14 +185,402 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   @Inject
   protected IQualifiedNameProvider qualifiedNameProvider;
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addIssue(String message, EObject source, EStructuralFeature feature, int index,
-          String issueCode, String... issueData)
+  public static final BigInteger INT16_MAX = BigInteger.valueOf(Short.MAX_VALUE);
+
+  public static final BigInteger INT16_MIN = BigInteger.valueOf(Short.MIN_VALUE);
+
+  public static final BigInteger INT32_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
+
+  public static final BigInteger INT32_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
+
+  public static final BigInteger INT64_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+
+  public static final BigInteger INT64_MIN = BigInteger.valueOf(Long.MIN_VALUE);
+
+  public static final BigInteger INT8_MAX = BigInteger.valueOf(Byte.MAX_VALUE);
+
+  public static final BigInteger INT8_MIN = BigInteger.valueOf(Byte.MIN_VALUE);
+
+  public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
+
+  public static final BigInteger UINT16_MIN = BigInteger.ZERO;
+
+  public static final BigInteger UINT32_MAX = BigInteger.valueOf(0xffffffffL);
+
+  public static final BigInteger UINT32_MIN = BigInteger.ZERO;
+
+  public static final BigInteger UINT64_MAX = new BigInteger("ffffffffffffffff", 16);
+
+  public static final BigInteger UINT64_MIN = BigInteger.ZERO;
+
+  public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
+
+  public static final BigInteger UINT8_MIN = BigInteger.ZERO;
+
+  public static final BigDecimal FLOAT32_MAX = BigDecimal.valueOf(Float.MAX_VALUE);
+
+  public static final BigDecimal FLOAT32_MIN = FLOAT32_MAX.negate();
+
+  public static final BigDecimal FLOAT64_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
+
+  public static final BigDecimal FLOAT64_MIN = FLOAT64_MAX.negate();
+
+  private void checkChar(Expression e)
   {
-    super.addIssue(message, source, feature, index, issueCode, issueData);
+    switch (e.eClass().getClassifierID())
+    {
+      case XcataloguePackage.CHARACTER_LITERAL:
+        final var chr = solver.getString(e);
+        if (chr.length() != 1)
+        {
+          acceptError("Invalid Character: " + chr, e, null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        }
+        break;
+      default:
+        // check byte value
+        solver.getInteger(e, INT8_MIN, INT8_MAX);
+    }
+  }
+
+  private void checkDateTime(Expression e)
+  {
+    switch (e.eClass().getClassifierID())
+    {
+      case XcataloguePackage.STRING_LITERAL:
+        try
+        {
+          EcoreUtil.createFromString(XMLTypePackage.Literals.DATE_TIME,
+                  XsmpUtil.getString((StringLiteral) e));
+        }
+        catch (final Exception ex)
+        {
+          acceptError("Invalid DateTime format: " + ex.getMessage(), e, null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        }
+        break;
+      default:
+        // check Date Time in ns
+        solver.getInteger(e, INT64_MIN, INT64_MAX);
+        break;
+    }
+  }
+
+  private void checkDuration(Expression e)
+  {
+    switch (e.eClass().getClassifierID())
+    {
+      case XcataloguePackage.STRING_LITERAL:
+        try
+        {
+          EcoreUtil.createFromString(XMLTypePackage.Literals.DURATION,
+                  XsmpUtil.getString((StringLiteral) e));
+        }
+        catch (final Exception ex)
+        {
+          acceptError("Invalid Duration format: " + ex.getMessage(), e, null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        }
+        break;
+      default:
+        // check duration in ns
+        solver.getInteger(e, INT64_MIN, INT64_MAX);
+        break;
+    }
+  }
+
+  private void checkEnumeration(Enumeration type, Expression e)
+  {
+    final var literal = solver.getEnum(e);
+    if (literal != null && literal.eContainer() != type)
+    {
+      acceptError("Incompatible enumeration Type: expecting " + type.getName(), e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+    }
+  }
+
+  private void checkFloat(org.eclipse.xsmp.xcatalogue.Float type, Expression e)
+  {
+    solver.getDecimal(e, getMin(type), getMax(type), type.isMinInclusive(), type.isMaxInclusive());
+  }
+
+  private void checkString(org.eclipse.xsmp.xcatalogue.String type, Expression e)
+  {
+
+    final var value = solver.getString(e);
+    if (type.getLength() == null)
+    {
+      return;
+    }
+
+    final var length = solver.getInteger(type.getLength(), BigInteger.ZERO, INT64_MAX);
+
+    if (length == null)
+    {
+      return;
+    }
+
+    if (value.length() > length.intValue())
+    {
+      acceptError(
+              "The String length cannot exceed " + length + " characters, got " + value.length()
+                      + ".",
+              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+    }
+
+  }
+
+  private BigDecimal getMax(org.eclipse.xsmp.xcatalogue.Float type)
+  {
+    if (type.getMaximum() != null)
+    {
+      return solver.getDecimal(type.getMaximum());
+    }
+    return FLOAT64_MAX;
+  }
+
+  private BigDecimal getMin(org.eclipse.xsmp.xcatalogue.Float type)
+  {
+    if (type.getMinimum() != null)
+    {
+      return solver.getDecimal(type.getMinimum());
+    }
+    return FLOAT64_MAX.negate();
+  }
+
+  protected void check(Type type, Expression e)
+  {
+    if (e == null || type == null || type.eIsProxy())
+    {
+      return;
+    }
+    switch (type.eClass().getClassifierID())
+    {
+      case XcataloguePackage.ARRAY:
+        checkArray((Array) type, e);
+        break;
+      case XcataloguePackage.ENUMERATION:
+        checkEnumeration((Enumeration) type, e);
+        break;
+      case XcataloguePackage.FLOAT:
+        checkFloat((org.eclipse.xsmp.xcatalogue.Float) type, e);
+        break;
+      case XcataloguePackage.INTEGER:
+        checkInteger((org.eclipse.xsmp.xcatalogue.Integer) type, e);
+        break;
+      case XcataloguePackage.PRIMITIVE_TYPE:
+        checkPrimitiveType((PrimitiveType) type, e);
+        break;
+      case XcataloguePackage.STRING:
+        checkString((org.eclipse.xsmp.xcatalogue.String) type, e);
+        break;
+      case XcataloguePackage.STRUCTURE:
+        checkStructure((Structure) type, e);
+        break;
+      default:
+        acceptError("Unsupported Type " + type.eClass().getName(), e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        break;
+    }
+  }
+
+  private void checkArray(Array type, Expression e)
+  {
+    if (type.getSize() != null)
+    {
+      switch (e.eClass().getClassifierID())
+      {
+        case XcataloguePackage.COLLECTION_LITERAL:
+          final var size = solver.getInteger(type.getSize(), BigInteger.ZERO, INT64_MAX);
+
+          if (size == null)
+          {
+            break;
+          }
+
+          final var s = size.longValue();
+
+          final var values = (CollectionLiteral) e;
+
+          // check correct number of elements
+          if (values.getElements().size() <= s)
+          {
+            // check each array field
+            values.getElements().stream().forEach(j -> check(type.getItemType(), j));
+
+            if (s != values.getElements().size() && !values.getElements().isEmpty())
+            {
+              acceptInfo("Partial initialization, the array type expects " + s + " elements.", e,
+                      null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+            }
+          }
+          else
+          {
+            acceptError("Expecting " + s + " elements, got " + values.getElements().size() + ".", e,
+                    null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+          }
+          break;
+        default:
+          acceptError("Expecting a Collection Literal, got " + e.eClass().getName() + ".", e, null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+          break;
+
+      }
+    }
+  }
+
+  private void checkInteger(org.eclipse.xsmp.xcatalogue.Integer type, Expression e)
+  {
+    solver.getInteger(e, getMin(type), getMax(type));
+  }
+
+  private void checkPrimitiveType(PrimitiveType type, Expression e)
+  {
+    switch (typeUtil.getPrimitiveType(type))
+    {
+      case BOOL:
+        solver.getBoolean(e);
+        break;
+      case CHAR8:
+        checkChar(e);
+        break;
+      case DATE_TIME:
+        checkDateTime(e);
+        break;
+      case DURATION:
+        checkDuration(e);
+        break;
+      case FLOAT32:
+        solver.getDecimal(e, FLOAT32_MIN, FLOAT32_MAX, true, true);
+        break;
+      case FLOAT64:
+        solver.getDecimal(e, FLOAT64_MIN, FLOAT64_MAX, true, true);
+        break;
+      case INT16:
+        solver.getInteger(e, INT16_MIN, INT16_MAX);
+        break;
+      case INT32:
+        solver.getInteger(e, INT32_MIN, INT32_MAX);
+        break;
+      case INT64:
+        solver.getInteger(e, INT64_MIN, INT64_MAX);
+        break;
+      case INT8:
+        solver.getInteger(e, INT8_MIN, INT8_MAX);
+        break;
+      case STRING8:
+        solver.getString(e);
+        break;
+      case UINT16:
+        solver.getInteger(e, UINT16_MIN, UINT16_MAX);
+        break;
+      case UINT32:
+        solver.getInteger(e, UINT32_MIN, UINT32_MAX);
+        break;
+      case UINT64:
+        solver.getInteger(e, UINT64_MIN, UINT64_MAX);
+        break;
+      case UINT8:
+        solver.getInteger(e, UINT8_MIN, UINT8_MAX);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private void checkStructure(Structure type, Expression e)
+  {
+    switch (e.eClass().getClassifierID())
+    {
+      case XcataloguePackage.COLLECTION_LITERAL:
+
+        final List<Field> fields = type.getMember().stream().filter(Field.class::isInstance)
+                .map(Field.class::cast).collect(Collectors.toList());
+        final var values = (CollectionLiteral) e;
+
+        final var size = values.getElements().size();
+        // check correct number of elements
+        if (size <= fields.size())
+        {
+          // check each field
+          for (var i = 0; i < size; ++i)
+          {
+            check(fields.get(i).getType(), values.getElements().get(i));
+          }
+          if (size != fields.size() && size != 0)
+          {
+            acceptInfo("Partial initialization. Expecting " + fields.size() + " elements.", e, null,
+                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+          }
+        }
+        else
+        {
+          acceptError("Expecting " + fields.size() + " elements, got " + size + " value(s).", e,
+                  null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        }
+        break;
+      default:
+        acceptError("Expecting a Collection Literal, got " + e.eClass().getName() + ".", e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        break;
+    }
+  }
+
+  private BigInteger getMax(org.eclipse.xsmp.xcatalogue.Integer type)
+  {
+    if (type.getMaximum() != null)
+    {
+      return solver.getInteger(type.getMaximum());
+    }
+
+    switch (typeUtil.getPrimitiveType(type))
+    {
+      case INT16:
+        return INT16_MAX;
+      case INT32:
+        return INT32_MAX;
+      case INT64:
+        return INT64_MAX;
+      case INT8:
+        return INT8_MAX;
+      case UINT16:
+        return UINT16_MAX;
+      case UINT32:
+        return UINT32_MAX;
+      case UINT64:
+        return UINT64_MAX;
+      case UINT8:
+        return UINT8_MAX;
+      default:
+        return null;
+    }
+  }
+
+  private BigInteger getMin(org.eclipse.xsmp.xcatalogue.Integer type)
+  {
+    if (type.getMinimum() != null)
+    {
+      return solver.getInteger(type.getMinimum());
+    }
+
+    switch (typeUtil.getPrimitiveType(type))
+    {
+      case INT16:
+        return INT16_MIN;
+      case INT32:
+        return INT32_MIN;
+      case INT64:
+        return INT64_MIN;
+      case INT8:
+        return INT8_MIN;
+      case UINT16:
+      case UINT32:
+      case UINT64:
+      case UINT8:
+        return UINT16_MIN;
+      default:
+        return null;
+    }
   }
 
   boolean startWithVowel(String word)
@@ -227,7 +624,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     if (operatorKind.equals(fqn) || fieldUpdateKind.equals(fqn))
     {
       error("Cannot refers to type " + fqn + ".", source, feature, index,
-              XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+              XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
 
   }
@@ -264,7 +661,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
                 + qualifiedNameProvider.getFullyQualifiedName(source) + "; "
                 + (startWithVowel(fea) ? "an " : "a ") + fea + " must be "
                 + (startWithVowel(expectedType.getName()) ? "an " : "a ") + expectedType.getName()
-                + " Type.", feature, index, XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                + " Type.", feature, index, XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
 
     }
@@ -290,14 +687,15 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   {
 
     // check size > 0
-    ExpressionValidator.checkIntegralRange(BigInteger.ZERO, ExpressionValidator.INT64_MAX,
-            elem.getSize() != null ? elem.getSize().solve(this) : null, this);
-
-    if (elem.getSize() instanceof CollectionLiteral)
+    if (elem.getSize() != null)
     {
-      error("Cannot use brackets for array size.", XcataloguePackage.Literals.ARRAY__SIZE);
-    }
+      solver.getInteger(elem.getSize(), BigInteger.ZERO, INT64_MAX);
 
+      if (elem.getSize() instanceof CollectionLiteral)
+      {
+        error("Cannot use brackets for array size.", XcataloguePackage.Literals.ARRAY__SIZE);
+      }
+    }
     var type = elem.getItemType();
 
     checkTypeReference(type, elem, XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
@@ -327,7 +725,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkAttributeType(AttributeType elem)
   {
     doCheckTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE, -1);
-    expressionValidator.check(elem.getType(), elem.getDefault(), this);
+    check(elem.getType(), elem.getDefault());
     for (var i = 0; i < elem.getUsage().size(); ++i)
     {
       if (!validUsages.contains(elem.getUsage().get(i)))
@@ -347,7 +745,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     {
       final var type = (AttributeType) elem.getType();
       // check the attribute value
-      expressionValidator.check(type.getType(), elem.getValue(), this);
+      check(type.getType(), elem.getValue());
     }
   }
 
@@ -361,7 +759,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     {
       error("A " + elem.eClass().getName() + " cannot extends from a derived Type.",
               XcataloguePackage.Literals.CLASS__BASE,
-              XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+              XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
 
     checkTypeReference(base, elem, XcataloguePackage.Literals.CLASS__BASE);
@@ -395,7 +793,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
                   + " shall only contain Properties, Operations, Associations, Constants and Fields. Got  "
                   + member.eClass().eClass().getName() + ".",
                   XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
-                  XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                  XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
 
@@ -467,7 +865,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
                   + " shall only contain Constants, Properties, Association, Operations, Fields, EntryPoints, EventSink, EventSource, Container and Reference. Got  "
                   + member.eClass().getName() + ".",
                   XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
-                  XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                  XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
 
@@ -485,7 +883,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     }
 
     // check the constant value
-    expressionValidator.check(f.getType(), f.getValue(), this);
+    check(f.getType(), f.getValue());
 
     checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONSTANT__TYPE);
 
@@ -519,45 +917,18 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkMultiplicity(NamedElementWithMultiplicity element)
   {
 
-    final var multiplicity = element.getMultiplicity();
-    long lower;
-    long upper;
-    if (element.isOptional()) // ?
-    {
-      lower = 0;
-      upper = 1;
-    }
-    else if (multiplicity == null) // empty
-    {
-      lower = 1;
-      upper = 1;
-    }
-    else if (multiplicity.getLower() == null && multiplicity.getUpper() == null) // [] | [*] | [+]
-    {
-      lower = multiplicity.isAux() ? 1 : 0;
-      upper = -1;
-    }
-    else if (multiplicity.getUpper() == null) // [INT] | [INT ... *]
-    {
-      final var value = multiplicity.getLower().getInteger(null).longValue();
-      lower = value;
-      upper = multiplicity.isAux() ? -1 : value;
-    }
-    else // [INT ... INT]
-    {
-      lower = multiplicity.getLower().getInteger(null).longValue();
-      upper = multiplicity.getUpper().getInteger(null).longValue();
-    }
+    final var lower = element.getLower();
 
     if (lower < 0)
     {
-      error("Lower bound shall be a positive number or 0.", multiplicity,
+      error("Lower bound shall be a positive number or 0.", element.getMultiplicity(),
               XcataloguePackage.Literals.MULTIPLICITY__LOWER);
     }
+    final var upper = element.getUpper();
     if (upper != -1 && upper < lower)
     {
       error("Lower bound shall be less or equal to the upper bound, if present.\nUpper bound shall be -1 or larger or equal to the lower bound.",
-              multiplicity, XcataloguePackage.Literals.MULTIPLICITY__LOWER);
+              element.getMultiplicity(), XcataloguePackage.Literals.MULTIPLICITY__LOWER);
     }
 
   }
@@ -614,15 +985,14 @@ public class DefaultValidator extends AbstractXsmpcatValidator
     for (final EnumerationLiteral l : elem.getLiteral())
     {
 
-      final var value = l.getValue().solve(this);
-      ExpressionValidator.checkIntegralRange(ExpressionValidator.INT32_MIN,
-              ExpressionValidator.INT32_MAX, value, this);
       if (l.getValue() instanceof CollectionLiteral)
       {
         error("Cannot use brackets for enumeration literal value.", l,
                 XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE);
       }
-      if (!values.add(value.getInteger(null)))
+      final var value = solver.getInteger(l.getValue(), INT32_MIN, INT32_MAX);
+
+      if (value != null && !values.add(value))
       {
         error("Enumeration Literal Values shall be unique within an Enumeration.", l,
                 XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE,
@@ -636,9 +1006,10 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkField(Field f)
   {
     // check the field value
-    expressionValidator.check(f.getType(), f.getDefault(), this);
+    check(f.getType(), f.getDefault());
 
     checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE);
+    // TODO check no String8 type
   }
 
   @Check
@@ -662,8 +1033,8 @@ public class DefaultValidator extends AbstractXsmpcatValidator
       }
     }
 
-    final var min = elem.getMinimum() != null ? elem.getMinimum().getDecimal(this) : null;
-    final var max = elem.getMaximum() != null ? elem.getMaximum().getDecimal(this) : null;
+    final var min = solver.getDecimal(elem.getMinimum());
+    final var max = solver.getDecimal(elem.getMaximum());
 
     if (min != null && max != null)
     {
@@ -682,14 +1053,6 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkInteger(org.eclipse.xsmp.xcatalogue.Integer elem)
   {
 
-    final var min = elem.getMinimum() != null ? elem.getMinimum().getInteger(this) : null;
-    final var max = elem.getMaximum() != null ? elem.getMaximum().getInteger(this) : null;
-
-    if (min != null && max != null && min.compareTo(max) > 0)
-    {
-      error("Minimum shall be less or equal than Maximum.",
-              XcataloguePackage.Literals.INTEGER__MINIMUM);
-    }
     // check type
     checkTypeReference(elem.getPrimitiveType(), elem,
             XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE);
@@ -702,36 +1065,36 @@ public class DefaultValidator extends AbstractXsmpcatValidator
       switch (kind)
       {
         case INT16:
-          baseTypeMin = ExpressionValidator.INT16_MIN;
-          baseTypeMax = ExpressionValidator.INT16_MAX;
+          baseTypeMin = INT16_MIN;
+          baseTypeMax = INT16_MAX;
           break;
         case INT32:
-          baseTypeMin = ExpressionValidator.INT32_MIN;
-          baseTypeMax = ExpressionValidator.INT32_MAX;
+          baseTypeMin = INT32_MIN;
+          baseTypeMax = INT32_MAX;
           break;
         case INT64:
-          baseTypeMin = ExpressionValidator.INT64_MIN;
-          baseTypeMax = ExpressionValidator.INT64_MAX;
+          baseTypeMin = INT64_MIN;
+          baseTypeMax = INT64_MAX;
           break;
         case INT8:
-          baseTypeMin = ExpressionValidator.INT8_MIN;
-          baseTypeMax = ExpressionValidator.INT8_MAX;
+          baseTypeMin = INT8_MIN;
+          baseTypeMax = INT8_MAX;
           break;
         case UINT16:
-          baseTypeMin = ExpressionValidator.UINT16_MIN;
-          baseTypeMax = ExpressionValidator.UINT16_MAX;
+          baseTypeMin = UINT16_MIN;
+          baseTypeMax = UINT16_MAX;
           break;
         case UINT32:
-          baseTypeMin = ExpressionValidator.UINT32_MIN;
-          baseTypeMax = ExpressionValidator.UINT32_MAX;
+          baseTypeMin = UINT32_MIN;
+          baseTypeMax = UINT32_MAX;
           break;
         case UINT64:
-          baseTypeMin = ExpressionValidator.UINT64_MIN;
-          baseTypeMax = ExpressionValidator.UINT64_MAX;
+          baseTypeMin = UINT64_MIN;
+          baseTypeMax = UINT64_MAX;
           break;
         case UINT8:
-          baseTypeMin = ExpressionValidator.UINT8_MIN;
-          baseTypeMax = ExpressionValidator.UINT8_MAX;
+          baseTypeMin = UINT8_MIN;
+          baseTypeMax = UINT8_MAX;
           break;
         default:
           error("Expecting an Integral Type, got " + kind.name() + ".",
@@ -739,18 +1102,14 @@ public class DefaultValidator extends AbstractXsmpcatValidator
           return;
       }
     }
+    final var min = solver.getInteger(elem.getMinimum(), baseTypeMin, baseTypeMax);
+    final var max = solver.getInteger(elem.getMaximum(), baseTypeMin, baseTypeMax);
 
-    if (elem.getMinimum() != null)
+    if (min != null && max != null && min.compareTo(max) > 0)
     {
-      ExpressionValidator.checkIntegralRange(baseTypeMin, baseTypeMax,
-              elem.getMinimum().solve(this), this);
+      error("Minimum shall be less or equal than Maximum.",
+              XcataloguePackage.Literals.INTEGER__MINIMUM);
     }
-    if (elem.getMaximum() != null)
-    {
-      ExpressionValidator.checkIntegralRange(baseTypeMin, baseTypeMax,
-              elem.getMaximum().solve(this), this);
-    }
-
   }
 
   @Check
@@ -766,12 +1125,12 @@ public class DefaultValidator extends AbstractXsmpcatValidator
       {
         error("An Interface cannot extends a derived Type.",
                 XcataloguePackage.Literals.INTERFACE__BASE, i,
-                XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
       if (!visited.add(bases.get(i)))
       {
         error("Duplicate Interface.", XcataloguePackage.Literals.INTERFACE__BASE, i,
-                XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
 
       checkTypeReference(bases.get(i), elem, XcataloguePackage.Literals.INTERFACE__BASE, i);
@@ -800,7 +1159,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
           error("An Interface shall only contain Constants, Properties and Operations. Got  "
                   + member.eClass().getName() + ".",
                   XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
-                  XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                  XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
     }
@@ -810,6 +1169,13 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkNamedElement(NamedElementImplCustom elem)
   {
     elem.check(getChain());
+
+    if (!VALID_ID_PATTERN.matcher(elem.getName()).matches())
+    {
+      error("An Element Name shall only contain letters, digits, and the underscore.",
+              XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
+              XsmpcatIssueCodesProvider.NAME_IS_INVALID);
+    }
 
     if (elem.eContainingFeature() != XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER
             && reservedKeywordsSet.contains(elem.getName()))
@@ -1007,8 +1373,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
   protected void checkString(org.eclipse.xsmp.xcatalogue.String elem)
   {
     // check size > 0
-    ExpressionValidator.checkIntegralRange(BigInteger.ZERO, ExpressionValidator.INT64_MAX,
-            elem.getLength() != null ? elem.getLength().solve(this) : null, this);
+    solver.getInteger(elem.getLength(), BigInteger.ZERO, INT64_MAX);
 
     if (elem.getLength() instanceof CollectionLiteral)
     {
@@ -1041,7 +1406,7 @@ public class DefaultValidator extends AbstractXsmpcatValidator
             error("A Structure shall only contain Constants and Fields. Got  "
                     + member.eClass().getName() + ".",
                     XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
-                    XsmpcatIssueCodesProvider.INVALID_MEMBER_TYPE);
+                    XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
             break;
         }
       }

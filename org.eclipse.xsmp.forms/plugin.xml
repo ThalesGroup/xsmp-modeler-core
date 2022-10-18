@@ -1,52 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-    <extension point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
-        <file filePath="views/NamedElement.view">
-                <filter key="proxyId" value="NamedElement"/>
-        </file>
-        <file filePath="views/VisibilityElement.view">
-                <filter key="proxyId" value="VisibilityElement"/>
-        </file>
-        <file filePath="views/Type.view">
-                <filter key="proxyId" value="Type"/>
-        </file>
-        <file filePath="views/Reference.view"/>
-        <file filePath="views/EventSource.view"/>
-        <file filePath="views/EventSink.view"/>
-        <file filePath="views/EntryPoint.view"/>
-        <file filePath="views/Container.view"/>
-        <file filePath="views/Property.view"/>
-        <file filePath="views/Field.view"/>
-        <file filePath="views/Constant.view"/>
-        <file filePath="views/Association.view"/>
-        <file filePath="views/Service.view"/>
-        <file filePath="views/Model.view"/>
-        <file filePath="views/Interface.view"/>
-        <file filePath="views/Structure.view"/>
-        <file filePath="views/Exception.view"/>
-        <file filePath="views/Class.view"/>
-        <file filePath="views/EventType.view"/>
-        <file filePath="views/ValueReference.view"/>
-        <file filePath="views/String.view"/>
-        <file filePath="views/Integer.view"/>
-        <file filePath="views/Float.view"/>
-        <file filePath="views/Array.view"/>
-        <file filePath="views/PrimitiveType.view"/>
-        <file filePath="views/Parameter.view"/>
-        <file filePath="views/Enumeration.view"/>
-        <file filePath="views/AttributeType.view"/>
-        <file filePath="views/Attribute.view"/>
-        
-        <file filePath="views/Operation.view"/>
-        <file filePath="views/Namespace.view"/>
-        <file filePath="views/Catalogue.view"/>
-    </extension>
-    
-    <extension point="org.eclipse.emf.ecp.view.template">
-        <viewTemplate xmi="views/xsmp.template"/>
-    </extension>
-    <extension point="org.eclipse.emf.ecp.view.context.viewServices">
-       <viewService class="org.eclipse.xsmp.forms.service.XsmpReferenceService"/>
-    </extension>
+	<extension point="org.eclipse.emf.ecp.view.model.provider.xmi.file">
+		<file filePath="views/Array.view" />
+		<file filePath="views/Association.view" />
+		<file filePath="views/Attribute.view" />
+		<file filePath="views/AttributeType.view" />
+		<file filePath="views/Catalogue.view" />
+		<file filePath="views/Class.view" />
+		<file filePath="views/Constant.view" />
+		<file filePath="views/Container.view" />
+		<file filePath="views/EntryPoint.view" />
+		<file filePath="views/Enumeration.view" />
+		<file filePath="views/EnumerationLiteral.view" />
+		<file filePath="views/EventSink.view" />
+		<file filePath="views/EventSource.view" />
+		<file filePath="views/EventType.view" />
+		<file filePath="views/Exception.view" />
+		<file filePath="views/Field.view" />
+		<file filePath="views/Float.view" />
+		<file filePath="views/Integer.view" />
+		<file filePath="views/Interface.view" />
+		<file filePath="views/Model.view" />
+		<file filePath="views/Namespace.view" />
+		<file filePath="views/NativeType.view" />
+		<file filePath="views/Operation.view" />
+		<file filePath="views/Parameter.view" />
+		<file filePath="views/PlatformMapping.view" />
+		<file filePath="views/PrimitiveType.view" />
+		<file filePath="views/Property.view" />
+		<file filePath="views/Reference.view" />
+		<file filePath="views/Service.view" />
+		<file filePath="views/String.view" />
+		<file filePath="views/Structure.view" />
+		<file filePath="views/ValueReference.view" />
+	</extension>
+
+	<extension point="org.eclipse.emf.ecp.view.template">
+		<viewTemplate xmi="views/xsmp.template" />
+	</extension>
+	<extension point="org.eclipse.emf.ecp.view.context.viewServices">
+		<viewService class="org.eclipse.xsmp.forms.service.XsmpReferenceService" />
+	</extension>
 </plugin>

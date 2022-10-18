@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.xsmp.util.ExpressionSolver;
+import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Attribute;
@@ -332,15 +332,15 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     return p;
   }
 
-  private static final List<BuiltInConstant> builtInConstants = ExpressionSolver.constantMappings
-          .keySet().stream().map(s -> {
+  private static final List<BuiltInConstant> builtInConstants = Solver.constantMappings.keySet()
+          .stream().map(s -> {
             final var cst = XcatalogueFactory.eINSTANCE.createBuiltInConstant();
             cst.setName(s);
             return cst;
           }).collect(Collectors.toList());
 
-  private static final List<BuiltInFunction> builtInFunctions = ExpressionSolver.functionMappings
-          .keySet().stream().map(s -> {
+  private static final List<BuiltInFunction> builtInFunctions = Solver.functionMappings.keySet()
+          .stream().map(s -> {
             final var cst = XcatalogueFactory.eINSTANCE.createBuiltInFunction();
             cst.setName(s);
             return cst;

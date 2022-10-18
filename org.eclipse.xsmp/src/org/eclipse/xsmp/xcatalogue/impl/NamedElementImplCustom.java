@@ -86,9 +86,10 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         index = xsmpcatdoc.tags().size();
       }
-
+      final var tag = new TagElement(-1, tagName);
+      tag.fragments().add(new TextElement(-1, serialize(eStructuralFeature, newObject)));
       // add the tag
-      xsmpcatdoc.tags().add(index, new TagElement(-1, serialize(eStructuralFeature, newObject)));
+      xsmpcatdoc.tags().add(index, tag);
       metadatum.setDocumentation(xsmpcatdoc.toString());
 
     }
@@ -514,6 +515,15 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       if (Boolean.FALSE.equals(value))
       {
         xsmpcatdoc.tags().remove(tag);
+      }
+      else if (tag == null)
+      {
+        tag = new TagElement(-1, tagName);
+        xsmpcatdoc.tags().add(tag);
+      }
+      else
+      {
+        tag.fragments().clear();
       }
     }
     else if (strValue == null || strValue.isEmpty())

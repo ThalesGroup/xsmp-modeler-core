@@ -62,13 +62,16 @@ namespace ns
 	 * @deprecated
 	 * @uuid b51a06b9-f4ea-4564-9f23-a0adab973040
 	 */
-	float Float
+	float Float extends Float32
 
 	/** @uuid 9f77d979-ce53-4bef-a872-fe9a721b6d38 */
-	integer Integer
+	integer Integer extends UInt8
 
 	/** @uuid 7c3ee119-841e-4c5b-b520-a0a75e63b71c */
-	event Event
+	event Event extends Int8
+	
+	/** @uuid 3a7e4a73-b465-4c8a-92d7-cf9673440105 */
+	array Array = Int8[10]
 
 	/** @uuid a9b35f18-5ca9-4de8-bb3c-485f500ddfec */
 	interface Interface
@@ -106,9 +109,10 @@ namespace ns
 				  Enum
 				    L1
 				    L2
-				  Float
-				  Integer
-				  Event
+				  Float : Smp::Float32
+				  Integer : Smp::UInt8
+				  Event : Smp::Int8
+				  Array : Smp::Int8[10]
 				  Interface
 				    Cst : Smp::Int16
 				    Operation(Smp::Int32, Smp::Int64*) : Smp::Bool
@@ -116,8 +120,8 @@ namespace ns
 				    Property : Smp::Bool
 				  Model
 				    field : ns::Float
-				    container : Smp::IComponent
-				    reference : Smp::IComponent
+				    container : Smp::IComponent[5]
+				    reference : Smp::IComponent[*]
 				    esi : ns::Event
 				    eso : ns::Event
 			'''

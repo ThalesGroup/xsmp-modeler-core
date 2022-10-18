@@ -10,10 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -22,8 +20,9 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.StyledString;
+import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
 import com.google.inject.Inject;
 
@@ -86,43 +85,22 @@ public class AttributeItemProvider extends GenericItemProvider
             XcataloguePackage.Literals.ATTRIBUTE__VALUE, true, false, false, null, null, null));
   }
 
+  @Inject
+  protected IQualifiedNameProvider qualifiedNameProvider;
+
   /**
    * This returns the label text for the adapted class.
    */
   @Override
   public String getText(Object object)
   {
-    return ((StyledString) getStyledText(object)).getString();
-  }
 
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public Object getStyledText(Object object)
-  {
-    return new StyledString(getString("_UI_Attribute_type"));
-  }
+    final var attribute = (Attribute) object;
+    final var type = attribute.getType();
 
-  /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-   */
-  @Override
-  public void notifyChanged(Notification notification)
-  {
-    updateChildren(notification);
-    super.notifyChanged(notification);
-  }
+    final var fqn = qualifiedNameProvider.getFullyQualifiedName(type);
+    return fqn == null ? getString("_UI_Attribute_type") : fqn.toString("::");
 
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

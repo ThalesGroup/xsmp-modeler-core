@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.util;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
+import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
@@ -407,6 +409,120 @@ public class XsmpUtil
     return value.substring(1, value.length() - 1);
   }
 
+  public static String getString(CharacterLiteral t)
+  {
+    var value = t.getValue();
+    // remove ENCODINGPREFIX: 'u' | 'U' | 'L'
+    switch (value.charAt(0))
+    {
+      case 'u':
+      case 'U':
+      case 'L':
+        value = value.substring(1);
+        break;
+      default:
+        break;
+    }
+    // remove quotes
+    return value.substring(1, value.length() - 1);
+  }
+
+  public static String getUnescapedChar(CharacterLiteral t)
+  {
+    return translateEscapes(getString(t));
+  }
+
+  public static String getUnescapedString(StringLiteral t)
+  {
+    return translateEscapes(getString(t));
+  }
+
+  public static String translateEscapes(String s) throws IllegalArgumentException
+  {
+    if (s.isEmpty())
+    {
+      return s;
+    }
+    final var chars = s.toCharArray();
+    final var length = chars.length;
+    var from = 0;
+    var to = 0;
+    while (from < length)
+    {
+      var ch = chars[from];
+      from++;
+      if (ch == '\\')
+      {
+        ch = from < length ? chars[from++] : '\0';
+        switch (ch)
+        {
+          case 'a':
+            ch = 0x07;
+            break;
+          case 'b':
+            ch = 0x08;
+            break;
+          case 'f':
+            ch = 0x0c;
+            break;
+          case 'n':
+            ch = 0x0a;
+            break;
+          case 'r':
+            ch = 0x0d;
+            break;
+          case 't':
+            ch = 0x09;
+            break;
+          case 'v':
+            ch = 0x0b;
+            break;
+          case '\'':
+          case '\"':
+          case '\\':
+            // as is
+            break;
+          case '?':
+            ch = 0x3f;
+            break;
+          case '0':
+          case '1':
+          case '2':
+          case '3':
+          case '4':
+          case '5':
+          case '6':
+          case '7':
+            final var limit = Integer.min(from + (ch <= '3' ? 2 : 1), length);
+            var code = ch - '0';
+            while (from < limit)
+            {
+              ch = chars[from];
+              if (ch < '0' || '7' < ch)
+              {
+                break;
+              }
+              from++;
+              code = code << 3 | ch - '0';
+            }
+            ch = (char) code;
+            break;
+
+          default:
+          {
+            final var msg = String.format("Invalid escape sequence: \\%c \\\\u%04X", ch, (int) ch);
+            throw new IllegalArgumentException(msg);
+          }
+        }
+      }
+
+      chars[to] = ch;
+      to++;
+    }
+
+    return new String(chars, 0, to);
+  }
+
   /**
    * Return the list of all direct dependent packages
    */
@@ -447,7 +563,7 @@ public class XsmpUtil
   {
     if (doc.getDate() != null)
     {
-      return doc.getDate().getYear();
+      return doc.getDate().toInstant().get(ChronoField.YEAR);
     }
     return LocalDate.now().getYear();
   }

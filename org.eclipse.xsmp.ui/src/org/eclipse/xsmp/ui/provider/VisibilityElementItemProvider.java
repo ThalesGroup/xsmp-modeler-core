@@ -10,14 +10,12 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
@@ -88,39 +86,6 @@ public class VisibilityElementItemProvider extends NamedElementItemProvider
 
   }
 
-  @Override
-  protected Object overlayImage(Object object, Object image)
-  {
-    final var visibilityElement = (VisibilityElement) object;
-    if (visibilityElement.eContainer() != null)
-    {
-
-      final var visi = visibilityElement.getRealVisibility();
-      switch (visi)
-      {
-        case PRIVATE:
-        case PROTECTED:
-          final var newImage = getResourceLocator()
-                  .getImage("full/ovr16/" + visi.getLiteral() + ".png");
-          if (image instanceof ComposedImage)
-          {
-            ((ComposedImage) image).getImages().add(newImage);
-          }
-          else
-          {
-            final List<Object> images = new ArrayList<>(2);
-            images.add(image);
-            images.add(newImage);
-            image = new ComposedImage(images);
-          }
-          break;
-        default:
-          break;
-      }
-    }
-    return super.overlayImage(object, image);
-  }
-
   /**
    * This handles model notifications by calling {@link #updateChildren} to update any cached
    * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
@@ -133,7 +98,6 @@ public class VisibilityElementItemProvider extends NamedElementItemProvider
     switch (notification.getFeatureID(VisibilityElement.class))
     {
       case XcataloguePackage.VISIBILITY_ELEMENT__VISIBILITY:
-      case XcataloguePackage.VISIBILITY_ELEMENT__MODIFIERS:
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;

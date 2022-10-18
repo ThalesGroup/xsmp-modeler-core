@@ -10,16 +10,12 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -129,72 +125,26 @@ public class FieldItemProvider extends VisibilityElementItemProvider
   }
 
   /**
-   * This returns Field.gif.
-   */
-  @Override
-  public Object getImage(Object object)
-  {
-
-    final var elem = (Field) object;
-
-    final List<Object> images = new ArrayList<>(2);
-    images.add(imageHelper
-            .getImage("full/obj16/Field_" + elem.getRealVisibility().getLiteral() + ".png"));
-
-    if (elem.isInput())
-    {
-      images.add(imageHelper.getImage("full/ovr16/input.png"));
-    }
-
-    if (elem.isOutput())
-    {
-      images.add(imageHelper.getImage("full/ovr16/output.png"));
-    }
-
-    return new ComposedImage(images);
-
-  }
-
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var elem = (Field) object;
-    return text(elem, elem.getType());
-  }
-
-  /**
    * This handles model notifications by calling {@link #updateChildren} to update any cached
    * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Field.class))
     {
-      case XcataloguePackage.FIELD__TRANSIENT:
+      // case XcataloguePackage.FIELD__TRANSIENT:
       case XcataloguePackage.FIELD__INPUT:
       case XcataloguePackage.FIELD__OUTPUT:
+      case XcataloguePackage.FIELD__TYPE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

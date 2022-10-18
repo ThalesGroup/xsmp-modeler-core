@@ -10,13 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -76,34 +74,13 @@ public class ReferenceItemProvider extends NamedElementWithMultiplicityItemProvi
 
     switch (notification.getFeatureID(Reference.class))
     {
-      case XcataloguePackage.REFERENCE__LOWER:
-      case XcataloguePackage.REFERENCE__UPPER:
+      case XcataloguePackage.REFERENCE__INTERFACE:
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-  }
-
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var elem = (Reference) object;
-    return text(elem, elem.getInterface());
   }
 
 }

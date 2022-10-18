@@ -13,11 +13,11 @@ package org.eclipse.xsmp.ui.contentassist;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Integer;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
@@ -45,7 +45,7 @@ public class DefaultValueProvider
         return getDefautValue(((ValueReference) t).getType());
       case XcataloguePackage.ARRAY:
         return "{" + java.lang.String.join(", ",
-                Collections.nCopies(((Array) t).getSize().getInteger(null).intValue(),
+                Collections.nCopies(Solver.INSTANCE.getInteger(((Array) t).getSize()).intValue(),
                         getDefautValue(((Array) t).getItemType())))
                 + "}";
       case XcataloguePackage.ENUMERATION:
@@ -56,26 +56,14 @@ public class DefaultValueProvider
       case XcataloguePackage.FLOAT:
         return "0.0";
       case XcataloguePackage.INTEGER:
-        final var integer = (Integer) t;
-        if (integer.getMinimum() != null)
-        {
-          return integer.getMinimum().getInteger(null).toString();
-        }
-        else
-          if (integer.getMaximum() != null && 0 > integer.getMaximum().getInteger(null).intValue())
-        {
-          return integer.getMaximum().getInteger(null).toString();
-        }
-          else
-        {
-          return "0";
-        }
+        return "0";
       case XcataloguePackage.PRIMITIVE_TYPE:
         switch (typeUtil.getPrimitiveType((PrimitiveType) t))
         {
           case BOOL:
             return "false";
           case FLOAT32:
+            return "0.0f";
           case FLOAT64:
             return "0.0";
           case DATE_TIME:

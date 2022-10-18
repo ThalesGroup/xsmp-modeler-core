@@ -484,7 +484,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     format(parent.getMetadatum(), doc, false);
     final var parentRegion = regionFor(parent);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::newLine);
-    doc.surround(parentRegion.keyword(ga.getEnumerationLiteralAccess().getEqualsSignKeyword_2()),
+    doc.surround(parentRegion.keyword(ga.getEnumerationLiteralAccess().getEqualsSignKeyword_2_0()),
             this::oneSpace);
     doc.format(parent.getValue());
   }

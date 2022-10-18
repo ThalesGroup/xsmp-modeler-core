@@ -19,7 +19,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.templates.TemplateVariable;
-import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
+import org.eclipse.xsmp.ui.contentassist.IReferenceFilter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -47,7 +47,7 @@ public class XsmpcatCrossReferenceTemplateVariableResolver
   private IGlobalScopeProvider globalScopeProvider;
 
   @Inject
-  private XsmpcatReferenceProposalCreator typeReferenceConverter;
+  private IReferenceFilter referenceFilter;
 
   private static final QualifiedName SmpQualifiedName = QualifiedName.create("Smp");
 
@@ -90,7 +90,7 @@ public class XsmpcatCrossReferenceTemplateVariableResolver
     }
     var linkingCandidates = queryScope(scope);
 
-    final var filter = typeReferenceConverter.getFilter(currentModel, reference);
+    final var filter = referenceFilter.getFilter(currentModel, reference);
 
     if (filter != null)
     {

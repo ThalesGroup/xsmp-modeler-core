@@ -10,12 +10,13 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.xsmp.xcatalogue.EventType;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
 import com.google.inject.Inject;
@@ -71,18 +72,16 @@ public class EventTypeItemProvider extends TypeItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
-    super.notifyChanged(notification);
-  }
 
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
+    switch (notification.getFeatureID(EventType.class))
+    {
+      case XcataloguePackage.EVENT_TYPE__EVENT_ARGS:
+        updateChildren(notification);
+        fireNotifyChanged(
+                new ViewerNotification(notification, notification.getNotifier(), false, true));
+        return;
+      default:
+        super.notifyChanged(notification);
+    }
   }
-
 }

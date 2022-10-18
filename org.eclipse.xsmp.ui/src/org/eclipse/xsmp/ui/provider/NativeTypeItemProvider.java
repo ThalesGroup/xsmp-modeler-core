@@ -11,10 +11,13 @@
 package org.eclipse.xsmp.ui.provider;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.xsmp.xcatalogue.Namespace;
+import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
+import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
 import com.google.inject.Inject;
 
@@ -34,17 +37,20 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
   }
 
   /**
-   * This returns the property descriptors for the adapted class.
+   * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate
+   * feature for an {@link org.eclipse.emf.edit.command.AddCommand},
+   * {@link org.eclipse.emf.edit.command.RemoveCommand} or
+   * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
    */
   @Override
-  public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object)
+  public Collection< ? extends EStructuralFeature> getChildrenFeatures(Object object)
   {
-    if (itemPropertyDescriptors == null)
+    if (childrenFeatures == null)
     {
-      super.getPropertyDescriptors(object);
-
+      super.getChildrenFeatures(object);
+      childrenFeatures.add(XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM);
     }
-    return itemPropertyDescriptors;
+    return childrenFeatures;
   }
 
   /**
@@ -54,8 +60,16 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
-    super.notifyChanged(notification);
+    switch (notification.getFeatureID(Namespace.class))
+    {
+      case XcataloguePackage.NATIVE_TYPE__PLATFORM:
+        updateChildren(notification);
+        fireNotifyChanged(
+                new ViewerNotification(notification, notification.getNotifier(), true, false));
+        return;
+      default:
+        super.notifyChanged(notification);
+    }
   }
 
   /**
@@ -66,6 +80,9 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
   {
     super.collectNewChildDescriptors(newChildDescriptors, object);
+
+    newChildDescriptors.add(createChildParameter(XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM,
+            XcatalogueFactory.eINSTANCE.createPlatformMapping()));
   }
 
 }

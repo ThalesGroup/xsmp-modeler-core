@@ -10,14 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.xcatalogue.impl;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.util.ExpressionSolver;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 /**
  * Implements generated methods
@@ -37,77 +30,36 @@ public class IntegerLiteralImplCustom extends IntegerLiteralImpl
     {
       return null;
     }
-    var withoutUnderscore = text.replace("'", "");
+    var withoutSeparator = text.replace("'", "");
 
     // remove trailing suffix
-    if (withoutUnderscore.endsWith("ll") || withoutUnderscore.endsWith("LL"))
+    if (withoutSeparator.endsWith("ll") || withoutSeparator.endsWith("LL"))
     {
-      withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 2);
+      withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 2);
     }
-    else if (withoutUnderscore.endsWith("l") || withoutUnderscore.endsWith("L"))
+    else if (withoutSeparator.endsWith("l") || withoutSeparator.endsWith("L"))
     {
-      withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 1);
+      withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 1);
     }
-    if (withoutUnderscore.endsWith("u") || withoutUnderscore.endsWith("U"))
+    if (withoutSeparator.endsWith("u") || withoutSeparator.endsWith("U"))
     {
-      withoutUnderscore = withoutUnderscore.substring(0, withoutUnderscore.length() - 1);
+      withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 1);
     }
 
-    if (withoutUnderscore.startsWith("0x") || withoutUnderscore.startsWith("0X"))
+    if (withoutSeparator.startsWith("0x") || withoutSeparator.startsWith("0X"))
     {
-      return new BigInteger(withoutUnderscore.substring(2), 16);
+      return new BigInteger(withoutSeparator.substring(2), 16);
     }
-    if (withoutUnderscore.startsWith("0b") || withoutUnderscore.startsWith("0B"))
+    if (withoutSeparator.startsWith("0b") || withoutSeparator.startsWith("0B"))
     {
-      return new BigInteger(withoutUnderscore.substring(2), 2);
+      return new BigInteger(withoutSeparator.substring(2), 2);
     }
-    if (withoutUnderscore.startsWith("0"))
+    if (withoutSeparator.startsWith("0"))
     {
-      return new BigInteger(withoutUnderscore, 8);
+      return new BigInteger(withoutSeparator, 8);
     }
-    return new BigInteger(withoutUnderscore);
+    return new BigInteger(withoutSeparator);
 
   }
 
-  @Override
-  public Expression solve(ValidationMessageAcceptor acceptor)
-  {
-    return duplicateEObject(EcoreUtil.copy(this), this);
-  }
-
-  @Override
-  public BigDecimal doGetDecimal(ValidationMessageAcceptor acceptor)
-  {
-    try
-    {
-      return new BigDecimal(getValue());
-    }
-    catch (final NumberFormatException e)
-    {
-      if (acceptor != null)
-      {
-        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-                XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
-      }
-      return null;
-    }
-  }
-
-  @Override
-  public BigInteger doGetInteger(ValidationMessageAcceptor acceptor)
-  {
-    try
-    {
-      return getValue();
-    }
-    catch (final NumberFormatException e)
-    {
-      if (acceptor != null)
-      {
-        acceptor.acceptError(e.getMessage(), ExpressionSolver.getTarget(this),
-                XcataloguePackage.Literals.INTEGER_LITERAL__TEXT, -1, "NumberFormatException");
-      }
-      return null;
-    }
-  }
 } // IntegerLiteralImplCustom

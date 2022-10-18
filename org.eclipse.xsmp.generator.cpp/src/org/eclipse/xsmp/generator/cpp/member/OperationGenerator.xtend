@@ -22,6 +22,7 @@ import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
+import org.eclipse.xsmp.util.Solver
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
@@ -32,7 +33,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
 		var operator = o.attributeValue(QualifiedName.create("Attributes", "Operator"))
 		if (operator !== null) {
-			val value = operator.getEnum(null)
+			val value = Solver.INSTANCE.getEnum(operator)
 
 			if (value !== null) {
 				switch (value.name) {

@@ -31,7 +31,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Document" abstract="true" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         volatile="true" transient="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//DateTime"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"
         volatile="true" transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="creator" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String" volatile="true"
@@ -133,41 +133,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="VisibilityKindObject" instanceClassName="org.eclipse.emf.common.util.Enumerator"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ValidationMessageAcceptor" instanceClassName="org.eclipse.xtext.validation.ValidationMessageAcceptor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true">
-    <eOperations name="getString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="getDecimal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="getInteger" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="getBoolean" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="solve" eType="#//Expression">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="doGetString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="doGetDecimal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="doGetInteger" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="doGetBoolean" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="getEnum" eType="#//EnumerationLiteral">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-    <eOperations name="doGetEnum" eType="#//EnumerationLiteral">
-      <eParameters name="acceptor" eType="#//ValidationMessageAcceptor"/>
-    </eOperations>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="CollectionLiteral" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//Expression" containment="true" resolveProxies="false"/>
@@ -347,13 +313,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="singlecast" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
         volatile="true" transient="true" defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedElementWithMultiplicity" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElementWithMultiplicity" abstract="true"
+      eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"
-        changeable="false" volatile="true" transient="true" defaultValueLiteral="1"
-        derived="true"/>
+        volatile="true" transient="true" defaultValueLiteral="1" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"
-        changeable="false" volatile="true" transient="true" defaultValueLiteral="1"
-        derived="true"/>
+        volatile="true" transient="true" defaultValueLiteral="1" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="multiplicity" eType="#//Multiplicity"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"

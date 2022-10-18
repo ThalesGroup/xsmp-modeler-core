@@ -48,6 +48,11 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
     this.editingDomain = editingDomain;
   }
 
+  public void refresh()
+  {
+
+  }
+
   @Override
   public void createControl(Composite parent)
   {
@@ -83,7 +88,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
     detailManager = new DetailViewManager(container);
 
     detailManager.layoutDetailParent(container);
-    detailManager.setCache(new BasicDetailViewCache(30));
+    detailManager.setCache(new BasicDetailViewCache(40));
   }
 
   @Override
@@ -104,7 +109,6 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
   @Override
   public void setActionBars(IActionBars actionBars)
   {
-    // ignore
   }
 
   @Override
@@ -148,13 +152,11 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
         viewMessage.setImage(null);
       }
 
-      final var cached = detailManager.getCachedView(eObject);
-      // if the view for this eObject is cached, reuse it
-      if (cached != null)
+      if (detailManager.isCached(eObject))
       {
-        cached.getViewModelContext().getViewModel()
+        // It's ready to present (no async needed)
+        detailManager.activate(eObject).getViewModelContext().getViewModel()
                 .setReadonly(editingDomain.isReadOnly(eObject.eResource()));
-        detailManager.activate(eObject);
       }
       else
       {
@@ -166,11 +168,6 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
         detailManager.render(modelContext, ECPSWTViewRenderer.INSTANCE::render);
       }
     }
-  }
-
-  public void refresh()
-  {
-    // ignore
   }
 
 }

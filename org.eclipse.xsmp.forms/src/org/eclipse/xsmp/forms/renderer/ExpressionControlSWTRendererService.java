@@ -26,9 +26,8 @@ public class ExpressionControlSWTRendererService extends AbstractRendererService
   {
     if (valueType instanceof EReference)
     {
-      final var eStructuralFeature = EReference.class.cast(valueType);
-      if (XcataloguePackage.Literals.EXPRESSION
-              .isSuperTypeOf(eStructuralFeature.getEReferenceType()))
+      final var eReference = EReference.class.cast(valueType);
+      if (XcataloguePackage.Literals.EXPRESSION.isSuperTypeOf(eReference.getEReferenceType()))
       {
         return 10;
       }

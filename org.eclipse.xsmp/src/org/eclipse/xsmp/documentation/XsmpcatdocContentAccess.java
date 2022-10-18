@@ -210,7 +210,7 @@ public class XsmpcatdocContentAccess
     fBuf.append("Deprecated.");
     fBuf.append("</b> <i>"); //$NON-NLS-1$
     handleContentElements(tag.fragments());
-    fBuf.append("</i><p>"); //$NON-NLS-1$
+    fBuf.append("</i></p>"); //$NON-NLS-1$
   }
 
   private void handleContentElements(List< ? extends TextElement> nodes)

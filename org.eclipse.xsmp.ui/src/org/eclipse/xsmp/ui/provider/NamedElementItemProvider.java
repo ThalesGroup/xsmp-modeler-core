@@ -10,13 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -25,10 +23,8 @@ import org.eclipse.emf.edit.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
@@ -103,38 +99,12 @@ public class NamedElementItemProvider extends GenericItemProvider
   @Override
   public final String getText(Object object)
   {
-    return getStyledText(object).getString();
-  }
-
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var label = ((NamedElement) object).getName();
-    final var styledLabel = new StyledString();
-    if (label != null)
+    final var fqn = qualifiedNameProvider.getFullyQualifiedName((EObject) object);
+    if (fqn != null)
     {
-      styledLabel.append(label);
+      return fqn.toString("::");
     }
-    return styledLabel;
-  }
-
-  protected StyledString text(NamedElement elem, Type type)
-  {
-    final var label = elem.getName();
-    final var styledLabel = new StyledString();
-    if (label != null)
-    {
-      styledLabel.append(label);
-    }
-    if (type != null && !type.eIsProxy())
-    {
-      styledLabel.append(" : " + qualifiedNameProvider.getFullyQualifiedName(type).toString("::"),
-              StyledString.Style.DECORATIONS_STYLER);
-    }
-    return styledLabel;
+    return "";
   }
 
   /**
@@ -144,13 +114,12 @@ public class NamedElementItemProvider extends GenericItemProvider
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(NamedElement.class))
     {
-      case XcataloguePackage.NAMED_ELEMENT__METADATUM:
       case XcataloguePackage.NAMED_ELEMENT__NAME:
-      case XcataloguePackage.NAMED_ELEMENT__DESCRIPTION:
+      case XcataloguePackage.NAMED_ELEMENT__DEPRECATED:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
@@ -159,37 +128,4 @@ public class NamedElementItemProvider extends GenericItemProvider
     }
   }
 
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-  }
-
-  @Override
-  protected Object overlayImage(Object object, Object image)
-  {
-    final var element = (NamedElement) object;
-
-    if (element.isDeprecated())
-    {
-      final var newImage = getResourceLocator().getImage("full/ovr16/deprecated.png");
-      if (image instanceof ComposedImage)
-      {
-        ((ComposedImage) image).getImages().add(0, newImage);
-      }
-      else
-      {
-        final List<Object> images = new ArrayList<>(2);
-        images.add(newImage);
-        images.add(image);
-        image = new ComposedImage(images);
-      }
-    }
-
-    return super.overlayImage(object, image);
-  }
 }

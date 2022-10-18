@@ -10,13 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Container;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -81,44 +79,23 @@ public class ContainerItemProvider extends NamedElementWithMultiplicityItemProvi
   }
 
   /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var elem = (Container) object;
-    return text(elem, elem.getType());
-  }
-
-  /**
    * This handles model notifications by calling {@link #updateChildren} to update any cached
    * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Container.class))
     {
-      case XcataloguePackage.CONTAINER__LOWER:
-      case XcataloguePackage.CONTAINER__UPPER:
+      case XcataloguePackage.CONTAINER__TYPE:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), false, true));
         return;
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
   }
 
 }

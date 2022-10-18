@@ -15,6 +15,7 @@ import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.Model
 import org.eclipse.xsmp.xcatalogue.Namespace
 import org.eclipse.xsmp.xcatalogue.Reference
+import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -29,7 +30,7 @@ class MultiplicityParsingTest {
 	ParseHelper<Catalogue> catalogueParseHelper
 
 	@Test
-	def void check() {
+	def void checkParsing() {
 		val result = catalogueParseHelper.parse(
 	'''
 			catalogue test
@@ -97,4 +98,40 @@ class MultiplicityParsingTest {
 		Assertions.assertEquals(1, ref7.getUpper());
 	}
 
+	@Test
+	def void checkSetters() {
+		var ref = XcatalogueFactory.eINSTANCE.createReference
+		Assertions.assertEquals(1, ref.lower);
+		Assertions.assertEquals(1, ref.upper);
+
+		ref.lower = 0
+		Assertions.assertEquals(0, ref.lower);
+		Assertions.assertEquals(1, ref.upper);
+		
+		ref.lower = 1
+		Assertions.assertEquals(1, ref.lower);
+		Assertions.assertEquals(1, ref.upper);
+		
+		
+		ref.lower = 0
+		ref.upper = -1
+		Assertions.assertEquals(0, ref.lower);
+		Assertions.assertEquals(-1, ref.upper);
+
+		ref.lower = 1
+		Assertions.assertEquals(1, ref.lower);
+		Assertions.assertEquals(-1, ref.upper);
+		
+		ref.lower = 10
+		Assertions.assertEquals(10, ref.lower);
+		Assertions.assertEquals(-1, ref.upper);
+		
+		ref.upper = 10
+		Assertions.assertEquals(10, ref.lower);
+		Assertions.assertEquals(10, ref.upper);
+		
+		ref.upper = 20
+		Assertions.assertEquals(10, ref.lower);
+		Assertions.assertEquals(20, ref.upper);
+	}
 }

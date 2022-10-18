@@ -12,17 +12,13 @@ package org.eclipse.xsmp.ui.provider;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.StyledString;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-import org.eclipse.xsmp.util.ElementUtil;
 import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
@@ -33,8 +29,6 @@ import com.google.inject.Inject;
  */
 public class OperationItemProvider extends VisibilityElementItemProvider
 {
-  @Inject
-  private ElementUtil elementUtil;
 
   /**
    * This constructs an instance from a factory and a notifier.
@@ -67,9 +61,9 @@ public class OperationItemProvider extends VisibilityElementItemProvider
   {
     itemPropertyDescriptors.add(createItemPropertyDescriptor(
             ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-            getResourceLocator(), getString("_UI_Constructor_raisedException_feature"),
-            getString("_UI_PropertyDescriptor_description",
-                    "_UI_Constructor_raisedException_feature", "_UI_Constructor_type"),
+            getResourceLocator(), getString("_UI_Operation_raisedException_feature"),
+            getString("_UI_PropertyDescriptor_description", "_UI_Operation_raisedException_feature",
+                    "_UI_Operation_type"),
             XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION, true, false, true, null, null,
             null));
   }
@@ -93,49 +87,19 @@ public class OperationItemProvider extends VisibilityElementItemProvider
   }
 
   /**
-   *
-   */
-  @Override
-  protected EStructuralFeature getChildFeature(Object object, Object child)
-  {
-    // Check the type of the specified child object and return the proper feature to use for
-    // adding (see {@link AddCommand}) it as a child.
-
-    return super.getChildFeature(object, child);
-  }
-
-  /**
-   * This returns the label styled text for the adapted class.
-   */
-  @Override
-  public StyledString getStyledText(Object object)
-  {
-    final var op = (Operation) object;
-    final var styledLabel = super.getStyledText(object);
-    styledLabel.append("(" + op.getParameter().stream().map(this::getParameterType)
-            .collect(Collectors.joining(", ")) + ")");
-    styledLabel.append(
-            " : " + (op.getReturnParameter() == null ? "void"
-                    : getParameterType(op.getReturnParameter())),
-            StyledString.Style.DECORATIONS_STYLER);
-
-    return styledLabel;
-  }
-
-  /**
    * This handles model notifications by calling {@link #updateChildren} to update any cached
    * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
   {
-    updateChildren(notification);
 
     switch (notification.getFeatureID(Operation.class))
     {
 
       case XcataloguePackage.OPERATION__PARAMETER:
       case XcataloguePackage.OPERATION__RETURN_PARAMETER:
+        updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), true, false));
         return;
@@ -181,50 +145,6 @@ public class OperationItemProvider extends VisibilityElementItemProvider
                 getTypeText(owner) });
     }
     return super.getCreateChildText(owner, feature, child, selection);
-  }
-
-  /**
-   * This returns Operation.gif.
-   */
-  @Override
-  public Object getImage(Object object)
-  {
-    final var ope = (Operation) object;
-    if (ope.eContainer() != null)
-    {
-      return imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_"
-              + ope.getRealVisibility().getLiteral() + ".png");
-    }
-    return imageHelper.getImage("full/obj16/" + ope.eClass().getName() + "_public.png");
-  }
-
-  protected String getParameterType(Parameter p)
-  {
-    final var label = new StringBuilder();
-    if (elementUtil.isConst(p))
-    {
-      label.append("const ");
-    }
-    final var type = p.getType();
-    if (type != null && !type.eIsProxy())
-    {
-      label.append(qualifiedNameProvider.getFullyQualifiedName(p.getType()).toString("::"));
-    }
-
-    switch (elementUtil.kind(p))
-    {
-      case BY_PTR:
-        label.append("*");
-        break;
-      case BY_REF:
-        label.append("&");
-        break;
-      default:
-        break;
-    }
-
-    return label.toString();
-
   }
 
 }
