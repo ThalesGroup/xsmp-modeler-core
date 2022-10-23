@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	
+    <extension point="org.eclipse.ui.commands">
+        <command id="org.eclipse.xsmp.tool.smp.convertSmpcat" name="Convert to Xsmpcat">
+        </command>
+    </extension>
+    <extension point="org.eclipse.ui.handlers">
+        <handler class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.ui.action.SmpImporterAction" commandId="org.eclipse.xsmp.tool.smp.convertSmpcat">
+        </handler>
+    </extension>
+
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution allPopups="true" locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+            <command commandId="org.eclipse.xsmp.tool.smp.convertSmpcat" label="Convert to Xsmpcat" style="push">
+                <visibleWhen checkEnabled="false">
+                    <with variable="activeMenuSelection">
+                        <iterate ifEmpty="false">
+                            <adapt type="org.eclipse.core.resources.IResource">
+                                <test property="org.eclipse.core.resources.extension" value="smpcat"/>
+                            </adapt>          
+                        </iterate>         
+                    </with>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+        <menuContribution allPopups="true" locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+            <command commandId="org.eclipse.xsmp.tool.smp.convertSmpcat" label="Convert to Xsmpcat" style="push">
+                <visibleWhen checkEnabled="false">
+                    <with variable="activeMenuSelection">
+                        <iterate ifEmpty="false">
+                            <adapt type="org.eclipse.core.resources.IResource">
+                                <test property="org.eclipse.core.resources.extension" value="smpcat"/>
+                            </adapt>          
+                        </iterate>   
+                    </with>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+    </extension>
+    
+    <extension
+          point="org.eclipse.xsmp.ui.tool">
+       <factory
+             description="A Tool that convert xsmpcat files to smpcat/smppkg"
+             injector="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:com.google.inject.Injector"
+             id="org.eclipse.xsmp.tool.smp"
+             name="SMP model generator">
+       </factory>
+    </extension>
+    <extension point="org.eclipse.xtext.builder.participant">
+		<participant
+			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="xsmpcat"/>
+	</extension>
+	<!-- adding resource factories -->
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
+			type="smpcat">
+		</parser>
+	</extension>
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
+			type="smppkg">
+		</parser>
+	</extension>
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
+			type="smpcfg">
+		</parser>
+	</extension>
+</plugin>

@@ -65,7 +65,17 @@ public class XsmpUtil
    */
   public enum PrimitiveTypeKind
   {
-    BOOL, CHAR8, DATE_TIME, DURATION, FLOAT32, FLOAT64, INT8, INT16, INT32, INT64, STRING8, UINT8, UINT16, UINT32, UINT64;
+    BOOL("Bool"), CHAR8("Char8"), DATE_TIME("DateTime"), DURATION("Duration"), FLOAT32(
+            "Float32"), FLOAT64("Float64"), INT8("Int8"), INT16("Int16"), INT32("Int32"), INT64(
+                    "Int64"), STRING8("String8"), UINT8("UInt8"), UINT16("UInt16"), UINT32(
+                            "UInt32"), UINT64("UInt64"), ENUM("Int32"), NONE("None");
+
+    public final String label;
+
+    PrimitiveTypeKind(String label)
+    {
+      this.label = label;
+    }
   }
 
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
@@ -328,11 +338,11 @@ public class XsmpUtil
       case XcataloguePackage.INTEGER:
         return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Integer) type);
       case XcataloguePackage.ENUMERATION:
-        return PrimitiveTypeKind.INT32;
+        return PrimitiveTypeKind.ENUM;
       case XcataloguePackage.STRING:
         return PrimitiveTypeKind.STRING8;
       default:
-        return null;
+        return PrimitiveTypeKind.NONE;
     }
 
   }

@@ -50,7 +50,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
 
   public void refresh()
   {
-
+    // ignore
   }
 
   @Override
@@ -109,6 +109,7 @@ class EMFFormsPropertySheetPage implements IPropertySheetPage
   @Override
   public void setActionBars(IActionBars actionBars)
   {
+    // ignore
   }
 
   @Override

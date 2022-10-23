@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -118,22 +119,15 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
-import org.eclipse.xsmp.ui.mdk.IMdkConfigurationUIProvider;
-import org.eclipse.xsmp.ui.provider.XcatalogueItemProviderAdapterFactory;
+import org.eclipse.xsmp.ui.configuration.IConfigurationUIProvider;
 import org.eclipse.xsmp.xcatalogue.util.XcatalogueAdapterFactory;
+import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDomainProvider,
         ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker, IRevertablePart
 {
-
-  @Inject
-  private XcatalogueItemProviderAdapterFactory xcatalogueItemProviderAdapterFactory;
-
-  @Inject
-  private Injector defaultInjector;
 
   /**
    * This keeps track of the editing domain that is used to track all changes to the model. <!--
@@ -311,6 +305,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
             dispatchUpdateProblemIndication();
             break;
           }
+          default:
+            break;
         }
       }
       else
@@ -381,7 +377,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
                 {
                   if ((delta.getFlags() & IResourceDelta.MARKERS) != 0)
                   {
-                    DiagnosticDecorator.Styled.DiagnosticAdapter.update(resource, markerHelper
+                    DiagnosticDecorator.DiagnosticAdapter.update(resource, markerHelper
                             .getMarkerDiagnostics(resource, (IFile) delta.getResource(), false));
                   }
                   if ((delta.getFlags() & IResourceDelta.CONTENT) != 0
@@ -591,7 +587,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   @Inject
-  private IMdkConfigurationUIProvider mdkProvider;
+  private IConfigurationUIProvider configurationProvider;
 
   /**
    * This creates a model editor.
@@ -832,18 +828,14 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
 
   private void initializeEditingDomain(IEditorInput input)
   {
+
+    IProject project = null;
     if (input instanceof IFileEditorInput)
     {
-      final var injector = mdkProvider
-              .getInjector(((IFileEditorInput) input).getFile().getProject());
-      if (injector != null)
-      {
-        injector.injectMembers(editingDomain);
-        return;
-      }
-    }
+      project = ((IFileEditorInput) input).getFile().getProject();
 
-    defaultInjector.injectMembers(editingDomain);
+    }
+    configurationProvider.getInjector(project).injectMembers(editingDomain);
   }
 
   /**
@@ -855,7 +847,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     final var input = getEditorInput();
     initializeEditingDomain(input);
 
-    final var resource = editingDomain.createResource(input);
+    final var resource = (XtextResource) editingDomain.createResource(input);
     Exception exception = null;
     try
     {
@@ -873,16 +865,9 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     }
     editingDomain.getResourceSet().eAdapters().add(problemIndicationAdapter);
 
-    // add the specific adapter factory according to the selected MDK
-    final var adapter = mdkProvider.getInstance(resource, XcatalogueAdapterFactory.class);
-    if (adapter != null)
-    {
-      adapterFactory.addAdapterFactory(adapter);
-    }
-    else
-    {
-      adapterFactory.addAdapterFactory(xcatalogueItemProviderAdapterFactory);
-    }
+    adapterFactory.addAdapterFactory(
+            resource.getResourceServiceProvider().get(XcatalogueAdapterFactory.class));
+
   }
 
   /**

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createJavaProject
 
 @ExtendWith(InjectionExtension)
-@InjectWith(XsmpcatUiInjectorProvider)
+@InjectWith(XsmpUiInjectorProvider)
 class HighlightingTest extends AbstractHighlightingTest {
 
 	@Inject extension XsmpcatHighlightingConfiguration

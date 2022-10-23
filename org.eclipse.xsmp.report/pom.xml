@@ -64,5 +64,41 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.tool.smp</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.tool.smp.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.tool.smp.ui</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp.cli</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp.ui</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>

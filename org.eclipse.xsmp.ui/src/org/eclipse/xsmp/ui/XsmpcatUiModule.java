@@ -10,14 +10,16 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui;
 
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.mdk.IMdkConfigurationProvider;
+import org.eclipse.xsmp.configuration.IConfigurationProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatMultiLineTerminalEditStrategy;
+import org.eclipse.xsmp.ui.configuration.XsmpcatConfigurationUIProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateContextType;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateProposalProvider;
-import org.eclipse.xsmp.ui.editor.model.SaveActionsPreferenceAccess;
+import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.editor.model.XsmpcatDocumentProvider;
 import org.eclipse.xsmp.ui.editor.model.XsmpcatTerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xsmp.ui.folding.XsmpcatFoldingRegionProvider;
@@ -26,12 +28,11 @@ import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
 import org.eclipse.xsmp.ui.highlighting.XsmpcatSemanticHighlightingCalculator;
 import org.eclipse.xsmp.ui.hover.XsmpcatDispatchingEObjectTextHover;
 import org.eclipse.xsmp.ui.hover.XsmpcatEObjectHoverProvider;
-import org.eclipse.xsmp.ui.mdk.EclipseMdkConfigurationProvider;
-import org.eclipse.xsmp.ui.mdk.IMdkConfigurationUIProvider;
 import org.eclipse.xsmp.ui.outline.XsmpcatOutlineTreeProvider;
 import org.eclipse.xsmp.ui.quickfix.XsmpcatTextEditComposer;
 import org.eclipse.xsmp.ui.resource.XsmpcatResourceUiServiceProvider;
 import org.eclipse.xsmp.ui.template.XsmpcatCrossReferenceTemplateVariableResolver;
+import org.eclipse.xsmp.ui.template.XsmpcatTemplateStore;
 import org.eclipse.xsmp.ui.validation.XsmpValidatorConfigurationBlock;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
@@ -120,7 +121,7 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
   {
     binder.bind(IPreferenceStoreInitializer.class)
             .annotatedWith(Names.named("saveActionsPreferenceInitializer"))
-            .to(SaveActionsPreferenceAccess.Initializer.class);
+            .to(XsmpPreferenceAccess.Initializer.class);
   }
 
   @Override
@@ -141,14 +142,9 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpcatOutlineTreeProvider.class;
   }
 
-  public Class< ? extends IMdkConfigurationProvider> bindIMdkConfigurationProvider()
+  public Class< ? extends IConfigurationProvider> bindIConfigurationProvider()
   {
-    return EclipseMdkConfigurationProvider.class;
-  }
-
-  public Class< ? extends IMdkConfigurationUIProvider> bindIMdkConfigurationUIProvider()
-  {
-    return EclipseMdkConfigurationProvider.class;
+    return XsmpcatConfigurationUIProvider.class;
   }
 
   @Override
@@ -199,4 +195,9 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpcatDocumentProvider.class;
   }
 
+  @Override
+  public Class< ? extends TemplateStore> bindTemplateStore()
+  {
+    return XsmpcatTemplateStore.class;
+  }
 }

@@ -64,7 +64,7 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
   private ProjectByResourceProvider projectProvider;
 
   @Inject
-  private SaveActionsPreferenceAccess saveActionsPreferenceAccess;
+  private XsmpPreferenceAccess xsmpPreferenceAccess;
 
   @Override
   protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document,
@@ -101,7 +101,7 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
 
       var modified = false;
       // update the document date
-      if (saveActionsPreferenceAccess.isUpdateDocumentDate(project))
+      if (xsmpPreferenceAccess.isUpdateDocumentDate(project))
       {
         serializer.addModification((Document) state.getContents().get(0), r -> r
                 .setDate(new Date(Instant.now().truncatedTo(ChronoUnit.SECONDS).toEpochMilli())));
@@ -111,19 +111,13 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
       // generate the missing UUIDs
       modified |= generateMissingUUIDs(serializer, state);
 
-      // organize imports
-      if (saveActionsPreferenceAccess.isOrganizeImports(project))
-      {
-        // TODO
-      }
-
       return modified;
     });
     if (isModified)
     {
       applyModifications(monitor, serializer);
     }
-    if (saveActionsPreferenceAccess.isFormatSourceCode(project))
+    if (xsmpPreferenceAccess.isFormatSourceCode(project))
     {
       formatSourceCode(monitor, document);
     }

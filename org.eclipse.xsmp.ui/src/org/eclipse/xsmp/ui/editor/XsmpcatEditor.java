@@ -14,33 +14,30 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.xsmp.ui.mdk.IMdkConfigurationUIProvider;
+import org.eclipse.xsmp.ui.configuration.IConfigurationUIProvider;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
 import com.google.inject.Inject;
 
 /**
- * A specialized Editor that reinject members with the MDK provider if provided
+ * A specialized Editor that reinject members with the Profile provider if provided
  */
 public class XsmpcatEditor extends XtextEditor
 {
-
   @Inject
-  private IMdkConfigurationUIProvider mdkProvider;
+  private IConfigurationUIProvider configurationProvider;
 
   @Override
   public void init(IEditorSite site, IEditorInput input) throws PartInitException
   {
-    // in case of a file editor input (file inside a project), get the MDK injector and re-inject
+    // in case of a file editor input (file inside a project), get the Profile injector and
+    // re-inject
     // all the members to use specific content assist, quick fix, ...
     if (input instanceof IFileEditorInput)
     {
-      final var injector = mdkProvider
-              .getInjector(((IFileEditorInput) input).getFile().getProject());
-      if (injector != null)
-      {
-        injector.injectMembers(this);
-      }
+      configurationProvider.getInjector(((IFileEditorInput) input).getFile().getProject())
+              .injectMembers(this);
+
     }
     super.init(site, input);
   }

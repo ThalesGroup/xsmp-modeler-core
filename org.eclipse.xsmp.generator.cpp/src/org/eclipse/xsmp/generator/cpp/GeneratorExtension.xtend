@@ -85,9 +85,8 @@ class GeneratorExtension {
 
 		val platform = type.platform.findFirst["cpp" == it.name]
 		if (platform !== null) {
-			return (platform.namespace !== null
-				? QualifiedName.create(platform.namespace.split("::"))
-				: QualifiedName.EMPTY).append(platform.type)
+			return (platform.namespace !== null ? QualifiedName.create(platform.namespace.split("::")) : QualifiedName.
+				EMPTY).append(platform.type)
 		}
 
 		return qualifiedNameProvider.getFullyQualifiedName(type)
@@ -128,11 +127,7 @@ class GeneratorExtension {
 	}
 
 	def CharSequence generatePrimitiveKind(Type t) {
-		val kind = t.primitiveType
-		if (kind !== null)
-			'''::Smp::PrimitiveTypeKind::PTK_«kind.name»'''
-		else
-			'''::Smp::PrimitiveTypeKind::PTK_None'''
+		'''::Smp::PrimitiveTypeKind::PTK_«t.primitiveType.label»'''
 	}
 
 	def CharSequence uuidQfn(Type t) {

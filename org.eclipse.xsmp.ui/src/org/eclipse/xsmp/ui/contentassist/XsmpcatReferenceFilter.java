@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
-import org.eclipse.xsmp.validation.DefaultValidator;
+import org.eclipse.xsmp.validation.XsmpcatValidator;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Field;
@@ -176,7 +176,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
       return false;
     }
     final var fqn = p.getQualifiedName();
-    if (fqn.equals(DefaultValidator.fieldUpdateKind) || fqn.equals(DefaultValidator.operatorKind))
+    if (fqn.equals(XsmpcatValidator.fieldUpdateKind) || fqn.equals(XsmpcatValidator.operatorKind))
     {
       return false;
     }

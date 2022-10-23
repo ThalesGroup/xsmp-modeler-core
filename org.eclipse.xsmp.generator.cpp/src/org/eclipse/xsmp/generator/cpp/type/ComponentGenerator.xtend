@@ -75,7 +75,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 					::Smp::IObject* parent);
 			
 			/// Virtual destructor to release memory.
-			virtual ~«t.name(useGenPattern)»();
+			~«t.name(useGenPattern)»() override;
 		'''
 	}
 
@@ -88,9 +88,6 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 					: «type.genName»::«type.genName»(name, description, parent) {
 			}
 			
-			/// Virtual destructor that is called by inherited classes as well.
-			«type.name»::~«type.name»() {
-			}
 			
 			void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
 			}
@@ -243,7 +240,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 					
 					void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
 						«IF base !== null»
-							// Call mdk implementation first
+							// Call CDK implementation first
 							«base»::Connect(simulator);
 							
 						«ENDIF»

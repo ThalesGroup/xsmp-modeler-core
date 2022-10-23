@@ -227,28 +227,6 @@
 			uriExtension="xsmpcat">
 		</resourceServiceProvider>
 	</extension>
-	<!-- marker definitions for org.eclipse.xsmp.Xsmpcat -->
-	<extension
-			id="xsmpcat.check.fast"
-			name="Xsmpcat Problem"
-			point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.xtext.ui.check.fast"/>
-		<persistent value="true"/>
-	</extension>
-	<extension
-			id="xsmpcat.check.normal"
-			name="Xsmpcat Problem"
-			point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.xtext.ui.check.normal"/>
-		<persistent value="true"/>
-	</extension>
-	<extension
-			id="xsmpcat.check.expensive"
-			name="Xsmpcat Problem"
-			point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.xtext.ui.check.expensive"/>
-		<persistent value="true"/>
-	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.eclipse.xsmp.ui.XsmpcatExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"

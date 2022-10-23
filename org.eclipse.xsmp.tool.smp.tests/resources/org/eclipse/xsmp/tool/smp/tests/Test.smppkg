@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="ASCII"?>
+<Catalogue:Catalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Catalogue="http://www.ecss.nl/smp/2019/Smdl/Catalogue" xmlns:Types="http://www.ecss.nl/smp/2019/Core/Types" xmlns:xlink="http://www.w3.org/1999/xlink" Id="Test" Name="Test" Title="a title" Date="2022-10-31T08:33:21.000Z" Creator="creator1, creator2" Version="1.0.0">
+  <Description>Catalogue Test</Description>
+  <Namespace Id="ns" Name="ns">
+    <Description></Description>
+    <Namespace Id="ns.nestedNs" Name="nestedNs">
+      <Description></Description>
+    </Namespace>
+    <Type xsi:type="Types:AttributeType" Id="ns.SingleAttribute" Name="SingleAttribute" Visibility="public" Uuid="c489402d-7ecc-466a-a2e7-e1cb3d1da3c5" AllowMultiple="false">
+      <Description></Description>
+      <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      <Default xsi:type="Types:BoolValue" Value="true"/>
+      <Usage>NamedElement</Usage>
+    </Type>
+    <Type xsi:type="Types:AttributeType" Id="ns.MultipleAttribute" Name="MultipleAttribute" Visibility="public" Uuid="52057807-e889-40fb-89f9-f568018bddf1" AllowMultiple="true">
+      <Description></Description>
+      <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      <Default xsi:type="Types:BoolValue" Value="true"/>
+      <Usage>NamedElement</Usage>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Bool" Name="ArrayOf3Bool" Uuid="621cf9ac-7b8d-4111-a1ef-69084815a903" Size="3">
+      <Description></Description>
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool2" Name="SingleAttribute">
+        <Type xlink:title="SingleAttribute" xlink:href="#ns.SingleAttribute"/>
+        <Value xsi:type="Types:BoolValue" Value="true"/>
+      </Metadata>
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool3" Name="MultipleAttribute">
+        <Type xlink:title="MultipleAttribute" xlink:href="#ns.MultipleAttribute"/>
+        <Value xsi:type="Types:BoolValue" Value="true"/>
+      </Metadata>
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool4" Name="MultipleAttribute">
+        <Type xlink:title="MultipleAttribute" xlink:href="#ns.MultipleAttribute"/>
+        <Value xsi:type="Types:BoolValue" Value="true"/>
+      </Metadata>
+      <ItemType xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.MatrixOf3_3Bool" Name="MatrixOf3_3Bool" Uuid="b92805e6-20c6-455f-b791-7327a58c499a" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="ArrayOf3Bool" xlink:href="#ns.ArrayOf3Bool"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Char8" Name="ArrayOf3Char8" Uuid="a6b216a8-838c-4a2b-aac3-3155b51e90a5" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Char8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Char8"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Int8" Name="ArrayOf3Int8" Uuid="118e9d39-6359-4dcb-9ca3-f7f3ed408ba7" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Int8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int8"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Int16" Name="ArrayOf3Int16" Uuid="bb7123e4-982d-47d8-b4e1-6cf470d66bed" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Int16" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int16"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Int32" Name="ArrayOf3Int32" Uuid="675c2305-e381-4083-982e-8b3a64216b11" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Int32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int32"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Int64" Name="ArrayOf3Int64" Uuid="bc8abc6b-dfe1-445d-8ba2-eea4c2d1fa25" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Int64" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int64"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3UInt8" Name="ArrayOf3UInt8" Uuid="1e783d5c-f6e9-48e7-9f5f-15d1c430f603" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="UInt8" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt8"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3UInt16" Name="ArrayOf3UInt16" Uuid="69528823-d681-418e-92d9-4cb17ad9d226" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="UInt16" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt16"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3UInt32" Name="ArrayOf3UInt32" Uuid="41eb616b-fdd5-4fcb-8abc-c6c0e889f3ca" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="UInt32" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt32"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3UInt64" Name="ArrayOf3UInt64" Uuid="f40b2852-997e-461f-a4af-9575ab7920a0" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="UInt64" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt64"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Float32" Name="ArrayOf3Float32" Uuid="edd0eb26-9a1b-4fd1-860c-3c862c3fb752" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Float32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float32"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Float64" Name="ArrayOf3Float64" Uuid="6f228799-6e9a-4da8-9a53-d612050f0669" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Float64" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float64"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3Duration" Name="ArrayOf3Duration" Uuid="3f203a6e-2f0a-4fd0-b3de-ef3299565749" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="Duration" xlink:href="http://www.esa.int/2019/Smdl#Smp.Duration"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3DateTime" Name="ArrayOf3DateTime" Uuid="a7ed47b1-01b2-407c-90b0-864993f026ca" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="DateTime" xlink:href="http://www.esa.int/2019/Smdl#Smp.DateTime"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3AnEnum" Name="ArrayOf3AnEnum" Uuid="582a38b3-77f7-4c67-9d1b-2df6722233bd" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="AnEnum" xlink:href="#ns.AnEnum"/>
+    </Type>
+    <Type xsi:type="Types:Array" Id="ns.ArrayOf3AString" Name="ArrayOf3AString" Uuid="7f28e66a-0741-4fc8-a8cf-e1c9d8ddb6ea" Size="3">
+      <Description></Description>
+      <ItemType xlink:title="AString" xlink:href="#ns.AString"/>
+    </Type>
+    <Type xsi:type="Types:Class" Id="ns.AnAbstractClass" Name="AnAbstractClass" Uuid="9b21955e-bbf9-41e6-9bc4-5ed613bf7821" Abstract="true">
+      <Description></Description>
+      <Constant Id="ns.AnAbstractClass.constant" Name="constant">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Value xsi:type="Types:BoolValue" Value="true"/>
+      </Constant>
+      <Field Id="ns.AnAbstractClass.field" Name="field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Property Id="ns.AnAbstractClass.property" Name="property" Access="readWrite" Category="Properties">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <AttachedField xlink:title="field" xlink:href="#ns.AnAbstractClass.field"/>
+      </Property>
+      <Operation Id="ns.AnAbstractClass.voidOperation" Name="voidOperation">
+        <Description></Description>
+      </Operation>
+      <Operation Id="ns.AnAbstractClass.getter" Name="getter">
+        <Description></Description>
+        <Parameter Id="ns.AnAbstractClass.getter.return" Name="return" Direction="return">
+          <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        </Parameter>
+      </Operation>
+      <Operation Id="ns.AnAbstractClass.Setter" Name="Setter">
+        <Description></Description>
+        <Parameter Id="ns.AnAbstractClass.Setter.value" Name="value" Direction="in">
+          <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        </Parameter>
+      </Operation>
+      <Association Id="ns.AnAbstractClass.association" Name="association">
+        <Description></Description>
+        <Type xlink:title="Float32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float32"/>
+      </Association>
+    </Type>
+    <Type xsi:type="Types:Class" Id="ns.AClass" Name="AClass" Uuid="1d8f1fc8-4ce1-4a70-9883-3c2728f1cba4" Abstract="false">
+      <Description></Description>
+      <Base xlink:title="AnAbstractClass" xlink:href="#ns.AnAbstractClass"/>
+    </Type>
+    <Type xsi:type="Types:Enumeration" Id="ns.AnEnum" Name="AnEnum" Visibility="public" Uuid="7cb57c5f-acc1-46c7-b8c8-23e3949a6584">
+      <Description></Description>
+      <Literal Id="ns.AnEnum.L1" Name="L1" Value="0">
+        <Description></Description>
+      </Literal>
+      <Literal Id="ns.AnEnum.L2" Name="L2" Value="1">
+        <Description></Description>
+      </Literal>
+      <Literal Id="ns.AnEnum.L3" Name="L3" Value="2">
+        <Description></Description>
+      </Literal>
+    </Type>
+    <Type xsi:type="Catalogue:EventType" Id="ns.AnIn32EventType" Name="AnIn32EventType" Uuid="6eb41667-3fd3-4742-a1a7-6ba3224099a6">
+      <Description></Description>
+      <EventArgs xlink:title="Int32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int32"/>
+    </Type>
+    <Type xsi:type="Catalogue:EventType" Id="ns.AVoidEventType" Name="AVoidEventType" Uuid="675ca788-4876-481a-bb51-b04a822d1f8b">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Exception" Id="ns.AnAbstractException" Name="AnAbstractException" Uuid="cc5c3af5-5565-4641-a070-93c2afd55968" Abstract="false">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Exception" Id="ns.AnException" Name="AnException" Uuid="c0d3d9c5-6636-4e62-bd04-1dcc3a30eca1" Abstract="false">
+      <Description></Description>
+      <Base xlink:title="AnAbstractException" xlink:href="#ns.AnAbstractException"/>
+    </Type>
+    <Type xsi:type="Types:Float" Id="ns.AFloat" Name="AFloat" Uuid="850a9105-b093-4c0e-8863-1d7f51a43286" MinInclusive="true" MaxInclusive="true">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Float" Id="ns.AFloat32" Name="AFloat32" Uuid="e83b1c21-d97d-45af-9158-d3beaa4687c5" MinInclusive="true" MaxInclusive="true">
+      <Description></Description>
+      <PrimitiveType xlink:title="Float32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float32"/>
+    </Type>
+    <Type xsi:type="Types:Float" Id="ns.AFloat64" Name="AFloat64" Uuid="a6526234-6242-49ab-ab14-fbf1ab9b44b2" MinInclusive="true" MaxInclusive="true">
+      <Description></Description>
+      <PrimitiveType xlink:title="Float64" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float64"/>
+    </Type>
+    <Type xsi:type="Types:Float" Id="ns.AFloatWithRange" Name="AFloatWithRange" Uuid="9cbf0614-53b7-4a27-9b6e-3ff9134d50ea" Maximum="100.0" MinInclusive="true" Minimum="0.0" MaxInclusive="true">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Float" Id="ns.AFloatWithExclusiveRange" Name="AFloatWithExclusiveRange" Uuid="6dbdb0c2-c291-4f21-a0b1-3775881e062e" Maximum="100.0" MinInclusive="false" Minimum="0.0" MaxInclusive="false">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnInteger" Name="AnInteger" Uuid="53e1f876-1347-4874-a931-a357d0a3d4c2">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnInt8Integer" Name="AnInt8Integer" Uuid="bc6e34b8-1a0c-46cc-8565-695f60873011">
+      <Description></Description>
+      <PrimitiveType xlink:title="Int8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int8"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnInt16Integer" Name="AnInt16Integer" Uuid="058690f7-fd28-4a31-bac1-498df537b4f9">
+      <Description></Description>
+      <PrimitiveType xlink:title="Int16" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int16"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnInt32Integer" Name="AnInt32Integer" Uuid="8489b78e-3531-44fa-b36e-8f9a9350d5f9">
+      <Description></Description>
+      <PrimitiveType xlink:title="Int32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int32"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnInt64Integer" Name="AnInt64Integer" Uuid="9932c757-903e-49d4-a454-f8e88d05e099">
+      <Description></Description>
+      <PrimitiveType xlink:title="Int64" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int64"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnUInt8Integer" Name="AnUInt8Integer" Uuid="831facb7-aad5-4862-b837-7e187f2d26bb">
+      <Description></Description>
+      <PrimitiveType xlink:title="UInt8" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt8"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnUInt16Integer" Name="AnUInt16Integer" Uuid="029ff31c-c57a-4cf1-b18e-53926ae09419">
+      <Description></Description>
+      <PrimitiveType xlink:title="UInt16" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt16"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnUInt32Integer" Name="AnUInt32Integer" Uuid="1db4285c-2140-4fe0-ae48-bd1b5557ee4d">
+      <Description></Description>
+      <PrimitiveType xlink:title="UInt32" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt32"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnUInt64Integer" Name="AnUInt64Integer" Uuid="9e4c3c41-234a-48d6-a249-00be87bbbdae">
+      <Description></Description>
+      <PrimitiveType xlink:title="UInt64" xlink:href="http://www.esa.int/2019/Smdl#Smp.UInt64"/>
+    </Type>
+    <Type xsi:type="Types:Integer" Id="ns.AnIntegerWithRange" Name="AnIntegerWithRange" Visibility="protected" Uuid="93b6170a-b9b9-4df5-b69d-14493f7c9cf5" Minimum="0" Maximum="100">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:String" Id="ns.AString" Name="AString" Uuid="adfec040-aba1-4bc8-8561-476c1e738a02" Length="10">
+      <Description></Description>
+    </Type>
+    <Type xsi:type="Types:NativeType" Id="ns.NativeType" Name="NativeType" Visibility="public" Uuid="d9806d07-4cf1-4a40-982b-10b6a7e55909">
+      <Description></Description>
+      <Platform Name="cpp" Type="NativeType" Namespace="Test" Location="Test/NativeType.h"/>
+    </Type>
+    <Type xsi:type="Types:ValueReference" Id="ns.ValueReference" Name="ValueReference" Uuid="35c6cdeb-4980-46b4-8d37-e990ab4f0fc2">
+      <Description></Description>
+      <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+    </Type>
+    <Type xsi:type="Catalogue:Interface" Id="ns.AnInterface" Name="AnInterface" Visibility="public" Uuid="d2e665e3-5f66-425e-9840-6b4ebf1bdbe5">
+      <Description></Description>
+      <Constant Id="ns.AnInterface.constant" Name="constant">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Value xsi:type="Types:BoolValue" Value="false"/>
+      </Constant>
+      <Property Id="ns.AnInterface.property" Name="property" Access="readWrite" Category="Properties">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Property>
+      <Operation Id="ns.AnInterface.voidOperation" Name="voidOperation">
+        <Description></Description>
+      </Operation>
+      <Operation Id="ns.AnInterface.op" Name="op">
+        <Description></Description>
+        <Parameter Id="ns.AnInterface.op.in" Name="in" Direction="in">
+          <Type xlink:title="Float32" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float32"/>
+        </Parameter>
+        <Parameter Id="ns.AnInterface.op.out" Name="out" Direction="out">
+          <Type xlink:title="Float64" xlink:href="http://www.esa.int/2019/Smdl#Smp.Float64"/>
+        </Parameter>
+        <Parameter Id="ns.AnInterface.op.inout" Name="inout" Direction="inout">
+          <Description>a desc1</Description>
+          <Type xlink:title="Duration" xlink:href="http://www.esa.int/2019/Smdl#Smp.Duration"/>
+          <Default xsi:type="Types:DurationValue" Value="P0Y0M0DT0H0M0.000S"/>
+        </Parameter>
+        <Parameter Id="ns.AnInterface.op.return" Name="return" Direction="return">
+          <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        </Parameter>
+      </Operation>
+      <Base xlink:title="IComponent" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComponent"/>
+      <Base xlink:title="ICollection" xlink:href="http://www.esa.int/2019/Smdl#Smp.ICollection"/>
+    </Type>
+    <Type xsi:type="Catalogue:Model" Id="ns.AnAbstractModel" Name="AnAbstractModel" Visibility="private" Uuid="02b2a015-71c8-48bc-beb1-95a494c5e438">
+      <Description></Description>
+      <Field Id="ns.AnAbstractModel.hidden_field" Name="hidden_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.hidden_field2" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.esa.int/2019/Smdl#Attributes.View"/>
+          <Value xsi:type="Types:EnumerationValue" Value="0"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.debug_field" Name="debug_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.debug_field2" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.esa.int/2019/Smdl#Attributes.View"/>
+          <Value xsi:type="Types:EnumerationValue" Value="1"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.expert_field" Name="expert_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.expert_field2" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.esa.int/2019/Smdl#Attributes.View"/>
+          <Value xsi:type="Types:EnumerationValue" Value="2"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.all_field" Name="all_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.all_field2" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.esa.int/2019/Smdl#Attributes.View"/>
+          <Value xsi:type="Types:EnumerationValue" Value="3"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.forcible_field" Name="forcible_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.forcible_field2" Name="Forcible">
+          <Type xlink:title="Forcible" xlink:href="http://www.esa.int/2019/Smdl#Attributes.Forcible"/>
+          <Value xsi:type="Types:BoolValue" Value="true"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.mutable_field" Name="mutable_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.mutable_field2" Name="Mutable">
+          <Type xlink:title="Mutable" xlink:href="http://www.esa.int/2019/Smdl#Attributes.Mutable"/>
+          <Value xsi:type="Types:BoolValue" Value="true"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+      <Field Id="ns.AnAbstractModel.failure_field" Name="failure_field" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.failure_field2" Name="Failure">
+          <Type xlink:title="Failure" xlink:href="http://www.esa.int/2019/Smdl#Attributes.Failure"/>
+          <Value xsi:type="Types:BoolValue" Value="true"/>
+        </Metadata>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Default xsi:type="Types:BoolValue" Value="false"/>
+      </Field>
+    </Type>
+    <Type xsi:type="Catalogue:Model" Id="ns.AModel" Name="AModel" Visibility="public" Uuid="4fd30ec9-4add-41a5-84b2-bdccc968115b">
+      <Description></Description>
+      <Base xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      <Interface xlink:title="AnInterface" xlink:href="#ns.AnInterface"/>
+      <EntryPoint Id="ns.AModel.ep" Name="ep">
+        <Description></Description>
+        <Input xlink:title="inout" xlink:href="#ns.AModel.inout"/>
+        <Input xlink:title="input" xlink:href="#ns.AModel.input"/>
+        <Output xlink:title="output" xlink:href="#ns.AModel.output"/>
+      </EntryPoint>
+      <EventSink Id="ns.AModel.voidEventSink" Name="voidEventSink">
+        <Description></Description>
+        <Type xlink:title="AVoidEventType" xlink:href="#ns.AVoidEventType"/>
+      </EventSink>
+      <EventSink Id="ns.AModel.int32EventSink" Name="int32EventSink">
+        <Description></Description>
+        <Type xlink:title="AnIn32EventType" xlink:href="#ns.AnIn32EventType"/>
+      </EventSink>
+      <EventSource Id="ns.AModel.voidEventSource" Name="voidEventSource" Multicast="true">
+        <Description></Description>
+        <Type xlink:title="AVoidEventType" xlink:href="#ns.AVoidEventType"/>
+      </EventSource>
+      <EventSource Id="ns.AModel.int32EventSource" Name="int32EventSource" Multicast="false">
+        <Description></Description>
+        <Type xlink:title="AnIn32EventType" xlink:href="#ns.AnIn32EventType"/>
+      </EventSource>
+      <Field Id="ns.AModel.aChar" Name="aChar" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Char8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Char8"/>
+        <Default xsi:type="Types:Char8Value" Value="c"/>
+      </Field>
+      <Field Id="ns.AModel.aCharNumber" Name="aCharNumber" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Char8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Char8"/>
+        <Default xsi:type="Types:Char8Value" Value="&#xA;"/>
+      </Field>
+      <Field Id="ns.AModel.aCharWithEscape" Name="aCharWithEscape" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Char8" xlink:href="http://www.esa.int/2019/Smdl#Smp.Char8"/>
+        <Default xsi:type="Types:Char8Value" Value="&#xA;"/>
+      </Field>
+      <Field Id="ns.AModel.aDateTime" Name="aDateTime" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="DateTime" xlink:href="http://www.esa.int/2019/Smdl#Smp.DateTime"/>
+        <Default xsi:type="Types:DateTimeValue" Value="1970-01-01T00:00:00.000Z"/>
+      </Field>
+      <Field Id="ns.AModel.aDateTimeStr" Name="aDateTimeStr" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="DateTime" xlink:href="http://www.esa.int/2019/Smdl#Smp.DateTime"/>
+        <Default xsi:type="Types:DateTimeValue" Value="2022-10-22T09:07:44.000Z"/>
+      </Field>
+      <Field Id="ns.AModel.aDuration" Name="aDuration" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Duration" xlink:href="http://www.esa.int/2019/Smdl#Smp.Duration"/>
+        <Default xsi:type="Types:DurationValue" Value="P0Y0M0DT0H0M0.000S"/>
+      </Field>
+      <Field Id="ns.AModel.aDurationStr" Name="aDurationStr" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Duration" xlink:href="http://www.esa.int/2019/Smdl#Smp.Duration"/>
+        <Default xsi:type="Types:DurationValue" Value="P0Y0M0DT0H0M0.345S"/>
+      </Field>
+      <Field Id="ns.AModel.aFloat" Name="aFloat" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AFloat" xlink:href="#ns.AFloat"/>
+        <Default xsi:type="Types:Float64Value" Value="4.5"/>
+      </Field>
+      <Field Id="ns.AModel.aFloat32" Name="aFloat32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AFloat32" xlink:href="#ns.AFloat32"/>
+        <Default xsi:type="Types:Float32Value" Value="10.0"/>
+      </Field>
+      <Field Id="ns.AModel.aFloat64" Name="aFloat64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AFloat64" xlink:href="#ns.AFloat64"/>
+        <Default xsi:type="Types:Float64Value" Value="2.5"/>
+      </Field>
+      <Field Id="ns.AModel.aFloatWithExclusiveRange" Name="aFloatWithExclusiveRange" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AFloatWithExclusiveRange" xlink:href="#ns.AFloatWithExclusiveRange"/>
+        <Default xsi:type="Types:Float64Value" Value="0.001"/>
+      </Field>
+      <Field Id="ns.AModel.aFloatWithRange" Name="aFloatWithRange" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AFloatWithRange" xlink:href="#ns.AFloatWithRange"/>
+        <Default xsi:type="Types:Float64Value" Value="0.0"/>
+      </Field>
+      <Field Id="ns.AModel.anInteger" Name="anInteger" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnInteger" xlink:href="#ns.AnInteger"/>
+        <Default xsi:type="Types:Int32Value" Value="10"/>
+      </Field>
+      <Field Id="ns.AModel.anIntegerWithRange" Name="anIntegerWithRange" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnIntegerWithRange" xlink:href="#ns.AnIntegerWithRange"/>
+        <Default xsi:type="Types:Int32Value" Value="10"/>
+      </Field>
+      <Field Id="ns.AModel.anInt8" Name="anInt8" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnInt8Integer" xlink:href="#ns.AnInt8Integer"/>
+        <Default xsi:type="Types:Int8Value" Value="8"/>
+      </Field>
+      <Field Id="ns.AModel.anInt16" Name="anInt16" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnInt16Integer" xlink:href="#ns.AnInt16Integer"/>
+        <Default xsi:type="Types:Int16Value" Value="16"/>
+      </Field>
+      <Field Id="ns.AModel.anInt32" Name="anInt32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnInt32Integer" xlink:href="#ns.AnInt32Integer"/>
+        <Default xsi:type="Types:Int32Value" Value="32"/>
+      </Field>
+      <Field Id="ns.AModel.anInt64" Name="anInt64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnInt64Integer" xlink:href="#ns.AnInt64Integer"/>
+        <Default xsi:type="Types:Int64Value" Value="64"/>
+      </Field>
+      <Field Id="ns.AModel.anUInt8" Name="anUInt8" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnUInt8Integer" xlink:href="#ns.AnUInt8Integer"/>
+        <Default xsi:type="Types:UInt8Value" Value="8"/>
+      </Field>
+      <Field Id="ns.AModel.anUInt16" Name="anUInt16" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnUInt16Integer" xlink:href="#ns.AnUInt16Integer"/>
+        <Default xsi:type="Types:UInt16Value" Value="16"/>
+      </Field>
+      <Field Id="ns.AModel.anUInt32" Name="anUInt32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnUInt32Integer" xlink:href="#ns.AnUInt32Integer"/>
+        <Default xsi:type="Types:UInt32Value" Value="32"/>
+      </Field>
+      <Field Id="ns.AModel.anUInt64" Name="anUInt64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnUInt64Integer" xlink:href="#ns.AnUInt64Integer"/>
+        <Default xsi:type="Types:UInt64Value" Value="64"/>
+      </Field>
+      <Field Id="ns.AModel.anEnum" Name="anEnum" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AnEnum" xlink:href="#ns.AnEnum"/>
+        <Default xsi:type="Types:EnumerationValue" Value="0"/>
+      </Field>
+      <Field Id="ns.AModel.aString" Name="aString" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AString" xlink:href="#ns.AString"/>
+        <Default xsi:type="Types:String8Value" Value="test"/>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Bool" Name="arrayOf3Bool" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Bool" xlink:href="#ns.ArrayOf3Bool"/>
+        <Default xsi:type="Types:BoolArrayValue">
+          <ItemValue Value="false"/>
+          <ItemValue Value="false"/>
+          <ItemValue Value="false"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.matrixOf3_3Bool" Name="matrixOf3_3Bool" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="MatrixOf3_3Bool" xlink:href="#ns.MatrixOf3_3Bool"/>
+        <Default xsi:type="Types:ArrayValue">
+          <ItemValue xsi:type="Types:BoolArrayValue">
+            <ItemValue Value="false"/>
+            <ItemValue Value="false"/>
+            <ItemValue Value="false"/>
+          </ItemValue>
+          <ItemValue xsi:type="Types:BoolArrayValue">
+            <ItemValue Value="true"/>
+            <ItemValue Value="true"/>
+            <ItemValue Value="false"/>
+          </ItemValue>
+          <ItemValue xsi:type="Types:BoolArrayValue">
+            <ItemValue Value="false"/>
+            <ItemValue Value="false"/>
+            <ItemValue Value="true"/>
+          </ItemValue>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Char8" Name="arrayOf3Char8" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Char8" xlink:href="#ns.ArrayOf3Char8"/>
+        <Default xsi:type="Types:Char8ArrayValue">
+          <ItemValue Value="a"/>
+          <ItemValue Value="&#xA;"/>
+          <ItemValue Value="&#x9;"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Int8" Name="arrayOf3Int8" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Int8" xlink:href="#ns.ArrayOf3Int8"/>
+        <Default xsi:type="Types:Int8ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Int16" Name="arrayOf3Int16" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Int16" xlink:href="#ns.ArrayOf3Int16"/>
+        <Default xsi:type="Types:Int16ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Int32" Name="arrayOf3Int32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Int32" xlink:href="#ns.ArrayOf3Int32"/>
+        <Default xsi:type="Types:Int32ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Int64" Name="arrayOf3Int64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Int64" xlink:href="#ns.ArrayOf3Int64"/>
+        <Default xsi:type="Types:Int64ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3UInt8" Name="arrayOf3UInt8" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3UInt8" xlink:href="#ns.ArrayOf3UInt8"/>
+        <Default xsi:type="Types:UInt8ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3UInt16" Name="arrayOf3UInt16" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3UInt16" xlink:href="#ns.ArrayOf3UInt16"/>
+        <Default xsi:type="Types:UInt16ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3UInt32" Name="arrayOf3UInt32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3UInt32" xlink:href="#ns.ArrayOf3UInt32"/>
+        <Default xsi:type="Types:UInt32ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3UInt64" Name="arrayOf3UInt64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3UInt64" xlink:href="#ns.ArrayOf3UInt64"/>
+        <Default xsi:type="Types:UInt64ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Float32" Name="arrayOf3Float32" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Float32" xlink:href="#ns.ArrayOf3Float32"/>
+        <Default xsi:type="Types:Float32ArrayValue">
+          <ItemValue Value="0.0"/>
+          <ItemValue Value="1.0"/>
+          <ItemValue Value="2.0"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Float64" Name="arrayOf3Float64" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Float64" xlink:href="#ns.ArrayOf3Float64"/>
+        <Default xsi:type="Types:Float64ArrayValue">
+          <ItemValue Value="0.0"/>
+          <ItemValue Value="1.0"/>
+          <ItemValue Value="2.0"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3Duration" Name="arrayOf3Duration" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3Duration" xlink:href="#ns.ArrayOf3Duration"/>
+        <Default xsi:type="Types:DurationArrayValue">
+          <ItemValue Value="P0Y0M0DT0H0M0.000S"/>
+          <ItemValue Value="P0Y0M0DT0H0M0.000S"/>
+          <ItemValue Value="P0Y0M0DT0H0M0.000S"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3DateTime" Name="arrayOf3DateTime" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3DateTime" xlink:href="#ns.ArrayOf3DateTime"/>
+        <Default xsi:type="Types:DateTimeArrayValue">
+          <ItemValue Value="1970-01-01T00:00:00.000Z"/>
+          <ItemValue Value="1970-01-01T00:00:00.000Z"/>
+          <ItemValue Value="1970-01-01T00:00:00.000Z"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3AnEnum" Name="arrayOf3AnEnum" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3AnEnum" xlink:href="#ns.ArrayOf3AnEnum"/>
+        <Default xsi:type="Types:EnumerationArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.arrayOf3AString" Name="arrayOf3AString" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="ArrayOf3AString" xlink:href="#ns.ArrayOf3AString"/>
+        <Default xsi:type="Types:String8ArrayValue">
+          <ItemValue Value="0"/>
+          <ItemValue Value="1"/>
+          <ItemValue Value="2"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.aStruct" Name="aStruct" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="AStruct" xlink:href="#ns.AStruct"/>
+        <Default xsi:type="Types:StructureValue">
+          <FieldValue xsi:type="Types:BoolValue" Value="true"/>
+          <FieldValue xsi:type="Types:Int16Value" Value="10"/>
+        </Default>
+      </Field>
+      <Field Id="ns.AModel.input" Name="input" State="true" Input="true" Output="false">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Field>
+      <Field Id="ns.AModel.output" Name="output" State="true" Input="false" Output="true">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Field>
+      <Field Id="ns.AModel.transient" Name="transient" State="false" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Field>
+      <Field Id="ns.AModel.inout" Name="inout" State="true" Input="true" Output="true">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Field>
+      <Association Id="ns.AModel.asso" Name="asso">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Association>
+      <Container Id="ns.AModel.container" Name="container" Lower="1" Upper="1">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AModel" xlink:href="#ns.AModel"/>
+      </Container>
+      <Container Id="ns.AModel.optional_container" Name="optional_container" Lower="0" Upper="1">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      </Container>
+      <Container Id="ns.AModel.list_container" Name="list_container" Lower="0" Upper="-1">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      </Container>
+      <Container Id="ns.AModel.non_empty_list_container" Name="non_empty_list_container" Lower="1" Upper="-1">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      </Container>
+      <Container Id="ns.AModel.list_container_4" Name="list_container_4" Lower="4" Upper="4">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      </Container>
+      <Container Id="ns.AModel.list_container_4_or_more" Name="list_container_4_or_more" Lower="4" Upper="-1">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+        <DefaultComponent xlink:title="AnAbstractModel" xlink:href="#ns.AnAbstractModel"/>
+      </Container>
+      <Container Id="ns.AModel.list_container_betwwen_4_and_10" Name="list_container_betwwen_4_and_10" Lower="4" Upper="10">
+        <Description></Description>
+        <Type xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Container>
+      <Reference Id="ns.AModel.reference" Name="reference" Lower="1" Upper="1">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.optional_reference" Name="optional_reference" Lower="0" Upper="1">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.list_reference" Name="list_reference" Lower="0" Upper="-1">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.non_empty_list_reference" Name="non_empty_list_reference" Lower="1" Upper="-1">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.list_reference_4" Name="list_reference_4" Lower="4" Upper="4">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.list_reference_4_or_more" Name="list_reference_4_or_more" Lower="4" Upper="-1">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+      <Reference Id="ns.AModel.list_reference_betwwen_4_and_10" Name="list_reference_betwwen_4_and_10" Lower="4" Upper="10">
+        <Description></Description>
+        <Interface xlink:title="IComposite" xlink:href="http://www.esa.int/2019/Smdl#Smp.IComposite"/>
+      </Reference>
+    </Type>
+    <Type xsi:type="Types:Structure" Id="ns.AStruct" Name="AStruct" Uuid="717d3adb-4aa8-4997-b4f4-ea20cba12c14">
+      <Description></Description>
+      <Constant Id="ns.AStruct.constant" Name="constant">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+        <Value xsi:type="Types:BoolValue" Value="true"/>
+      </Constant>
+      <Field Id="ns.AStruct.field1" Name="field1" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Bool" xlink:href="http://www.esa.int/2019/Smdl#Smp.Bool"/>
+      </Field>
+      <Field Id="ns.AStruct.field2" Name="field2" State="true" Input="false" Output="false">
+        <Description></Description>
+        <Type xlink:title="Int16" xlink:href="http://www.esa.int/2019/Smdl#Smp.Int16"/>
+      </Field>
+    </Type>
+  </Namespace>
+</Catalogue:Catalogue>

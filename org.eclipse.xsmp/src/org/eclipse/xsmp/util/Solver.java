@@ -39,7 +39,7 @@ public class Solver
 
   public Solver()
   {
-    this.acceptor = new AbstractValidationMessageAcceptor() {
+    acceptor = new AbstractValidationMessageAcceptor() {
 
     };
   }
@@ -702,7 +702,7 @@ public class Solver
     return null;
   }
 
-  protected Object getValue(Expression e)
+  public Object getValue(Expression e)
   {
     if (e == null)
     {
@@ -1040,20 +1040,38 @@ public class Solver
     return value;
   }
 
-  public EnumerationLiteral getEnum(Expression e)
+  public EnumerationLiteral getEnum(Expression e, Enumeration type)
   {
     final var value = getValue(e);
     if (value instanceof EnumerationLiteral)
     {
-      return (EnumerationLiteral) value;
+      final var literal = (EnumerationLiteral) value;
+      if (literal.eContainer() != type)
+      {
+        acceptor.acceptError("Incompatible enumeration Type: expecting " + type.getName(), e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+      }
+      return literal;
     }
-    if (value != null)
+
+    final var integer = getInteger(e);
+
+    if (integer != null)
     {
+      final var literal = type.getLiteral().stream()
+              .filter(l -> integer.equals(Solver.INSTANCE.getInteger(l.getValue()))).findFirst();
+
+      if (literal.isPresent())
+      {
+        return literal.get();
+      }
+
       acceptor.acceptError(
-              "Could not convert " + value.getClass().getSimpleName() + " to EnumerationLiteral.",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+              "Could not convert " + integer + " to Enumeration " + type.getName() + ".", e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
               XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
     }
+
     return null;
   }
 
@@ -1066,10 +1084,22 @@ public class Solver
     }
     if (value instanceof BigDecimal)
     {
+      acceptor.acceptWarning(
+              "Narrowing convertion of \"" + value + "\" from \"double\" to \"bool\".", e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+              XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
       return Optional.of(((BigDecimal) value).doubleValue() != 0.);
     }
     if (value instanceof BigInteger)
     {
+      if (!BigInteger.ZERO.equals(value) && !BigInteger.ONE.equals(value))
+      {
+        acceptor.acceptWarning(
+                "Narrowing convertion of \"" + value + "\" from \"int\" to \"bool\".", e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+                XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
+      }
+
       return Optional.of(((BigInteger) value).compareTo(BigInteger.ZERO) != 0);
     }
     if (value != null)
