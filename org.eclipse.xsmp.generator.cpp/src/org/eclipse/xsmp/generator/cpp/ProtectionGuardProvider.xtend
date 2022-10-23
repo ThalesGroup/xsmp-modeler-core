@@ -27,7 +27,7 @@ class ProtectionGuardProvider implements IProtectionGuardProvider {
 	}
 
 	def guard(QualifiedName qfn) {
-		'''_«qfn.toString("_").toUpperCase()»_H_'''
+		'''«qfn.toString("_").toUpperCase()»_H_'''
 	}
 
 	override CharSequence getEndGuard(QualifiedName qfn) {

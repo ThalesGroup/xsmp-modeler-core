@@ -116,7 +116,7 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
     if (image == null)
     {
       image = imageHelper.getImage(
-              "platform:/plugin/org.eclipse.xsmp.mdk.ui/template_" + template.getName() + ".png");
+              "platform:/plugin/org.eclipse.xsmp.ui/template_" + template.getName() + ".png");
     }
     if (image == null)
     {

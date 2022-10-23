@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.google.inject.Inject;
 
 @ExtendWith(InjectionExtension.class)
-@InjectWith(XsmpcatUiInjectorProvider.class)
+@InjectWith(XsmpUiInjectorProvider.class)
 class LabelProviderTest
 {
   @Inject

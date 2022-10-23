@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*******************************************************************************&#xA;* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.&#xA;*&#xA;* All rights reserved. This program and the accompanying materials&#xA;* are made available under the terms of the Eclipse Public License 2.0&#xA;* which accompanies this distribution, and is available at&#xA;* https://www.eclipse.org/legal/epl-2.0/&#xA;*&#xA;* SPDX-License-Identifier: EPL-2.0&#xA;******************************************************************************"
+    modelDirectory="/org.eclipse.xsmp.tool.smp/emf-gen" editDirectory="/org.eclipse.xsmp.tool.smp.edit/src"
+    editorDirectory="/org.eclipse.xsmp.tool.smp.editor/src" modelPluginID="org.eclipse.xsmp.tool.smp"
+    forceOverwrite="true" modelName="smp" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    editPluginID="org.eclipse.xsmp.tool.smp.edit" editorPluginID="org.eclipse.xsmp.tool.smp.editor"
+    runtimeVersion="2.20">
+  <foreignModel>catalogue.ecore</foreignModel>
+  <foreignModel>configuration.ecore</foreignModel>
+  <foreignModel>elements.ecore</foreignModel>
+  <foreignModel>package.ecore</foreignModel>
+  <foreignModel>types.ecore</foreignModel>
+  <foreignModel>xlink.ecore</foreignModel>
+  <genPackages prefix="Catalogue" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
+      disposableProviderFactory="true" ecorePackage="catalogue.ecore#/">
+    <genClasses ecoreClass="catalogue.ecore#//Catalogue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Catalogue/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//CatalogueDocumentRoot">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute catalogue.ecore#//CatalogueDocumentRoot/mixed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//CatalogueDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//CatalogueDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference catalogue.ecore#//CatalogueDocumentRoot/catalogue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="catalogue.ecore#//Component">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/base"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/interface"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/entryPoint"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/eventSink"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/eventSource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/field"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/association"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/container"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Component/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//Container">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Container/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Container/defaultComponent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute catalogue.ecore#//Container/lower"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute catalogue.ecore#//Container/upper"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//EntryPoint">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//EntryPoint/input"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//EntryPoint/output"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//EventSink">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//EventSink/type"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//EventSource">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//EventSource/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute catalogue.ecore#//EventSource/multicast"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//EventType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//EventType/eventArgs"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//Interface">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Interface/base"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//Model"/>
+    <genClasses ecoreClass="catalogue.ecore#//Namespace">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Namespace/namespace"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Namespace/type"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//Reference">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Reference/interface"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute catalogue.ecore#//Reference/lower"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute catalogue.ecore#//Reference/upper"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="catalogue.ecore#//ReferenceType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//ReferenceType/constant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//ReferenceType/property"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//ReferenceType/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="catalogue.ecore#//Service"/>
+  </genPackages>
+  <genPackages prefix="Configuration" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
+      disposableProviderFactory="true" ecorePackage="configuration.ecore#/">
+    <genClasses ecoreClass="configuration.ecore#//ComponentConfiguration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ComponentConfiguration/include"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ComponentConfiguration/component"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ComponentConfiguration/fieldValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//ComponentConfiguration/path"/>
+    </genClasses>
+    <genClasses ecoreClass="configuration.ecore#//Configuration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/include"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/component"/>
+    </genClasses>
+    <genClasses ecoreClass="configuration.ecore#//ConfigurationDocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//ConfigurationDocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference configuration.ecore#//ConfigurationDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference configuration.ecore#//ConfigurationDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ConfigurationDocumentRoot/configuration"/>
+    </genClasses>
+    <genClasses ecoreClass="configuration.ecore#//ConfigurationOfConfigurationUsage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//ConfigurationOfConfigurationUsage/configurationName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference configuration.ecore#//ConfigurationOfConfigurationUsage/configuration"/>
+    </genClasses>
+    <genClasses ecoreClass="configuration.ecore#//ConfigurationUsage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ConfigurationUsage/configuration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//ConfigurationUsage/path"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Elements" basePackage="org.eclipse.xsmp.tool.smp.core" resource="XML"
+      disposableProviderFactory="true" ecorePackage="elements.ecore#/">
+    <genDataTypes ecoreDataType="elements.ecore#//Description"/>
+    <genDataTypes ecoreDataType="elements.ecore#//Identifier"/>
+    <genDataTypes ecoreDataType="elements.ecore#//Name"/>
+    <genDataTypes ecoreDataType="elements.ecore#//Path"/>
+    <genDataTypes ecoreDataType="elements.ecore#//UUID"/>
+    <genClasses ecoreClass="elements.ecore#//Comment"/>
+    <genClasses image="false" ecoreClass="elements.ecore#//Document">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//Document/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//Document/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//Document/creator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//Document/version"/>
+    </genClasses>
+    <genClasses ecoreClass="elements.ecore#//Documentation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elements.ecore#//Documentation/resource"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="elements.ecore#//Metadata"/>
+    <genClasses ecoreClass="elements.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//NamedElement/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elements.ecore#//NamedElement/metadata"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//NamedElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elements.ecore#//NamedElement/name"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Package" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
+      disposableProviderFactory="true" ecorePackage="package.ecore#/">
+    <genClasses ecoreClass="package.ecore#//DependencyOfPackage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute package.ecore#//DependencyOfPackage/packageName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference package.ecore#//DependencyOfPackage/package"/>
+    </genClasses>
+    <genClasses ecoreClass="package.ecore#//ImplementationOfPackage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute package.ecore#//ImplementationOfPackage/typeName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference package.ecore#//ImplementationOfPackage/type"/>
+    </genClasses>
+    <genClasses ecoreClass="package.ecore#//Package">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference package.ecore#//Package/implementation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference package.ecore#//Package/dependency"/>
+    </genClasses>
+    <genClasses ecoreClass="package.ecore#//PackageDocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute package.ecore#//PackageDocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference package.ecore#//PackageDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference package.ecore#//PackageDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference package.ecore#//PackageDocumentRoot/package"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Types" basePackage="org.eclipse.xsmp.tool.smp.core" resource="XML"
+      disposableProviderFactory="true" ecorePackage="types.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AccessKind">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AccessKind/readWrite"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AccessKind/readOnly"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AccessKind/writeOnly"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ParameterDirectionKind">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ParameterDirectionKind/in"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ParameterDirectionKind/out"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ParameterDirectionKind/inout"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ParameterDirectionKind/return"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//VisibilityKind">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//VisibilityKind/public"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//VisibilityKind/private"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//VisibilityKind/protected"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="types.ecore#//AccessKindObject"/>
+    <genDataTypes ecoreDataType="types.ecore#//ParameterDirectionKindObject"/>
+    <genDataTypes ecoreDataType="types.ecore#//VisibilityKindObject"/>
+    <genClasses ecoreClass="types.ecore#//Array">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Array/itemType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Array/size"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Association">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Association/type"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Attribute">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Attribute/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Attribute/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//AttributeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//AttributeType/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//AttributeType/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//AttributeType/usage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//AttributeType/allowMultiple"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//BoolArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//BoolArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//BoolValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//BoolValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Char8ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Char8ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Char8Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Char8Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Class">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Class/base"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Class/property"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Class/operation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Class/association"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Class/abstract"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Constant">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Constant/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Constant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//DateTimeArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//DateTimeArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//DateTimeValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//DateTimeValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//DurationArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//DurationArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//DurationValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//DurationValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Enumeration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Enumeration/literal"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//EnumerationArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//EnumerationArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//EnumerationLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//EnumerationLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//EnumerationValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//EnumerationValue/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//EnumerationValue/literal"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Exception"/>
+    <genClasses ecoreClass="types.ecore#//Field">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Field/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Field/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Field/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Field/input"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Field/output"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Float">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Float/primitiveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float/maximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float/minInclusive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float/minimum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float/maxInclusive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float/unit"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Float32ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Float32ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Float32Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float32Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Float64ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Float64ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Float64Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Float64Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int16ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Int16ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int16Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Int16Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int32ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Int32ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int32Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Int32Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int64ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Int64ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int64Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Int64Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int8ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Int8ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Int8Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Int8Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Integer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Integer/primitiveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Integer/minimum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Integer/maximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Integer/unit"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//LanguageType"/>
+    <genClasses ecoreClass="types.ecore#//NativeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//NativeType/platform"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Operation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Operation/parameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Operation/raisedException"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Parameter">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Parameter/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Parameter/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Parameter/direction"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//PlatformMapping">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//PlatformMapping/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//PlatformMapping/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//PlatformMapping/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//PlatformMapping/location"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//PrimitiveType"/>
+    <genClasses ecoreClass="types.ecore#//Property">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Property/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Property/attachedField"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Property/getRaises"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Property/setRaises"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Property/access"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Property/category"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//SimpleArrayValue">
+      <genOperations ecoreOperation="types.ecore#//SimpleArrayValue/getItemValue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//SimpleType"/>
+    <genClasses image="false" ecoreClass="types.ecore#//SimpleValue"/>
+    <genClasses ecoreClass="types.ecore#//String">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//String/length"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//String8ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//String8ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//String8Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//String8Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//Structure">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Structure/constant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//Structure/field"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//StructureValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//StructureValue/fieldValue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//Type">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Type/uuid"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//ElementReference">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//ElementReference/T"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference types.ecore#//ElementReference/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt16ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//UInt16ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt16Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//UInt16Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt32ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//UInt32ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt32Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//UInt32Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt64ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//UInt64ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt64Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//UInt64Value/value"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt8ArrayValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//UInt8ArrayValue/itemValue"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//UInt8Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//UInt8Value/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//Value">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//Value/field"/>
+    </genClasses>
+    <genClasses ecoreClass="types.ecore#//ValueReference">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference types.ecore#//ValueReference/type"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//ValueType"/>
+    <genClasses image="false" ecoreClass="types.ecore#//VisibilityElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//VisibilityElement/visibility"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Xlink" basePackage="org.eclipse.xsmp.tool.smp" resource="XML" disposableProviderFactory="true"
+      ecorePackage="xlink.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xlink.ecore#//ActuateKind">
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/onLoad"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/onRequest"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/other"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/none"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xlink.ecore#//ShowKind">
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ShowKind/new"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ShowKind/replace"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ShowKind/embed"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ShowKind/other"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ShowKind/none"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xlink.ecore#//TypeKind">
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/simple"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/extended"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/title"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/arc"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/resource"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/locator"/>
+      <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//TypeKind/none"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="xlink.ecore#//ActuateKindObject"/>
+    <genDataTypes ecoreDataType="xlink.ecore#//ShowKindObject"/>
+    <genDataTypes ecoreDataType="xlink.ecore#//TypeKindObject"/>
+    <genClasses image="false" ecoreClass="xlink.ecore#//SimpleLinkBase">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/actuate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/arcrole"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/show"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLinkBase/linkType"/>
+      <genOperations ecoreOperation="xlink.ecore#//SimpleLinkBase/getHref"/>
+    </genClasses>
+    <genClasses ecoreClass="xlink.ecore#//SimpleLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//SimpleLink/href"/>
+    </genClasses>
+    <genClasses ecoreClass="xlink.ecore#//SimpleLinkRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xlink.ecore#//SimpleLinkRef/reference"/>
+      <genOperations ecoreOperation="xlink.ecore#//SimpleLinkRef/getHref"/>
+    </genClasses>
+    <genClasses ecoreClass="xlink.ecore#//XlinkDocument">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xlink.ecore#//XlinkDocument/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xlink.ecore#//XlinkDocument/xSISchemaLocation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/actuate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/arcrole"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/href"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/show"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xlink.ecore#//XlinkDocument/type"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

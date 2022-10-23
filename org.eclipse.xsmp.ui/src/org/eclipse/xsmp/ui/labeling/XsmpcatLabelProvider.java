@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedImage;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
@@ -68,10 +67,9 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   @Inject
   protected IImageHelper imageHelper;
 
-  @Inject
-  public XsmpcatLabelProvider(AdapterFactoryLabelProvider delegate)
+  public XsmpcatLabelProvider()
   {
-    super(delegate);
+    super(null);
   }
 
   protected StyledString text(NamedElement elem, Type type)
@@ -337,20 +335,49 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   {
     if (imageDescription instanceof ComposedImage)
     {
-      return ExtendedImageRegistry.INSTANCE.getImage(imageDescription);
+      try
+      {
+        return ExtendedImageRegistry.INSTANCE.getImage(imageDescription);
+      }
+      catch (final Exception e)
+      {
+        // ignore
+      }
     }
     return super.convertToImage(imageDescription);
   }
 
+  private Image doGetImage(String path)
+  {
+    var image = imageHelper.getImage(path);
+    if (image == null)
+    {
+      image = imageHelper.getImage("platform:/plugin/"
+              + org.eclipse.xsmp.ui.internal.XsmpActivator.PLUGIN_ID + "/" + path);
+    }
+    return image;
+  }
+
+  private Image getImage(String path)
+  {
+
+    return doGetImage("full/obj16/" + path);
+  }
+
+  private Image getOverlay(String path)
+  {
+    return doGetImage("full/ovr16/" + path);
+  }
+
   private Image getDeprecatedImage()
   {
-    return imageHelper.getImage("full/ovr16/deprecated.png");
+    return getOverlay("deprecated.png");
   }
 
   public Object image(Field elem)
   {
-    final var image = imageHelper.getImage("full/obj16/" + elem.eClass().getName() + "_"
-            + elem.getRealVisibility().getLiteral() + ".png");
+    final var image = getImage(
+            elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
 
     if (elem.isInput() || elem.isOutput() || elem.isDeprecated())
     {
@@ -365,12 +392,12 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
 
       if (elem.isInput())
       {
-        images.add(imageHelper.getImage("full/ovr16/input.png"));
+        images.add(getOverlay("input.png"));
       }
 
       if (elem.isOutput())
       {
-        images.add(imageHelper.getImage("full/ovr16/output.png"));
+        images.add(getOverlay("output.png"));
       }
       return new ComposedImage(images);
     }
@@ -380,16 +407,15 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   public Object image(Constant elem)
   {
 
-    return imageHelper.getImage("full/obj16/" + elem.eClass().getName() + "_"
-            + elem.getRealVisibility().getLiteral() + ".png");
+    return getImage(elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
 
   }
 
   public Object image(Operation elem)
   {
 
-    final var image = imageHelper.getImage("full/obj16/" + elem.eClass().getName() + "_"
-            + elem.getRealVisibility().getLiteral() + ".png");
+    final var image = getImage(
+            elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
 
     if (elem.isDeprecated())
     {
@@ -410,20 +436,20 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     {
       images.add(getDeprecatedImage());
     }
-    images.add(imageHelper.getImage("full/obj16/" + elem.eClass().getName() + "_"
-            + elem.getRealVisibility().getLiteral() + ".png"));
+    images.add(getImage(
+            elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png"));
 
     switch (elem.getAccess())
     {
       case READ_ONLY:
-        images.add(imageHelper.getImage("full/ovr16/read.png"));
+        images.add(getOverlay("read.png"));
         break;
       case WRITE_ONLY:
-        images.add(imageHelper.getImage("full/ovr16/write.png"));
+        images.add(getOverlay("write.png"));
         break;
       default:
-        images.add(imageHelper.getImage("full/ovr16/read.png"));
-        images.add(imageHelper.getImage("full/ovr16/write.png"));
+        images.add(getOverlay("read.png"));
+        images.add(getOverlay("write.png"));
         break;
     }
     return new ComposedImage(images);
@@ -431,7 +457,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
 
   public Image image(EObject elem)
   {
-    return imageHelper.getImage("full/obj16/" + elem.eClass().getName() + ".png");
+    return getImage(elem.eClass().getName() + ".png");
 
   }
 
@@ -456,8 +482,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     final var visibility = elem.getRealVisibility();
     if (visibility != VisibilityKind.PUBLIC)
     {
-      final var visibilityImage = imageHelper
-              .getImage("full/ovr16/" + visibility.getLiteral() + ".png");
+      final var visibilityImage = getOverlay(visibility.getLiteral() + ".png");
       if (image instanceof ComposedImage)
       {
         ((ComposedImage) image).getImages().add(visibilityImage);
@@ -477,7 +502,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     final var image = image(elem);
     if (isAbstract)
     {
-      final var abstractImage = imageHelper.getImage("full/ovr16/abstract.png");
+      final var abstractImage = getOverlay("abstract.png");
       if (image instanceof ComposedImage)
       {
         ((ComposedImage) image).getImages().add(abstractImage);

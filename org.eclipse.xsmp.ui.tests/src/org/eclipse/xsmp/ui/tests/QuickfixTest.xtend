@@ -19,7 +19,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createJavaProject
 
 @ExtendWith(InjectionExtension)
-@InjectWith(XsmpcatUiInjectorProvider)
+@InjectWith(XsmpUiInjectorProvider)
 class QuickfixTest extends AbstractQuickfixTest {
 
 	@BeforeAll def void setup() throws Exception {

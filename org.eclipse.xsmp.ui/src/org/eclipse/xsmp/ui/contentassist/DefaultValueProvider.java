@@ -54,9 +54,8 @@ public class DefaultValueProvider
                 .orElse(null);
 
       case XcataloguePackage.FLOAT:
-        return "0.0";
       case XcataloguePackage.INTEGER:
-        return "0";
+      case XcataloguePackage.STRING:
       case XcataloguePackage.PRIMITIVE_TYPE:
         switch (typeUtil.getPrimitiveType((PrimitiveType) t))
         {
@@ -84,8 +83,6 @@ public class DefaultValueProvider
             break;
         }
         break;
-      case XcataloguePackage.STRING:
-        return "\"\"";
       case XcataloguePackage.STRUCTURE:
         return "{" + java.lang.String.join(", ",
                 ((Structure) t).getMember().stream().filter(Field.class::isInstance)

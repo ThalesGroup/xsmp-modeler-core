@@ -10,11 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.generator;
 
-import java.util.function.Consumer;
-
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.extension.IExtensionConfigurationProvider;
-import org.eclipse.xsmp.mdk.IMdkConfigurationProvider;
+import org.eclipse.xsmp.configuration.IConfigurationProvider;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGenerator2;
@@ -22,6 +19,7 @@ import org.eclipse.xtext.generator.IGeneratorContext;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * Generates code from your model files on save. See
@@ -31,45 +29,33 @@ import com.google.inject.Singleton;
 public final class XsmpcatGenerator extends AbstractGenerator
 {
 
-  @Inject(optional = true)
-  private IExtensionConfigurationProvider extensionProvider;
+  public static final String NAMED_DELEGATE = "org.eclipse.xsmp.generator.XsmpcatGenerator.delegate";
 
-  @Inject(optional = true)
-  private IMdkConfigurationProvider mdkProvider;
+  @Inject
+  @Named(NAMED_DELEGATE)
+  private IGenerator2 delegate;
 
-  private void apply(final Resource input, Consumer<IGenerator2> consumer)
-  {
-    if (mdkProvider != null)
-    {
-      final var generator = mdkProvider.getInstance(input, IGenerator2.class);
-      if (generator != null)
-      {
-        consumer.accept(generator);
-      }
-    }
-    if (extensionProvider != null)
-    {
-      extensionProvider.getGenerators(input).forEach(consumer::accept);
-    }
-  }
+  @Inject
+  private IConfigurationProvider configurationProvider;
 
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa,
           final IGeneratorContext context)
   {
-    apply(resource, g -> g.doGenerate(resource, fsa, context));
+    if (configurationProvider.isEnabledFor(resource))
+    {
+      delegate.doGenerate(resource, fsa, context);
+    }
   }
 
-  @Override
-  public void beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
+  public static class NullGenerator extends AbstractGenerator
   {
-    apply(input, g -> g.beforeGenerate(input, fsa, context));
-  }
 
-  @Override
-  public void afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
-  {
-    apply(input, g -> g.afterGenerate(input, fsa, context));
-  }
+    @Override
+    public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
+    {
+      // do nothing
+    }
 
+  }
 }

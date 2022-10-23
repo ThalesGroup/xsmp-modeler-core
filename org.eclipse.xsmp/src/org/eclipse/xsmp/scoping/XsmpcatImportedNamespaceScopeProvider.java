@@ -246,7 +246,7 @@ public class XsmpcatImportedNamespaceScopeProvider
   }
 
   /**
-   * @return the QualifiedNameProvider
+   * @return the XsmpcatQualifiedNameProvider
    */
   public IQualifiedNameProvider getQualifiedNameProvider()
   {

@@ -10,8 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
-import com.google.inject.Injector;
-
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
@@ -26,17 +24,4 @@ public class XsmpcatStandaloneSetup extends XsmpcatStandaloneSetupGenerated
     new XsmpcatStandaloneSetup().createInjectorAndDoEMFRegistration();
   }
 
-  @Override
-  public void register(Injector injector)
-  {
-    super.register(injector);
-
-    // Add resource factory for smpcat/smppkg/smpcfg files
-    /*
-     * final var resourceFactory = injector.getInstance(SmpResourceFactoryImpl.class);
-     * Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("smpcat", resourceFactory);
-     * Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("smppkg", resourceFactory);
-     * Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("smpcfg", resourceFactory);
-     */
-  }
 }

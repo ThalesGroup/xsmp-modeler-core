@@ -51,7 +51,7 @@ public abstract class ComponentImplCustom extends ComponentImpl
 
     if (eNotificationRequired())
     {
-      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.CLASS__ABSTRACT,
+      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.COMPONENT__ABSTRACT,
               oldAbstract, newAbstract));
     }
 

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.eclipse.xsmp.ui.editor.model.SaveActionsPreferenceAccess;
+import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xtext.builder.internal.Activator;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.preferences.OptionsConfigurationBlock;
@@ -95,12 +95,10 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
     description.setLayoutData(
             new GridData(GridData.BEGINNING, GridData.CENTER, true, false, nColumns - 1, 1));
 
-    addCheckBox(composite, "Format source code", SaveActionsPreferenceAccess.PREF_FORMAT,
-            BOOLEAN_VALUES, 0);
-    addCheckBox(composite, "Organize imports", SaveActionsPreferenceAccess.PREF_ORGANIZE_IMPORTS,
+    addCheckBox(composite, "Format source code", XsmpPreferenceAccess.PREF_FORMAT,
             BOOLEAN_VALUES, 0);
     addCheckBox(composite, "Update document date",
-            SaveActionsPreferenceAccess.PREF_UPDATE_DOCUMENT_DATE, BOOLEAN_VALUES, 0);
+            XsmpPreferenceAccess.PREF_UPDATE_DOCUMENT_DATE, BOOLEAN_VALUES, 0);
     new Label(composite, SWT.NONE);
     restoreSectionExpansionStates(getDialogSettings());
     return sc1;

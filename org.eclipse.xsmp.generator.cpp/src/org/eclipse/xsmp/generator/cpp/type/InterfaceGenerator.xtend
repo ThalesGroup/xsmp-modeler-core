@@ -21,7 +21,7 @@ class InterfaceGenerator extends MemberGenerator<Interface> {
             «t.comment()»
             class «t.name»: public «t.genName» {
                 public:
-                    virtual ~«t.name»()=default;
+                    ~«t.name»() override = default;
                     «t.declareMembers(VisibilityKind.PUBLIC)»
             };
         '''

@@ -8,5 +8,5 @@ public interface XsmpVersion
   /**
    * The current version of this plugin
    */
-  String VERSION = "${project.version}".split("-")[0];
+  String VERSION = "${qualifiedVersion}";
 }

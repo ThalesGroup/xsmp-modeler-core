@@ -33,6 +33,7 @@ import org.eclipse.xsmp.xcatalogue.VisibilityKind
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import java.util.Optional
+import org.eclipse.xsmp.xcatalogue.Attribute
 
 @Singleton
 class ElementUtil {
@@ -53,11 +54,16 @@ class ElementUtil {
 	@Inject
 	IQualifiedNameProvider qualifiedNameProvider
 
-	def Expression attributeValue(NamedElement o, QualifiedName id) {
+	def Attribute attribute(NamedElement o, QualifiedName id) {
 
-		var attribute = o.metadatum.metadata.findFirst [
+		 o.metadatum.metadata.findFirst [
 			it.type !== null && id.equals(qualifiedNameProvider.getFullyQualifiedName(it.type))
 		]
+
+	}
+	def Expression attributeValue(NamedElement o, QualifiedName id) {
+
+		var attribute = attribute(o, id)
 		if (attribute === null)
 			null
 		else if (attribute.value === null)

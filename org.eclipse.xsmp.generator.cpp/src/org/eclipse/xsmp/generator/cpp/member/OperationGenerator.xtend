@@ -23,6 +23,7 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.util.Solver
+import org.eclipse.xsmp.xcatalogue.Enumeration
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
@@ -31,9 +32,9 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 		if (o.isConstructor)
 			return EcoreUtil2.getContainerOfType(o, NamedElementWithMembers).name
 
-		var operator = o.attributeValue(QualifiedName.create("Attributes", "Operator"))
+		var operator = o.attribute(QualifiedName.create("Attributes", "Operator"))
 		if (operator !== null) {
-			val value = Solver.INSTANCE.getEnum(operator)
+			val value = Solver.INSTANCE.getEnum(operator.value, operator.type as Enumeration)
 
 			if (value !== null) {
 				switch (value.name) {

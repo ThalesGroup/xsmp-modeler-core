@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ *******************************************************************************
+ * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ******************************************************************************
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.ecss.nl/smp/2019/Smdl/Catalogue"
+            class="org.eclipse.xsmp.tool.smp.smdl.catalogue.CataloguePackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="catalogue"
+            class="org.eclipse.xsmp.tool.smp.smdl.catalogue.util.CatalogueResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.ecss.nl/smp/2019/Smdl/Configuration"
+            class="org.eclipse.xsmp.tool.smp.smdl.configuration.ConfigurationPackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="configuration"
+            class="org.eclipse.xsmp.tool.smp.smdl.configuration.util.ConfigurationResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.ecss.nl/smp/2019/Core/Elements"
+            class="org.eclipse.xsmp.tool.smp.core.elements.ElementsPackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="elements"
+            class="org.eclipse.xsmp.tool.smp.core.elements.util.ElementsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.ecss.nl/smp/2019/Smdl/Package"
+            class="org.eclipse.xsmp.tool.smp.smdl.package_.PackagePackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="package"
+            class="org.eclipse.xsmp.tool.smp.smdl.package_.util.PackageResourceFactoryImpl"/>
+   </extension>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.ecss.nl/smp/2019/Core/Types"
+            class="org.eclipse.xsmp.tool.smp.core.types.TypesPackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="types"
+            class="org.eclipse.xsmp.tool.smp.core.types.util.TypesResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated smp -->
+      <package
+            uri="http://www.w3.org/1999/xlink"
+            class="org.eclipse.xsmp.tool.smp.xlink.XlinkPackage"
+            genModel="model/smp.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated smp -->
+      <parser
+            type="xlink"
+            class="org.eclipse.xsmp.tool.smp.xlink.util.XlinkResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

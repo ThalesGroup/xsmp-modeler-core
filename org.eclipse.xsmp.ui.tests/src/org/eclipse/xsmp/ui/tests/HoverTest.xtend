@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 
 @ExtendWith(InjectionExtension)
-@InjectWith(XsmpcatUiInjectorProvider)
+@InjectWith(XsmpUiInjectorProvider)
 class HoverTest extends AbstractHoverTest {
 
 	@BeforeEach

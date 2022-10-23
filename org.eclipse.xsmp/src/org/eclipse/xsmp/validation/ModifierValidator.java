@@ -32,6 +32,8 @@ public class ModifierValidator
 
   public static final String PRIVATE_MODIFIER = "private";
 
+  public static final String ABSTRACT_MODIFIER = "abstract";
+
   private final Set<String> allowedModifiers;
 
   private final String allowedModifiersAsString;
