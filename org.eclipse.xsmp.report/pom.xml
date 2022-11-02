@@ -48,7 +48,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.sirius</artifactId>
+			<artifactId>org.eclipse.xsmp.design</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

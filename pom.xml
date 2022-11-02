@@ -6,7 +6,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<xtextVersion>2.27.0</xtextVersion>
+		<xtextVersion>2.28.0</xtextVersion>
 		<mwe2Version>2.13.0</mwe2Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
