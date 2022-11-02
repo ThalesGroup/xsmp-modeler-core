@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.sirius;
+package org.eclipse.xsmp.design;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin
 {
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.eclipse.xsmp.sirius";
+  public static final String PLUGIN_ID = "org.eclipse.xsmp.design";
 
   private final Set<Viewpoint> viewpoints = new HashSet<>();
 

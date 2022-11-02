@@ -10,14 +10,14 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.xsmp.ui;
 
-import org.eclipse.xsmp.ui.XsmpcatExecutableExtensionFactory;
 import org.eclipse.xsmp.ui.internal.XsmpActivator;
+import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 import com.google.inject.Injector;
 
-public class XsmpExecutableExtensionFactory extends XsmpcatExecutableExtensionFactory
+public class XsmpExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory
 {
 
   @Override

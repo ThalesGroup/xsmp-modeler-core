@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.xsmp.sirius
-Bundle-SymbolicName: org.eclipse.xsmp.sirius;singleton:=true
+Bundle-Name: org.eclipse.xsmp.design
+Bundle-SymbolicName: org.eclipse.xsmp.design;singleton:=true
 Bundle-Version: 1.1.0.qualifier
-Bundle-Activator: org.eclipse.xsmp.sirius.Activator
+Bundle-Activator: org.eclipse.xsmp.design.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

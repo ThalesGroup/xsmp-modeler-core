@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
-    <component class="org.eclipse.xsmp.sirius.Activator"
+    <component class="org.eclipse.xsmp.design.Activator"
                id="org.eclipse.xsmp.sirius"
 	       name="xsmp">
     </component>
@@ -19,7 +19,7 @@
   <extension
         point="org.eclipse.eef.properties.ui.eefTabDescriptorFilter">
      <descriptor
-           class="org.eclipse.xsmp.sirius.EEFTabDescriptorFilter"
+           class="org.eclipse.xsmp.design.EEFTabDescriptorFilter"
            description="description"
            id="org.eclipse.xsmp.sirius.tabFilter"
            label="Filter legacy tabs">
@@ -28,7 +28,7 @@
   <extension
         point="org.eclipse.eef.properties.ui.eefTabDescriptorProvider">
      <descriptor
-           class="org.eclipse.xsmp.sirius.EEFTabDescriptorProvider"
+           class="org.eclipse.xsmp.design.EEFTabDescriptorProvider"
            description="description"
            id="org.eclipse.xsmp.sirius.tabEditor"
            label="EMF Forms editor">

@@ -317,7 +317,7 @@ version(s), and exceptions or additional permissions here}.&quot;
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.xsmp.sirius"
+         id="org.eclipse.xsmp.design"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -325,6 +325,27 @@ version(s), and exceptions or additional permissions here}.&quot;
 
    <plugin
          id="org.eclipse.xsmp.lib"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xsmp.generator.cpp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xsmp.tool.smp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xsmp.tool.smp.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

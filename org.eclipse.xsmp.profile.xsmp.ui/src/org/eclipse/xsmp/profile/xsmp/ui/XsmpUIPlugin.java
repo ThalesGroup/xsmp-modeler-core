@@ -15,7 +15,7 @@ import org.eclipse.xsmp.ui.AbstractXsmpcatUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * This is the central singleton for the Xsmp Tool Chain UI plugin.
+ * This is the central singleton for the Xsmp Profile UI plugin.
  */
 public final class XsmpUIPlugin extends AbstractXsmpcatUIPlugin
 {

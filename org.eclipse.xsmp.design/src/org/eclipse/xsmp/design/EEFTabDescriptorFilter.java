@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.sirius;
+package org.eclipse.xsmp.design;
 
 import org.eclipse.eef.properties.ui.api.IEEFTabDescriptor;
 import org.eclipse.eef.properties.ui.api.IEEFTabDescriptorFilter;
