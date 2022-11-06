@@ -160,7 +160,7 @@ public class XsmpcatDocumentProvider extends XtextDocumentProvider
       }
       catch (final CoreException e)
       {
-        e.printStackTrace();
+        // ignore
       }
       change.dispose();
     }

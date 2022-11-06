@@ -53,11 +53,6 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
   {
     super.enhanceProject(project, subMonitor, shell);
     createCproject(project, subMonitor.newChild(1));
-    createLanguageSetting(project, subMonitor.newChild(1));
-  }
-
-  protected void createLanguageSetting(IProject project, SubMonitor newChild)
-  {
   }
 
   protected void createCproject(IProject project, SubMonitor newChild)
@@ -74,7 +69,7 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
       }
       catch (final CoreException e)
       {
-        e.printStackTrace();
+        // ignore
       }
     });
   }
