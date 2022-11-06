@@ -56,8 +56,6 @@ public abstract class XsmpcatExtensionRuntimeModule extends AbstractXsmpcatRunti
             .to(NullGenerator.class);
   }
 
-  public abstract void configureExtensionName(Binder binder);
-
   @Override
   public Class< ? extends IValueConverterService> bindIValueConverterService()
   {

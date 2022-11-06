@@ -8,14 +8,18 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp;
+package org.eclipse.xsmp.ui.configuration;
 
-import org.eclipse.xtext.Constants;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 
-public interface XsmpcatConstants extends Constants
+import com.google.inject.ImplementedBy;
+import com.google.inject.Injector;
+
+@ImplementedBy(XsmpcatServiceUIProvider.class)
+public interface IXsmpcatServiceUIProvider extends IXsmpcatServiceProvider
 {
-  String EXTENSION_NAME = "extension";
 
-  String DEFAULT_PROFILE_NAME = "org.eclipse.xsmp";
+  Injector getInjector(IProject project);
 
 }

@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.xsmp.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpcatConstants;
 import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.internal.XsmpActivator;
@@ -33,7 +33,6 @@ import com.google.inject.Injector;
 
 public class Extension
 {
-
   private static final Map<String, Extension> tools = new HashMap<>();
   static
   {

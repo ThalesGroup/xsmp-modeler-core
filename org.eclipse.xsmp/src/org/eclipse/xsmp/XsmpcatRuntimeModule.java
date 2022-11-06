@@ -13,22 +13,12 @@ package org.eclipse.xsmp;
 import org.eclipse.xsmp.validation.XsmpcatValidator;
 import org.eclipse.xtext.service.SingletonBinding;
 
-import com.google.inject.Binder;
-import com.google.inject.name.Names;
-
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
 public class XsmpcatRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
-
-  @Override
-  public void configureExtensionName(Binder binder)
-  {
-    binder.bind(String.class).annotatedWith(Names.named(XsmpcatConstants.EXTENSION_NAME))
-            .toInstance(XsmpcatConstants.DEFAULT_PROFILE_NAME);
-  }
 
   @SingletonBinding(eager = true)
   public Class< ? extends XsmpcatValidator> bindXsmpcatValidator()

@@ -17,7 +17,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.xsmp.configuration.IConfigurationProvider;
+import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 
@@ -30,9 +30,10 @@ import com.google.inject.Inject;
  */
 public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
 {
+  private final String IS_RESPONSIBLE = getClass().getCanonicalName() + ".isResponsible";
 
   @Inject
-  private IConfigurationProvider configurationProvider;
+  private IXsmpcatServiceProvider xsmpcatServiceProvider;
 
   @Override
   protected List<EPackage> getEPackages()
@@ -40,11 +41,25 @@ public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
     return Arrays.asList(XcataloguePackage.eINSTANCE, EcorePackage.eINSTANCE);
   }
 
+  /**
+   * Cache the result in the context map
+   */
   @Override
   protected boolean isResponsible(Map<Object, Object> context, EObject eObject)
   {
-    return super.isResponsible(context, eObject)
-            && configurationProvider.isEnabledFor(eObject.eResource());
+
+    var responsible = context != null ? (Boolean) context.get(IS_RESPONSIBLE) : null;
+    if (responsible == null)
+    {
+      responsible = super.isResponsible(context, eObject)
+              && xsmpcatServiceProvider.isEnabledFor(eObject.eResource());
+
+      if (context != null)
+      {
+        context.put(IS_RESPONSIBLE, responsible);
+      }
+    }
+    return responsible;
   }
 
 }

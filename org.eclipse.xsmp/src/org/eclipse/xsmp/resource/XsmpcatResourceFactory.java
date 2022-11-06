@@ -12,7 +12,7 @@ package org.eclipse.xsmp.resource;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.configuration.IConfigurationProvider;
+import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 
@@ -22,12 +22,12 @@ public class XsmpcatResourceFactory implements IResourceFactory
 {
 
   @Inject
-  private IConfigurationProvider configurationProvider;
+  private IXsmpcatServiceProvider xsmpcatServiceProvider;
 
   @Override
   public Resource createResource(URI uri)
   {
-    final var xtextResource = configurationProvider.getInstance(uri, XtextResource.class);
+    final var xtextResource = xsmpcatServiceProvider.getInstance(uri, XtextResource.class);
     xtextResource.setURI(uri);
     return xtextResource;
   }

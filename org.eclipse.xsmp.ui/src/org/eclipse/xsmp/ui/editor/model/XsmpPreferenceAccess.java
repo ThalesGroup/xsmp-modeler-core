@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.editor.model;
 
-import org.eclipse.xsmp.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpcatConstants;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 
@@ -20,7 +20,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class XsmpPreferenceAccess
 {
-
   public static final String PREF_FORMAT = "format"; //$NON-NLS-1$
 
   public static final String PREF_UPDATE_DOCUMENT_DATE = "update_document_date"; //$NON-NLS-1$

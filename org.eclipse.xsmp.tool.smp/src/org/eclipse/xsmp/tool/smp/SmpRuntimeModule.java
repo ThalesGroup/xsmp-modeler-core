@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.tool.smp;
 
-import org.eclipse.xsmp.XsmpcatConstants;
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.XsmpcatGenerator;
 import org.eclipse.xsmp.tool.smp.generator.SmpGenerator;
@@ -29,12 +28,6 @@ import com.google.inject.name.Names;
  */
 public class SmpRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
-  @Override
-  public void configureExtensionName(Binder binder)
-  {
-    binder.bind(String.class).annotatedWith(Names.named(XsmpcatConstants.EXTENSION_NAME))
-            .toInstance("org.eclipse.xsmp.tool.smp");
-  }
 
   @Override
   public void configureIGenerator2Delegate(Binder binder)

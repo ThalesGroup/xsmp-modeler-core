@@ -21,10 +21,10 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import com.google.inject.Inject;
 
 @SuppressWarnings("restriction")
-public class XsmpcatResourceUiServiceProvider extends DefaultResourceUIServiceProvider
+public class XsmpcatResourceUIServiceProvider extends DefaultResourceUIServiceProvider
 {
   @Inject
-  public XsmpcatResourceUiServiceProvider(IResourceServiceProvider delegate)
+  public XsmpcatResourceUIServiceProvider(IResourceServiceProvider delegate)
   {
     super(delegate);
   }

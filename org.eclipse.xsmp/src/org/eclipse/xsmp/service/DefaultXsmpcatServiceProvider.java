@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.configuration;
+package org.eclipse.xsmp.service;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-public class DefaultConfigurationProvider implements IConfigurationProvider
+public class DefaultXsmpcatServiceProvider implements IXsmpcatServiceProvider
 {
 
   @Inject

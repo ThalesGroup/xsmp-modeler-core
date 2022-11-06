@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.configuration.IConfigurationProvider;
+import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGenerator2;
@@ -36,13 +36,13 @@ public final class XsmpcatGenerator extends AbstractGenerator
   private IGenerator2 delegate;
 
   @Inject
-  private IConfigurationProvider configurationProvider;
+  private IXsmpcatServiceProvider xsmpcatServiceProvider;
 
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa,
           final IGeneratorContext context)
   {
-    if (configurationProvider.isEnabledFor(resource))
+    if (xsmpcatServiceProvider.isEnabledFor(resource))
     {
       delegate.doGenerate(resource, fsa, context);
     }

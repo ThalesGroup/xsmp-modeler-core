@@ -12,10 +12,10 @@ package org.eclipse.xsmp.ui;
 
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.configuration.IConfigurationProvider;
+import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatMultiLineTerminalEditStrategy;
-import org.eclipse.xsmp.ui.configuration.XsmpcatConfigurationUIProvider;
+import org.eclipse.xsmp.ui.configuration.XsmpcatServiceUIProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateContextType;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateProposalProvider;
@@ -30,7 +30,7 @@ import org.eclipse.xsmp.ui.hover.XsmpcatDispatchingEObjectTextHover;
 import org.eclipse.xsmp.ui.hover.XsmpcatEObjectHoverProvider;
 import org.eclipse.xsmp.ui.outline.XsmpcatOutlineTreeProvider;
 import org.eclipse.xsmp.ui.quickfix.XsmpcatTextEditComposer;
-import org.eclipse.xsmp.ui.resource.XsmpcatResourceUiServiceProvider;
+import org.eclipse.xsmp.ui.resource.XsmpcatResourceUIServiceProvider;
 import org.eclipse.xsmp.ui.template.XsmpcatCrossReferenceTemplateVariableResolver;
 import org.eclipse.xsmp.ui.template.XsmpcatTemplateStore;
 import org.eclipse.xsmp.ui.validation.XsmpValidatorConfigurationBlock;
@@ -124,6 +124,12 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
             .to(XsmpPreferenceAccess.Initializer.class);
   }
 
+  public void configureExtensionName(Binder binder)
+  {
+    binder.bind(String.class).annotatedWith(Names.named(XsmpcatConstants.EXTENSION_NAME))
+            .toInstance(XsmpcatConstants.DEFAULT_PROFILE_NAME);
+  }
+
   @Override
   public Provider<IAllContainersState> provideIAllContainersState()
   {
@@ -142,9 +148,9 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpcatOutlineTreeProvider.class;
   }
 
-  public Class< ? extends IConfigurationProvider> bindIConfigurationProvider()
+  public Class< ? extends IXsmpcatServiceProvider> bindIXsmpcatServiceProvider()
   {
-    return XsmpcatConfigurationUIProvider.class;
+    return XsmpcatServiceUIProvider.class;
   }
 
   @Override
@@ -176,7 +182,7 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
 
   public Class< ? extends IResourceUIServiceProvider> bindIResourceUIServiceProvider()
   {
-    return XsmpcatResourceUiServiceProvider.class;
+    return XsmpcatResourceUIServiceProvider.class;
   }
 
   @Override

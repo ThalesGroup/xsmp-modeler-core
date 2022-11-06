@@ -13,7 +13,7 @@ package org.eclipse.xsmp.ui.configuration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpcatConstants;
 import org.eclipse.xsmp.ui.extension.Extension;
 import org.eclipse.xsmp.ui.resource.XsmpProjectByResourceProvider;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
@@ -25,8 +25,9 @@ import com.google.inject.name.Named;
 /**
  * A specialization of the IConfigurationUIProvider to use in Eclipse environment
  */
-public class XsmpcatConfigurationUIProvider implements IConfigurationUIProvider
+public class XsmpcatServiceUIProvider implements IXsmpcatServiceUIProvider
 {
+
   @Inject
   @Named(XsmpcatConstants.EXTENSION_NAME)
   private String extensionName;

@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.configuration;
+package org.eclipse.xsmp.service;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,8 +18,8 @@ import com.google.inject.ImplementedBy;
 /**
  * @author daveluy
  */
-@ImplementedBy(DefaultConfigurationProvider.class)
-public interface IConfigurationProvider
+@ImplementedBy(DefaultXsmpcatServiceProvider.class)
+public interface IXsmpcatServiceProvider
 {
   /**
    * Get an instance of clazz<T> from the specified context
@@ -32,6 +32,8 @@ public interface IConfigurationProvider
   <T> T getInstance(URI context, Class<T> clazz);
 
   /**
+   * Check whether the current module is enabled for this resource
+   *
    * @param context
    *          the context resource
    * @return true if this Profile/Tool is enabled
