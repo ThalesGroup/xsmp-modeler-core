@@ -224,7 +224,7 @@ public class SmpGenerator extends AbstractModelConverter
     try
     {
       final var os = new ByteArrayOutputStream();
-      catalogueResource.save(os, Collections.emptyMap());
+      packageResource.save(os, Collections.emptyMap());
 
       fsa.generateFile(
               resource.getURI().trimFileExtension().appendFileExtension("smppkg").lastSegment(),
@@ -322,7 +322,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     if ("ecss.smp.xsmpcat".equals(uri.lastSegment()))
     {
-      return URI.createURI("http://www.esa.int/2019/Smdl");
+      return URI.createURI("http://www.ecss.nl/smp/2019/Smdl");
     }
     return toSmpcatGenURI(uri);
   }

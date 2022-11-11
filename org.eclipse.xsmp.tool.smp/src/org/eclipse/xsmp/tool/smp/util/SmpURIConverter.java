@@ -38,6 +38,7 @@ public class SmpURIConverter extends ExtensibleURIConverterImpl
       final var smpcatUri = URI.createURI(smpcatUrl.toString());
       uriMap.put(URI.createURI("http://www.esa.int/2008/02/Smdl"), smpcatUri);
       uriMap.put(URI.createURI("http://www.esa.int/2019/Smdl"), smpcatUri);
+      uriMap.put(URI.createURI("http://www.ecss.nl/smp/2019/Smdl"), smpcatUri);
       uriMap.put(URI.createURI("ecss.smp.smpcat"), smpcatUri);
     }
     final var smppkgUrl = getClass().getResource("/org/eclipse/xsmp/tool/smp/lib/ecss.smp.smppkg");
