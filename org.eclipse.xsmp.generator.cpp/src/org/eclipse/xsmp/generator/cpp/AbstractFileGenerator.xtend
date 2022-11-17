@@ -22,7 +22,7 @@ import org.eclipse.xtext.EcoreUtil2
 abstract class AbstractFileGenerator<T extends NamedElement> {
 
     @Inject
-    protected CopyrightProvider copyright
+    protected CppCopyrightNoticeProvider copyright
 
     @Inject
     protected extension GeneratorExtension

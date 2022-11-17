@@ -12,13 +12,13 @@ package org.eclipse.xsmp.profile.xsmp.generator.cpp
 
 import com.google.inject.Singleton
 import org.eclipse.xsmp.XsmpVersion
-import org.eclipse.xsmp.generator.cpp.CopyrightProvider
+import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider
 
 /** 
  * @author daveluy
  */
 @Singleton
-class XsmpCopyrightProvider extends CopyrightProvider {
+class XsmpCopyrightProvider extends CppCopyrightNoticeProvider {
 
 
 	protected override  generatedBy() {

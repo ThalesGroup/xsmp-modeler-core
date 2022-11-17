@@ -13,7 +13,7 @@ package org.eclipse.xsmp.profile.xsmp;
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.XsmpcatGenerator;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
-import org.eclipse.xsmp.generator.cpp.CopyrightProvider;
+import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EntryPointGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EventSinkGenerator;
@@ -127,7 +127,7 @@ public class XsmpRuntimeModule extends XsmpcatExtensionRuntimeModule
     return XsmpStringGenerator.class;
   }
 
-  public Class< ? extends CopyrightProvider> bindCopyrightProvider()
+  public Class< ? extends CppCopyrightNoticeProvider> bindCopyrightProvider()
   {
     return XsmpCopyrightProvider.class;
   }

@@ -559,11 +559,11 @@ terminal WS:
 terminal fragment NEW_LINE:
 	('\r' '\n'? | '\n');
 
-terminal ML_COMMENT:
-	'/*' !'*'->'*/';
-
 terminal ML_DOCUMENTATION:
-	'/**'->'*/';
+	'/**' !'*'->'*/';
+
+terminal ML_COMMENT:
+	('/*' !'*' | '/***')->'*/';
 
 terminal SL_COMMENT:
 	'//' !('\n' | '\r')* ('\r'? '\n')?;

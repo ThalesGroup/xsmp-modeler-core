@@ -6,28 +6,35 @@ import org.eclipse.xsmp.XsmpVersion
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.NamedElement
+import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
 
 /** 
  * @author daveluy
  */
 @Singleton
-class CopyrightProvider {
+class CppCopyrightNoticeProvider {
 
 	@Inject
 	protected extension GeneratorExtension
+
+	@Inject
+	CopyrightNoticeProvider provider
 
 	protected def date(Catalogue cat) {
 		XsmpUtil.year(cat)
 	}
 
 	protected def copyright(Catalogue cat) {
-	
+		provider.getCopyrightNotice(cat.eResource, "// ")
+
 	}
+
 	protected def generatedBy() {
 		'''
 			XsmpcatGenerator-«XsmpVersion.VERSION»
 		'''
 	}
+
 	def CharSequence getSourceText(NamedElement element, Catalogue cat) {
 		'''
 			«cat.copyright»
