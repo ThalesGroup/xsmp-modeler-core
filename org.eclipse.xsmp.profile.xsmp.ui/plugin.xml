@@ -14,4 +14,11 @@
 			class="org.eclipse.xsmp.profile.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="xsmpcat"/>
 	</extension>
+		<extension
+		point="org.eclipse.xtext.ui.projectTemplate">
+		<projectTemplateProvider
+			class="org.eclipse.xsmp.profile.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.profile.xsmp.ui.wizard.XsmpProjectTemplateProvider"
+			grammarName="org.eclipse.xsmp.Xsmpcat">
+		</projectTemplateProvider>
+	</extension>
 </plugin>

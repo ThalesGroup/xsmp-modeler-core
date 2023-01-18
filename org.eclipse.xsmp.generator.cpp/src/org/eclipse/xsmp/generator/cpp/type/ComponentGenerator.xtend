@@ -59,6 +59,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 	}
 
 	def CharSequence constructorDeclaration(Component t, boolean useGenPattern) {
+		val name = t.name(useGenPattern)
 		'''
 			// ------------------------------------------------------------------------------------
 			// -------------------------- Constructors/Destructor --------------------------
@@ -69,13 +70,21 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 			/// @param name Name of new model instance.
 			/// @param description Description of new model instance.
 			/// @param parent Parent of new model instance.
-			«t.name(useGenPattern)»(
+			«name»(
 					::Smp::String8 name,
 					::Smp::String8 description,
 					::Smp::IObject* parent);
+			/// deleted copy constructor
+			«name»(const «name»&) = delete;
+			/// deleted move constructor
+			«name»(«name»&&) = delete;
+			/// deleted copy assignment
+			«name»& operator=(const «name»&) = delete;
+			/// deleted move assignment
+			«name»& operator=(«name»&&) = delete;
 			
 			/// Virtual destructor to release memory.
-			~«t.name(useGenPattern)»() override;
+			~«name»() override;
 		'''
 	}
 
@@ -88,6 +97,8 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 					: «type.genName»::«type.genName»(name, description, parent) {
 			}
 			
+			«type.name»::~«type.name»() {
+			}
 			
 			void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
 			}
@@ -179,7 +190,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 		if (base !== null)
 			'''
 				// Base class initialization
-				«base»(_name, _description, _parent)
+				«base»(name, description, parent)
 			'''
 	}
 
@@ -202,9 +213,9 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
 					
 					//--------------------------- Constructor -------------------------
 					«t.name(useGenPattern)»::«t.name(useGenPattern)»(
-						::Smp::String8 _name,
-						::Smp::String8 _description,
-						::Smp::IObject* _parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+						::Smp::String8 name,
+						::Smp::String8 description,
+						::Smp::IObject* parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
 					{
 					}
 					
