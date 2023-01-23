@@ -10,19 +10,18 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.xsmp.generator;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
 import org.eclipse.xsmp.generator.cpp.CppOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
-import org.eclipse.xtext.generator.OutputConfigurationProvider;
 
 import com.google.inject.Inject;
 
 /**
  * Default configuration for output folders used in the generator
  */
-public class XsmpOutputConfigurationProvider extends OutputConfigurationProvider
+public class XsmpOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
 {
 
   @Inject
@@ -31,7 +30,7 @@ public class XsmpOutputConfigurationProvider extends OutputConfigurationProvider
   @Override
   public Set<OutputConfiguration> getOutputConfigurations()
   {
-    final var result = new HashSet<OutputConfiguration>();
+    final var result = super.getOutputConfigurations();
     result.addAll(cppOutputConfigurationProvider.getOutputConfigurations());
     return result;
   }
