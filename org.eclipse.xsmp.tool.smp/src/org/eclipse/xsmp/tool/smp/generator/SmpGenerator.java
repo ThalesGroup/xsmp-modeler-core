@@ -389,17 +389,20 @@ public class SmpGenerator extends AbstractModelConverter
     copy((NamedElement) src, (org.eclipse.xsmp.tool.smp.core.elements.NamedElement) dest);
 
     dest.setCreator(src.getCreator().stream().collect(Collectors.joining(", ")));
-
-    final var gc = new GregorianCalendar();
-    gc.setTime(src.getDate());
-    gc.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
-    try
+    final var date = src.getDate();
+    if (date != null)
     {
-      dest.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(gc));
-    }
-    catch (final Exception e)
-    {
-      // ignore
+      final var gc = new GregorianCalendar();
+      gc.setTime(src.getDate());
+      gc.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
+      try
+      {
+        dest.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(gc));
+      }
+      catch (final Exception e)
+      {
+        // ignore
+      }
     }
     dest.setTitle(src.getTitle());
     dest.setVersion(src.getVersion());
