@@ -30,8 +30,6 @@ public class XsmpOutputConfigurationProvider extends XsmpcatOutputConfigurationP
   @Override
   public Set<OutputConfiguration> getOutputConfigurations()
   {
-    final var result = super.getOutputConfigurations();
-    result.addAll(cppOutputConfigurationProvider.getOutputConfigurations());
-    return result;
+    return cppOutputConfigurationProvider.getOutputConfigurations();
   }
 }

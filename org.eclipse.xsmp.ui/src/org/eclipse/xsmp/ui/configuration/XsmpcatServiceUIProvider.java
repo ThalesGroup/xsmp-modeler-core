@@ -76,7 +76,12 @@ public class XsmpcatServiceUIProvider implements IXsmpcatServiceUIProvider
   @Override
   public boolean isEnabledFor(Resource context)
   {
-    final var project = projectProvider.getProjectContext(context);
+    return isEnabledFor(projectProvider.getProjectContext(context));
+  }
+
+  @Override
+  public boolean isEnabledFor(IProject project)
+  {
     final var preferenceStore = preferenceStoreAccess.getContextPreferenceStore(project);
 
     return extensionName.equals(Extension.getProfileId(preferenceStore))

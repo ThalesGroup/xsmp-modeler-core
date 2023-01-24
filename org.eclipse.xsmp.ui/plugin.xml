@@ -266,12 +266,12 @@
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
 		</page>
 	</extension>
-	<extension point="org.eclipse.xtext.builder.participant">
+	<!--<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="xsmpcat"/>
 	</extension>
-	<!--<extension point="org.eclipse.ui.preferencePages">
+	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			category="org.eclipse.xsmp.default"
 			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"

@@ -22,4 +22,12 @@ public interface IXsmpcatServiceUIProvider extends IXsmpcatServiceProvider
 
   Injector getInjector(IProject project);
 
+  /**
+   * Check whether the current module is enabled for this project
+   *
+   * @param project
+   *          the project
+   * @return true if this Profile/Tool is enabled
+   */
+  boolean isEnabledFor(IProject project);
 }

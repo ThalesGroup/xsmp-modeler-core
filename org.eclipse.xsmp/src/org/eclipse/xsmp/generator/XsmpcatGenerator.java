@@ -11,15 +11,11 @@
 package org.eclipse.xsmp.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 /**
  * Generates code from your model files on save. See
@@ -29,33 +25,11 @@ import com.google.inject.name.Named;
 public final class XsmpcatGenerator extends AbstractGenerator
 {
 
-  public static final String NAMED_DELEGATE = "org.eclipse.xsmp.generator.XsmpcatGenerator.delegate";
-
-  @Inject
-  @Named(NAMED_DELEGATE)
-  private IGenerator2 delegate;
-
-  @Inject
-  private IXsmpcatServiceProvider xsmpcatServiceProvider;
-
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa,
           final IGeneratorContext context)
   {
-    if (xsmpcatServiceProvider.isEnabledFor(resource))
-    {
-      delegate.doGenerate(resource, fsa, context);
-    }
+    // nothing to do by default
   }
 
-  public static class NullGenerator extends AbstractGenerator
-  {
-
-    @Override
-    public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
-    {
-      // do nothing
-    }
-
-  }
 }

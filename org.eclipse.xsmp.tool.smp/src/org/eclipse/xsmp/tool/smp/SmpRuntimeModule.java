@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.tool.smp;
 
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
-import org.eclipse.xsmp.generator.XsmpcatGenerator;
 import org.eclipse.xsmp.tool.smp.generator.SmpGenerator;
 import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider;
 import org.eclipse.xsmp.tool.smp.validation.SmpValidator;
@@ -19,21 +18,16 @@ import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 
-import com.google.inject.Binder;
-import com.google.inject.name.Names;
-
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
 public class SmpRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
-
   @Override
-  public void configureIGenerator2Delegate(Binder binder)
+  public Class< ? extends IGenerator2> bindIGenerator2()
   {
-    binder.bind(IGenerator2.class).annotatedWith(Names.named(XsmpcatGenerator.NAMED_DELEGATE))
-            .to(SmpGenerator.class);
+    return SmpGenerator.class;
   }
 
   @SingletonBinding(eager = true)

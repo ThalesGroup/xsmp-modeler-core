@@ -12,8 +12,6 @@ package org.eclipse.xsmp;
 
 import org.eclipse.xsmp.conversion.XsmpcatValueConverterService;
 import org.eclipse.xsmp.documentation.XsmpcatEObjectDocumentationProvider;
-import org.eclipse.xsmp.generator.XsmpcatGenerator;
-import org.eclipse.xsmp.generator.XsmpcatGenerator.NullGenerator;
 import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
 import org.eclipse.xsmp.naming.XsmpcatQualifiedNameProvider;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
@@ -23,7 +21,6 @@ import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
-import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -48,12 +45,6 @@ public abstract class XsmpcatExtensionRuntimeModule extends AbstractXsmpcatRunti
     binder.bind(IScopeProvider.class)
             .annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
             .to(XsmpcatImportedNamespaceScopeProvider.class);
-  }
-
-  public void configureIGenerator2Delegate(Binder binder)
-  {
-    binder.bind(IGenerator2.class).annotatedWith(Names.named(XsmpcatGenerator.NAMED_DELEGATE))
-            .to(NullGenerator.class);
   }
 
   @Override

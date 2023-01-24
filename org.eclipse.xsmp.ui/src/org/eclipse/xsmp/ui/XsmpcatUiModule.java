@@ -15,6 +15,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatMultiLineTerminalEditStrategy;
+import org.eclipse.xsmp.ui.builder.XsmpcatBuilderParticipant;
 import org.eclipse.xsmp.ui.configuration.XsmpcatServiceUIProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateContextType;
@@ -34,6 +35,7 @@ import org.eclipse.xsmp.ui.resource.XsmpcatResourceUIServiceProvider;
 import org.eclipse.xsmp.ui.template.XsmpcatCrossReferenceTemplateVariableResolver;
 import org.eclipse.xsmp.ui.template.XsmpcatTemplateStore;
 import org.eclipse.xsmp.ui.validation.XsmpValidatorConfigurationBlock;
+import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
@@ -205,5 +207,11 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
   public Class< ? extends TemplateStore> bindTemplateStore()
   {
     return XsmpcatTemplateStore.class;
+  }
+
+  @Override
+  public Class< ? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant()
+  {
+    return XsmpcatBuilderParticipant.class;
   }
 }
