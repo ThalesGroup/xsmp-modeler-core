@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.util;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -573,7 +573,7 @@ public class XsmpUtil
   {
     if (doc.getDate() != null)
     {
-      return doc.getDate().toInstant().get(ChronoField.YEAR);
+      return LocalDate.ofInstant(doc.getDate().toInstant(), ZoneId.systemDefault()).getYear();
     }
     return LocalDate.now().getYear();
   }
