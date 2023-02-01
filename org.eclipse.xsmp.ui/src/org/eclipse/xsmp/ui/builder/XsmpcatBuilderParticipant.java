@@ -1,3 +1,13 @@
+/*******************************************************************************
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
 package org.eclipse.xsmp.ui.builder;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -18,8 +28,7 @@ import com.google.inject.Inject;
 
 /**
  * A specialized builder participant that check that the builder is enabled for the provided project
- *
- * @author yannick
+ * Support for output configuration without a default_output
  */
 public class XsmpcatBuilderParticipant extends BuilderParticipant
 {
