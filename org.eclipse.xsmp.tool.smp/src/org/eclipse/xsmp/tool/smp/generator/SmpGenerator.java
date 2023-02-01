@@ -138,6 +138,10 @@ public class SmpGenerator extends AbstractModelConverter
   @Inject
   private XsmpUtil utils;
 
+  private final static String SMPCAT_EXT = "smpcat";
+
+  private final static String SMPPKG_EXT = "smppkg";
+
   @Override
   public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
@@ -163,7 +167,7 @@ public class SmpGenerator extends AbstractModelConverter
 
     // Save the catalogue resource
     final var catalogueResource = rs.createResource(fsa.getURI(
-            resource.getURI().trimFileExtension().appendFileExtension("smpcat").lastSegment(),
+            resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT).lastSegment(),
             SMDL_GEN));
     catalogueResource.getContents().add(generatedCatalogue);
     try
@@ -173,7 +177,7 @@ public class SmpGenerator extends AbstractModelConverter
       catalogueResource.save(os, Collections.emptyMap());
 
       fsa.generateFile(
-              resource.getURI().trimFileExtension().appendFileExtension("smpcat").lastSegment(),
+              resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT).lastSegment(),
               SMDL_GEN, os.toString(StandardCharsets.UTF_8));
     }
     catch (final IOException e)
@@ -218,7 +222,7 @@ public class SmpGenerator extends AbstractModelConverter
 
     // Save the package resource
     final var packageResource = rs.createResource(fsa.getURI(
-            resource.getURI().trimFileExtension().appendFileExtension("smppkg").lastSegment(),
+            resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT).lastSegment(),
             SMDL_GEN));
     packageResource.getContents().add(pkg);
     try
@@ -227,7 +231,7 @@ public class SmpGenerator extends AbstractModelConverter
       packageResource.save(os, Collections.emptyMap());
 
       fsa.generateFile(
-              resource.getURI().trimFileExtension().appendFileExtension("smppkg").lastSegment(),
+              resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT).lastSegment(),
               SMDL_GEN, os.toString(StandardCharsets.UTF_8));
     }
     catch (final IOException e)
@@ -329,7 +333,7 @@ public class SmpGenerator extends AbstractModelConverter
 
   private URI toSmpcatGenURI(URI uri)
   {
-    final var lastSeg = uri.trimFileExtension().appendFileExtension("smpcat").lastSegment();
+    final var lastSeg = uri.trimFileExtension().appendFileExtension(SMPCAT_EXT).lastSegment();
     return URI.createFileURI(lastSeg);
   }
 
@@ -340,7 +344,7 @@ public class SmpGenerator extends AbstractModelConverter
 
   private URI toSmppkgGenURI(URI uri)
   {
-    final var lastSeg = uri.trimFileExtension().appendFileExtension("smppkg").lastSegment();
+    final var lastSeg = uri.trimFileExtension().appendFileExtension(SMPPKG_EXT).lastSegment();
     return URI.createFileURI(lastSeg);
   }
 
@@ -830,6 +834,7 @@ public class SmpGenerator extends AbstractModelConverter
           default:
             break;
         }
+        break;
       default:
         break;
     }

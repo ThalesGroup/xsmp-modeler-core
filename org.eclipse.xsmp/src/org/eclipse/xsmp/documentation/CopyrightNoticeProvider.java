@@ -55,7 +55,7 @@ public class CopyrightNoticeProvider
     final var text = getCopyrightNotice(resource);
     if (text != null)
     {
-      return prefix + text.replaceAll("\n", "\n" + prefix);
+      return prefix + text.replace("\n", "\n" + prefix);
     }
     return null;
   }
