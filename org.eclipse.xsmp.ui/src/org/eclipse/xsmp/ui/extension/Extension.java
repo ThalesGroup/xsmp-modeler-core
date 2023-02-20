@@ -134,10 +134,14 @@ public class Extension
 
   public static String getProfileId(IPreferenceStore preferenceStore)
   {
-    var id = preferenceStore.getString(XsmpPreferenceAccess.PREF_PROFILE).strip();
-    if (id.isEmpty() && !preferenceStore.contains(XsmpPreferenceAccess.PREF_PROFILE))
+    String id;
+    if (preferenceStore.contains(XsmpPreferenceAccess.PREF_MDK))
     {
       id = preferenceStore.getString(XsmpPreferenceAccess.PREF_MDK).strip();
+    }
+    else
+    {
+      id = preferenceStore.getString(XsmpPreferenceAccess.PREF_PROFILE).strip();
     }
     return id;
   }
