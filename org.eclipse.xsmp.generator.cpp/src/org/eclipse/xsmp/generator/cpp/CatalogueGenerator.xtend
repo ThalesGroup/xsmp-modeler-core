@@ -137,8 +137,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
 				/// @param typeRegistry Type Registry for registration of types.
 				/// @return True if initialisation was successful, false otherwise.
 				bool Initialise_«t.name»(
-					::Smp::ISimulator*,
-					::Smp::Publication::ITypeRegistry*);
+					::Smp::ISimulator* simulator,
+					::Smp::Publication::ITypeRegistry* typeRegistry);
 			
 				/// Finalise Package «t.name».
 				/// @return True if finalisation was successful, false otherwise.
@@ -156,8 +156,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
 				/// @param typeRegistry Type Registry for registration of types.
 				/// @return True if initialisation was successful, false otherwise.
 				bool Initialise_«t.name»(
-					::Smp::ISimulator*,
-					::Smp::Publication::ITypeRegistry*);
+					::Smp::ISimulator* simulator,
+					::Smp::Publication::ITypeRegistry* typeRegistry);
 			
 				/// Finalise Package «t.name».
 				/// @return True if finalisation was successful, false otherwise.
