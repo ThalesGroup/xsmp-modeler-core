@@ -114,11 +114,17 @@ class ExpressionGenerator {
 				'''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType.itemType, context)»«ENDFOR»}'''
 		} else if (expectedType instanceof Structure) {
 			val fields = expectedType.member.filter(Field)
-			'''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).doGenerateExpression(fields.get(i).type, context)»«ENDFOR»}'''
+			'''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).generateStructMember(fields.get(i).type, context)»«ENDFOR»}'''
 
 		} else
 			'''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType, context)»«ENDFOR»}'''
 
+	}
+	def CharSequence generateStructMember(Expression t, Type expectedType, NamedElement context) {
+		if (expectedType instanceof Array)
+			'''{«t.doGenerateExpression(expectedType, context)»}'''
+		else
+			t.doGenerateExpression(expectedType, context)
 	}
 
 	def dispatch CharSequence doGenerateExpression(UnaryOperation t, Type expectedType, NamedElement context) {
