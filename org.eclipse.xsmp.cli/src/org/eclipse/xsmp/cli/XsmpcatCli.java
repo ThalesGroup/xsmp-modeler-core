@@ -290,13 +290,23 @@ public class XsmpcatCli
         {
           LOG.info("Validating " + uri.toFileString() + " ... ");
           final var list = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
-          if (!list.isEmpty())
+          var hasError = false;
+          for (final Issue issue : list)
+          {
+            switch (issue.getSeverity())
+            {
+              case ERROR:
+                LOG.error(issue);
+                hasError = true;
+                break;
+              default:
+                LOG.info(issue);
+                break;
+            }
+          }
+          if (hasError)
           {
             LOG.error("Failed.");
-            for (final Issue issue : list)
-            {
-              LOG.error(issue);
-            }
             return FileVisitResult.CONTINUE;
           }
           LOG.info("Done.");
