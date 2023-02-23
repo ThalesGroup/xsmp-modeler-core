@@ -2,6 +2,7 @@ package org.eclipse.xsmp.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.DoubleUnaryOperator;
@@ -135,7 +136,7 @@ public class Solver
       }
       if (value instanceof BigInteger)
       {
-        return (T) new BigDecimal((BigInteger) value);
+        return (T) new BigDecimal((BigInteger) value, MathContext.DECIMAL64);
       }
       return (T) value;
     }
@@ -356,7 +357,7 @@ public class Solver
     }
     if (clazz == BigDecimal.class)
     {
-      return ((BigDecimal) left).divide((BigDecimal) right);
+      return ((BigDecimal) left).divide((BigDecimal) right, MathContext.DECIMAL64);
     }
 
     throw new UnsupportedOperationException();
