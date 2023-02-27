@@ -122,7 +122,7 @@ class GeneratorExtension {
 		''' 
 			/// Universally unique identifier of type «t.name».
 			/// @return Universally Unique Identifier of «t.name».
-			static constexpr ::Smp::Uuid Uuid_«t.name»{0x«t.uuid.trim.split("-").join(", 0x")»};
+			static constexpr ::Smp::Uuid Uuid_«t.name»{«t.uuid.trim.split("-").map(it | "0x" + it + "U").join(", ")»};
 		'''
 	}
 
