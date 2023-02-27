@@ -98,7 +98,7 @@ class GeneratorExtension {
 	}
 
 	def dispatch include(PrimitiveType type) {
-		"#include<Smp/PrimitiveTypes.h>"
+		"#include <Smp/PrimitiveTypes.h>"
 	}
 
 	def dispatch include(NativeType type) {
