@@ -120,7 +120,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
         acceptor.includedTypes.remove(type)
         acceptor.includedTypes.forEach[includeList.add(it.include())]
-        acceptor.mdkTypesHeader.forEach[it|includeList.add("#include <" + it + ">")]
+        acceptor.mdkTypesHeader.forEach[it|includeList.add("#include \"" + it + "\"")]
         acceptor.systemTypesHeader.forEach[it|includeList.add("#include <" + it + ">")]
 
         '''
@@ -142,7 +142,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     def protected CharSequence generateHeaderIncludes(T type) {
         '''
             /* Include the generated header file */
-            #include <«type.fqn(true).toString("/")».h>
+            #include "«type.fqn(true).toString("/")».h"
         '''
     }
 
@@ -174,7 +174,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     def protected CharSequence generateSourceIncludes(T type) {
         '''
-            #include <«type.fqn(false).toString("/")».h>
+            #include "«type.fqn(false).toString("/")».h"
         '''
     }
 
@@ -182,7 +182,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
         Catalogue cat) {
         val Set<String> includeList = newHashSet
 
-        acceptor.mdkTypesSource.forEach[it|includeList.add("#include <" + it + ">")]
+        acceptor.mdkTypesSource.forEach[it|includeList.add("#include \"" + it + "\"")]
         acceptor.systemTypesSource.forEach[it|includeList.add("#include <" + it + ">")]
 
         acceptor.forwardedTypes.forEach[includeList.add(it.include())]

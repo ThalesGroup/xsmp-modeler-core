@@ -94,17 +94,17 @@ class GeneratorExtension {
 	}
 
 	def dispatch include(NamedElement type) {
-		"#include <" + type.fqn.toString("/") + ".h>"
+		"#include \"" + type.fqn.toString("/") + ".h\""
 	}
 
 	def dispatch include(PrimitiveType type) {
-		"#include <Smp/PrimitiveTypes.h>"
+		"#include \"Smp/PrimitiveTypes.h\""
 	}
 
 	def dispatch include(NativeType type) {
 		val platform = type.platform.findFirst["cpp" == it.name]
 		if (platform !== null && platform.location !== null) {
-			return "#include <" + platform.location + ">"
+			return "#include \"" + platform.location + "\""
 		}
 	}
 
