@@ -84,19 +84,19 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.xsmp</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp_sdk</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.xsmp.cli</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp_sdk.cli</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.xsmp.ui</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp_sdk.ui</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

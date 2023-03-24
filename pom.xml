@@ -36,10 +36,10 @@
 		<module>org.eclipse.xsmp.ui</module>
 		<module>org.eclipse.xsmp.ui.tests</module>
 		<module>org.eclipse.xsmp.report</module>
-		<module>org.eclipse.xsmp.profile.xsmp</module>
-		<module>org.eclipse.xsmp.profile.xsmp.cli</module>
-		<module>org.eclipse.xsmp.profile.xsmp.feature</module>
-		<module>org.eclipse.xsmp.profile.xsmp.ui</module>
+		<module>org.eclipse.xsmp.profile.xsmp_sdk</module>
+		<module>org.eclipse.xsmp.profile.xsmp_sdk.cli</module>
+		<module>org.eclipse.xsmp.profile.xsmp_sdk.feature</module>
+		<module>org.eclipse.xsmp.profile.xsmp_sdk.ui</module>
 		<module>org.eclipse.xsmp.tool.smp</module>
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ui</module>

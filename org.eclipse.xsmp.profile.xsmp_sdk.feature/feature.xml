@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.xsmp.feature"
-      label="Xsmp core components"
+      id="org.eclipse.xsmp.profile.xsmp_sdk.feature"
+      label="Xsmp Simulator Development Kit  Profile"
       version="1.1.0.qualifier">
 
    <copyright>
@@ -288,64 +288,19 @@ version(s), and exceptions or additional permissions here}.&quot;
   You may add additional accurate notices of copyright ownership.
    </license>
 
+   <includes
+         id="org.eclipse.xsmp.feature"
+         version="0.0.0"/>
+
    <plugin
-         id="org.eclipse.xsmp"
+         id="org.eclipse.xsmp.profile.xsmp_sdk"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.xsmp.ide"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.forms"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.design"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.lib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.generator.cpp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.tool.smp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.xsmp.tool.smp.ui"
+         id="org.eclipse.xsmp.profile.xsmp_sdk.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

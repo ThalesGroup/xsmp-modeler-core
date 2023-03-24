@@ -21,20 +21,26 @@
 
 XSMP Modeler is an Eclipse framework for development of SMDL (Simulation Model Definition Language) as defined in the [ECSS SMP standard](https://ecss.nl/standard/ecss-e-st-40-07c-simulation-modelling-platform-2-march-2020/). 
 
-It comes comes with:
+It comes with:
  - an integrated Text Editor with coloring, error checking, auto-completion, formatting, hover information, outline, quick fix, ...
  - a customizable C++ code generator.
 
+### System Requirements
 
+ - Eclipse 2022-09 or newer.
 
-### How To Build
+### How To Install
 
-Check out and run: 
-  ```mvn install```
+Refers to instructions provided in the [releases page](https://github.com/ThalesGroup/xsmp-modeler-core/releases) or in the [wiki](https://github.com/ThalesGroup/xsmp-modeler-core/wiki/User-guide#installation)
+
+### Debug and Build
+
+This project uses Apache maven as its build system.
+To build from a command-line, run `mvn package` in the root directory of the project source files.
 
 ## Documentation
 
-Documentation is available [here](/doc/).
+Documentation is available [here](https://github.com/ThalesGroup/xsmp-modeler-core/wiki).
 
 ## Contributing
 

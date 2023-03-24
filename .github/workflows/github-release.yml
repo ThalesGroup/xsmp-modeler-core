@@ -22,9 +22,35 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Publish release
-      uses: softprops/action-gh-release@v1
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        prerelease: true
-        files: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository-*.zip
-      
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          This release contains XSMP modeler ${{ github.ref_name }}
+          
+          
+          To install, add or update the XSMP [software site](https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-127.htm) with URL:
+          `jar:https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip!/`
+        draft: true
+        prerelease: false
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
+        asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
+        asset_content_type: application/zip
+    - name: Publish release
+      uses: StuYarrow/publish-release@v1.1.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        id: ${{ steps.create_release.outputs.id }}
+  
