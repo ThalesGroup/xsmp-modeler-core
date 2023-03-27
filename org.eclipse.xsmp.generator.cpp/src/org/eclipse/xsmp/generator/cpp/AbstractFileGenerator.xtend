@@ -141,7 +141,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     def protected CharSequence generateHeaderIncludes(T type) {
         '''
-            /* Include the generated header file */
+            // Include the generated header file
             #include "«type.fqn(true).toString("/")».h"
         '''
     }
