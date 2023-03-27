@@ -43,8 +43,8 @@ class StructureGenerator extends MemberGenerator<Structure> {
 			    	~«t.name(useGenPattern)»() = default;
 			    	«t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;
 			    	«t.name(useGenPattern)»(«t.name(useGenPattern)» &&) = default;
-			    	«t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» _«f.name»«ENDFOR»):
-			    	«FOR f : t.member.filter(Field) SEPARATOR ", "»«f.name»(_«f.name»)«ENDFOR» {}
+			    	«t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name»«ENDFOR»):
+			    	«FOR f : t.member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
 			    	«t.name(useGenPattern)»& operator=(const «t.name(useGenPattern)» &) = default;
 			    	
 			    «ENDIF»
