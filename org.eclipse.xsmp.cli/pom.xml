@@ -33,6 +33,7 @@
 							<mainClass>org.eclipse.xsmp.cli.XsmpcatCli</mainClass>
 							<includeSystemScope>true</includeSystemScope>
 							<excludeDevtools>true</excludeDevtools>
+							<attach>false</attach>
 						</configuration>
 					</execution>
 				</executions>
