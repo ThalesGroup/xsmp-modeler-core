@@ -166,9 +166,9 @@ public class SmpGenerator extends AbstractModelConverter
     final var generatedCatalogue = (org.eclipse.xsmp.tool.smp.smdl.catalogue.Catalogue) copy(cat);
 
     // Save the catalogue resource
-    final var catalogueResource = rs.createResource(fsa.getURI(
-            resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT).lastSegment(),
-            SMDL_GEN));
+    final var catFileName = resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT)
+            .lastSegment();
+    final var catalogueResource = rs.createResource(URI.createURI(catFileName));
     catalogueResource.getContents().add(generatedCatalogue);
     try
     {
@@ -176,9 +176,7 @@ public class SmpGenerator extends AbstractModelConverter
       final var os = new ByteArrayOutputStream();
       catalogueResource.save(os, Collections.emptyMap());
 
-      fsa.generateFile(
-              resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT).lastSegment(),
-              SMDL_GEN, os.toString(StandardCharsets.UTF_8));
+      fsa.generateFile(catFileName, SMDL_GEN, os.toString(StandardCharsets.UTF_8));
     }
     catch (final IOException e)
     {
@@ -221,18 +219,17 @@ public class SmpGenerator extends AbstractModelConverter
     }
 
     // Save the package resource
-    final var packageResource = rs.createResource(fsa.getURI(
-            resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT).lastSegment(),
-            SMDL_GEN));
+
+    final var pkgFileName = resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT)
+            .lastSegment();
+    final var packageResource = rs.createResource(URI.createURI(pkgFileName));
     packageResource.getContents().add(pkg);
     try
     {
       final var os = new ByteArrayOutputStream();
       packageResource.save(os, Collections.emptyMap());
 
-      fsa.generateFile(
-              resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT).lastSegment(),
-              SMDL_GEN, os.toString(StandardCharsets.UTF_8));
+      fsa.generateFile(pkgFileName, SMDL_GEN, os.toString(StandardCharsets.UTF_8));
     }
     catch (final IOException e)
     {
