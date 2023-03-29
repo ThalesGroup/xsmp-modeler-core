@@ -43,6 +43,7 @@
 		<module>org.eclipse.xsmp.tool.smp</module>
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ui</module>
+        <module>org.eclipse.xsmp.tool.smp.cli</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
