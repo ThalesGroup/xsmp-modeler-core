@@ -13,9 +13,15 @@ package org.eclipse.xsmp.tool.smp.cli;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.xsmp.cli.XsmpcatCli;
 import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
+import org.eclipse.xsmp.validation.XsmpcatValidator;
+
+import com.google.inject.Inject;
 
 public class SmpCli extends XsmpcatCli
 {
+  // inject the default validator to register it
+  @Inject
+  XsmpcatValidator validator;
 
   public static void main(String[] args) throws ParseException
   {
