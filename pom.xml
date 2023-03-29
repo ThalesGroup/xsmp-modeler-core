@@ -44,6 +44,10 @@
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ui</module>
         <module>org.eclipse.xsmp.tool.smp.cli</module>
+        <module>org.eclipse.xsmp.profile.simsat</module>
+        <module>org.eclipse.xsmp.profile.simsat.cli</module>
+        <module>org.eclipse.xsmp.profile.simsat.feature</module>
+        <module>org.eclipse.xsmp.profile.simsat.ui</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
