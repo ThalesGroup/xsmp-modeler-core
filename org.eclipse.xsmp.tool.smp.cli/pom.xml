@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.xsmp</groupId>
+		<artifactId>org.eclipse.xsmp.parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.eclipse.xsmp.tool.smp.cli</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<sonar.sources>src</sonar.sources>
+	</properties>
+
+	<build>
+		<plugins>
+			<!--<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>-->
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.7.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}</finalName>
+							<mainClass>org.eclipse.xsmp.tool.smp.cli.SmpCli</mainClass>
+							<includeSystemScope>true</includeSystemScope>
+							<excludeDevtools>true</excludeDevtools>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>
