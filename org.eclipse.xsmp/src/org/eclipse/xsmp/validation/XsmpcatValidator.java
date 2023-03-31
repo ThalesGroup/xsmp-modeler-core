@@ -64,7 +64,6 @@ import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xsmp.xcatalogue.ValueType;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
@@ -352,8 +351,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         checkStructure((Structure) type, e);
         break;
       default:
-        acceptError("Unsupported Type " + type.eClass().getName(), e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        // ignore other types
+        // acceptError("Unsupported Type " + type.eClass().getName(), e, null,
+        // ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
         break;
     }
   }
@@ -576,9 +576,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
-  protected void checkTypeReference(Type type, EObject source, EReference feature)
+  protected Boolean checkTypeReference(Type type, EObject source, EReference feature)
   {
-    checkTypeReference(type, source, feature, -1);
+    return checkTypeReference(type, source, feature, -1);
   }
 
   public static final QualifiedName operatorKind = QualifiedName.create("Attributes",
@@ -587,10 +587,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   public static final QualifiedName fieldUpdateKind = QualifiedName.create("Attributes",
           "FieldUpdateKind");
 
-  protected void checkTypeReference(Type type, EObject source, EReference feature, int index)
+  protected Boolean checkTypeReference(Type type, EObject source, EReference feature, int index)
   {
 
-    doCheckTypeReference(type, source, feature, index);
+    final var result = doCheckTypeReference(type, source, feature, index);
     final var fqn = qualifiedNameProvider.getFullyQualifiedName(type);
     // check that these specifics types are not referred
     if (operatorKind.equals(fqn) || fieldUpdateKind.equals(fqn))
@@ -598,11 +598,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       error("Cannot refers to type " + fqn + ".", source, feature, index,
               XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
-
+    return result;
   }
 
-  protected void doCheckTypeReference(Type type, EObject source, EReference feature, int index)
+  protected Boolean doCheckTypeReference(Type type, EObject source, EReference feature, int index)
   {
+    var result = false;
     if (type != null && !type.eIsProxy())
     {
       // check that the referenced type is visible
@@ -627,7 +628,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       {
         final var fea = feature.getName();
 
-        error("The " + type.eClass().getName() + " "
+        warning("The " + type.eClass().getName() + " "
                 + qualifiedNameProvider.getFullyQualifiedName(type) + " cannot be "
                 + (startWithVowel(fea) ? "an " : "a ") + fea + " of "
                 + qualifiedNameProvider.getFullyQualifiedName(source) + "; "
@@ -635,9 +636,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
                 + (startWithVowel(expectedType.getName()) ? "an " : "a ") + expectedType.getName()
                 + " Type.", feature, index, XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
+      else
+      {
+        result = true;
+      }
 
     }
-
+    return result;
   }
 
   protected void checkFieldReferenceVisibility(Field field, EObject source,
@@ -724,9 +729,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkAttribute(Attribute elem)
   {
 
-    checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE__TYPE);
-
-    if (elem.getType() instanceof AttributeType)
+    if (checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE__TYPE))
     {
       final var type = (AttributeType) elem.getType();
 
@@ -875,10 +878,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
               XcataloguePackage.Literals.CONSTANT__VALUE);
     }
 
-    // check the constant value
-    check(f.getType(), f.getValue());
-
-    checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONSTANT__TYPE);
+    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONSTANT__TYPE))
+    {
+      // check the constant value
+      check(f.getType(), f.getValue());
+    }
 
   }
 
@@ -998,11 +1002,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Check
   protected void checkField(Field f)
   {
-    // check the field value
-    check(f.getType(), f.getDefault());
 
-    checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE);
     // TODO check no String8 type
+    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE))
+    {
+      // check the field value
+      check(f.getType(), f.getDefault());
+    }
   }
 
   @Check
@@ -1273,13 +1279,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkParameter(Parameter p)
   {
 
-    if (p.getDefault() != null && !(p.getType() instanceof ValueType))
+    if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      error("Only ValueType type can have a default value.",
-              XcataloguePackage.Literals.PARAMETER__DEFAULT);
+      check(p.getType(), p.getDefault());
     }
-
-    checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE);
 
   }
 
