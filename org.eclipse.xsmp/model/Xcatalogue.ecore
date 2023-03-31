@@ -71,8 +71,8 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String" volatile="true"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="default" lowerBound="1"
-        eType="#//Expression" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="default" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="#//SimpleType">
     <eStructuralFeatures xsi:type="ecore:EReference" name="literal" upperBound="-1"
