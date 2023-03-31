@@ -697,12 +697,25 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkAttributeType(AttributeType elem)
   {
     doCheckTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE, -1);
-    check(elem.getType(), elem.getDefault());
+
+    if (elem.getDefault() == null)
+    {
+      warning("Default value is missing.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+    }
+    else
+    {
+      check(elem.getType(), elem.getDefault());
+    }
+    final Set<String> visitedUsages = new HashSet<>();
     for (var i = 0; i < elem.getUsage().size(); ++i)
     {
       if (!validUsages.contains(elem.getUsage().get(i)))
       {
         warning("Invalid usage.", XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
+      }
+      if (!visitedUsages.add(elem.getUsage().get(i)))
+      {
+        warning("Duplicated usage.", XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
       }
     }
   }
@@ -716,8 +729,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (elem.getType() instanceof AttributeType)
     {
       final var type = (AttributeType) elem.getType();
-      // check the attribute value
-      check(type.getType(), elem.getValue());
+
+      if (type.getDefault() == null && elem.getValue() == null)
+      {
+        error("A value is required.", XcataloguePackage.Literals.ATTRIBUTE__VALUE);
+      }
+      else
+      {
+        // check the attribute value
+        check(type.getType(), elem.getValue());
+      }
     }
   }
 
@@ -1183,7 +1204,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       if (!type.isAllowMultiple() && !visitedTypes.add(type))
       {
-        error("Duplicate annotation of non-repeatable type. Only annotation types marked @allowMultiple can be used multiple times at one target.",
+        warning("Duplicate annotation of non-repeatable type. Only annotation types marked @allowMultiple can be used multiple times at one target.",
                 elem.getMetadatum(), XcataloguePackage.Literals.METADATUM__METADATA, i);
       }
       var usageOk = false;
@@ -1197,7 +1218,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       }
       if (!usageOk)
       {
-        error("This annotation is disallowed for this location.", elem.getMetadatum(),
+        warning("This annotation is disallowed for this location.", elem.getMetadatum(),
                 XcataloguePackage.Literals.METADATUM__METADATA, i);
       }
     }
