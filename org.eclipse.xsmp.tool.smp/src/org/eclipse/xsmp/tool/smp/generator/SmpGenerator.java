@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -120,6 +119,7 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
+import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.inject.Inject;
 
@@ -128,12 +128,12 @@ import com.google.inject.Inject;
  */
 public class SmpGenerator extends AbstractModelConverter
 {
-  final Map<String, EObject> idToEObjectMap = new HashMap<>();
-
-  final Map<EObject, String> EObjectToIdMap = new HashMap<>();
 
   @Inject
   private SmpURIConverter smpURIConverter;
+
+  @Inject
+  private IResourceScopeCache cache;
 
   @Inject
   private XsmpUtil utils;
@@ -145,18 +145,7 @@ public class SmpGenerator extends AbstractModelConverter
   @Override
   public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
-    idToEObjectMap.clear();
-    EObjectToIdMap.clear();
     final var cat = (Catalogue) resource.getContents().get(0);
-
-    // Initialize all ids
-    EcoreUtil.resolveAll(resource.getResourceSet());
-    resource.getResourceSet().getAllContents().forEachRemaining(it -> {
-      if (it instanceof NamedElement)
-      {
-        id((NamedElement) it);
-      }
-    });
 
     // Resource set for the smpcat/smppkg resources
     final var rs = new ResourceSetImpl();
@@ -172,7 +161,6 @@ public class SmpGenerator extends AbstractModelConverter
     catalogueResource.getContents().add(generatedCatalogue);
     try
     {
-      // catalogueResource.save(Collections.emptyMap());
       final var os = new ByteArrayOutputStream();
       catalogueResource.save(os, Collections.emptyMap());
 
@@ -240,58 +228,66 @@ public class SmpGenerator extends AbstractModelConverter
 
   /* --- id --- */
 
-  private String id(EObject e)
+  private String id(NamedElement e)
   {
-    var id = EObjectToIdMap.get(e);
-    if (id == null)
-    {
-      id = computeId(e);
-      if (idToEObjectMap.containsKey(id))
-      {
-        var i = 2;
-        var newId = id + i;
-
-        while (idToEObjectMap.containsKey(newId))
-        {
-          i++;
-          newId = id + i;
-        }
-        id = newId;
-      }
-      idToEObjectMap.put(id, e);
-      EObjectToIdMap.put(e, id);
-    }
-    return id;
+    return cache.get("smp_id_map", e.eResource(), () -> loadSmpIds(e.eResource())).get(e);
   }
 
-  /* --- computeId --- */
-
-  private String computeId(EObject e)
+  /**
+   * Computes the fully qualified name for the given object, if any.
+   */
+  private Map<EObject, String> loadSmpIds(Resource resource)
   {
-    if (e instanceof NamedElement)
-    {
-      final var container = e.eContainer();
-      final var name = ((NamedElement) e).getName();
+    final Map<String, EObject> idToEObjectMap = new HashMap<>();
 
-      /*
-       * if (container instanceof Document && "ecss_smp_smp".equals(((Document)
-       * container).getName()) && "Attributes".equals(name)) { return "Smp." + name; }
-       */
-      if (container != null && !(container instanceof Document))
+    final Map<EObject, String> EObjectToIdMap = new HashMap<>();
+    resource.getAllContents().forEachRemaining(e -> {
+
+      if (e instanceof NamedElement && !EObjectToIdMap.containsKey(e))
       {
-        return id(container) + "." + name;
+
+        var id = ((NamedElement) e).getName();
+        // Prefix the document ID with _ to avoid ID conflict in case of a namespace with the same
+        // name than the document
+        if (e instanceof Document)
+        {
+          id = "_" + id;
+        }
+        else
+        {
+          final var container = EcoreUtil2.getContainerOfType(e.eContainer(), NamedElement.class);
+
+          if (!(container instanceof Document))
+          {
+            id = EObjectToIdMap.get(container) + "." + id;
+          }
+          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID should be
+          // prefixed with "Smp."
+          if ("ecss_smp_smp".equals(container.getName()) && "Attributes".equals(id))
+          {
+            id = "Smp." + id;
+          }
+        }
+        // in case of ID conflict (e.g: operations with same name but different signature),
+        // increment the ID
+        if (idToEObjectMap.containsKey(id))
+        {
+          var i = 1;
+          String newId;
+          do
+          {
+            i++;
+            newId = id + i;
+          }
+          while (idToEObjectMap.containsKey(newId));
+
+          id = newId;
+        }
+        idToEObjectMap.put(id, e);
+        EObjectToIdMap.put(e, id);
       }
-      return name;
-    }
-    if (e instanceof Document)
-    {
-      return e.eClass().getName() + "_" + e.eClass().getName();
-    }
-    if (e instanceof Attribute)
-    {
-      return id(EcoreUtil2.getContainerOfType(e, NamedElement.class));
-    }
-    throw new IllegalArgumentException("Unhandled parameter types: " + Arrays.asList(e).toString());
+    });
+    return EObjectToIdMap;
   }
 
   /* --- getReference --- */
@@ -363,7 +359,8 @@ public class SmpGenerator extends AbstractModelConverter
   protected void copy(Attribute src, org.eclipse.xsmp.tool.smp.core.types.Attribute dest)
   {
     dest.setName(src.getType().getName());
-    dest.setId(id(src));
+    dest.setId(id(EcoreUtil2.getContainerOfType(src, NamedElement.class)) + "."
+            + src.getType().getName());
 
     final var type = (AttributeType) src.getType();
     dest.setType(getReference(type, src.eResource()));
@@ -636,7 +633,10 @@ public class SmpGenerator extends AbstractModelConverter
 
     dest.setAllowMultiple(src.isAllowMultiple());
 
-    dest.setDefault(convert(src.getDefault(), src.getType()));
+    if (src.getDefault() != null)
+    {
+      dest.setDefault(convert(src.getDefault(), src.getType()));
+    }
 
     dest.setType(getReference(src.getType(), src.eResource()));
 
