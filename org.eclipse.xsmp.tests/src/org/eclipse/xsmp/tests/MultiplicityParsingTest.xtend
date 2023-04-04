@@ -26,112 +26,111 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpcatInjectorProvider)
 class MultiplicityParsingTest {
-	@Inject
-	ParseHelper<Catalogue> catalogueParseHelper
+    @Inject
+    ParseHelper<Catalogue> catalogueParseHelper
 
-	@Test
-	def void checkParsing() {
-		val result = catalogueParseHelper.parse(
-	'''
-			catalogue test
-			
-			namespace ns
-			{
-				model  t
-				{
-					reference i ref0
-					reference i[] ref1
-					reference i[*] ref2
-					reference i[+] ref3
-					reference i[5] ref4
-					reference i[3 ... 5] ref5
-					reference i[2 ... *] ref6
-					reference i? ref7
-					
-				}
-			}
-			
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-		val model = (result.member.get(0) as Namespace).member.get(0) as Model
+    @Test
+    def void checkParsing() {
+        val result = catalogueParseHelper.parse(
+    '''
+            catalogue test
+            
+            namespace ns
+            {
+                model  t
+                {
+                    reference i ref0
+                    reference i[] ref1
+                    reference i[*] ref2
+                    reference i[+] ref3
+                    reference i[5] ref4
+                    reference i[3 ... 5] ref5
+                    reference i[2 ... *] ref6
+                    reference i? ref7
+                    
+                }
+            }
+            
+        ''')
+        Assertions.assertNotNull(result)
+        val errors = result.eResource.errors
+        Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+        val model = (result.member.get(0) as Namespace).member.get(0) as Model
 
-		val ref0 = model.member.get(0) as Reference
+        val ref0 = model.member.get(0) as Reference
 
-		Assertions.assertEquals(1, ref0.getLower());
-		Assertions.assertEquals(1, ref0.getUpper());
+        Assertions.assertEquals(1, ref0.getLower());
+        Assertions.assertEquals(1, ref0.getUpper());
 
-		val ref1 = model.member.get(1) as Reference
+        val ref1 = model.member.get(1) as Reference
 
-		Assertions.assertEquals(0, ref1.getLower());
-		Assertions.assertEquals(-1, ref1.getUpper());
+        Assertions.assertEquals(0, ref1.getLower());
+        Assertions.assertEquals(-1, ref1.getUpper());
 
-		val ref2 = model.member.get(2) as Reference
+        val ref2 = model.member.get(2) as Reference
 
-		Assertions.assertEquals(0, ref2.getLower());
-		Assertions.assertEquals(-1, ref2.getUpper());
+        Assertions.assertEquals(0, ref2.getLower());
+        Assertions.assertEquals(-1, ref2.getUpper());
 
-		val ref3 = model.member.get(3) as Reference
+        val ref3 = model.member.get(3) as Reference
 
-		Assertions.assertEquals(1, ref3.getLower());
-		Assertions.assertEquals(-1, ref3.getUpper());
+        Assertions.assertEquals(1, ref3.getLower());
+        Assertions.assertEquals(-1, ref3.getUpper());
 
-		val ref4 = model.member.get(4) as Reference
+        val ref4 = model.member.get(4) as Reference
 
-		Assertions.assertEquals(5, ref4.getLower());
-		Assertions.assertEquals(5, ref4.getUpper());
+        Assertions.assertEquals(5, ref4.getLower());
+        Assertions.assertEquals(5, ref4.getUpper());
 
-		val ref5 = model.member.get(5) as Reference
+        val ref5 = model.member.get(5) as Reference
 
-		Assertions.assertEquals(3, ref5.getLower());
-		Assertions.assertEquals(5, ref5.getUpper());
+        Assertions.assertEquals(3, ref5.getLower());
+        Assertions.assertEquals(5, ref5.getUpper());
 
-		val ref6 = model.member.get(6) as Reference
+        val ref6 = model.member.get(6) as Reference
 
-		Assertions.assertEquals(2, ref6.getLower());
-		Assertions.assertEquals(-1, ref6.getUpper());
+        Assertions.assertEquals(2, ref6.getLower());
+        Assertions.assertEquals(-1, ref6.getUpper());
 
-		val ref7 = model.member.get(7) as Reference
+        val ref7 = model.member.get(7) as Reference
 
-		Assertions.assertEquals(0, ref7.getLower());
-		Assertions.assertEquals(1, ref7.getUpper());
-	}
+        Assertions.assertEquals(0, ref7.getLower());
+        Assertions.assertEquals(1, ref7.getUpper());
+    }
 
-	@Test
-	def void checkSetters() {
-		var ref = XcatalogueFactory.eINSTANCE.createReference
-		Assertions.assertEquals(1, ref.lower);
-		Assertions.assertEquals(1, ref.upper);
+    @Test
+    def void checkSetters() {
+        var ref = XcatalogueFactory.eINSTANCE.createReference
+        Assertions.assertEquals(1, ref.lower);
+        Assertions.assertEquals(1, ref.upper);
 
-		ref.lower = 0
-		Assertions.assertEquals(0, ref.lower);
-		Assertions.assertEquals(1, ref.upper);
-		
-		ref.lower = 1
-		Assertions.assertEquals(1, ref.lower);
-		Assertions.assertEquals(1, ref.upper);
-		
-		
-		ref.lower = 0
-		ref.upper = -1
-		Assertions.assertEquals(0, ref.lower);
-		Assertions.assertEquals(-1, ref.upper);
+        ref.lower = 0
+        Assertions.assertEquals(0, ref.lower);
+        Assertions.assertEquals(1, ref.upper);
 
-		ref.lower = 1
-		Assertions.assertEquals(1, ref.lower);
-		Assertions.assertEquals(-1, ref.upper);
-		
-		ref.lower = 10
-		Assertions.assertEquals(10, ref.lower);
-		Assertions.assertEquals(-1, ref.upper);
-		
-		ref.upper = 10
-		Assertions.assertEquals(10, ref.lower);
-		Assertions.assertEquals(10, ref.upper);
-		
-		ref.upper = 20
-		Assertions.assertEquals(10, ref.lower);
-		Assertions.assertEquals(20, ref.upper);
-	}
+        ref.lower = 1
+        Assertions.assertEquals(1, ref.lower);
+        Assertions.assertEquals(1, ref.upper);
+
+        ref.lower = 0
+        ref.upper = -1
+        Assertions.assertEquals(0, ref.lower);
+        Assertions.assertEquals(-1, ref.upper);
+
+        ref.lower = 1
+        Assertions.assertEquals(1, ref.lower);
+        Assertions.assertEquals(-1, ref.upper);
+
+        ref.lower = 10
+        Assertions.assertEquals(10, ref.lower);
+        Assertions.assertEquals(-1, ref.upper);
+
+        ref.upper = 10
+        Assertions.assertEquals(10, ref.lower);
+        Assertions.assertEquals(10, ref.upper);
+
+        ref.upper = 20
+        Assertions.assertEquals(10, ref.lower);
+        Assertions.assertEquals(20, ref.upper);
+    }
 }

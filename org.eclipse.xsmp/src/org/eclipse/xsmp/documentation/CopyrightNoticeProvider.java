@@ -62,7 +62,7 @@ public class CopyrightNoticeProvider
 
   private static final Pattern slPattern = Pattern.compile("^// ?");
 
-  private static final Pattern mlEndsPattern = Pattern.compile("(?:^/\\*+)|(?:\\*++/$)");
+  private static final Pattern mlEndsPattern = Pattern.compile("(?:^/\\*+)|(?:\\*+/$)");
 
   private static final Pattern mlMiddlePattern = Pattern.compile("\\n ?\\* ?");
 

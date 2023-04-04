@@ -25,51 +25,51 @@ import static org.eclipse.core.runtime.IStatus.*
  * Each template is able to generate one or more projects. Each project can be configured such that any number of files are included.
  */
 class XsmpcatProjectTemplateProvider implements IProjectTemplateProvider {
-	override getProjectTemplates() {
-		#[new CatalogueProject]
-	}
+    override getProjectTemplates() {
+        #[new CatalogueProject]
+    }
 }
 
 @ProjectTemplate(label="Default Catalogue Project", icon="project_template.png", description="<p><b>Create a new Default Catalogue Project</b></p>")
 final class CatalogueProject {
-	val advancedGroup = group("Properties")
+    val advancedGroup = group("Properties")
 
-	val cName = "<<catalogue_name>>"
-	val name = text("Catalogue Name:", cName, "The Catalogue name", advancedGroup)
+    val cName = "<<catalogue_name>>"
+    val name = text("Catalogue Name:", cName, "The Catalogue name", advancedGroup)
 
-	override protected updateVariables() {
-		if (name.value == cName)
-			name.value = projectInfo.projectName
-		super.updateVariables()
-	}
+    override protected updateVariables() {
+        if (name.value == cName)
+            name.value = projectInfo.projectName
+        super.updateVariables()
+    }
 
-	override protected validate() {
-		if (name.value.matches('[a-zA-Z][A-Za-z0-9_]*'))
-			null
-		else
-			new Status(ERROR, "Wizard", "'" + name + "' is not a valid document name")
-	}
+    override protected validate() {
+        if (name.value.matches('[a-zA-Z][A-Za-z0-9_]*'))
+            null
+        else
+            new Status(ERROR, "Wizard", "'" + name + "' is not a valid document name")
+    }
 
-	override generateProjects(IProjectGenerator generator) {
-		updateVariables()
-		generator.generate(new XsmpcatProjectFactory() => [
-			projectName = projectInfo.projectName
-			location = projectInfo.locationPath
+    override generateProjects(IProjectGenerator generator) {
+        updateVariables()
+        generator.generate(new XsmpcatProjectFactory() => [
+            projectName = projectInfo.projectName
+            location = projectInfo.locationPath
 
-			addFile('''smdl/«name».xsmpcat''', '''
-				/**
-				 * Catalogue «name»
-				 * 
-				 * @creator «System.getProperty("user.name")»
-				 * @date «Instant.now().truncatedTo(ChronoUnit.SECONDS)»
-				 */
-				catalogue «name»
-				
-				namespace «name»
-				{
-					
-				}
-			''')
-		])
-	}
+            addFile('''smdl/«name».xsmpcat''', '''
+                /**
+                 * Catalogue «name»
+                 * 
+                 * @creator «System.getProperty("user.name")»
+                 * @date «Instant.now().truncatedTo(ChronoUnit.SECONDS)»
+                 */
+                catalogue «name»
+                
+                namespace «name»
+                {
+                    
+                }
+            ''')
+        ])
+    }
 }

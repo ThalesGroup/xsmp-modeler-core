@@ -10,27 +10,27 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Class
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class ExceptionGenerator extends ClassGenerator {
 
-	override protected generateHeaderGenBody(Class t, boolean useGenPattern) {
-		'''
-			«t.comment»
-			class «t.name(useGenPattern)»: public «IF t.base!==null»::«t.base.fqn.toString("::")»«ELSE»::Smp::Exception«ENDIF» {
-			    «t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
-			};
-			
-			«t.uuidDeclaration»
-		'''
-	}
+    override protected generateHeaderGenBody(Class t, boolean useGenPattern) {
+        '''
+            «t.comment»
+            class «t.name(useGenPattern)»: public «IF t.base!==null»::«t.base.fqn.toString("::")»«ELSE»::Smp::Exception«ENDIF» {
+                «t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
+            };
+            
+            «t.uuidDeclaration»
+        '''
+    }
 
-	override collectIncludes(Class type, IncludeAcceptor acceptor) {
-		super.collectIncludes(type, acceptor)
-		if (type.base === null)
-			acceptor.mdkHeader("Smp/Exception.h")
-	}
+    override collectIncludes(Class type, IncludeAcceptor acceptor) {
+        super.collectIncludes(type, acceptor)
+        if (type.base === null)
+            acceptor.mdkHeader("Smp/Exception.h")
+    }
 
 }

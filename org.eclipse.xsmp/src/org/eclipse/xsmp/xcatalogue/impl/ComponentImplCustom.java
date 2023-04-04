@@ -56,4 +56,4 @@ public abstract class ComponentImplCustom extends ComponentImpl
     }
 
   }
-} // ComponentImpl
+} // ComponentImplCustom

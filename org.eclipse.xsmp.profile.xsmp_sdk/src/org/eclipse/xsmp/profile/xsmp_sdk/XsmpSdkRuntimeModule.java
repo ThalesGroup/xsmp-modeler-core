@@ -23,21 +23,21 @@ import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpOutputConfigurationProvider;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpCatalogueGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpCopyrightProvider;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpContainerGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpEntryPointGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpEventSinkGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpEventSourceGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpFieldGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpReferenceGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpArrayGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpComponentGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpStringGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpStructureGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.validation.XsmpValidator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpSdkGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpSdkOutputConfigurationProvider;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpSdkCatalogueGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpSdkCopyrightProvider;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkContainerGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkEntryPointGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkEventSinkGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkEventSourceGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkFieldGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member.XsmpSdkReferenceGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkArrayGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkComponentGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkStringGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkStructureGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.validation.XsmpSdkValidator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.service.SingletonBinding;
@@ -46,85 +46,84 @@ import org.eclipse.xtext.service.SingletonBinding;
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
-public class XsmpRuntimeModule extends XsmpcatExtensionRuntimeModule
+public class XsmpSdkRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
-
   @Override
   public Class< ? extends IGenerator2> bindIGenerator2()
   {
-    return XsmpGenerator.class;
+    return XsmpSdkGenerator.class;
   }
 
   @SingletonBinding(eager = true)
-  public Class< ? extends XsmpValidator> bindXsmpValidator()
+  public Class< ? extends XsmpSdkValidator> bindXsmpValidator()
   {
-    return XsmpValidator.class;
+    return XsmpSdkValidator.class;
   }
 
   @Override
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
   {
-    return XsmpOutputConfigurationProvider.class;
+    return XsmpSdkOutputConfigurationProvider.class;
   }
 
   public Class< ? extends EntryPointGenerator> bindEntryPointGenerator()
   {
-    return XsmpEntryPointGenerator.class;
+    return XsmpSdkEntryPointGenerator.class;
   }
 
   public Class< ? extends EventSinkGenerator> bindEventSinkGenerator()
   {
-    return XsmpEventSinkGenerator.class;
+    return XsmpSdkEventSinkGenerator.class;
   }
 
   public Class< ? extends EventSourceGenerator> bindEventSourceGenerator()
   {
-    return XsmpEventSourceGenerator.class;
+    return XsmpSdkEventSourceGenerator.class;
   }
 
   public Class< ? extends ReferenceGenerator> bindReferenceGenerator()
   {
-    return XsmpReferenceGenerator.class;
+    return XsmpSdkReferenceGenerator.class;
   }
 
   public Class< ? extends ContainerGenerator> bindConatinerGenerator()
   {
-    return XsmpContainerGenerator.class;
+    return XsmpSdkContainerGenerator.class;
   }
 
   public Class< ? extends ComponentGenerator> bindComponentGenerator()
   {
-    return XsmpComponentGenerator.class;
+    return XsmpSdkComponentGenerator.class;
   }
 
   public Class< ? extends CatalogueGenerator> bindCatalogueGenerator()
   {
-    return XsmpCatalogueGenerator.class;
+    return XsmpSdkCatalogueGenerator.class;
   }
 
   public Class< ? extends ArrayGenerator> bindArrayGenerator()
   {
-    return XsmpArrayGenerator.class;
+    return XsmpSdkArrayGenerator.class;
   }
 
   public Class< ? extends StructureGenerator> bindStructureGenerator()
   {
-    return XsmpStructureGenerator.class;
+    return XsmpSdkStructureGenerator.class;
   }
 
   public Class< ? extends FieldGenerator> bindFieldGenerator()
   {
-    return XsmpFieldGenerator.class;
+    return XsmpSdkFieldGenerator.class;
   }
 
   public Class< ? extends StringGenerator> bindStringGenerator()
   {
-    return XsmpStringGenerator.class;
+    return XsmpSdkStringGenerator.class;
   }
 
   public Class< ? extends CppCopyrightNoticeProvider> bindCopyrightProvider()
   {
-    return XsmpCopyrightProvider.class;
+    return XsmpSdkCopyrightProvider.class;
   }
 
 }

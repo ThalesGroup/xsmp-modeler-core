@@ -10,20 +10,20 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.xsmp_sdk.ui;
 
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpRuntimeModule;
+import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkRuntimeModule;
 import org.eclipse.xsmp.ui.AbstractXsmpcatUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Xsmp Profile UI plugin.
  */
-public final class XsmpUIPlugin extends AbstractXsmpcatUIPlugin
+public final class XsmpSdkUIPlugin extends AbstractXsmpcatUIPlugin
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.profile.xsmp_sdk.ui";
 
-  private static XsmpUIPlugin instance;
+  private static XsmpSdkUIPlugin instance;
 
-  public static XsmpUIPlugin getInstance()
+  public static XsmpSdkUIPlugin getInstance()
   {
     return instance;
   }
@@ -45,13 +45,13 @@ public final class XsmpUIPlugin extends AbstractXsmpcatUIPlugin
   @Override
   protected com.google.inject.Module getRuntimeModule()
   {
-    return new XsmpRuntimeModule();
+    return new XsmpSdkRuntimeModule();
   }
 
   @Override
   protected com.google.inject.Module getUiModule()
   {
-    return new XsmpUiModule(this);
+    return new XsmpSdkUiModule(this);
   }
 
 }

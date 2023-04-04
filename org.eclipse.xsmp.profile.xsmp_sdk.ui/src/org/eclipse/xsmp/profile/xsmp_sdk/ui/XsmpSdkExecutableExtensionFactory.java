@@ -17,19 +17,19 @@ import org.osgi.framework.FrameworkUtil;
 
 import com.google.inject.Injector;
 
-public class XsmpExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory
+public class XsmpSdkExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory
 {
 
   @Override
   protected Bundle getBundle()
   {
-    return FrameworkUtil.getBundle(XsmpUIPlugin.class);
+    return FrameworkUtil.getBundle(XsmpSdkUIPlugin.class);
   }
 
   @Override
   protected Injector getInjector()
   {
-    final var activator = XsmpUIPlugin.getInstance();
+    final var activator = XsmpSdkUIPlugin.getInstance();
     return activator != null ? activator.getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT) : null;
   }
 

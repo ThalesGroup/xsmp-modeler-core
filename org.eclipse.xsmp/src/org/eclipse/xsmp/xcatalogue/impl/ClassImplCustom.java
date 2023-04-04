@@ -58,4 +58,4 @@ public class ClassImplCustom extends ClassImpl
 
   }
 
-} // ClassImpl
+} // ClassImplCustom

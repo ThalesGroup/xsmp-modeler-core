@@ -20,46 +20,46 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 abstract class AbstractMemberGenerator<T extends EObject> {
 
-	@Inject
-	protected extension GeneratorExtension
-	@Inject
-	protected extension ExpressionGenerator
-	@Inject
-	protected extension ElementUtil
+    @Inject
+    protected extension GeneratorExtension
+    @Inject
+    protected extension ExpressionGenerator
+    @Inject
+    protected extension ElementUtil
 
-	/**
-	 * Declare a member it its container (INCLUDE)
-	 */
-	def abstract CharSequence declare(NamedElementWithMembers container, T member)
+    /**
+     * Declare a member it its container (INCLUDE)
+     */
+    def abstract CharSequence declare(NamedElementWithMembers container, T member)
 
-	/**
-	 * Define a member it its container (SOURCE)
-	 */
-	def abstract CharSequence define(NamedElementWithMembers container, T member)
+    /**
+     * Define a member it its container (SOURCE)
+     */
+    def abstract CharSequence define(NamedElementWithMembers container, T member)
 
-	/**
-	 * Declare a member it its container (INCLUDE-GEN)
-	 */
-	def abstract CharSequence declareGen(NamedElementWithMembers container, T member, boolean useGenPattern)
+    /**
+     * Declare a member it its container (INCLUDE-GEN)
+     */
+    def abstract CharSequence declareGen(NamedElementWithMembers container, T member, boolean useGenPattern)
 
-	/**
-	 * Define a member it its container (SOURCE-GEN)
-	 */
-	def abstract CharSequence defineGen(NamedElementWithMembers container, T member, boolean useGenPattern)
+    /**
+     * Define a member it its container (SOURCE-GEN)
+     */
+    def abstract CharSequence defineGen(NamedElementWithMembers container, T member, boolean useGenPattern)
 
-	/**
-	 * Collect all includes required by this member
-	 */
-	def void collectIncludes(T element, IncludeAcceptor acceptor) {
-		collectIncludes(acceptor)
-	}
+    /**
+     * Collect all includes required by this member
+     */
+    def void collectIncludes(T element, IncludeAcceptor acceptor) {
+        collectIncludes(acceptor)
+    }
 
-	protected def void collectIncludes(IncludeAcceptor acceptor) {
-	}
+    protected def void collectIncludes(IncludeAcceptor acceptor) {
+    }
 
-	def abstract CharSequence initialize(NamedElementWithMembers container, T member, boolean useGenPattern)
+    def abstract CharSequence initialize(NamedElementWithMembers container, T member, boolean useGenPattern)
 
-	def abstract CharSequence finalize(T element)
+    def abstract CharSequence finalize(T element)
 
-	def abstract CharSequence Publish(T element)
+    def abstract CharSequence Publish(T element)
 }

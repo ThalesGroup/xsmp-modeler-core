@@ -10,50 +10,50 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.member
 
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Reference
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class ReferenceGenerator extends AbstractMemberGenerator<Reference> {
 
-	override declare(NamedElementWithMembers type, Reference element) {
-	}
+    override declare(NamedElementWithMembers type, Reference element) {
+    }
 
-	override define(NamedElementWithMembers type, Reference element) {
-	}
+    override define(NamedElementWithMembers type, Reference element) {
+    }
 
-	override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
-		'''
-			«element.comment»
-			::Smp::IReference* «element.name»;
-		'''
-	}
+    override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
+        '''
+            «element.comment»
+            ::Smp::IReference* «element.name»;
+        '''
+    }
 
-	override defineGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
-	}
+    override defineGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
+    }
 
-	override collectIncludes(Reference element, IncludeAcceptor acceptor) {
-		super.collectIncludes(element, acceptor)
-		acceptor.include(element.interface)
+    override collectIncludes(Reference element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
+        acceptor.include(element.interface)
 
-		element.multiplicity?.lower?.include(acceptor)
-		element.multiplicity?.upper?.include(acceptor)
-	}
+        element.multiplicity?.lower?.include(acceptor)
+        element.multiplicity?.upper?.include(acceptor)
+    }
 
-	protected override collectIncludes(IncludeAcceptor acceptor) {
-		acceptor.mdkHeader("Smp/IReference.h")
-	}
+    protected override collectIncludes(IncludeAcceptor acceptor) {
+        acceptor.mdkHeader("Smp/IReference.h")
+    }
 
-	override initialize(NamedElementWithMembers container, Reference member, boolean useGenPattern) {
-	}
+    override initialize(NamedElementWithMembers container, Reference member, boolean useGenPattern) {
+    }
 
-	override finalize(Reference element) {
-		'''  
-			delete «element.name»;
-			«element.name» = nullptr;
-		'''
-	}
+    override finalize(Reference element) {
+        '''  
+            delete «element.name»;
+            «element.name» = nullptr;
+        '''
+    }
 
-	override Publish(Reference element) {
-	}
+    override Publish(Reference element) {
+    }
 }

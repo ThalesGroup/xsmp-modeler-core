@@ -8,18 +8,20 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.profile.xsmp_sdk.validation;
+package org.eclipse.xsmp.profile.xsmp_sdk.cli;
 
-import org.eclipse.xsmp.validation.XsmpcatValidator;
+import org.apache.commons.cli.ParseException;
+import org.eclipse.xsmp.cli.XsmpcatCli;
+import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
 
-import com.google.inject.Singleton;
-
-/**
- * This class contains custom validation rules. See
- * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
- */
-@Singleton
-public class XsmpValidator extends XsmpcatValidator
+public class XsmpSdkCli extends XsmpcatCli
 {
+
+  public static void main(String[] args) throws ParseException
+  {
+    final var injector = new XsmpSdkStandaloneSetup().createInjectorAndDoEMFRegistration();
+    final var main = injector.getInstance(XsmpSdkCli.class);
+    main.execute(args);
+  }
 
 }

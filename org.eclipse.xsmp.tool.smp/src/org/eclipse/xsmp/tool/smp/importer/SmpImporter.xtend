@@ -90,8 +90,9 @@ class SmpImporter {
         ElementsPackage.Literals.DOCUMENT__CREATOR, ElementsPackage.Literals.DOCUMENT__DATE,
         ElementsPackage.Literals.DOCUMENT__TITLE, ElementsPackage.Literals.DOCUMENT__VERSION,
         TypesPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE, TypesPackage.Literals.ATTRIBUTE_TYPE__USAGE,
-        TypesPackage.Literals.PROPERTY__CATEGORY, TypesPackage.Literals.TYPE__UUID,
-        TypesPackage.Literals.NATIVE_TYPE__PLATFORM, CataloguePackage.Literals.EVENT_SOURCE__MULTICAST).build();
+        TypesPackage.Literals.PROPERTY__CATEGORY, TypesPackage.Literals.TYPE__UUID, TypesPackage.Literals.INTEGER__UNIT,
+        TypesPackage.Literals.FLOAT__UNIT, TypesPackage.Literals.NATIVE_TYPE__PLATFORM,
+        CataloguePackage.Literals.EVENT_SOURCE__MULTICAST).build();
 
     def doGenerate(Resource resource, IFileSystemAccess2 fsa) {
         // create result resource

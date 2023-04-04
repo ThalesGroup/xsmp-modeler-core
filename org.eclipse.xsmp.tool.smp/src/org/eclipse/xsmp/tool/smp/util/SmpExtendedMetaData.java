@@ -34,13 +34,8 @@ public class SmpExtendedMetaData extends BasicExtendedMetaData
 
   private boolean isOldNamespace(String namespace)
   {
-
-    if (namespace != null && (NAMESPACE_OLD_CATALOGUE.equals(namespace)
-            || NAMESPACE_OLD_TYPES.equals(namespace) || NAMESPACE_OLD_ELEMENTS.equals(namespace)))
-    {
-      return true;
-    }
-    return false;
+    return namespace != null && (NAMESPACE_OLD_CATALOGUE.equals(namespace)
+            || NAMESPACE_OLD_TYPES.equals(namespace) || NAMESPACE_OLD_ELEMENTS.equals(namespace));
   }
 
   private String computedNamespace(String namespace)

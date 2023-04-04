@@ -18,7 +18,7 @@ import com.google.inject.Injector;
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public class XsmpStandaloneSetup extends XsmpcatStandaloneSetup
+public class XsmpSdkStandaloneSetup extends XsmpcatStandaloneSetup
 {
 
   /**
@@ -26,13 +26,13 @@ public class XsmpStandaloneSetup extends XsmpcatStandaloneSetup
    */
   public static void doSetup()
   {
-    new XsmpStandaloneSetup().createInjectorAndDoEMFRegistration();
+    new XsmpSdkStandaloneSetup().createInjectorAndDoEMFRegistration();
   }
 
   @Override
   public Injector createInjector()
   {
-    return Guice.createInjector(new XsmpRuntimeModule());
+    return Guice.createInjector(new XsmpSdkRuntimeModule());
   }
 
 }

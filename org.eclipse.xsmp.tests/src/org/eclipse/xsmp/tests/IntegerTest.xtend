@@ -22,18 +22,18 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class IntegerTest {
 
-	@Test
-	def void checkUnit() {
+    @Test
+    def void checkUnit() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createInteger
+        var elem = XcatalogueFactory.eINSTANCE.createInteger
 
-		elem.unit = "V"
-		assertEquals("V", elem.unit)
-		assertEquals('''/** @unit V */'''.toString, elem.metadatum.documentation)
+        elem.unit = "V"
+        assertEquals("V", elem.unit)
+        assertEquals('''/** @unit V */'''.toString, elem.metadatum.documentation)
 
-		elem.unit = null
-		assertEquals(null, elem.unit)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.unit = null
+        assertEquals(null, elem.unit)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
 }

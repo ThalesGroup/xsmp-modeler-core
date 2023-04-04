@@ -25,68 +25,68 @@ import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.c
 @InjectWith(XsmpUiInjectorProvider)
 class HighlightingTest extends AbstractHighlightingTest {
 
-	@Inject extension XsmpcatHighlightingConfiguration
+    @Inject extension XsmpcatHighlightingConfiguration
 
-	@BeforeEach override void setUp() throws Exception {
-		super.setUp
-		projectName.createJavaProject
+    @BeforeEach override void setUp() throws Exception {
+        super.setUp
+        projectName.createJavaProject
 
-	}
+    }
 
-	@Test def catalogue_keyword() {
-		'''
-			catalogue c
-		'''.testHighlighting("catalogue", keywordTextStyle)
-	}
+    @Test def catalogue_keyword() {
+        '''
+            catalogue c
+        '''.testHighlighting("catalogue", keywordTextStyle)
+    }
 
-	@Test def namespace_keyword() {
-		'''
-			catalogue c
-			namespace ns {}
-		'''.testHighlighting("namespace", keywordTextStyle)
-	}
+    @Test def namespace_keyword() {
+        '''
+            catalogue c
+            namespace ns {}
+        '''.testHighlighting("namespace", keywordTextStyle)
+    }
 
-	@Test def single_line_comment() {
-		'''
-			// A comment
-			catalogue c
-		'''.testHighlighting("// A comment", commentTextStyle)
-	}
+    @Test def single_line_comment() {
+        '''
+            // A comment
+            catalogue c
+        '''.testHighlighting("// A comment", commentTextStyle)
+    }
 
-	@Test def multi_line_comment() {
-		'''
-			/*
-			 * A multi line comment
-			 */
-			catalogue c
-		'''.testHighlighting('''
-			/*
-			 * A multi line comment
-			 */
-		''', commentTextStyle)
-	}
+    @Test def multi_line_comment() {
+        '''
+            /*
+             * A multi line comment
+             */
+            catalogue c
+        '''.testHighlighting('''
+            /*
+             * A multi line comment
+             */
+        ''', commentTextStyle)
+    }
 
-	@Test def documentation() {
-		'''
-			/**
-			 * A documentation
-			 */
-			catalogue c
-		'''.testHighlighting('''
-			/**
-			 * A documentation
-			 */
-		''', documentationTextStyle)
-	}
+    @Test def documentation() {
+        '''
+            /**
+             * A documentation
+             */
+            catalogue c
+        '''.testHighlighting('''
+            /**
+             * A documentation
+             */
+        ''', documentationTextStyle)
+    }
 
-	@Test def documentation_tag() {
-		'''
-			/**
-			 * A documentation
-			 * @deprecated 
-			 */
-			catalogue c
-		'''.testHighlighting("@deprecated", documentationTagTextStyle)
-	}
+    @Test def documentation_tag() {
+        '''
+            /**
+             * A documentation
+             * @deprecated 
+             */
+            catalogue c
+        '''.testHighlighting("@deprecated", documentationTagTextStyle)
+    }
 
 }

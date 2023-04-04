@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.XsmpcatStandaloneSetup;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -152,7 +153,7 @@ public class XsmpcatCli
             "Xsmpcat generator/validator Command Line Interface", options, null, true);
   }
 
-  protected void execute(String[] args)
+  protected void execute(String[] args) throws ParseException
   {
     final var ns = System.nanoTime();
     final var options = getOptions();
@@ -170,7 +171,7 @@ public class XsmpcatCli
     {
       printHelp(options);
       LOG.fatal("Invalid argument", e);
-      return;
+      throw e;
     }
     if (cmd.hasOption("h"))
     {
@@ -293,16 +294,16 @@ public class XsmpcatCli
           var hasError = false;
           for (final Issue issue : list)
           {
-            switch (issue.getSeverity())
+            if (issue.getSeverity() == Severity.ERROR)
             {
-              case ERROR:
-                LOG.error(issue);
-                hasError = true;
-                break;
-              default:
-                LOG.info(issue);
-                break;
+              LOG.error(issue);
+              hasError = true;
             }
+            else
+            {
+              LOG.info(issue);
+            }
+
           }
           if (hasError)
           {

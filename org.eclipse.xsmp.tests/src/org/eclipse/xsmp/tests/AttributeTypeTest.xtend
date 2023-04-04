@@ -22,42 +22,42 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class AttributeTypeTest {
 
-	@Test
-	def void checkAllowMultiple() {
+    @Test
+    def void checkAllowMultiple() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createAttributeType
+        var elem = XcatalogueFactory.eINSTANCE.createAttributeType
 
-		elem.allowMultiple = true
-		assertEquals(true, elem.allowMultiple)
-		assertEquals('''/** @allowMultiple */'''.toString, elem.metadatum.documentation)
+        elem.allowMultiple = true
+        assertEquals(true, elem.allowMultiple)
+        assertEquals('''/** @allowMultiple */'''.toString, elem.metadatum.documentation)
 
-		elem.allowMultiple = false
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.allowMultiple = false
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
-	@Test
-	def void checkUsage() {
+    @Test
+    def void checkUsage() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createAttributeType
+        var elem = XcatalogueFactory.eINSTANCE.createAttributeType
 
-		elem.usage += "Operation"
-		assertEquals(#["Operation"], elem.usage)
-		assertEquals('''/** @usage Operation */'''.toString, elem.metadatum.documentation)
+        elem.usage += "Operation"
+        assertEquals(#["Operation"], elem.usage)
+        assertEquals('''/** @usage Operation */'''.toString, elem.metadatum.documentation)
 
-		elem.usage += "Field"
-		assertEquals(#["Operation", "Field"], elem.usage)
-		assertEquals('''
-		/**
-		 * @usage Operation
-		 * @usage Field
-		 */'''.toString, elem.metadatum.documentation)
+        elem.usage += "Field"
+        assertEquals(#["Operation", "Field"], elem.usage)
+        assertEquals('''
+        /**
+         * @usage Operation
+         * @usage Field
+         */'''.toString, elem.metadatum.documentation)
 
-		elem.usage.remove(0)
-		assertEquals(#["Field"], elem.usage)
-		assertEquals('''/** @usage Field */'''.toString, elem.metadatum.documentation)
+        elem.usage.remove(0)
+        assertEquals(#["Field"], elem.usage)
+        assertEquals('''/** @usage Field */'''.toString, elem.metadatum.documentation)
 
-		elem.usage.clear
-		assertEquals(#[], elem.usage)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.usage.clear
+        assertEquals(#[], elem.usage)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 }

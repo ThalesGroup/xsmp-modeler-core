@@ -26,71 +26,73 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class DocumentTest {
 
-	static class Document extends DocumentImplCustom {
-	}
+    static class Document extends DocumentImplCustom {
+    }
 
-	@Test
-	def void checkVersion() {
+    @Test
+    def void checkVersion() {
 
-		var elem = new Document
+        var elem = new Document
 
-		elem.version = "1.0.0"
-		assertEquals('''/** @version 1.0.0 */'''.toString, elem.metadatum.documentation)
+        elem.version = "1.0.0"
+        assertEquals('''/** @version 1.0.0 */'''.toString, elem.metadatum.documentation)
 
-		elem.version = null
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.version = null
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
-	@Test
-	def void checkDate() {
+    @Test
+    def void checkDate() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
 
-		var date = new Date()
-		elem.date = date
-		assertEquals('''/** @date «EcoreUtil.convertToString(XcataloguePackage.Literals.DOCUMENT__DATE.getEAttributeType(), date)» */'''.toString, elem.metadatum.documentation)
+        var date = new Date()
+        elem.date = date
+        assertEquals(
+            '''/** @date «EcoreUtil.convertToString(XcataloguePackage.Literals.DOCUMENT__DATE.getEAttributeType(), date)» */'''.
+                toString, elem.metadatum.documentation)
 
-		elem.date = null
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.date = null
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
-	@Test
-	def void checkTitle() {
+    @Test
+    def void checkTitle() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
 
-		elem.title = "A title"
-		assertEquals("A title", elem.title)
-		assertEquals('''/** @title A title */'''.toString, elem.metadatum.documentation)
+        elem.title = "A title"
+        assertEquals("A title", elem.title)
+        assertEquals('''/** @title A title */'''.toString, elem.metadatum.documentation)
 
-		elem.title = null
-		assertEquals(null, elem.title)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.title = null
+        assertEquals(null, elem.title)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
-	@Test
-	def void checkCreator() {
+    @Test
+    def void checkCreator() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
 
-		elem.creator += "User1"
-		assertEquals(#["User1"], elem.creator)
-		assertEquals('''/** @creator User1 */'''.toString, elem.metadatum.documentation)
+        elem.creator += "User1"
+        assertEquals(#["User1"], elem.creator)
+        assertEquals('''/** @creator User1 */'''.toString, elem.metadatum.documentation)
 
-		elem.creator += "User2"
-		assertEquals(#["User1", "User2"], elem.creator)
-		assertEquals('''
-		/**
-		 * @creator User1
-		 * @creator User2
-		 */'''.toString, elem.metadatum.documentation)
+        elem.creator += "User2"
+        assertEquals(#["User1", "User2"], elem.creator)
+        assertEquals('''
+        /**
+         * @creator User1
+         * @creator User2
+         */'''.toString, elem.metadatum.documentation)
 
-		elem.creator.remove(0)
-		assertEquals(#["User2"], elem.creator)
-		assertEquals('''/** @creator User2 */'''.toString, elem.metadatum.documentation)
+        elem.creator.remove(0)
+        assertEquals(#["User2"], elem.creator)
+        assertEquals('''/** @creator User2 */'''.toString, elem.metadatum.documentation)
 
-		elem.creator.clear
-		assertEquals(#[], elem.creator)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.creator.clear
+        assertEquals(#[], elem.creator)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 }

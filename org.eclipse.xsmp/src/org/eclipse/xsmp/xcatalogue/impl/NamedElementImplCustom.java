@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,21 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
   private class XsmpcatdocEList<E> extends EcoreEList.Dynamic<E>
   {
+    @Override
+    public boolean equals(Object object)
+    {
+      if (object instanceof XsmpcatdocEList< ? >)
+      {
+        return ((XsmpcatdocEList< ? >) object).tagName.equals(tagName) && super.equals(object);
+      }
+      return super.equals(object);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(tagName, super.hashCode());
+    }
 
     /**
      *
@@ -309,6 +325,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
           }
           catch (final Exception e)
           {
+            // ignore
           }
         }
       }

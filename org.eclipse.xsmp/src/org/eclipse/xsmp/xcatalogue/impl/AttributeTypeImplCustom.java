@@ -66,4 +66,4 @@ public class AttributeTypeImplCustom extends AttributeTypeImpl
     }
   }
 
-} // AttributeTypeImpl
+} // AttributeTypeImplCustom

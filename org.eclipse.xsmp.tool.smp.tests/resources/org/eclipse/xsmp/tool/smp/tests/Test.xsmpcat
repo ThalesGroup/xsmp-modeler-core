@@ -142,7 +142,8 @@ namespace ns
 	{
 	}
 
-	/** @uuid 850a9105-b093-4c0e-8863-1d7f51a43286 */
+	/** @unit m
+	@uuid 850a9105-b093-4c0e-8863-1d7f51a43286 */
 	float AFloat
 
 	/** @uuid e83b1c21-d97d-45af-9158-d3beaa4687c5 */
@@ -161,7 +162,8 @@ namespace ns
 	/** @uuid 53e1f876-1347-4874-a931-a357d0a3d4c2 */
 	integer AnInteger
 
-	/** @uuid bc6e34b8-1a0c-46cc-8565-695f60873011 */
+	/** @unit s
+	@uuid bc6e34b8-1a0c-46cc-8565-695f60873011 */
 	integer AnInt8Integer extends Int8
 
 

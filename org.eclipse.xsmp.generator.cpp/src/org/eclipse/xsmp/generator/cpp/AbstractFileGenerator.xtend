@@ -40,11 +40,11 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
         val namespace = EcoreUtil2.getContainerOfType(object, Namespace)
         if (namespace !== null)
             namespace.eContainer.namespace(
-			'''
+            '''
                 «namespace.comment()»
                 namespace «namespace.name»
                 {
-                	«body»
+                    «body»
                 } // namespace «namespace.name»
             ''')
         else

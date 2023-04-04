@@ -22,11 +22,9 @@ import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.c
 @InjectWith(XsmpUiInjectorProvider)
 class QuickfixTest extends AbstractQuickfixTest {
 
-	@BeforeAll def void setup() throws Exception {
+    @BeforeAll def void setup() throws Exception {
 
-		projectName.createJavaProject
-	}
-
-
+        projectName.createJavaProject
+    }
 
 }

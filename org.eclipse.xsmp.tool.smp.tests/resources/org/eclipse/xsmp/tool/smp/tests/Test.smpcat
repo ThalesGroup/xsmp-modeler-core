@@ -165,7 +165,7 @@
       <Description></Description>
       <Base xlink:title="AnAbstractException" xlink:href="#ns.AnAbstractException"/>
     </Type>
-    <Type xsi:type="Types:Float" Id="ns.AFloat" Name="AFloat" Uuid="850a9105-b093-4c0e-8863-1d7f51a43286" MinInclusive="true" MaxInclusive="true">
+    <Type xsi:type="Types:Float" Id="ns.AFloat" Name="AFloat" Uuid="850a9105-b093-4c0e-8863-1d7f51a43286" MinInclusive="true" MaxInclusive="true" Unit="m">
       <Description></Description>
     </Type>
     <Type xsi:type="Types:Float" Id="ns.AFloat32" Name="AFloat32" Uuid="e83b1c21-d97d-45af-9158-d3beaa4687c5" MinInclusive="true" MaxInclusive="true">
@@ -185,7 +185,7 @@
     <Type xsi:type="Types:Integer" Id="ns.AnInteger" Name="AnInteger" Uuid="53e1f876-1347-4874-a931-a357d0a3d4c2">
       <Description></Description>
     </Type>
-    <Type xsi:type="Types:Integer" Id="ns.AnInt8Integer" Name="AnInt8Integer" Uuid="bc6e34b8-1a0c-46cc-8565-695f60873011">
+    <Type xsi:type="Types:Integer" Id="ns.AnInt8Integer" Name="AnInt8Integer" Uuid="bc6e34b8-1a0c-46cc-8565-695f60873011" Unit="s">
       <Description></Description>
       <PrimitiveType xlink:title="Int8" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Int8"/>
     </Type>

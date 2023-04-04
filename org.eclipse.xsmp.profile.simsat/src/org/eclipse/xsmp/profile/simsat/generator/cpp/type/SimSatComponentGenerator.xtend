@@ -46,19 +46,19 @@ class SimSatComponentGenerator extends ComponentGenerator {
 
         '''
             if (handlers.find("«o.name»") == handlers.end()) {
-            	handlers["«o.name»"] = [](«container.name(useGenPattern)»* cmp, ::Smp::IRequest* req) {
-            	«FOR p : o.parameter»
-            	    «p.initParameter(container)»
-            	«ENDFOR»
-            	
-            	/// Invoke «o.name»
-            	«IF r !== null»auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
-            	
-            	«FOR p : o.parameter»
+                handlers["«o.name»"] = [](«container.name(useGenPattern)»* cmp, ::Smp::IRequest* req) {
+                «FOR p : o.parameter»
+                    «p.initParameter(container)»
+                «ENDFOR»
+                
+                /// Invoke «o.name»
+                «IF r !== null»auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
+                
+                «FOR p : o.parameter»
                 «p.setParameter(container)»
-            	«ENDFOR»
-            	«IF r !== null»::esa::ecss::smp::cdk::Request::setReturnValue(req, «r.type.generatePrimitiveKind», p_«r.name»);«ENDIF»
-            	};
+                «ENDFOR»
+                «IF r !== null»::esa::ecss::smp::cdk::Request::setReturnValue(req, «r.type.generatePrimitiveKind», p_«r.name»);«ENDIF»
+                };
             }
         '''
     }

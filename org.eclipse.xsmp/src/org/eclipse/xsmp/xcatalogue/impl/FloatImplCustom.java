@@ -85,12 +85,10 @@ public class FloatImplCustom extends FloatImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    if ("unit".equals(name))
     {
-      case "unit":
-        return XcataloguePackage.Literals.FLOAT__UNIT;
-      default:
-        return super.getFeature(name);
+      return XcataloguePackage.Literals.FLOAT__UNIT;
     }
+    return super.getFeature(name);
   }
-} // FloatImpl
+} // FloatImplCustom

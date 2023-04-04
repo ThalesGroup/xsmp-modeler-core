@@ -138,9 +138,9 @@ public class SmpGenerator extends AbstractModelConverter
   @Inject
   private XsmpUtil utils;
 
-  private final static String SMPCAT_EXT = "smpcat";
+  private static final String SMPCAT_EXT = "smpcat";
 
-  private final static String SMPPKG_EXT = "smppkg";
+  private static final String SMPPKG_EXT = "smppkg";
 
   @Override
   public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context)
@@ -240,10 +240,10 @@ public class SmpGenerator extends AbstractModelConverter
   {
     final Map<String, EObject> idToEObjectMap = new HashMap<>();
 
-    final Map<EObject, String> EObjectToIdMap = new HashMap<>();
+    final Map<EObject, String> eObjectToIdMap = new HashMap<>();
     resource.getAllContents().forEachRemaining(e -> {
 
-      if (e instanceof NamedElement && !EObjectToIdMap.containsKey(e))
+      if (e instanceof NamedElement && !eObjectToIdMap.containsKey(e))
       {
 
         var id = ((NamedElement) e).getName();
@@ -259,7 +259,7 @@ public class SmpGenerator extends AbstractModelConverter
 
           if (!(container instanceof Document))
           {
-            id = EObjectToIdMap.get(container) + "." + id;
+            id = eObjectToIdMap.get(container) + "." + id;
           }
           // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID should be
           // prefixed with "Smp."
@@ -285,7 +285,7 @@ public class SmpGenerator extends AbstractModelConverter
         }
 
         idToEObjectMap.put(id, e);
-        EObjectToIdMap.put(e, id);
+        eObjectToIdMap.put(e, id);
 
         for (final var attribute : ((NamedElement) e).getMetadatum().getMetadata())
         {
@@ -305,12 +305,12 @@ public class SmpGenerator extends AbstractModelConverter
           }
 
           idToEObjectMap.put(attributeId, attribute);
-          EObjectToIdMap.put(attribute, attributeId);
+          eObjectToIdMap.put(attribute, attributeId);
         }
 
       }
     });
-    return EObjectToIdMap;
+    return eObjectToIdMap;
   }
 
   /* --- getReference --- */

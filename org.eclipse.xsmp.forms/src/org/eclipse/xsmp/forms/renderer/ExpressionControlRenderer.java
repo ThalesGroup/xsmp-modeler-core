@@ -98,9 +98,6 @@ public class ExpressionControlRenderer extends SimpleControlSWTControlSWTRendere
   @Override
   protected Control createSWTControl(Composite parent)
   {
-    // final var composite = new Composite(parent, SWT.NONE);
-    // GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).applyTo(composite);
-
     final var resource = (XtextResource) getViewModelContext().getDomainModel().eResource();
 
     // get or create a resourceSet shared between all EmbeddedEditor

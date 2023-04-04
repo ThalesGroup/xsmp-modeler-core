@@ -147,11 +147,10 @@ class XtextAdapterFactoryEditingDomain extends AdapterFactoryEditingDomain
     configureResourceSet(resourceSet, emfUri);
     final var resource = (XtextResource) resourceFactory.createResource(emfUri);
     resourceSet.getResources().add(resource);
-    // resource.setValidationDisabled(isValidationDisabled(uri));
     return resource;
   }
 
-  protected Resource createResource(IStorage storage) throws CoreException
+  protected Resource createResource(IStorage storage)
   {
     final var resourceSet = getResourceSet(storage);
     final var uri = URI.createPlatformResourceURI(storage.getFullPath().toString(), true);
@@ -163,7 +162,6 @@ class XtextAdapterFactoryEditingDomain extends AdapterFactoryEditingDomain
     }
     final var resource = (XtextResource) resourceFactory.createResource(uriForResource);
     resourceSet.getResources().add(resource);
-    // resource.setValidationDisabled(isValidationDisabled(uri, storage));
     return resource;
   }
 

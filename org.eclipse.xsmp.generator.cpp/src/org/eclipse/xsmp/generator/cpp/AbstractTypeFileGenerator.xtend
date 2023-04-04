@@ -14,10 +14,10 @@ import org.eclipse.xsmp.xcatalogue.Type
 
 abstract class AbstractTypeFileGenerator<T extends Type> extends AbstractFileGenerator<T> {
 
-	override protected collectIncludes(IncludeAcceptor acceptor) {
-		super.collectIncludes(acceptor)
-		// all types must include the ITypeRegistry
-		acceptor.mdkHeader("Smp/Publication/ITypeRegistry.h")
-	}
+    override protected collectIncludes(IncludeAcceptor acceptor) {
+        super.collectIncludes(acceptor)
+        // all types must include the ITypeRegistry
+        acceptor.mdkHeader("Smp/Publication/ITypeRegistry.h")
+    }
 
 }

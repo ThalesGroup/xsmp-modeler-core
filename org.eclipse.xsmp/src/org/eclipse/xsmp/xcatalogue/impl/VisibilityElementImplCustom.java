@@ -168,4 +168,4 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
 
   }
 
-} // VisibilityElementImpl
+} // VisibilityElementImplCustom
