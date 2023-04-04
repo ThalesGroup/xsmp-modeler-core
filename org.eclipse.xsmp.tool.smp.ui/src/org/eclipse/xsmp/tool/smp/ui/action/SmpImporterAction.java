@@ -18,6 +18,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.ui.CommonUIPlugin;
 import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
@@ -61,6 +64,30 @@ public class SmpImporterAction extends AbstractHandler
   @Inject
   private SmpURIConverter uriConverter;
 
+  class Visitor implements IResourceProxyVisitor
+  {
+    private final SmpURIConverter uriConverter;
+
+    public Visitor(SmpURIConverter uriConverter)
+    {
+      this.uriConverter = uriConverter;
+    }
+
+    @Override
+    public boolean visit(IResourceProxy proxy)
+    {
+
+      if (proxy.getName().endsWith(".smpcat"))
+      {
+        uriConverter.getURIMap().put(URI.createURI(proxy.getName()),
+                URI.createPlatformResourceURI(proxy.requestFullPath().toString(), true));
+        return false;
+      }
+
+      return true;
+    }
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -84,10 +111,15 @@ public class SmpImporterAction extends AbstractHandler
 
           final ResourceSet rs = new ResourceSetImpl();
           rs.setURIConverter(uriConverter);
-          rs.getResourceFactoryRegistry().getProtocolToFactoryMap().put("http",
+
+          ResourcesPlugin.getWorkspace().getRoot().accept(new Visitor(uriConverter),
+                  IResource.FILE);
+          rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("smpcat",
                   new SmpResourceFactoryImpl());
           final var resource = rs.getResource(modelURI, true);
+
           EcoreUtil.resolveAll(resource);
+
           final var errors = resource.getErrors();
           final var warnings = resource.getWarnings();
 

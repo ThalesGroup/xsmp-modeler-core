@@ -228,7 +228,7 @@ public class SmpGenerator extends AbstractModelConverter
 
   /* --- id --- */
 
-  private String id(NamedElement e)
+  private String id(EObject e)
   {
     return cache.get("smp_id_map", e.eResource(), () -> loadSmpIds(e.eResource())).get(e);
   }
@@ -283,8 +283,31 @@ public class SmpGenerator extends AbstractModelConverter
 
           id = newId;
         }
+
         idToEObjectMap.put(id, e);
         EObjectToIdMap.put(e, id);
+
+        for (final var attribute : ((NamedElement) e).getMetadatum().getMetadata())
+        {
+          var attributeId = id + "." + attribute.getType().getName();
+          if (idToEObjectMap.containsKey(attributeId))
+          {
+            var i = 1;
+            String newId;
+            do
+            {
+              i++;
+              newId = attributeId + i;
+            }
+            while (idToEObjectMap.containsKey(newId));
+
+            attributeId = newId;
+          }
+
+          idToEObjectMap.put(attributeId, attribute);
+          EObjectToIdMap.put(attribute, attributeId);
+        }
+
       }
     });
     return EObjectToIdMap;
@@ -359,8 +382,7 @@ public class SmpGenerator extends AbstractModelConverter
   protected void copy(Attribute src, org.eclipse.xsmp.tool.smp.core.types.Attribute dest)
   {
     dest.setName(src.getType().getName());
-    dest.setId(id(EcoreUtil2.getContainerOfType(src, NamedElement.class)) + "."
-            + src.getType().getName());
+    dest.setId(id(src));
 
     final var type = (AttributeType) src.getType();
     dest.setType(getReference(type, src.eResource()));
@@ -783,59 +805,61 @@ public class SmpGenerator extends AbstractModelConverter
 
   private Value convert(Expression value, Type type)
   {
-    final var primitiveType = utils.getPrimitiveType(type);
-
-    switch (primitiveType)
+    if (type != null)
     {
-      case BOOL:
-        return boolValue(value);
-      case CHAR8:
-        return char8Value(value);
-      case DATE_TIME:
-        return dateTimeValue(value);
-      case DURATION:
-        return durationValue(value);
-      case FLOAT32:
-        return float32Value(value);
-      case FLOAT64:
-        return float64Value(value);
-      case INT16:
-        return int16Value(value);
-      case INT32:
-        return int32Value(value);
-      case INT64:
-        return int64Value(value);
-      case INT8:
-        return int8Value(value);
-      case STRING8:
-        return string8Value(value);
-      case UINT16:
-        return uint16Value(value);
-      case UINT32:
-        return uint32Value(value);
-      case UINT64:
-        return uint64Value(value);
-      case UINT8:
-        return uint8Value(value);
-      case ENUM:
-        return enumValue(value, (Enumeration) type);
-      case NONE:
-        switch (type.eClass().getClassifierID())
-        {
-          case XcataloguePackage.ARRAY:
-            return convert((CollectionLiteral) value, (Array) type);
-          case XcataloguePackage.STRUCTURE:
-          case XcataloguePackage.CLASS:
-          case XcataloguePackage.EXCEPTION:
-            return convert((CollectionLiteral) value, (Structure) type);
-          default:
-            break;
-        }
-        break;
-      default:
-        break;
-    }
+      final var primitiveType = utils.getPrimitiveType(type);
 
+      switch (primitiveType)
+      {
+        case BOOL:
+          return boolValue(value);
+        case CHAR8:
+          return char8Value(value);
+        case DATE_TIME:
+          return dateTimeValue(value);
+        case DURATION:
+          return durationValue(value);
+        case FLOAT32:
+          return float32Value(value);
+        case FLOAT64:
+          return float64Value(value);
+        case INT16:
+          return int16Value(value);
+        case INT32:
+          return int32Value(value);
+        case INT64:
+          return int64Value(value);
+        case INT8:
+          return int8Value(value);
+        case STRING8:
+          return string8Value(value);
+        case UINT16:
+          return uint16Value(value);
+        case UINT32:
+          return uint32Value(value);
+        case UINT64:
+          return uint64Value(value);
+        case UINT8:
+          return uint8Value(value);
+        case ENUM:
+          return enumValue(value, (Enumeration) type);
+        case NONE:
+          switch (type.eClass().getClassifierID())
+          {
+            case XcataloguePackage.ARRAY:
+              return convert((CollectionLiteral) value, (Array) type);
+            case XcataloguePackage.STRUCTURE:
+            case XcataloguePackage.CLASS:
+            case XcataloguePackage.EXCEPTION:
+              return convert((CollectionLiteral) value, (Structure) type);
+            default:
+              break;
+          }
+          break;
+        default:
+          break;
+      }
+    }
     return null;
   }
 
@@ -893,7 +917,20 @@ public class SmpGenerator extends AbstractModelConverter
 
     for (var i = 0; i < value.getElements().size(); i++)
     {
-      v.getFieldValue().add(convert(value.getElements().get(i), fields.get(i).getType()));
+      Type fieldType;
+      try
+      {
+        fieldType = fields.get(i).getType();
+      }
+      catch (final IndexOutOfBoundsException e)
+      {
+        fieldType = null;
+      }
+      final var result = convert(value.getElements().get(i), fieldType);
+      if (result != null)
+      {
+        v.getFieldValue().add(result);
+      }
     }
 
     return v;

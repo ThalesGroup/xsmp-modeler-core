@@ -6,5 +6,8 @@
    <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature" version="0.0.0">
       <category name="main"/>
    </feature>
+   <feature id="org.eclipse.xsmp.profile.simsat.feature">
+      <category name="main"/>
+   </feature>
    <category-def name="main" label="Xsmp"/>
 </site>

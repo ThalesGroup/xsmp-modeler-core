@@ -13,6 +13,7 @@ package org.eclipse.xsmp.tool.smp.xlink.impl;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -21,6 +22,30 @@ public class SimpleLinkRefImplCustom extends SimpleLinkRefImpl
 {
   /** The HTTP URI scheme. */
   private static final String SCHEME_HTTP = "http"; //$NON-NLS-1$
+
+
+  @Override
+  public EObject eResolveProxy(InternalEObject proxy)
+  {
+
+    final var resource = eResource();
+    if (resource != null)
+    {
+      final var rs = resource.getResourceSet();
+      if (rs != null)
+      {
+        final var uri = rs.getURIConverter().getURIMap().get(proxy.eProxyURI().trimFragment());
+
+        if (uri != null)
+        {
+          proxy.eSetProxyURI(uri.appendFragment(proxy.eProxyURI().fragment()));
+        }
+
+      }
+    }
+
+    return super.eResolveProxy(proxy);
+  }
 
   @Override
   public String getHref()
@@ -101,4 +126,4 @@ public class SimpleLinkRefImplCustom extends SimpleLinkRefImpl
     return null;
   }
 
-} // SimpleLinkRefImpl
+} // SimpleLinkRefImplCustom
