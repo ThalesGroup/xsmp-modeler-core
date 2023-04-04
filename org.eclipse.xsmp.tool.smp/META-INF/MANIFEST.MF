@@ -11,8 +11,15 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xsmp
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.xsmp.tool.smp,
+ org.eclipse.xsmp.tool.smp.core.elements,
+ org.eclipse.xsmp.tool.smp.core.types,
  org.eclipse.xsmp.tool.smp.generator,
  org.eclipse.xsmp.tool.smp.importer,
  org.eclipse.xsmp.tool.smp.lib,
+ org.eclipse.xsmp.tool.smp.smdl.catalogue,
+ org.eclipse.xsmp.tool.smp.smdl.configuration,
+ org.eclipse.xsmp.tool.smp.smdl.package_,
  org.eclipse.xsmp.tool.smp.util,
- org.eclipse.xsmp.tool.smp.validation
+ org.eclipse.xsmp.tool.smp.validation,
+ org.eclipse.xsmp.tool.smp.xlink,
+ org.eclipse.xsmp.tool.smp.xlink.util

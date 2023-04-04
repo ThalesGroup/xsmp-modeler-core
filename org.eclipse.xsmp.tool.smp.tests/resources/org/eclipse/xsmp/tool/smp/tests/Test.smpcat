@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<Catalogue:Catalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Catalogue="http://www.ecss.nl/smp/2019/Smdl/Catalogue" xmlns:Types="http://www.ecss.nl/smp/2019/Core/Types" xmlns:xlink="http://www.w3.org/1999/xlink" Id="Test" Name="Test" Title="a title" Date="2022-10-31T08:33:21.000Z" Creator="creator1, creator2" Version="1.0.0">
+<Catalogue:Catalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Catalogue="http://www.ecss.nl/smp/2019/Smdl/Catalogue" xmlns:Types="http://www.ecss.nl/smp/2019/Core/Types" xmlns:xlink="http://www.w3.org/1999/xlink" Id="_Test" Name="Test" Title="a title" Date="2022-10-31T08:33:21.000Z" Creator="creator1, creator2" Version="1.0.0">
   <Description>Catalogue Test</Description>
   <Namespace Id="ns" Name="ns">
     <Description></Description>
@@ -20,15 +20,15 @@
     </Type>
     <Type xsi:type="Types:Array" Id="ns.ArrayOf3Bool" Name="ArrayOf3Bool" Uuid="621cf9ac-7b8d-4111-a1ef-69084815a903" Size="3">
       <Description></Description>
-      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool2" Name="SingleAttribute">
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool.SingleAttribute" Name="SingleAttribute">
         <Type xlink:title="SingleAttribute" xlink:href="#ns.SingleAttribute"/>
         <Value xsi:type="Types:BoolValue" Value="true"/>
       </Metadata>
-      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool3" Name="MultipleAttribute">
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool.MultipleAttribute" Name="MultipleAttribute">
         <Type xlink:title="MultipleAttribute" xlink:href="#ns.MultipleAttribute"/>
         <Value xsi:type="Types:BoolValue" Value="true"/>
       </Metadata>
-      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool4" Name="MultipleAttribute">
+      <Metadata xsi:type="Types:Attribute" Id="ns.ArrayOf3Bool.MultipleAttribute2" Name="MultipleAttribute">
         <Type xlink:title="MultipleAttribute" xlink:href="#ns.MultipleAttribute"/>
         <Value xsi:type="Types:BoolValue" Value="true"/>
       </Metadata>
@@ -269,8 +269,8 @@
       <Description></Description>
       <Field Id="ns.AnAbstractModel.hidden_field" Name="hidden_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.hidden_field2" Name="View">
-          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.View"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.hidden_field.View" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.View"/>
           <Value xsi:type="Types:EnumerationValue" Value="0"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -278,8 +278,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.debug_field" Name="debug_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.debug_field2" Name="View">
-          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.View"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.debug_field.View" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.View"/>
           <Value xsi:type="Types:EnumerationValue" Value="1"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -287,8 +287,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.expert_field" Name="expert_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.expert_field2" Name="View">
-          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.View"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.expert_field.View" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.View"/>
           <Value xsi:type="Types:EnumerationValue" Value="2"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -296,8 +296,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.all_field" Name="all_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.all_field2" Name="View">
-          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.View"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.all_field.View" Name="View">
+          <Type xlink:title="View" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.View"/>
           <Value xsi:type="Types:EnumerationValue" Value="3"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -305,8 +305,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.forcible_field" Name="forcible_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.forcible_field2" Name="Forcible">
-          <Type xlink:title="Forcible" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.Forcible"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.forcible_field.Forcible" Name="Forcible">
+          <Type xlink:title="Forcible" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.Forcible"/>
           <Value xsi:type="Types:BoolValue" Value="true"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -314,8 +314,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.mutable_field" Name="mutable_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.mutable_field2" Name="Mutable">
-          <Type xlink:title="Mutable" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.Mutable"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.mutable_field.Mutable" Name="Mutable">
+          <Type xlink:title="Mutable" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.Mutable"/>
           <Value xsi:type="Types:BoolValue" Value="true"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
@@ -323,8 +323,8 @@
       </Field>
       <Field Id="ns.AnAbstractModel.failure_field" Name="failure_field" State="true" Input="false" Output="false">
         <Description></Description>
-        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.failure_field2" Name="Failure">
-          <Type xlink:title="Failure" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Attributes.Failure"/>
+        <Metadata xsi:type="Types:Attribute" Id="ns.AnAbstractModel.failure_field.Failure" Name="Failure">
+          <Type xlink:title="Failure" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Attributes.Failure"/>
           <Value xsi:type="Types:BoolValue" Value="true"/>
         </Metadata>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>

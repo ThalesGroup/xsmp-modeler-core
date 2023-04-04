@@ -13,9 +13,7 @@ package org.eclipse.xsmp.tool.smp.util;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 
-import com.google.inject.Singleton;
-
-@Singleton
+//@Singleton
 public class SmpURIConverter extends ExtensibleURIConverterImpl
 {
 

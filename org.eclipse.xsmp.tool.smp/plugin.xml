@@ -28,7 +28,7 @@
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated smp -->
       <parser
-            type="catalogue"
+            type="smpcat"
             class="org.eclipse.xsmp.tool.smp.smdl.catalogue.util.CatalogueResourceFactoryImpl"/>
    </extension>
 
@@ -43,7 +43,7 @@
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated smp -->
       <parser
-            type="configuration"
+            type="smpcfg"
             class="org.eclipse.xsmp.tool.smp.smdl.configuration.util.ConfigurationResourceFactoryImpl"/>
    </extension>
 
@@ -73,7 +73,7 @@
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <!-- @generated smp -->
       <parser
-            type="package"
+            type="smppkg"
             class="org.eclipse.xsmp.tool.smp.smdl.package_.util.PackageResourceFactoryImpl"/>
    </extension>
    <extension point="org.eclipse.emf.ecore.generated_package">

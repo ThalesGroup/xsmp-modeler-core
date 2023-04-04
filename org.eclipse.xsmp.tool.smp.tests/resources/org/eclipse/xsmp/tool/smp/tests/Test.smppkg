@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<Package:Package xmlns:Catalogue="http://www.ecss.nl/smp/2019/Smdl/Catalogue" xmlns:Package="http://www.ecss.nl/smp/2019/Smdl/Package" xmlns:Types="http://www.ecss.nl/smp/2019/Core/Types" xmlns:xlink="http://www.w3.org/1999/xlink" Id="Test" Name="Test" Title="a title" Date="2022-10-31T08:33:21.000Z" Creator="creator1, creator2" Version="1.0.0">
+<Package:Package xmlns:Catalogue="http://www.ecss.nl/smp/2019/Smdl/Catalogue" xmlns:Package="http://www.ecss.nl/smp/2019/Smdl/Package" xmlns:Types="http://www.ecss.nl/smp/2019/Core/Types" xmlns:xlink="http://www.w3.org/1999/xlink" Id="_Test" Name="Test" Title="a title" Date="2022-10-31T08:33:21.000Z" Creator="creator1, creator2" Version="1.0.0">
   <Description>Catalogue Test</Description>
   <Implementation xlink:title="SingleAttribute" xlink:href="Types:AttributeType Test.smpcat#ns.SingleAttribute"/>
   <Implementation xlink:title="MultipleAttribute" xlink:href="Types:AttributeType Test.smpcat#ns.MultipleAttribute"/>

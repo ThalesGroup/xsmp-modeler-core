@@ -82,6 +82,7 @@ import org.eclipse.xsmp.tool.smp.smdl.catalogue.Reference
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.EcoreUtil2
 
 class SmpImporter {
 
@@ -101,22 +102,22 @@ class SmpImporter {
         // convert the smpcat model to xsmpcat
         var result = resource.contents.get(0).generate.toString
         val in = new ByteArrayInputStream(result.bytes);
-        try
-        {
-        r.load(in, rs.getLoadOptions());
+        try {
+            r.load(in, rs.getLoadOptions());
 
-        // save the result with format option
-        r.save(SaveOptions.newBuilder.format.options.toOptionsMap)
-        }
-        catch(Exception e){
+            // save the result with format option
+            r.save(SaveOptions.newBuilder.format.options.toOptionsMap)
+        } catch (Exception e) {
             fsa.generateFile(filename, result)
         }
     }
 
     def CharSequence qfn(NamedElement e) {
         var value = ""
-        if (!(e.eContainer instanceof Document))
-            value = qfn(e.eContainer as NamedElement) + "." + e.name
+
+        var parent = EcoreUtil2.getContainerOfType(e.eContainer, NamedElement)
+        if (!(parent instanceof Document))
+            value = qfn(parent) + "." + e.name
         else
             value = e.name
 
@@ -131,8 +132,9 @@ class SmpImporter {
         if (href === null || href.eIsProxy)
             return e.title
 
-        if (!(href.eContainer instanceof Document))
-            value = qfn(href.eContainer as NamedElement) + "." + href.name
+        var parent = EcoreUtil2.getContainerOfType(href.eContainer, NamedElement)
+        if (!(parent instanceof Document))
+            value = qfn(parent) + "." + href.name
         else
             value = href.name
 
@@ -233,21 +235,22 @@ class SmpImporter {
 
         val parent = o.eContainer
 
-        if (o.isSetVisibility && !(parent instanceof Interface) && !(parent instanceof Structure && !(parent instanceof Class)))
+        if (o.isSetVisibility && !(parent instanceof Interface) &&
+            !(parent instanceof Structure && !(parent instanceof Class)))
             '''«o.visibility» '''
     }
 
     def dispatch CharSequence generate(Comment o) {
         '''/* 
-		    * «o.name»  «o.description» 
-		    */'''
+            * «o.name»  «o.description» 
+            */'''
     }
 
     def dispatch CharSequence generate(Documentation o) {
         '''/* 
-		    * «o.name»  «o.description» 
-		    * resources: «FOR r : o.resource SEPARATOR ', '»«r.href»«ENDFOR»
-		    */'''
+            * «o.name»  «o.description» 
+            * resources: «FOR r : o.resource SEPARATOR ', '»«r.href»«ENDFOR»
+            */'''
     }
 
     def dispatch CharSequence generate(Attribute o) {
@@ -263,9 +266,9 @@ class SmpImporter {
             «o.header»
             namespace «o.name»
             {
-            	«FOR n : o.namespace SEPARATOR '\n'»«n.generate»«ENDFOR»
-            	«FOR n : o.type SEPARATOR '\n'»«n.generate»«ENDFOR»
-            }
+                «FOR n : o.namespace SEPARATOR '\n'»«n.generate»«ENDFOR»
+                «FOR n : o.type SEPARATOR '\n'»«n.generate»«ENDFOR»
+            } // namespace «o.name»
         '''
     }
 
@@ -344,7 +347,7 @@ class SmpImporter {
             «o.header»
             «o.visibility()»enum «o.name»
             {
-            	«FOR l : o.literal SEPARATOR ', \n'»«l.header»  «l.name» = «l.value»«ENDFOR»
+                «FOR l : o.literal SEPARATOR ', \n'»«l.header»  «l.name» = «l.value»«ENDFOR»
             }
         '''
     }
@@ -354,7 +357,7 @@ class SmpImporter {
             «o.header»
             «o.visibility()»struct «o.name»
             {
-            	«FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
+                «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
         '''
     }
@@ -364,7 +367,7 @@ class SmpImporter {
             «o.header»
             «o.visibility()»«IF o.abstract»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»
             {
-            	«FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
+                «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
         '''
     }
@@ -374,7 +377,7 @@ class SmpImporter {
             «o.header»
             «o.visibility()»interface «o.name»«FOR b : o.base BEFORE ' extends ' SEPARATOR ', '»«b.qfn»«ENDFOR»
             {
-            	«FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
+                «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
         '''
     }
@@ -384,7 +387,7 @@ class SmpImporter {
             «o.header»
             «o.visibility()»«IF o.name.startsWith("Abstract")»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»«FOR b : o.interface BEFORE ' implements ' SEPARATOR ', '»«b.qfn»«ENDFOR»
             {
-            	«FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
+                «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
         '''
     }
@@ -543,7 +546,7 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(String8Value o, Type type) {
-        '''"«o.value.replace("\n","\\n").replace("\t","\\t")»"'''
+        '''"«o.value.replace("\n","\\n").replace("\t","\\t").replace("\"","\\\"")»"'''
     }
 
     def dispatch CharSequence generate(BoolValue o, Type type) {
@@ -629,7 +632,10 @@ class SmpImporter {
 
     def dispatch CharSequence generate(StructureValue o, Type type) {
         var index = 0
-        if (type instanceof Structure)
+        if (type instanceof Class)
+            // TODO handle properly the constructor
+            '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
+        else if (type instanceof Structure)
             '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(type.field.get(index++).type.ref)»«ENDFOR»}'''
         else
             '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''

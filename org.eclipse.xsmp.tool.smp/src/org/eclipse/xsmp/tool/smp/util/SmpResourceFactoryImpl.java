@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 public class SmpResourceFactoryImpl extends ResourceFactoryImpl
@@ -21,7 +22,13 @@ public class SmpResourceFactoryImpl extends ResourceFactoryImpl
   /**
    * The URI handler responsible for resolving/deresolving URI's in SMDL documents
    */
-  protected XMLResource.URIHandler uriHandler;
+  private final XMLResource.URIHandler uriHandler = new URIHandlerImpl() {
+    @Override
+    public URI resolve(URI uri)
+    {
+      return uri;
+    }
+  };
 
   @Override
   public Resource createResource(URI uri)
@@ -31,8 +38,11 @@ public class SmpResourceFactoryImpl extends ResourceFactoryImpl
 
     result.getDefaultSaveOptions().put(XMLResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
 
+    result.getDefaultSaveOptions().put(XMLResource.OPTION_URI_HANDLER, uriHandler);
+
     result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE,
             Boolean.FALSE);
+
     result.getDefaultSaveOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE,
             Boolean.FALSE);
 
@@ -42,6 +52,7 @@ public class SmpResourceFactoryImpl extends ResourceFactoryImpl
             new SmpExtendedMetaData());
 
     result.getDefaultLoadOptions().put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
+    result.getDefaultLoadOptions().put(XMLResource.OPTION_URI_HANDLER, uriHandler);
     return result;
   }
 

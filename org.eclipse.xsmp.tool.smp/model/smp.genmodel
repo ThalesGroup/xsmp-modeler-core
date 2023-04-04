@@ -14,7 +14,7 @@
   <foreignModel>types.ecore</foreignModel>
   <foreignModel>xlink.ecore</foreignModel>
   <genPackages prefix="Catalogue" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
-      disposableProviderFactory="true" ecorePackage="catalogue.ecore#/">
+      disposableProviderFactory="true" fileExtensions="smpcat" ecorePackage="catalogue.ecore#/">
     <genClasses ecoreClass="catalogue.ecore#//Catalogue">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference catalogue.ecore#//Catalogue/namespace"/>
     </genClasses>
@@ -75,8 +75,8 @@
     </genClasses>
     <genClasses ecoreClass="catalogue.ecore#//Service"/>
   </genPackages>
-  <genPackages prefix="Configuration" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
-      disposableProviderFactory="true" ecorePackage="configuration.ecore#/">
+  <genPackages prefix="Configuration" basePackage="org.eclipse.xsmp.tool.smp.smdl"
+      resource="XML" disposableProviderFactory="true" fileExtensions="smpcfg" ecorePackage="configuration.ecore#/">
     <genClasses ecoreClass="configuration.ecore#//ComponentConfiguration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ComponentConfiguration/include"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//ComponentConfiguration/component"/>
@@ -128,7 +128,7 @@
     </genClasses>
   </genPackages>
   <genPackages prefix="Package" basePackage="org.eclipse.xsmp.tool.smp.smdl" resource="XML"
-      disposableProviderFactory="true" ecorePackage="package.ecore#/">
+      disposableProviderFactory="true" fileExtensions="smppkg" ecorePackage="package.ecore#/">
     <genClasses ecoreClass="package.ecore#//DependencyOfPackage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute package.ecore#//DependencyOfPackage/packageName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference package.ecore#//DependencyOfPackage/package"/>
@@ -386,8 +386,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute types.ecore#//VisibilityElement/visibility"/>
     </genClasses>
   </genPackages>
-  <genPackages prefix="Xlink" basePackage="org.eclipse.xsmp.tool.smp" resource="XML" disposableProviderFactory="true"
-      ecorePackage="xlink.ecore#/">
+  <genPackages prefix="Xlink" basePackage="org.eclipse.xsmp.tool.smp" resource="XML"
+      disposableProviderFactory="true" ecorePackage="xlink.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="xlink.ecore#//ActuateKind">
       <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/onLoad"/>
       <genEnumLiterals ecoreEnumLiteral="xlink.ecore#//ActuateKind/onRequest"/>
