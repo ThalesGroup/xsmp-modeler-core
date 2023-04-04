@@ -105,4 +105,4 @@ public abstract class DocumentImplCustom extends DocumentImpl
     }
   }
 
-} // DocumentImpl
+} // DocumentImplCustom

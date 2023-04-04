@@ -16,33 +16,33 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class AssociationGenerator extends AbstractMemberGenerator<Association> {
 
-	override declare(NamedElementWithMembers type, Association element) {
-	}
+    override declare(NamedElementWithMembers type, Association element) {
+    }
 
-	override define(NamedElementWithMembers type, Association element) {
-	}
+    override define(NamedElementWithMembers type, Association element) {
+    }
 
-	override declareGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
-		'''    
-			«element.comment»
-			«IF element.isConst»const «ENDIF»«IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")»«IF element.isByPointer»*«ENDIF» «element.name»;
-		'''
-	}
+    override declareGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
+        '''    
+            «element.comment»
+            «IF element.isConst»const «ENDIF»«IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")»«IF element.isByPointer»*«ENDIF» «element.name»;
+        '''
+    }
 
-	override defineGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
-	}
+    override defineGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
+    }
 
-	override collectIncludes(Association element, IncludeAcceptor acceptor) {
-		super.collectIncludes(element, acceptor)
-		acceptor.include(element.type)
-	}
+    override collectIncludes(Association element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
+        acceptor.include(element.type)
+    }
 
-	override initialize(NamedElementWithMembers container, Association member, boolean useGenPattern) {
-	}
+    override initialize(NamedElementWithMembers container, Association member, boolean useGenPattern) {
+    }
 
-	override finalize(Association element) {
-	}
+    override finalize(Association element) {
+    }
 
-	override Publish(Association element) {
-	}
+    override Publish(Association element) {
+    }
 }

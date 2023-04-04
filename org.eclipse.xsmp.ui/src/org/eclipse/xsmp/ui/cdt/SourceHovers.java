@@ -265,7 +265,7 @@ public class SourceHovers
   private int computeSourceStart(IDocument doc, int nameOffset, IBinding binding, boolean isKnR)
     throws BadLocationException
   {
-    var sourceStart = nameOffset;
+    int sourceStart;
     final var scanner = new CHeuristicScanner(doc);
     if (binding instanceof IParameter)
     {
@@ -395,7 +395,6 @@ public class SourceHovers
         {
           sourceStart = doc.getLineOffset(nextNonWSLine);
         }
-        // }
       }
     }
     return sourceStart;

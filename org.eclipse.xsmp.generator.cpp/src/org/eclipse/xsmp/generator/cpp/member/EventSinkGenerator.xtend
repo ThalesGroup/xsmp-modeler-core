@@ -10,75 +10,75 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.member
 
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.EventSink
 import org.eclipse.xsmp.xcatalogue.EventType
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
 
-	protected def getEventArgType(EventSink element) {
-		val eventType = element.type as EventType
-		return eventType.eventArgs as SimpleType
-	}
+    protected def getEventArgType(EventSink element) {
+        val eventType = element.type as EventType
+        return eventType.eventArgs as SimpleType
+    }
 
-	protected def args(EventSink element) {
-		val argType = element.eventArgType
-		'''::Smp::IObject* sender«IF argType !== null», const ::«argType.fqn.toString("::")» &value«ENDIF»'''
-	}
+    protected def args(EventSink element) {
+        val argType = element.eventArgType
+        '''::Smp::IObject* sender«IF argType !== null», const ::«argType.fqn.toString("::")» &value«ENDIF»'''
+    }
 
-	override declare(NamedElementWithMembers type, EventSink element) {
-		'''
-			virtual void _«element.name»(«element.args») override;
-		'''
-	}
+    override declare(NamedElementWithMembers type, EventSink element) {
+        '''
+            virtual void _«element.name»(«element.args») override;
+        '''
+    }
 
-	override define(NamedElementWithMembers type, EventSink element) {
-		'''
-			void «type.name»::_«element.name»(«element.args») {
-			}
-		'''
-	}
+    override define(NamedElementWithMembers type, EventSink element) {
+        '''
+            void «type.name»::_«element.name»(«element.args») {
+            }
+        '''
+    }
 
-	override declareGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
-		'''
-			«element.comment()»
-			::Smp::IEventSink* «element.name»;
-			virtual void _«element.name»(«element.args»)«IF useGenPattern» = 0«ENDIF»;
-		'''
-	}
+    override declareGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
+        '''
+            «element.comment()»
+            ::Smp::IEventSink* «element.name»;
+            virtual void _«element.name»(«element.args»)«IF useGenPattern» = 0«ENDIF»;
+        '''
+    }
 
-	override defineGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
-		if (!useGenPattern)
-			'''
-				void «type.name(useGenPattern)»::_«element.name»(«element.args») {
-				}
-			'''
-	}
+    override defineGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
+        if (!useGenPattern)
+            '''
+                void «type.name(useGenPattern)»::_«element.name»(«element.args») {
+                }
+            '''
+    }
 
-	override collectIncludes(EventSink element, IncludeAcceptor acceptor) {
-		super.collectIncludes(element, acceptor)
-		val eventArg = element.eventArgType
-		if (eventArg !== null) {
-			acceptor.include(eventArg)
-		}
-	}
+    override collectIncludes(EventSink element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
+        val eventArg = element.eventArgType
+        if (eventArg !== null) {
+            acceptor.include(eventArg)
+        }
+    }
 
-	protected override collectIncludes(IncludeAcceptor acceptor) {
-		acceptor.mdkHeader("Smp/IEventSink.h")
-	}
+    protected override collectIncludes(IncludeAcceptor acceptor) {
+        acceptor.mdkHeader("Smp/IEventSink.h")
+    }
 
-	override initialize(NamedElementWithMembers container, EventSink member, boolean useGenPattern) {
-	}
+    override initialize(NamedElementWithMembers container, EventSink member, boolean useGenPattern) {
+    }
 
-	override finalize(EventSink element) {
-		'''  
-			delete «element.name»;
-			«element.name» = nullptr;
-		'''
-	}
+    override finalize(EventSink element) {
+        '''  
+            delete «element.name»;
+            «element.name» = nullptr;
+        '''
+    }
 
-	override Publish(EventSink element) {
-	}
+    override Publish(EventSink element) {
+    }
 }

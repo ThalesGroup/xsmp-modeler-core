@@ -219,7 +219,7 @@ public class XsmpcatImportedNamespaceScopeProvider
     }
 
     // local element
-    if (name != null)
+    if (name != null && !name.isEmpty())
     {
 
       final List<ImportNormalizer> localNormalizer = singletonList(

@@ -19,7 +19,6 @@ import org.eclipse.xtext.service.SingletonBinding;
  */
 public class XsmpcatRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
-
   @SingletonBinding(eager = true)
   public Class< ? extends XsmpcatValidator> bindXsmpcatValidator()
   {

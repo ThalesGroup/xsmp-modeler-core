@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Interface
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class InterfaceGenerator extends MemberGenerator<Interface> {
 

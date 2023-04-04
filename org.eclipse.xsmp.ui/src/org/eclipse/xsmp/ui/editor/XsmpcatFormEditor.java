@@ -655,15 +655,6 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This is here for the listener to be able to call it.
-   */
-  @Override
-  protected void firePropertyChange(int action)
-  {
-    super.firePropertyChange(action);
-  }
-
-  /**
    * This sets the selection into whichever viewer is active.
    */
   public void setSelectionToViewer(Collection< ? > collection)
@@ -716,7 +707,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     public Object[] getElements(Object object)
     {
       final var parent = super.getParent(object);
-      return (parent == null ? Collections.EMPTY_SET : Collections.singleton(parent)).toArray();
+      return (parent == null ? Collections.emptySet() : Collections.singleton(parent)).toArray();
     }
 
     /**
@@ -725,8 +716,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     @Override
     public Object[] getChildren(Object object)
     {
-      final var parent = super.getParent(object);
-      return (parent == null ? Collections.EMPTY_SET : Collections.singleton(parent)).toArray();
+      return getElements(object);
     }
 
     /**
@@ -1323,11 +1313,10 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     {
       final var stream = editingDomain.getResourceSet().getURIConverter()
               .createInputStream(resource.getURI());
-      if (stream != null)
-      {
-        result = true;
-        stream.close();
-      }
+
+      result = true;
+      stream.close();
+
     }
     catch (final IOException e)
     {

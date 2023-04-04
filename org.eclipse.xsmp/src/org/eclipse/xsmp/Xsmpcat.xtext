@@ -15,555 +15,554 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://org.eclipse.xsmp/xcatalogue"
 
 Catalogue:
-	metadatum=Metadatum
-	'catalogue' name=ValidID
-	importSection=ImportSection?
-	member+=Namespace*;
+    metadatum=Metadatum
+    'catalogue' name=ValidID
+    importSection=ImportSection?
+    member+=Namespace*;
 
 ImportSection:
-	importDeclarations+=ImportDeclaration+;
+    importDeclarations+=ImportDeclaration+;
 
 ImportDeclaration:
-	'import' (importedType=[LanguageType|QualifiedName]
-	| 'namespace' importedNamespace=[Namespace|QualifiedName]);
+    'import' (importedType=[LanguageType|QualifiedName]
+    | 'namespace' importedNamespace=[Namespace|QualifiedName]);
 
 Attribute:
-	AttributeDeclaration (=>'(' value=Expression? ')')?;
+    AttributeDeclaration (=>'(' value=Expression? ')')?;
 
 fragment AttributeDeclaration returns Attribute hidden(ML_COMMENT, SL_COMMENT):
-	'@' (type=[Type|QualifiedName] | WS);
+    '@' (type=[Type|QualifiedName] | WS);
 
 Metadatum:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*;
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*;
 
 Namespace returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	{Namespace.metadatum=current} 'namespace' name=ValidID
-	'{'
-	member+=NamespaceMember*
-	'}';
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    {Namespace.metadatum=current} 'namespace' name=ValidID?
+    '{'
+    member+=NamespaceMember*
+    '}';
 
 enum RangeKind:
-	Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
+    Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
 
 fragment StructBody *:
-	'{'
-	member+=StructMember*
-	'}';
+    '{'
+    member+=StructMember*
+    '}';
 
 fragment ClassBody *:
-	'{'
-	member+=ClassMember*
-	'}';
+    '{'
+    member+=ClassMember*
+    '}';
 
 fragment InterfaceBody *:
-	'{'
-	member+=InterfaceMember*
-	'}';
+    '{'
+    member+=InterfaceMember*
+    '}';
 
 fragment ComponentBody *:
-	'{'
-	member+=ComponentMember*
-	'}';
+    '{'
+    member+=ComponentMember*
+    '}';
 
 fragment ConstantDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'constant' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID (=>'=' value=Expression)?;
+    modifiers+=VisibilityModifiers*
+    'constant' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID (=>'=' value=Expression)?;
 
 NamespaceMember returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	({Namespace.metadatum=current} 'namespace' name=ValidID
-	'{'
-	member+=NamespaceMember*
-	'}'
-	|
-	{Structure.metadatum=current} modifiers+=VisibilityModifiers*
-	'struct' name=ValidID
-	StructBody
-	|
-	{Class.metadatum=current} modifiers+=ClassModifiers*
-	'class' name=ValidID (=>'extends' base=[Type|QualifiedName])?
-	ClassBody
-	|
-	{Exception.metadatum=current} modifiers+=ClassModifiers*
-	'exception' name=ValidID (=>'extends' base=[Type|QualifiedName])?
-	ClassBody
-	|
-	{Interface.metadatum=current} modifiers+=VisibilityModifiers*
-	'interface' name=ValidID (=>'extends' base+=[Type|QualifiedName] (=>',' base+=[Type|QualifiedName])*)?
-	InterfaceBody
-	|
-	{Model.metadatum=current} modifiers+=ClassModifiers*
-	'model' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (=>','
-	interface+=[Type|QualifiedName])*)?
-	ComponentBody
-	|
-	{Service.metadatum=current} modifiers+=ClassModifiers*
-	'service' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (
-	=>','
-	interface+=[Type|QualifiedName])*)?
-	ComponentBody
-	|
-	{Array.metadatum=current} modifiers+=VisibilityModifiers*
-	(=>('array' | 'using') name=ValidID '='
-	itemType=[Type|QualifiedName] '[') size=Expression? ']'
-	|
-	{ValueReference.metadatum=current} modifiers+=VisibilityModifiers*
-	'using' name=ValidID '=' type=[Type|QualifiedName] '*'
-	|
-	{Integer.metadatum=current} modifiers+=VisibilityModifiers*
-	'integer' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*') '...'
-	(maximum=Expression | '*'))?
-	|
-	{Float.metadatum=current} modifiers+=VisibilityModifiers*
-	'float' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*')
-	range=RangeKind (maximum=Expression | '*'))?
-	|
-	{EventType.metadatum=current} modifiers+=VisibilityModifiers*
-	'event' name=ValidID (=>'extends' eventArgs=[Type|QualifiedName])?
-	|
-	{String.metadatum=current} modifiers+=VisibilityModifiers*
-	'string' name=ValidID '[' length=Expression? ']'
-	|
-	{PrimitiveType.metadatum=current} modifiers+=VisibilityModifiers*
-	'primitive' name=ValidID
-	|
-	{NativeType.metadatum=current} modifiers+=VisibilityModifiers*
-	'native' name=ValidID
-	|
-	{AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
-	'attribute' modifiers+=VisibilityModifiers* type=[ValueType|QualifiedName] name=ValidID (=>'=' default=Expression)?
-	|
-	{Enumeration.metadatum=current} modifiers+=VisibilityModifiers*
-	'enum' name=ValidID
-	'{'
-	(literal+=EnumerationLiteral (',' literal+=EnumerationLiteral)* (',')?)?
-	'}'
-	|
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Namespace.metadatum=current} 'namespace' name=ValidID?
+    '{'
+    member+=NamespaceMember*
+    '}'
+    |
+    {Structure.metadatum=current} modifiers+=VisibilityModifiers*
+    'struct' name=ValidID
+    StructBody
+    |
+    {Class.metadatum=current} modifiers+=ClassModifiers*
+    'class' name=ValidID (=>'extends' base=[Type|QualifiedName])?
+    ClassBody
+    |
+    {Exception.metadatum=current} modifiers+=ClassModifiers*
+    'exception' name=ValidID (=>'extends' base=[Type|QualifiedName])?
+    ClassBody
+    |
+    {Interface.metadatum=current} modifiers+=VisibilityModifiers*
+    'interface' name=ValidID (=>'extends' base+=[Type|QualifiedName] (=>',' base+=[Type|QualifiedName])*)?
+    InterfaceBody
+    |
+    {Model.metadatum=current} modifiers+=ClassModifiers*
+    'model' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (=>','
+    interface+=[Type|QualifiedName])*)?
+    ComponentBody
+    |
+    {Service.metadatum=current} modifiers+=ClassModifiers*
+    'service' name=ValidID (=>'extends' base=[Type|QualifiedName])? (=>'implements' interface+=[Type|QualifiedName] (
+    =>','
+    interface+=[Type|QualifiedName])*)?
+    ComponentBody
+    |
+    {Array.metadatum=current} modifiers+=VisibilityModifiers*
+    // using keywork is deprecated and will be removed in a future release
+    (=>('array' | 'using') name=ValidID '='
+    itemType=[Type|QualifiedName] '[') size=Expression? ']'
+    |
+    {ValueReference.metadatum=current} modifiers+=VisibilityModifiers*
+    'using' name=ValidID '=' type=[Type|QualifiedName] '*'
+    |
+    {Integer.metadatum=current} modifiers+=VisibilityModifiers*
+    'integer' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*') '...'
+    (maximum=Expression | '*'))?
+    |
+    {Float.metadatum=current} modifiers+=VisibilityModifiers*
+    'float' name=ValidID (=>'extends' primitiveType=[Type|QualifiedName])? (=>'in' (minimum=Expression | '*')
+    range=RangeKind (maximum=Expression | '*'))?
+    |
+    {EventType.metadatum=current} modifiers+=VisibilityModifiers*
+    'event' name=ValidID (=>'extends' eventArgs=[Type|QualifiedName])?
+    |
+    {String.metadatum=current} modifiers+=VisibilityModifiers*
+    'string' name=ValidID '[' length=Expression? ']'
+    |
+    {PrimitiveType.metadatum=current} modifiers+=VisibilityModifiers*
+    'primitive' name=ValidID
+    |
+    {NativeType.metadatum=current} modifiers+=VisibilityModifiers*
+    'native' name=ValidID
+    |
+    {AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
+    'attribute' modifiers+=VisibilityModifiers* type=[ValueType|QualifiedName] name=ValidID (=>'=' default=Expression)?
+    |
+    {Enumeration.metadatum=current} modifiers+=VisibilityModifiers*
+    'enum' name=ValidID
+    '{'
+    (literal+=EnumerationLiteral (',' literal+=EnumerationLiteral)* (',')?)?
+    '}'
+    |
 // This rule is deprecated and will be removed in a future release.
 // use AttributeTypeDeclaration
 // TODO to be removed
-	{AttributeType.metadatum=current}
-	modifiers+=VisibilityModifiers*
-	'attribute' name=ValidID
-	'{'
-	type=[ValueType|QualifiedName] ValidID '?'? ('=' default=Expression)?
-	'}');
+    {AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
+    'attribute' name=ValidID
+    '{'
+    type=[ValueType|QualifiedName] ValidID '?'? ('=' default=Expression)?
+    '}');
 
 fragment PropertyDeclaration *:
-	modifiers+=PropertyModifiers*
-	'property' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID
-	(=>'get' 'throws' getRaises+=[Type|QualifiedName] (',' getRaises+=[Type|QualifiedName])*)?
-	(=>'set' 'throws' setRaises+=[Type|QualifiedName] (',' setRaises+=[Type|QualifiedName])*)?
-	('->' attachedField=[Field|QualifiedName])?;
+    modifiers+=PropertyModifiers*
+    'property' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID
+    (=>'get' 'throws' getRaises+=[Type|QualifiedName] (',' getRaises+=[Type|QualifiedName])*)?
+    (=>'set' 'throws' setRaises+=[Type|QualifiedName] (',' setRaises+=[Type|QualifiedName])*)?
+    ('->' attachedField=[Field|QualifiedName])?;
 
 fragment OperationDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'def' modifiers+=VisibilityModifiers*
-	(returnParameter=ReturnParameter | 'void')
-	name=ValidID
-	'(' (parameter+=Parameter (',' parameter+=Parameter)*)? ')'
-	(=>'throws' raisedException+=[Type|QualifiedName] (',' raisedException+=[Type|QualifiedName])*)?;
+    modifiers+=VisibilityModifiers*
+    'def' modifiers+=VisibilityModifiers*
+    (returnParameter=ReturnParameter | 'void')
+    name=ValidID
+    '(' (parameter+=Parameter (',' parameter+=Parameter)*)? ')'
+    (=>'throws' raisedException+=[Type|QualifiedName] (',' raisedException+=[Type|QualifiedName])*)?;
 
 InterfaceMember returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	({Constant.metadatum=current} ConstantDeclaration
-	|
-	{Property.metadatum=current} PropertyDeclaration
-	|
-	{Operation.metadatum=current} OperationDeclaration);
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Constant.metadatum=current} ConstantDeclaration
+    |
+    {Property.metadatum=current} PropertyDeclaration
+    |
+    {Operation.metadatum=current} OperationDeclaration);
 
 fragment FieldDeclaration *:
-	modifiers+=FieldModifiers*
-	'field' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID (=>'=' default=Expression)?;
+    modifiers+=FieldModifiers*
+    'field' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID (=>'=' default=Expression)?;
 
 StructMember returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	({Constant.metadatum=current} ConstantDeclaration
-	|
-	{Field.metadatum=current} FieldDeclaration);
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Constant.metadatum=current} ConstantDeclaration
+    |
+    {Field.metadatum=current} FieldDeclaration);
 
 fragment AssociationDeclaration *:
-	modifiers+=VisibilityModifiers*
-	'association' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID;
+    modifiers+=VisibilityModifiers*
+    'association' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID;
 
 ClassMember returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	({Constant.metadatum=current} ConstantDeclaration
-	|
-	{Field.metadatum=current} FieldDeclaration
-	|
-	{Property.metadatum=current} PropertyDeclaration
-	|
-	{Operation.metadatum=current} OperationDeclaration
-	|
-	{Association.metadatum=current} AssociationDeclaration);
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Constant.metadatum=current} ConstantDeclaration
+    |
+    {Field.metadatum=current} FieldDeclaration
+    |
+    {Property.metadatum=current} PropertyDeclaration
+    |
+    {Operation.metadatum=current} OperationDeclaration
+    |
+    {Association.metadatum=current} AssociationDeclaration);
 
 fragment ContainerDeclaration *:
-	'container' type=[Type|QualifiedName] MultiplicityDeclaration name=ValidID (=>'='
-	defaultComponent=[Type|QualifiedName])?;
+    'container' type=[Type|QualifiedName] MultiplicityDeclaration name=ValidID (=>'='
+    defaultComponent=[Type|QualifiedName])?;
 
 fragment ReferenceDeclaration *:
-	'reference' interface=[Type|QualifiedName] MultiplicityDeclaration name=ValidID;
+    'reference' interface=[Type|QualifiedName] MultiplicityDeclaration name=ValidID;
 
 fragment EntryPointDeclaration *:
-	'entrypoint' name=ValidID
-	('{'
-	('in' input+=[Field|QualifiedName] | 'out' output+=[Field|QualifiedName])*
-	'}')?;
+    'entrypoint' name=ValidID
+    ('{'
+    ('in' input+=[Field|QualifiedName] | 'out' output+=[Field|QualifiedName])*
+    '}')?;
 
 fragment EventSinkDeclaration *:
-	'eventsink' type=[Type|QualifiedName] name=ValidID;
+    'eventsink' type=[Type|QualifiedName] name=ValidID;
 
 fragment EventSourceDeclaration *:
-	'eventsource' type=[Type|QualifiedName] name=ValidID;
+    'eventsource' type=[Type|QualifiedName] name=ValidID;
 
 ComponentMember returns ecore::EObject:
-	{Metadatum}
-	documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*
-	({Field.metadatum=current} FieldDeclaration
-	|
-	{Constant.metadatum=current} ConstantDeclaration
-	|
-	{Association.metadatum=current} AssociationDeclaration
-	|
-	{Property.metadatum=current} PropertyDeclaration
-	|
-	{Container.metadatum=current} ContainerDeclaration
-	|
-	{Reference.metadatum=current} ReferenceDeclaration
-	|
-	{EntryPoint.metadatum=current} EntryPointDeclaration
-	|
-	{EventSink.metadatum=current} EventSinkDeclaration
-	|
-	{EventSource.metadatum=current} EventSourceDeclaration
-	|
-	{Operation.metadatum=current} OperationDeclaration);
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Field.metadatum=current} FieldDeclaration
+    |
+    {Constant.metadatum=current} ConstantDeclaration
+    |
+    {Association.metadatum=current} AssociationDeclaration
+    |
+    {Property.metadatum=current} PropertyDeclaration
+    |
+    {Container.metadatum=current} ContainerDeclaration
+    |
+    {Reference.metadatum=current} ReferenceDeclaration
+    |
+    {EntryPoint.metadatum=current} EntryPointDeclaration
+    |
+    {EventSink.metadatum=current} EventSinkDeclaration
+    |
+    {EventSource.metadatum=current} EventSourceDeclaration
+    |
+    {Operation.metadatum=current} OperationDeclaration);
 
 fragment MultiplicityDeclaration *:
-	optional?='?' | multiplicity=Multiplicity?;
+    optional?='?' | multiplicity=Multiplicity?;
 
 Multiplicity:
-	{Multiplicity}
-	'[' ((lower=Expression ('...' (aux?='*' | upper=Expression))?) |
-	aux?='+'
-	| '*')? ']';
+    {Multiplicity}
+    '[' ((lower=Expression ('...' (aux?='*' | upper=Expression))?) |
+    aux?='+'
+    | '*')? ']';
 
 VisibilityModifiers:
-	'private' | 'protected' | 'public';
+    'private' | 'protected' | 'public';
 
 ClassModifiers:
-	VisibilityModifiers | 'abstract';
+    VisibilityModifiers | 'abstract';
 
 PropertyModifiers:
-	VisibilityModifiers | 'readWrite' | 'readOnly' | 'writeOnly';
+    VisibilityModifiers | 'readWrite' | 'readOnly' | 'writeOnly';
 
 FieldModifiers:
-	VisibilityModifiers | 'input' | 'output' | 'transient';
+    VisibilityModifiers | 'input' | 'output' | 'transient';
 
 EnumerationLiteral:
-	metadatum=Metadatum
-	name=ValidID (=>'=' value=Expression?)?;
+    metadatum=Metadatum
+    name=ValidID (=>'=' value=Expression?)?;
 
 ParameterMetadatum returns Metadatum:
-	{Metadatum}
-	// do not provide documentation at parameter level( see @param tag in operation)
-	// documentation=ML_DOCUMENTATION?
-	metadata+=Attribute*;
+    {Metadatum}
+    // do not provide documentation at parameter level( see @param tag in operation)
+    // documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*;
 
 ReturnParameter returns Parameter:
-	metadatum=ParameterMetadatum
-	type=[Type|QualifiedName] name=ValidID?;
+    metadatum=ParameterMetadatum
+    type=[Type|QualifiedName] name=ValidID?;
 
 Parameter:
-	metadatum=ParameterMetadatum
-	(=>direction=ParameterDirectionKind type=[Type|QualifiedName] | type=[Type|QualifiedName]) name=ValidID ('='
-	default=Expression)?;
+    metadatum=ParameterMetadatum
+    (=>direction=ParameterDirectionKind type=[Type|QualifiedName] | type=[Type|QualifiedName]) name=ValidID ('='
+    default=Expression)?;
 
 enum ParameterDirectionKind:
-	in='in' | out='out' | inout='inout';
+    in='in' | out='out' | inout='inout';
 
 ValidID:
-	ID | 'extends' | 'implements' | 'in' | 'out' | 'inout' | 'exception' | 'model' | 'service' | 'interface' | 'string'
-	| 'native' | 'primitive' | 'attribute' | 'integer' | 'catalogue' | 'entrypoint' | 'field' | 'container' |
-	'reference' | 'eventsink' | 'eventsource' | 'property' | 'association' | 'constant' | 'input' | 'output' |
-	'transient' | 'event' | 'def' | 'abstract' | 'get' | 'set' | 'readWrite' | 'readOnly' | 'writeOnly' |
-	'import' | 'array';
+    ID | 'extends' | 'implements' | 'in' | 'out' | 'inout' | 'exception' | 'model' | 'service' | 'interface' | 'string'
+    | 'native' | 'primitive' | 'attribute' | 'integer' | 'catalogue' | 'entrypoint' | 'field' | 'container' |
+    'reference' | 'eventsink' | 'eventsource' | 'property' | 'association' | 'constant' | 'input' | 'output' |
+    'transient' | 'event' | 'def' | 'abstract' | 'get' | 'set' | 'readWrite' | 'readOnly' | 'writeOnly' |
+    'import' | 'array';
 
 QualifiedName:
-	ValidID (=>'.' ValidID)*;
+    ValidID (=>'.' ValidID)*;
 
 Expression:
-	OrExpression;
+    OrExpression;
 
 OrExpression returns Expression:
-	AndExpression (=>({BinaryOperation.leftOperand=current} feature=OpOr) rightOperand=AndExpression)*;
+    AndExpression (=>({BinaryOperation.leftOperand=current} feature=OpOr) rightOperand=AndExpression)*;
 
 OpOr:
-	'||';
+    '||';
 
 AndExpression returns Expression:
-	BitwiseOrExpression (=>({BinaryOperation.leftOperand=current} feature=OpAnd) rightOperand=BitwiseOrExpression)*;
+    BitwiseOrExpression (=>({BinaryOperation.leftOperand=current} feature=OpAnd) rightOperand=BitwiseOrExpression)*;
 
 OpAnd:
-	'&&';
+    '&&';
 
 BitwiseOrExpression returns Expression:
-	BitwiseXorExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseOr)
-	rightOperand=BitwiseXorExpression)*;
+    BitwiseXorExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseOr)
+    rightOperand=BitwiseXorExpression)*;
 
 OpBitwiseOr:
-	'|';
+    '|';
 
 BitwiseXorExpression returns Expression:
-	BitwiseAndExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseXor)
-	rightOperand=BitwiseAndExpression)*;
+    BitwiseAndExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseXor)
+    rightOperand=BitwiseAndExpression)*;
 
 OpBitwiseXor:
-	'^';
+    '^';
 
 BitwiseAndExpression returns Expression:
-	EqualityExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseAnd)
-	rightOperand=EqualityExpression)*;
+    EqualityExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwiseAnd)
+    rightOperand=EqualityExpression)*;
 
 OpBitwiseAnd:
-	'&';
+    '&';
 
 EqualityExpression returns Expression:
-	RelationalExpression (=>({BinaryOperation.leftOperand=current} feature=OpEquality)
-	rightOperand=RelationalExpression)*;
+    RelationalExpression (=>({BinaryOperation.leftOperand=current} feature=OpEquality)
+    rightOperand=RelationalExpression)*;
 
 OpEquality:
-	'==' | '!=';
+    '==' | '!=';
 
 RelationalExpression returns Expression:
-	BitwiseExpression
-	(=>({BinaryOperation.leftOperand=current} feature=OpCompare) rightOperand=BitwiseExpression)*;
-	
+    BitwiseExpression
+    (=>({BinaryOperation.leftOperand=current} feature=OpCompare) rightOperand=BitwiseExpression)*;
 
 OpCompare:
-	'>=' | '<=' | '>' | '<';
+    '>=' | '<=' | '>' | '<';
 
 BitwiseExpression returns Expression:
-	AdditiveExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwise)
-	rightOperand=AdditiveExpression)*;
+    AdditiveExpression (=>({BinaryOperation.leftOperand=current} feature=OpBitwise)
+    rightOperand=AdditiveExpression)*;
 
 OpBitwise:
-	'<<' | '>>';
+    '<<' | '>>';
 
 AdditiveExpression returns Expression:
-	MultiplicativeExpression (=>({BinaryOperation.leftOperand=current} feature=OpAdd)
-	rightOperand=MultiplicativeExpression)*;
+    MultiplicativeExpression (=>({BinaryOperation.leftOperand=current} feature=OpAdd)
+    rightOperand=MultiplicativeExpression)*;
 
 OpAdd:
-	'+' | '-';
+    '+' | '-';
 
 MultiplicativeExpression returns Expression:
-	UnaryOperation (=>({BinaryOperation.leftOperand=current} feature=OpMulti) rightOperand=UnaryOperation)*;
+    UnaryOperation (=>({BinaryOperation.leftOperand=current} feature=OpMulti) rightOperand=UnaryOperation)*;
 
 OpMulti:
-	'*' | '/' | '%';
+    '*' | '/' | '%';
 
 UnaryOperation returns Expression:
-	{UnaryOperation} feature=OpUnary operand=UnaryOperation | Literal;
+    {UnaryOperation} feature=OpUnary operand=UnaryOperation | Literal;
 
 OpUnary:
-	"!" | "-" | "+" | "~";
+    "!" | "-" | "+" | "~";
 
 EnumerationLiteralReference returns Expression:
-	{EnumerationLiteralReference} value=[NamedElement|QualifiedName];
+    {EnumerationLiteralReference} value=[NamedElement|QualifiedName];
 
 Literal returns Expression:
-	CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
-	ParenthesizedExpression |
-	EnumerationLiteralReference | BuiltInConstant | BuiltInFunction;
+    CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
+    ParenthesizedExpression |
+    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction;
 
 ParenthesizedExpression returns Expression:
-	{ParenthesizedExpression} '(' expr=Expression ')';
+    {ParenthesizedExpression} '(' expr=Expression ')';
 
 CollectionLiteral:
-	{CollectionLiteral} '{' (elements+=Expression (',' elements+=Expression)* (',')?)? '}';
+    {CollectionLiteral} '{' (elements+=Expression (',' elements+=Expression)* (',')?)? '}';
 
 IntegerLiteral returns IntegerLiteral:
-	{IntegerLiteral} text=INTEGER_LITERAL;
+    {IntegerLiteral} text=INTEGER_LITERAL;
 
 FloatingLiteral returns FloatingLiteral:
-	{FloatingLiteral} text=FLOATING_LITERAL;
+    {FloatingLiteral} text=FLOATING_LITERAL;
 
 StringLiteral returns Expression:
-	{StringLiteral} value=STRING_LITERAL;
+    {StringLiteral} value=STRING_LITERAL;
 
 CharacterLiteral returns Expression:
-	{CharacterLiteral} value=CHARACTER_LITERAL;
+    {CharacterLiteral} value=CHARACTER_LITERAL;
 
 BuiltInConstant returns Expression:
-	{BuiltInConstant} '$' name=ValidID;
+    {BuiltInConstant} '$' name=ValidID;
 
 BuiltInFunction returns Expression:
-	{BuiltInFunction} '$' name=ValidID '(' (parameter+=Expression (',' parameter+=Expression)*)? ')';
+    {BuiltInFunction} '$' name=ValidID '(' (parameter+=Expression (',' parameter+=Expression)*)? ')';
 
 BooleanLiteral returns Expression:
-	{BooleanLiteral} ('false' | isTrue?='true');
+    {BooleanLiteral} ('false' | isTrue?='true');
 
 terminal INTEGER_LITERAL:
-	DECIMAL_LITERAL INTEGER_TIME_SUFFIX?
-	| OCTAL_LITERAL INTEGER_TIME_SUFFIX?
-	| HEXADECIMAL_LITERAL INTEGER_SUFFIX?
-	| BINARY_LITERAL INTEGER_SUFFIX?;
+    DECIMAL_LITERAL INTEGER_TIME_SUFFIX?
+    | OCTAL_LITERAL INTEGER_TIME_SUFFIX?
+    | HEXADECIMAL_LITERAL INTEGER_SUFFIX?
+    | BINARY_LITERAL INTEGER_SUFFIX?;
 
 terminal CHARACTER_LITERAL:
-	('u' | 'U' | 'L')? '\'' CCHAR+ '\'';
+    ('u' | 'U' | 'L')? '\'' CCHAR+ '\'';
 
 terminal FLOATING_LITERAL:
-	FRACTIONALCONSTANT EXPONENTPART? FLOATINGSUFFIX?
-	| DIGITSEQUENCE EXPONENTPART FLOATINGSUFFIX?;
+    FRACTIONALCONSTANT EXPONENTPART? FLOATINGSUFFIX?
+    | DIGITSEQUENCE EXPONENTPART FLOATINGSUFFIX?;
 
 terminal STRING_LITERAL:
-	ENCODINGPREFIX?
-	('"' SCHAR* '"');
+    ENCODINGPREFIX?
+    ('"' SCHAR* '"');
 
 terminal fragment HEX_QUAD:
-	HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT;
+    HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT;
 
 terminal fragment UNIVERSAL_CHARACTER_NAME:
-	'\\u' HEX_QUAD
-	| '\\U' HEX_QUAD HEX_QUAD;
+    '\\u' HEX_QUAD
+    | '\\U' HEX_QUAD HEX_QUAD;
 
 terminal ID:
-	/*
-	 *  ID_NONDIGIT | Identifier ID_NONDIGIT | Identifier DIGIT
-	 */
-	ID_NONDIGIT (ID_NONDIGIT | DIGIT)*;
+    /*
+     *  ID_NONDIGIT | Identifier ID_NONDIGIT | Identifier DIGIT
+     */
+    ID_NONDIGIT (ID_NONDIGIT | DIGIT)*;
 
 terminal fragment ID_NONDIGIT:
-	NONDIGIT | UNIVERSAL_CHARACTER_NAME;
+    NONDIGIT | UNIVERSAL_CHARACTER_NAME;
 
 terminal fragment NONDIGIT:
-	('a'..'z') | ('A'..'Z') | ('_');
+    ('a'..'z') | ('A'..'Z') | ('_');
 
 terminal fragment DIGIT:
-	('0'..'9');
+    ('0'..'9');
 
 terminal DECIMAL_LITERAL:
-	NONZERODIGIT ('\''? DIGIT)*;
+    NONZERODIGIT ('\''? DIGIT)*;
 
 terminal OCTAL_LITERAL:
-	'0' ('\''? OCTALDIGIT)*;
+    '0' ('\''? OCTALDIGIT)*;
 
 terminal HEXADECIMAL_LITERAL:
-	('0x' | '0X') HEXADECIMALDIGIT ('\''? HEXADECIMALDIGIT)*;
+    ('0x' | '0X') HEXADECIMALDIGIT ('\''? HEXADECIMALDIGIT)*;
 
 terminal BINARY_LITERAL:
-	('0b' | '0B') BINARYDIGIT ('\''? BINARYDIGIT)*;
+    ('0b' | '0B') BINARYDIGIT ('\''? BINARYDIGIT)*;
 
 terminal fragment NONZERODIGIT:
-	('1'..'9');
+    ('1'..'9');
 
 terminal fragment OCTALDIGIT:
-	'0'..'7';
+    '0'..'7';
 
 terminal fragment HEXADECIMALDIGIT:
-	'0'..'9' | 'a'..'z' | 'A'..'Z';
+    '0'..'9' | 'a'..'z' | 'A'..'Z';
 
 terminal fragment BINARYDIGIT:
-	'0' | '1';
+    '0' | '1';
 
 terminal fragment INTEGER_SUFFIX:
-	UNSIGNEDSUFFIX LONGSUFFIX?
-	| LONGSUFFIX UNSIGNEDSUFFIX?;
+    UNSIGNEDSUFFIX LONGSUFFIX?
+    | LONGSUFFIX UNSIGNEDSUFFIX?;
 
 terminal fragment INTEGER_TIME_SUFFIX:
-	'ns' | 'us' | 'ms' | 's' | 'mn' | 'h' | 'd' | 'y' | INTEGER_SUFFIX;
+    'ns' | 'us' | 'ms' | 's' | 'mn' | 'h' | 'd' | 'y' | INTEGER_SUFFIX;
 
 terminal fragment UNSIGNEDSUFFIX:
-	'u' | 'U';
+    'u' | 'U';
 
 terminal fragment LONGSUFFIX:
-	'l' | 'L' | 'll' | 'LL';
+    'l' | 'L' | 'll' | 'LL';
 
 terminal fragment CCHAR:
-	// ~ ['\\\r\n]
-	!('\'' | '\r' | '\n')
-	| ESCAPESEQUENCE
-	| UNIVERSAL_CHARACTER_NAME;
+    // ~ ['\\\r\n]
+    !('\'' | '\r' | '\n')
+    | ESCAPESEQUENCE
+    | UNIVERSAL_CHARACTER_NAME;
 
 terminal fragment ESCAPESEQUENCE:
-	SIMPLEESCAPESEQUENCE
-	| OCTALESCAPESEQUENCE
-	| HEXADECIMALESCAPESEQUENCE;
+    SIMPLEESCAPESEQUENCE
+    | OCTALESCAPESEQUENCE
+    | HEXADECIMALESCAPESEQUENCE;
 
 terminal fragment SIMPLEESCAPESEQUENCE:
-	'\\\''
-	| '\\"'
-	| '\\?'
-	| '\\\\'
-	| '\\a'
-	| '\\b'
-	| '\\f'
-	| '\\n'
-	| '\\r'
-	| ('\\' ('\r' '\n'? | '\n'))
-	| '\\t'
-	| '\\v';
+    '\\\''
+    | '\\"'
+    | '\\?'
+    | '\\\\'
+    | '\\a'
+    | '\\b'
+    | '\\f'
+    | '\\n'
+    | '\\r'
+    | ('\\' ('\r' '\n'? | '\n'))
+    | '\\t'
+    | '\\v';
 
 terminal fragment OCTALESCAPESEQUENCE:
-	'\\' OCTALDIGIT
-	| '\\' OCTALDIGIT OCTALDIGIT
-	| '\\' OCTALDIGIT OCTALDIGIT OCTALDIGIT;
+    '\\' OCTALDIGIT
+    | '\\' OCTALDIGIT OCTALDIGIT
+    | '\\' OCTALDIGIT OCTALDIGIT OCTALDIGIT;
 
 terminal fragment HEXADECIMALESCAPESEQUENCE:
-	'\\x' HEXADECIMALDIGIT+;
+    '\\x' HEXADECIMALDIGIT+;
 
 terminal fragment FRACTIONALCONSTANT:
-	DIGITSEQUENCE? '.' DIGITSEQUENCE
-	| DIGITSEQUENCE '.';
+    DIGITSEQUENCE? '.' DIGITSEQUENCE
+    | DIGITSEQUENCE '.';
 
 terminal fragment EXPONENTPART:
-	('e' | 'E') SIGN? DIGITSEQUENCE;
+    ('e' | 'E') SIGN? DIGITSEQUENCE;
 
 terminal fragment SIGN:
-	'+' | '-';
+    '+' | '-';
 
 terminal fragment DIGITSEQUENCE:
-	DIGIT ('\''? DIGIT)*;
+    DIGIT ('\''? DIGIT)*;
 
 terminal fragment FLOATINGSUFFIX:
-	'f' | 'F' | 'l' | 'L';
+    'f' | 'F' | 'l' | 'L';
 
 terminal fragment ENCODINGPREFIX:
-	'u8' | 'u' | 'U' | 'L';
+    'u8' | 'u' | 'U' | 'L';
 
 terminal fragment SCHAR:
-	// ~ ["\\\r\n]
-	!('"' | '\\' | '\r' | '\n')
-	| ESCAPESEQUENCE
-	| UNIVERSAL_CHARACTER_NAME;
+    // ~ ["\\\r\n]
+    !('"' | '\\' | '\r' | '\n')
+    | ESCAPESEQUENCE
+    | UNIVERSAL_CHARACTER_NAME;
 
 terminal WS:
-	(' ' | '\t' | NEW_LINE)+;
+    (' ' | '\t' | NEW_LINE)+;
 
 terminal fragment NEW_LINE:
-	('\r' '\n'? | '\n');
+    ('\r' '\n'? | '\n');
 
 terminal ML_DOCUMENTATION:
-	'/**' !'*'->'*/';
+    '/**' !'*'->'*/';
 
 terminal ML_COMMENT:
-	('/*' !'*' | '/***')->'*/';
+    ('/*' !'*' | '/***')->'*/';
 
 terminal SL_COMMENT:
-	'//' !('\n' | '\r')* ('\r'? '\n')?;
+    '//' !('\n' | '\r')* ('\r'? '\n')?;

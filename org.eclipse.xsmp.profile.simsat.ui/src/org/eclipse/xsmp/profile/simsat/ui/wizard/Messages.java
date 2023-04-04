@@ -15,8 +15,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.xsmp.profile.simsat.ui.wizard.messages"; //$NON-NLS-1$
 	
-	public static String XsmpProject_Label;
-	public static String XsmpProject_Description;
+	public static String SimSatProject_Label;
+	public static String SimSatProject_Description;
 	
 	static {
 	// initialize resource bundle

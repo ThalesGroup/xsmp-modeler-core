@@ -16,47 +16,47 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class ContainerGenerator extends AbstractMemberGenerator<Container> {
 
-	override declare(NamedElementWithMembers type, Container element) {
-	}
+    override declare(NamedElementWithMembers type, Container element) {
+    }
 
-	override define(NamedElementWithMembers type, Container element) {
-	}
+    override define(NamedElementWithMembers type, Container element) {
+    }
 
-	override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
-		'''
-			«element.comment»
-			::Smp::IContainer* «element.name»;
-		'''
-	}
+    override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+        '''
+            «element.comment»
+            ::Smp::IContainer* «element.name»;
+        '''
+    }
 
-	override defineGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
-	}
+    override defineGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+    }
 
-	override collectIncludes(Container element, IncludeAcceptor acceptor) {
-		super.collectIncludes(element, acceptor)
-		acceptor.include(element.type)
+    override collectIncludes(Container element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
+        acceptor.include(element.type)
 
-		if (element.defaultComponent !== null)
-			acceptor.include(element.defaultComponent)
+        if (element.defaultComponent !== null)
+            acceptor.include(element.defaultComponent)
 
-		element.multiplicity?.lower?.include(acceptor)
-		element.multiplicity?.upper?.include(acceptor)
-	}
+        element.multiplicity?.lower?.include(acceptor)
+        element.multiplicity?.upper?.include(acceptor)
+    }
 
-	protected override collectIncludes(IncludeAcceptor acceptor) {
-		acceptor.mdkHeader("Smp/IContainer.h")
-	}
+    protected override collectIncludes(IncludeAcceptor acceptor) {
+        acceptor.mdkHeader("Smp/IContainer.h")
+    }
 
-	override initialize(NamedElementWithMembers container, Container member, boolean useGenPattern) {
-	}
+    override initialize(NamedElementWithMembers container, Container member, boolean useGenPattern) {
+    }
 
-	override finalize(Container element) {
-		'''  
-			delete «element.name»;
-			«element.name» = nullptr;
-		'''
-	}
+    override finalize(Container element) {
+        '''  
+            delete «element.name»;
+            «element.name» = nullptr;
+        '''
+    }
 
-	override Publish(Container element) {
-	}
+    override Publish(Container element) {
+    }
 }

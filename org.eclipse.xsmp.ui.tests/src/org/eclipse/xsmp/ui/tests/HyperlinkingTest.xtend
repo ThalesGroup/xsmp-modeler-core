@@ -21,24 +21,24 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @InjectWith(XsmpUiInjectorProvider)
 class HyperlinkingTest extends AbstractHyperlinkingTest {
 
-	@BeforeEach
-	def void setup() throws Exception {
-		super.setUp();
-		project = XsmpcatProjectUtil.createProject(projectName).project
-	}
+    @BeforeEach
+    def void setup() throws Exception {
+        super.setUp();
+        project = XsmpcatProjectUtil.createProject(projectName).project
+    }
 
-	@Test def hyperlink_for_type_reference() {
-		'''
-			catalogue c
-			
-			namespace a
-			{
-				struct s
-				{
-					field «c»Bool«c» field
-				}
-			}
-		'''.hasHyperlinkTo("Smp.Bool")
-	}
+    @Test def hyperlink_for_type_reference() {
+        '''
+            catalogue c
+            
+            namespace a
+            {
+                struct s
+                {
+                    field «c»Bool«c» field
+                }
+            }
+        '''.hasHyperlinkTo("Smp.Bool")
+    }
 
 }

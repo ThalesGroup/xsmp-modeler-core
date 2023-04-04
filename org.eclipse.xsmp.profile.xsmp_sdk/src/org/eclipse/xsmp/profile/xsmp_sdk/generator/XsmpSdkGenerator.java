@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 @Singleton
-public final class XsmpGenerator extends AbstractGenerator
+public final class XsmpSdkGenerator extends AbstractGenerator
 {
 
   @Inject

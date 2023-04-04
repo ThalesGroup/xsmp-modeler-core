@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.util.ElementUtil;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
@@ -69,6 +70,7 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.validation.Check;
@@ -184,19 +186,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
 
-  public static final BigInteger UINT16_MIN = BigInteger.ZERO;
+  public static final BigInteger ZERO = BigInteger.ZERO;
 
   public static final BigInteger UINT32_MAX = BigInteger.valueOf(0xffffffffL);
 
-  public static final BigInteger UINT32_MIN = BigInteger.ZERO;
-
   public static final BigInteger UINT64_MAX = new BigInteger("ffffffffffffffff", 16);
 
-  public static final BigInteger UINT64_MIN = BigInteger.ZERO;
-
   public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
-
-  public static final BigInteger UINT8_MIN = BigInteger.ZERO;
 
   public static final BigDecimal FLOAT32_MAX = BigDecimal.valueOf(Float.MAX_VALUE);
 
@@ -352,8 +348,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         break;
       default:
         // ignore other types
-        // acceptError("Unsupported Type " + type.eClass().getName(), e, null,
-        // ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
         break;
     }
   }
@@ -446,16 +440,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         solver.getString(e);
         break;
       case UINT16:
-        solver.getInteger(e, UINT16_MIN, UINT16_MAX);
+        solver.getInteger(e, ZERO, UINT16_MAX);
         break;
       case UINT32:
-        solver.getInteger(e, UINT32_MIN, UINT32_MAX);
+        solver.getInteger(e, ZERO, UINT32_MAX);
         break;
       case UINT64:
-        solver.getInteger(e, UINT64_MIN, UINT64_MAX);
+        solver.getInteger(e, ZERO, UINT64_MAX);
         break;
       case UINT8:
-        solver.getInteger(e, UINT8_MIN, UINT8_MAX);
+        solver.getInteger(e, ZERO, UINT8_MAX);
         break;
       default:
         break;
@@ -549,7 +543,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       case UINT32:
       case UINT64:
       case UINT8:
-        return UINT16_MIN;
+        return ZERO;
       default:
         return null;
     }
@@ -576,7 +570,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
-  protected Boolean checkTypeReference(Type type, EObject source, EReference feature)
+  protected boolean checkTypeReference(Type type, EObject source, EReference feature)
   {
     return checkTypeReference(type, source, feature, -1);
   }
@@ -587,7 +581,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   public static final QualifiedName fieldUpdateKind = QualifiedName.create("Attributes",
           "FieldUpdateKind");
 
-  protected Boolean checkTypeReference(Type type, EObject source, EReference feature, int index)
+  protected boolean checkTypeReference(Type type, EObject source, EReference feature, int index)
   {
 
     final var result = doCheckTypeReference(type, source, feature, index);
@@ -601,7 +595,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     return result;
   }
 
-  protected Boolean doCheckTypeReference(Type type, EObject source, EReference feature, int index)
+  protected boolean doCheckTypeReference(Type type, EObject source, EReference feature, int index)
   {
     var result = false;
     if (type != null && !type.eIsProxy())
@@ -659,6 +653,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   }
 
+  @Inject
+  XsmpcatGrammarAccess ga;
+
   @Check
   protected void checkArray(Array elem)
   {
@@ -691,6 +688,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       type = ((Array) type).getItemType();
     }
 
+    // using keyword is deprecated
+    final var node = NodeModelUtils.findActualNodeFor(elem);
+    for (final var n : node.getAsTreeIterable())
+    {
+      if (n.getGrammarElement() == ga.getNamespaceMemberAccess().getUsingKeyword_3_7_2_0_0_1())
+      {
+        addIssue("'using' keyword is deprecated. Replace with 'array'.", elem, n.getOffset(),
+                n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_MODEL_PART);
+      }
+    }
   }
 
   private static Set<String> validUsages = XcataloguePackage.eINSTANCE.getEClassifiers().stream()
@@ -1080,19 +1087,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           baseTypeMax = INT8_MAX;
           break;
         case UINT16:
-          baseTypeMin = UINT16_MIN;
+          baseTypeMin = ZERO;
           baseTypeMax = UINT16_MAX;
           break;
         case UINT32:
-          baseTypeMin = UINT32_MIN;
+          baseTypeMin = ZERO;
           baseTypeMax = UINT32_MAX;
           break;
         case UINT64:
-          baseTypeMin = UINT64_MIN;
+          baseTypeMin = ZERO;
           baseTypeMax = UINT64_MAX;
           break;
         case UINT8:
-          baseTypeMin = UINT8_MIN;
+          baseTypeMin = ZERO;
           baseTypeMax = UINT8_MAX;
           break;
         default:

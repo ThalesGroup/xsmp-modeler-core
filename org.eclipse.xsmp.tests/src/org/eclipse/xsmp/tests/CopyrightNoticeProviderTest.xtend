@@ -23,142 +23,142 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpcatInjectorProvider)
 class CopyrightNoticeProviderTest {
-	@Inject
-	ParseHelper<Catalogue> catalogueParseHelper
+    @Inject
+    ParseHelper<Catalogue> catalogueParseHelper
 
-	@Inject
-	CopyrightNoticeProvider provider
+    @Inject
+    CopyrightNoticeProvider provider
 
+    @Test
+    def void none() {
+        val result = catalogueParseHelper.parse(
+    '''
+            /**
+             * Catalogue Test
+             * 
+             * @creator daveluy
+             * @date 2021-09-30T06:32:34Z
+             */
+            catalogue Test
+        ''')
 
-	@Test
-	def void none() {
-		val result = catalogueParseHelper.parse(
-	'''
-			/**
-			 * Catalogue Test
-			 * 
-			 * @creator daveluy
-			 * @date 2021-09-30T06:32:34Z
-			 */
-			catalogue Test
-		''')
+        var cp = provider.getCopyrightNotice(result.eResource)
 
-		var cp = provider.getCopyrightNotice(result.eResource)
+        Assertions.assertEquals(null, cp)
 
-		Assertions.assertEquals(null, cp)
+    }
 
-	}
-	@Test
-	def void multiline() {
-		val result = catalogueParseHelper.parse(
-	'''
-			/*******
-			 * 
-			copyright
-			 * 
-			 *notice
-			 * 
-			 ***********/
-			/* comment */
-			/**
-			 * Catalogue Test
-			 * 
-			 * @creator daveluy
-			 * @date 2021-09-30T06:32:34Z
-			 */
-			catalogue Test
-		''')
+    @Test
+    def void multiline() {
+        val result = catalogueParseHelper.parse(
+    '''
+            /*******
+             * 
+            copyright
+             * 
+             *notice
+             * 
+             ***********/
+            /* comment */
+            /**
+             * Catalogue Test
+             * 
+             * @creator daveluy
+             * @date 2021-09-30T06:32:34Z
+             */
+            catalogue Test
+        ''')
 
-		var cp = provider.getCopyrightNotice(result.eResource)
+        var cp = provider.getCopyrightNotice(result.eResource)
 
-		Assertions.assertEquals('''copyright
-
-notice'''.toString, cp)
-
-	}
-	
-	@Test
-	def void multilineWithPrefix() {
-		val result = catalogueParseHelper.parse(
-	'''
-			/* 
-			* 
-			 * copyright
-			
-			 * notice
-			 *
-			 */
-			// a comment
-			/**
-			 * Catalogue Test
-			 * 
-			 * @creator daveluy
-			 * @date 2021-09-30T06:32:34Z
-			 */
-			catalogue Test
-		''')
-
-		var cp = provider.getCopyrightNotice(result.eResource, "// ")
-
-		Assertions.assertEquals('''// copyright
-// 
-// notice'''.toString, cp)
-
-	}
-
-	@Test
-	def void singleline() {
-		val result = catalogueParseHelper.parse(
-	'''
-			//
-			// copyright
-			//
-			// notice
-			//
-			/* comment */
-			/**
-			 * Catalogue Test
-			 * 
-			 * @creator daveluy
-			 * @date 2021-09-30T06:32:34Z
-			 */
-			catalogue Test
-		''')
-
-		var cp = provider.getCopyrightNotice(result.eResource)
-
-		Assertions.assertEquals('''copyright
+        Assertions.assertEquals('''copyright
 
 notice'''.toString, cp)
 
-	}
+    }
 
-	@Test
-	def void singlelineWithPrefix() {
-		val result = catalogueParseHelper.parse(
-	'''
-			//
-			// copyright
-			//
-			// notice
-			//
-			
-			// comment
-			
-			/**
-			 * Catalogue Test
-			 * 
-			 * @creator daveluy
-			 * @date 2021-09-30T06:32:34Z
-			 */
-			catalogue Test
-		''')
+    @Test
+    def void multilineWithPrefix() {
+        val result = catalogueParseHelper.parse(
+    '''
+            /* 
+            * 
+             * copyright
+            
+             * notice
+             *
+             */
+            // a comment
+            /**
+             * Catalogue Test
+             * 
+             * @creator daveluy
+             * @date 2021-09-30T06:32:34Z
+             */
+            catalogue Test
+        ''')
 
-		var cp = provider.getCopyrightNotice(result.eResource, "// ")
+        var cp = provider.getCopyrightNotice(result.eResource, "// ")
 
-		Assertions.assertEquals('''// copyright
+        Assertions.assertEquals('''// copyright
 // 
 // notice'''.toString, cp)
 
-	}
+    }
+
+    @Test
+    def void singleline() {
+        val result = catalogueParseHelper.parse(
+    '''
+            //
+            // copyright
+            //
+            // notice
+            //
+            /* comment */
+            /**
+             * Catalogue Test
+             * 
+             * @creator daveluy
+             * @date 2021-09-30T06:32:34Z
+             */
+            catalogue Test
+        ''')
+
+        var cp = provider.getCopyrightNotice(result.eResource)
+
+        Assertions.assertEquals('''copyright
+
+notice'''.toString, cp)
+
+    }
+
+    @Test
+    def void singlelineWithPrefix() {
+        val result = catalogueParseHelper.parse(
+    '''
+            //
+            // copyright
+            //
+            // notice
+            //
+            
+            // comment
+            
+            /**
+             * Catalogue Test
+             * 
+             * @creator daveluy
+             * @date 2021-09-30T06:32:34Z
+             */
+            catalogue Test
+        ''')
+
+        var cp = provider.getCopyrightNotice(result.eResource, "// ")
+
+        Assertions.assertEquals('''// copyright
+// 
+// notice'''.toString, cp)
+
+    }
 }

@@ -20,10 +20,10 @@ import com.google.inject.name.Names;
 /**
  * Use this class to register components to be used within the Eclipse IDE.
  */
-public class XsmpUiModule extends XsmpcatUiModule
+public class XsmpSdkUiModule extends XsmpcatUiModule
 {
 
-  public XsmpUiModule(AbstractUIPlugin plugin)
+  public XsmpSdkUiModule(AbstractUIPlugin plugin)
   {
     super(plugin);
   }

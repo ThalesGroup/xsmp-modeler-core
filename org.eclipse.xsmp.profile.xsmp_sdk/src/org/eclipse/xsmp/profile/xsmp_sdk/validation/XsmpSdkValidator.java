@@ -8,22 +8,18 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp
+package org.eclipse.xsmp.profile.xsmp_sdk.validation;
 
-import com.google.inject.Singleton
-import org.eclipse.xsmp.XsmpVersion
-import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider
+import org.eclipse.xsmp.validation.XsmpcatValidator;
 
-/** 
- * @author daveluy
+import com.google.inject.Singleton;
+
+/**
+ * This class contains custom validation rules. See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-class XsmpCopyrightProvider extends CppCopyrightNoticeProvider {
+public class XsmpSdkValidator extends XsmpcatValidator
+{
 
-
-	protected override  generatedBy() {
-		'''
-			XsmpGenerator-«XsmpVersion.VERSION»
-		'''
-	}
 }

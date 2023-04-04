@@ -163,4 +163,4 @@ public class ParameterImplCustom extends ParameterImpl
     ((NamedElement) eContainer()).getMetadatum().setDocumentation(doc.toString());
   }
 
-} // ParameterImpl
+} // ParameterImplCustom

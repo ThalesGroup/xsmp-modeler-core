@@ -22,18 +22,18 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class EventSourceTest {
 
-	@Test
-	def void checkSingleCast() {
+    @Test
+    def void checkSingleCast() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createEventSource
+        var elem = XcatalogueFactory.eINSTANCE.createEventSource
 
-		elem.singlecast = true
-		assertEquals(true, elem.singlecast)
-		assertEquals('''/** @singlecast */'''.toString, elem.metadatum.documentation)
+        elem.singlecast = true
+        assertEquals(true, elem.singlecast)
+        assertEquals('''/** @singlecast */'''.toString, elem.metadatum.documentation)
 
-		elem.singlecast = false
-		assertEquals(false, elem.singlecast)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.singlecast = false
+        assertEquals(false, elem.singlecast)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
 }

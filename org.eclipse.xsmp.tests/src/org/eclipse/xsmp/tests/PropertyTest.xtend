@@ -22,22 +22,21 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class PropertyTest {
 
-	@Test
-	def void checkUnit() {
+    @Test
+    def void checkUnit() {
 
-		var elem = XcatalogueFactory.eINSTANCE.createProperty
+        var elem = XcatalogueFactory.eINSTANCE.createProperty
 
-		elem.category = "test"
-		assertEquals("test", elem.category)
-		assertEquals('''/** @category test */'''.toString, elem.metadatum.documentation)
+        elem.category = "test"
+        assertEquals("test", elem.category)
+        assertEquals('''/** @category test */'''.toString, elem.metadatum.documentation)
 
-		elem.category = "test2"
-		assertEquals("test2", elem.category)
-		assertEquals('''/** @category test2 */'''.toString, elem.metadatum.documentation)
+        elem.category = "test2"
+        assertEquals("test2", elem.category)
+        assertEquals('''/** @category test2 */'''.toString, elem.metadatum.documentation)
 
-
-		elem.category = null
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.category = null
+        assertEquals(null, elem.metadatum.documentation)
+    }
 
 }

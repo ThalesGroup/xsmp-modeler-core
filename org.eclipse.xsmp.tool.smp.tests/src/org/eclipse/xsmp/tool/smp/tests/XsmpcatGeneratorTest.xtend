@@ -33,42 +33,42 @@ import static org.junit.jupiter.api.Assertions.*
 @ExtendWith(InjectionExtension)
 @InjectWith(SmpInjectorProvider)
 class XsmpcatGeneratorTest {
-	@Inject ParseHelper<Catalogue> parsehelper
-	@Inject
-	Provider<XtextResourceSet> resourceSetProvider;
+    @Inject ParseHelper<Catalogue> parsehelper
+    @Inject
+    Provider<XtextResourceSet> resourceSetProvider;
 
-	@Inject IGenerator2 generator
+    @Inject IGenerator2 generator
 
-	@Test
-	def test() {
+    @Test
+    def test() {
 
-		var rs = resourceSetProvider.get
-		parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-			URI.createURI("ecss.smp.xsmpcat"), null, rs)
+        var rs = resourceSetProvider.get
+        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
+            URI.createURI("ecss.smp.xsmpcat"), null, rs)
 
-		val model = parsehelper.parse(getClass().getResource("Test.xsmpcat").openStream, URI.createURI("Test.xsmpcat"),
-			null, rs)
+        val model = parsehelper.parse(getClass().getResource("Test.xsmpcat").openStream, URI.createURI("Test.xsmpcat"),
+            null, rs)
 
-		val fsa = new InMemoryFileSystemAccess()
-		var context = new GeneratorContext();
-		context.setCancelIndicator(CancelIndicator.NullImpl);
-		generator.doGenerate(model.eResource, fsa, context)
+        val fsa = new InMemoryFileSystemAccess()
+        var context = new GeneratorContext();
+        context.setCancelIndicator(CancelIndicator.NullImpl);
+        generator.doGenerate(model.eResource, fsa, context)
 
-		assertEquals(2, fsa.getTextFiles.size)
-		assertTrue(fsa.getTextFiles.containsKey(SmpOutputConfigurationProvider::SMDL_GEN + "Test.smpcat"))
+        assertEquals(2, fsa.getTextFiles.size)
+        assertTrue(fsa.getTextFiles.containsKey(SmpOutputConfigurationProvider::SMDL_GEN + "Test.smpcat"))
 
-		try ( val br_generated = new BufferedReader(new InputStreamReader(fsa.readBinaryFile("Test.smpcat", SmpOutputConfigurationProvider::SMDL_GEN )))) {
-			try ( val br_ref = new BufferedReader(new InputStreamReader(getClass().getResource("Test.smpcat").openStream))) {
-				assertLinesMatch(br_ref.lines(), br_generated.lines());
-			}
-		}
+        try ( val br_generated = new BufferedReader(new InputStreamReader(fsa.readBinaryFile("Test.smpcat", SmpOutputConfigurationProvider::SMDL_GEN )))) {
+            try ( val br_ref = new BufferedReader(new InputStreamReader(getClass().getResource("Test.smpcat").openStream))) {
+                assertLinesMatch(br_ref.lines(), br_generated.lines());
+            }
+        }
 
-		assertTrue(fsa.getTextFiles.containsKey(SmpOutputConfigurationProvider::SMDL_GEN + "Test.smppkg"))
-		try ( val br_generated = new BufferedReader(new InputStreamReader(fsa.readBinaryFile("Test.smppkg", SmpOutputConfigurationProvider::SMDL_GEN )))) {
-			try ( val br_ref = new BufferedReader(new InputStreamReader(getClass().getResource("Test.smppkg").openStream))) {
-				assertLinesMatch(br_ref.lines(), br_generated.lines());
-			}
-		}
+        assertTrue(fsa.getTextFiles.containsKey(SmpOutputConfigurationProvider::SMDL_GEN + "Test.smppkg"))
+        try ( val br_generated = new BufferedReader(new InputStreamReader(fsa.readBinaryFile("Test.smppkg", SmpOutputConfigurationProvider::SMDL_GEN )))) {
+            try ( val br_ref = new BufferedReader(new InputStreamReader(getClass().getResource("Test.smppkg").openStream))) {
+                assertLinesMatch(br_ref.lines(), br_generated.lines());
+            }
+        }
 
-	}
+    }
 }

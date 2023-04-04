@@ -110,6 +110,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     }
     else if (lower == 1 && upper == 1)
     {
+      // keep as is
     }
     else if (lower == upper)
     {

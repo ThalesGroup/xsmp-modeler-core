@@ -32,13 +32,11 @@ public class NativeTypeImplCustom extends NativeTypeImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    if ("platform".equals(name))
     {
-      case "platform":
-        return XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM;
-      default:
-        return super.getFeature(name);
+      return XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM;
     }
+    return super.getFeature(name);
   }
 
 } // NativeTypeImplCustom

@@ -29,75 +29,75 @@ import static org.junit.jupiter.api.Assertions.*
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpcatInjectorProvider)
 class XsmpcatValidatorTest {
-	@Inject ParseHelper<Catalogue> parsehelper
-	@Inject extension ValidationTestHelper
-	@Inject
-	Provider<XtextResourceSet> resourceSetProvider;
+    @Inject ParseHelper<Catalogue> parsehelper
+    @Inject extension ValidationTestHelper
+    @Inject
+    Provider<XtextResourceSet> resourceSetProvider;
 
-	def Catalogue parse(CharSequence chr) {
-		var cat = parsehelper.parse(chr);
-		parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-			URI.createURI("ecss.smp.xsmpcat"), null, cat.eResource.resourceSet)
-		return cat
-	}
+    def Catalogue parse(CharSequence chr) {
+        var cat = parsehelper.parse(chr);
+        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
+            URI.createURI("ecss.smp.xsmpcat"), null, cat.eResource.resourceSet)
+        return cat
+    }
 
-	@Test
-	def void checkValid() {
-		var resourceSet = resourceSetProvider.get
-		parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-			URI.createURI("ecss.smp.xsmpcat"), null, resourceSet)
+    @Test
+    def void checkValid() {
+        var resourceSet = resourceSetProvider.get
+        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
+            URI.createURI("ecss.smp.xsmpcat"), null, resourceSet)
 
-		parsehelper.parse(getClass().getResource("testValid.xsmpcat").openStream,
-			URI.createURI("testValid.xsmpcat"), null, resourceSet).assertNoErrors
-	}
+        parsehelper.parse(getClass().getResource("testValid.xsmpcat").openStream,
+            URI.createURI("testValid.xsmpcat"), null, resourceSet).assertNoErrors
+    }
 
-	@Test
-	def void checkNameISReservedKeyword() {
-		val model = '''
-			catalogue Test
-			namespace default
-			{}
-		'''
-		model.parse => [
-			assertNumberOfIssues(1)
-			assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("default"), 7,
-				"An Element Name shall not be an ISO/ANSI C++ keyword.")
-		]
-	}
+    @Test
+    def void checkNameISReservedKeyword() {
+        val model = '''
+            catalogue Test
+            namespace default
+            {}
+        '''
+        model.parse => [
+            assertNumberOfIssues(1)
+            assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("default"), 7,
+                "An Element Name shall not be an ISO/ANSI C++ keyword.")
+        ]
+    }
 
-	@Test
-	def void checkNameISInvalid() {
-		val model = '''
-			catalogue Test
-			namespace _invalid
-			{}
-		'''
-		model.parse => [
-			assertNumberOfIssues(1)
-			assertError(NAMESPACE, NAME_IS_INVALID, model.indexOf("_invalid"), 8,
-				"An Element Name shall only contain letters, digits, and the underscore.")
-		]
-	}
+    @Test
+    def void checkNameISInvalid() {
+        val model = '''
+            catalogue Test
+            namespace _invalid
+            {}
+        '''
+        model.parse => [
+            assertNumberOfIssues(1)
+            assertError(NAMESPACE, NAME_IS_INVALID, model.indexOf("_invalid"), 8,
+                "An Element Name shall only contain letters, digits, and the underscore.")
+        ]
+    }
 
-	@Test
-	def void checkArraySize() {
-		val model = '''
-			catalogue Test
-			namespace ns
-			{
-				/** @uuid d8beb14e-594e-44df-a90c-e42908dc8192 */
-				array anArray = Int8[-10]
-			}
-		'''
-		model.parse => [
-			assertNumberOfIssues(1)
-			assertError(UNARY_OPERATION, INVALID_VALUE_RANGE, model.indexOf("-10"), 3,
-				"Integral value -10 is not in range 0 ... 9223372036854775807.")
-		]
+    @Test
+    def void checkArraySize() {
+        val model = '''
+            catalogue Test
+            namespace ns
+            {
+                /** @uuid d8beb14e-594e-44df-a90c-e42908dc8192 */
+                array anArray = Int8[-10]
+            }
+        '''
+        model.parse => [
+            assertNumberOfIssues(1)
+            assertError(UNARY_OPERATION, INVALID_VALUE_RANGE, model.indexOf("-10"), 3,
+                "Integral value -10 is not in range 0 ... 9223372036854775807.")
+        ]
 
-	}
+    }
 
-	private def assertNumberOfIssues(Catalogue domainModel, int expectedNumberOfIssues) {
-		assertEquals(expectedNumberOfIssues, domainModel.validate.size)
-	}
+    private def assertNumberOfIssues(Catalogue domainModel, int expectedNumberOfIssues) {
+        assertEquals(expectedNumberOfIssues, domainModel.validate.size)
+    }
 }

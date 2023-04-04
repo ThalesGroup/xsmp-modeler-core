@@ -20,45 +20,44 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @InjectWith(XsmpUiInjectorProvider)
 class FoldingTest extends AbstractFoldingTest {
 
+    @Test
+    def complex() {
+        '''
+            catalogue c
+            
+            
+            
+            [>/**
+             * a description
+             */<]
+            [>namespace ns1
+            {
+            [>    namespace ns2 
+                {
+            [>        model M1
+                    {
+                        field Bool field = 4
+                    }<]
+                }<]
+            }<]
+        '''.testFoldingRegions
+    }
 
-	@Test 
-	def complex() {
-		'''
-			catalogue c
-			
+    @Test def multi_line_comment() {
+        '''
+            [>/*
+               * multi line comment
+               */<]
+            catalogue c
+        '''.testFoldingRegions
+    }
 
-			
-			[>/**
-			 * a description
-			 */<]
-			[>namespace ns1
-			{
-			[>	namespace ns2 
-				{
-			[>		model M1
-					{
-						field Bool field = 4
-					}<]
-				}<]
-			}<]
-		'''.testFoldingRegions
-	}
-
-	@Test def multi_line_comment() {
-		'''
-			[>/*
-			   * multi line comment
-			   */<]
-			catalogue c
-		'''.testFoldingRegions
-	}
-
-	@Test def documentation() {
-		'''
-			[>/**
-			   * Documentation
-			   */<]
-			catalogue c
-		'''.testFoldingRegions
-	}
+    @Test def documentation() {
+        '''
+            [>/**
+               * Documentation
+               */<]
+            catalogue c
+        '''.testFoldingRegions
+    }
 }

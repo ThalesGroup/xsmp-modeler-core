@@ -30,7 +30,7 @@ import com.google.inject.Inject;
  */
 public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
 {
-  private final String IS_RESPONSIBLE = getClass().getCanonicalName() + ".isResponsible";
+  private final String isResponsible = getClass().getCanonicalName() + ".isResponsible";
 
   @Inject
   private IXsmpcatServiceProvider xsmpcatServiceProvider;
@@ -48,7 +48,7 @@ public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
   protected boolean isResponsible(Map<Object, Object> context, EObject eObject)
   {
 
-    var responsible = context != null ? (Boolean) context.get(IS_RESPONSIBLE) : null;
+    var responsible = context != null ? (Boolean) context.get(isResponsible) : null;
     if (responsible == null)
     {
       responsible = super.isResponsible(context, eObject)
@@ -56,7 +56,7 @@ public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
 
       if (context != null)
       {
-        context.put(IS_RESPONSIBLE, responsible);
+        context.put(isResponsible, responsible);
       }
     }
     return responsible;

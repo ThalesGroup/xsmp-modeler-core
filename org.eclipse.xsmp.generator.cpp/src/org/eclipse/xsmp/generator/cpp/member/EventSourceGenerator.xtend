@@ -10,49 +10,49 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.member
 
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.EventSource
 import org.eclipse.xsmp.xcatalogue.EventType
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
 
-	protected def getEventArgType(EventSource element) {
-		val eventType = element.type as EventType
-		return eventType.eventArgs as SimpleType
-	}
+    protected def getEventArgType(EventSource element) {
+        val eventType = element.type as EventType
+        return eventType.eventArgs as SimpleType
+    }
 
-	override declare(NamedElementWithMembers type, EventSource element) {
-	}
+    override declare(NamedElementWithMembers type, EventSource element) {
+    }
 
-	override define(NamedElementWithMembers type, EventSource element) {
-	}
+    override define(NamedElementWithMembers type, EventSource element) {
+    }
 
-	override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
-		'''
-			«element.comment»
-			::Smp::IEventSource* «element.name»;
-		'''
-	}
+    override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
+        '''
+            «element.comment»
+            ::Smp::IEventSource* «element.name»;
+        '''
+    }
 
-	override defineGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
-	}
+    override defineGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
+    }
 
-	protected override collectIncludes(IncludeAcceptor acceptor) {
-		acceptor.mdkHeader("Smp/IEventSource.h")
-	}
+    protected override collectIncludes(IncludeAcceptor acceptor) {
+        acceptor.mdkHeader("Smp/IEventSource.h")
+    }
 
-	override initialize(NamedElementWithMembers container, EventSource member, boolean useGenPattern) {
-	}
+    override initialize(NamedElementWithMembers container, EventSource member, boolean useGenPattern) {
+    }
 
-	override finalize(EventSource element) {
-		'''  
-			delete «element.name»;
-			«element.name» = nullptr;
-		'''
-	}
+    override finalize(EventSource element) {
+        '''  
+            delete «element.name»;
+            «element.name» = nullptr;
+        '''
+    }
 
-	override Publish(EventSource element) {
-	}
+    override Publish(EventSource element) {
+    }
 }

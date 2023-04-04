@@ -21,19 +21,18 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @InjectWith(XsmpUiInjectorProvider)
 class HoverTest extends AbstractHoverTest {
 
-	@BeforeEach
-	override void setUp() throws Exception {
-		super.setUp()
-		 XsmpcatProjectUtil.createProject(projectName)
+    @BeforeEach
+    override void setUp() throws Exception {
+        super.setUp()
+        XsmpcatProjectUtil.createProject(projectName)
 
-	}
+    }
 
-
-	@Test def hover_over_catalogue() {
-		'''
-			/** description */
-			catalogue name
-		'''.hasHoverOver("name", '''description''')
-	}
+    @Test def hover_over_catalogue() {
+        '''
+            /** description */
+            catalogue name
+        '''.hasHoverOver("name", '''description''')
+    }
 
 }

@@ -55,13 +55,12 @@ public class EventSourceImplCustom extends EventSourceImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    if ("singlecast".equals(name))
     {
-      case "singlecast":
-        return XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST;
-      default:
-        return super.getFeature(name);
+      return XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST;
     }
+    return super.getFeature(name);
+
   }
 
-} // EventSourceImpl
+} // EventSourceImplCustom

@@ -44,12 +44,10 @@ public abstract class TypeImplCustom extends TypeImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    if ("uuid".equals(name))
     {
-      case "uuid":
-        return XcataloguePackage.Literals.TYPE__UUID;
-      default:
-        return super.getFeature(name);
+      return XcataloguePackage.Literals.TYPE__UUID;
     }
+    return super.getFeature(name);
   }
-} // TypeImpl
+} // TypeImplCustom

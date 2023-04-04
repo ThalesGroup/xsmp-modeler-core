@@ -105,12 +105,10 @@ public class PropertyImplCustom extends PropertyImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    if ("category".equals(name))
     {
-      case "category":
-        return XcataloguePackage.Literals.PROPERTY__CATEGORY;
-      default:
-        return super.getFeature(name);
+      return XcataloguePackage.Literals.PROPERTY__CATEGORY;
     }
+    return super.getFeature(name);
   }
-} // PropertyImpl
+} // PropertyImplCustom

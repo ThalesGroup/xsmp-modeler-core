@@ -13,27 +13,27 @@ package org.eclipse.xsmp.generator.cpp
 import org.eclipse.xtext.naming.QualifiedName
 
 class ProtectionGuardProvider implements IProtectionGuardProvider {
-	package boolean usePragmaOnce = false
+    package boolean usePragmaOnce = false
 
-	override CharSequence getStartGuard(QualifiedName qfn) {
-		if (usePragmaOnce) {
-			return "#pragma once"
-		}
-		val guard = qfn.guard()
-		'''
-			#ifndef «guard»
-			#define «guard»
-		'''
-	}
+    override CharSequence getStartGuard(QualifiedName qfn) {
+        if (usePragmaOnce) {
+            return "#pragma once"
+        }
+        val guard = qfn.guard()
+        '''
+            #ifndef «guard»
+            #define «guard»
+        '''
+    }
 
-	def guard(QualifiedName qfn) {
-		'''«qfn.toString("_").toUpperCase()»_H_'''
-	}
+    def guard(QualifiedName qfn) {
+        '''«qfn.toString("_").toUpperCase()»_H_'''
+    }
 
-	override CharSequence getEndGuard(QualifiedName qfn) {
-		if (usePragmaOnce)
-			return ""
+    override CharSequence getEndGuard(QualifiedName qfn) {
+        if (usePragmaOnce)
+            return ""
 
-		return '''#endif // «qfn.guard»'''
-	}
+        return '''#endif // «qfn.guard»'''
+    }
 }

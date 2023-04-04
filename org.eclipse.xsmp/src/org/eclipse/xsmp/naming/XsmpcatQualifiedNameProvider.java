@@ -49,7 +49,7 @@ public class XsmpcatQualifiedNameProvider extends IQualifiedNameProvider.Abstrac
     final var name = ((NamedElement) obj).getName();
     if (name == null || name.isEmpty())
     {
-      return null;
+      return QualifiedName.EMPTY;
     }
     final var qualifiedNameFromConverter = converter.toQualifiedName(name);
     while ((obj = obj.eContainer()) != null)

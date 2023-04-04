@@ -11,58 +11,58 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.AbstractTypeFileGenerator
-import org.eclipse.xsmp.xcatalogue.Integer
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
+import org.eclipse.xsmp.xcatalogue.Integer
 
 class IntegerGenerator extends AbstractTypeFileGenerator<Integer> {
 
-	override protected generateHeaderBody(Integer t) {
-		'''
-			«t.comment()»
-			using «t.name» = «t.genName»;
-		'''
-	}
+    override protected generateHeaderBody(Integer t) {
+        '''
+            «t.comment()»
+            using «t.name» = «t.genName»;
+        '''
+    }
 
-	override protected generateSourceBody(Integer type) {
-	}
+    override protected generateSourceBody(Integer type) {
+    }
 
-	override protected generateHeaderGenBody(Integer t, boolean useGenPattern) {
-		'''
-			«t.uuidDeclaration»
-			«t.comment»
-			using «t.name(useGenPattern)» = «IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»;
-			void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
-		'''
-	}
+    override protected generateHeaderGenBody(Integer t, boolean useGenPattern) {
+        '''
+            «t.uuidDeclaration»
+            «t.comment»
+            using «t.name(useGenPattern)» = «IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»;
+            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+        '''
+    }
 
-	override protected generateSourceGenBody(Integer t, boolean useGenPattern) {
-		'''
-			void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
-			    registry->AddIntegerType(
-			        "«t.name»", //Name
-			        «t.description()», //description
-			        «t.uuidQfn», //UUID
-			    «IF t.minimum !== null»«t.minimum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::min()«ENDIF», //minimum
-			    «IF t.maximum !== null»«t.maximum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::max()«ENDIF», //maximum
-			    "«t.unit»", //unit
-			    «t.generatePrimitiveKind»);  
-			}
-		'''
-	}
+    override protected generateSourceGenBody(Integer t, boolean useGenPattern) {
+        '''
+            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
+                registry->AddIntegerType(
+                    "«t.name»", //Name
+                    «t.description()», //description
+                    «t.uuidQfn», //UUID
+                «IF t.minimum !== null»«t.minimum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::min()«ENDIF», //minimum
+                «IF t.maximum !== null»«t.maximum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::max()«ENDIF», //maximum
+                "«t.unit»", //unit
+                «t.generatePrimitiveKind»);  
+            }
+        '''
+    }
 
-	override collectIncludes(Integer type, IncludeAcceptor acceptor) {
-		super.collectIncludes(type, acceptor)
+    override collectIncludes(Integer type, IncludeAcceptor acceptor) {
+        super.collectIncludes(type, acceptor)
 
-		if (type.minimum === null || type.maximum === null)
-			acceptor.systemHeader("limits")
+        if (type.minimum === null || type.maximum === null)
+            acceptor.systemHeader("limits")
 
-		type.minimum?.include(acceptor)
-		type.maximum?.include(acceptor)
-	}
+        type.minimum?.include(acceptor)
+        type.maximum?.include(acceptor)
+    }
 
-	override protected collectIncludes(IncludeAcceptor acceptor) {
-		super.collectIncludes(acceptor)
-		acceptor.mdkHeader("Smp/PrimitiveTypes.h")
-	}
+    override protected collectIncludes(IncludeAcceptor acceptor) {
+        super.collectIncludes(acceptor)
+        acceptor.mdkHeader("Smp/PrimitiveTypes.h")
+    }
 
 }

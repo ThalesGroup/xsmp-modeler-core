@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 /**
  * Default configuration for output folders used in the generator
  */
-public class XsmpOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
+public class XsmpSdkOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
 {
 
   @Inject

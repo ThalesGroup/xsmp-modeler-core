@@ -23,7 +23,6 @@ public class SimpleLinkRefImplCustom extends SimpleLinkRefImpl
   /** The HTTP URI scheme. */
   private static final String SCHEME_HTTP = "http"; //$NON-NLS-1$
 
-
   @Override
   public EObject eResolveProxy(InternalEObject proxy)
   {

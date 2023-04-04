@@ -29,12 +29,12 @@ import static org.eclipse.core.runtime.IStatus.*
  */
 class SimSatProjectTemplateProvider implements IProjectTemplateProvider {
     override getProjectTemplates() {
-        #[new XsmpProject()]
+        #[new SimSatProject()]
     }
 }
 
 @ProjectTemplate(label="SIMSAT Project", icon="project_template.png", description="<p><b>Create a new SIMSAT Project</b></p>")
-final class XsmpProject {
+final class SimSatProject {
     val advancedGroup = group("Properties")
     val cName = "<<catalogue_name>>"
     val name = text("Catalogue Name:", cName, "The Catalogue name", advancedGroup)
@@ -79,7 +79,7 @@ final class XsmpProject {
                 
                 namespace «name»
                 {
-                	
+                    
                 }
             ''')
 
@@ -115,100 +115,100 @@ final class XsmpProject {
             addFile('''.cproject''', '''
                 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
-                	<storageModule moduleId="org.eclipse.cdt.core.settings">
-                		<cconfiguration id="cmake4eclipse.mbs.config.debug.«debugConfId»">
-                			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.debug.«debugConfId»" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-                				<externalSettings/>
-                				<extensions>
-                					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                				</extensions>
-                			</storageModule>
-                			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-                				<configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.«debugConfId»" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cmake4eclipse.mbs.config.debug">
-                					<folderInfo id="cmake4eclipse.mbs.config.debug.«debugConfId»." name="/" resourcePath="">
-                						<toolChain id="cmake4eclipse.mbs.toolchain.cmake.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.toolchain.cmake">
-                							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-                							<builder buildPath="/«name»/_build/Debug" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-                							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-                								<inputType id="cmake4eclipse.mbs.inputType.c.«debugCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
-                								<inputType id="cmake4eclipse.mbs.inputType.cpp.«debugCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
-                							</tool>
-                						</toolChain>
-                					</folderInfo>
-                				</configuration>
-                			</storageModule>
-                			<storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
-                				<options/>
-                			</storageModule>
-                			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-                		</cconfiguration>
-                		<cconfiguration id="cmake4eclipse.mbs.config.release.«releaseConfId»">
-                			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.release.«releaseConfId»" moduleId="org.eclipse.cdt.core.settings" name="Release">
-                				<externalSettings/>
-                				<extensions>
-                					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-                					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-                					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                				</extensions>
-                			</storageModule>
-                			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-                				<configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.«releaseConfId»" name="Release" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
-                					<folderInfo id="cmake4eclipse.mbs.config.release.«releaseConfId»." name="/" resourcePath="">
-                						<toolChain id="cmake4eclipse.mbs.config.release.toolChain.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.config.release.toolChain">
-                							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-                							<builder buildPath="/«name»/build/Release" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-                							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-                								<inputType id="cmake4eclipse.mbs.inputType.c.«releaseCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
-                								<inputType id="cmake4eclipse.mbs.inputType.cpp.«releaseCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
-                							</tool>
-                						</toolChain>
-                					</folderInfo>
-                				</configuration>
-                			</storageModule>
-                			<storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
-                				<options/>
-                			</storageModule>
-                			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-                		</cconfiguration>
-                	</storageModule>
-                	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-                		<project id="«name».cmake4eclipse.mbs.projectType.«Math.abs(random.nextInt())»" name="Cmake4eclipse" projectType="cmake4eclipse.mbs.projectType"/>
-                	</storageModule>
-                	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-                	<storageModule moduleId="refreshScope" versionNumber="2">
-                		<configuration configurationName="Debug">
-                			<resource resourceType="PROJECT" workspacePath="/«name»"/>
-                		</configuration>
-                		<configuration configurationName="Release">
-                			<resource resourceType="PROJECT" workspacePath="/«name»"/>
-                		</configuration>
-                	</storageModule>
-                	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-                	<storageModule moduleId="scannerConfiguration">
-                		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.c.«debugCId»">
-                			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                		</scannerConfigBuildInfo>
-                		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.cpp.«debugCppId»">
-                			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                		</scannerConfigBuildInfo>
-                		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.c.«releaseCId»">
-                			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                		</scannerConfigBuildInfo>
-                		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.cpp.«releaseCppId»">
-                			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                		</scannerConfigBuildInfo>
-                	</storageModule>
+                    <storageModule moduleId="org.eclipse.cdt.core.settings">
+                        <cconfiguration id="cmake4eclipse.mbs.config.debug.«debugConfId»">
+                            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.debug.«debugConfId»" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+                                <externalSettings/>
+                                <extensions>
+                                    <extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                </extensions>
+                            </storageModule>
+                            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                                <configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.«debugConfId»" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cmake4eclipse.mbs.config.debug">
+                                    <folderInfo id="cmake4eclipse.mbs.config.debug.«debugConfId»." name="/" resourcePath="">
+                                        <toolChain id="cmake4eclipse.mbs.toolchain.cmake.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.toolchain.cmake">
+                                            <targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
+                                            <builder buildPath="/«name»/_build/Debug" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
+                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
+                                                <inputType id="cmake4eclipse.mbs.inputType.c.«debugCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
+                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«debugCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
+                                            </tool>
+                                        </toolChain>
+                                    </folderInfo>
+                                </configuration>
+                            </storageModule>
+                            <storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
+                                <options/>
+                            </storageModule>
+                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+                        </cconfiguration>
+                        <cconfiguration id="cmake4eclipse.mbs.config.release.«releaseConfId»">
+                            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.release.«releaseConfId»" moduleId="org.eclipse.cdt.core.settings" name="Release">
+                                <externalSettings/>
+                                <extensions>
+                                    <extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                                    <extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+                                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                                </extensions>
+                            </storageModule>
+                            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                                <configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.«releaseConfId»" name="Release" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
+                                    <folderInfo id="cmake4eclipse.mbs.config.release.«releaseConfId»." name="/" resourcePath="">
+                                        <toolChain id="cmake4eclipse.mbs.config.release.toolChain.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.config.release.toolChain">
+                                            <targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
+                                            <builder buildPath="/«name»/build/Release" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
+                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
+                                                <inputType id="cmake4eclipse.mbs.inputType.c.«releaseCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
+                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«releaseCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
+                                            </tool>
+                                        </toolChain>
+                                    </folderInfo>
+                                </configuration>
+                            </storageModule>
+                            <storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
+                                <options/>
+                            </storageModule>
+                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+                        </cconfiguration>
+                    </storageModule>
+                    <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                        <project id="«name».cmake4eclipse.mbs.projectType.«Math.abs(random.nextInt())»" name="Cmake4eclipse" projectType="cmake4eclipse.mbs.projectType"/>
+                    </storageModule>
+                    <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+                    <storageModule moduleId="refreshScope" versionNumber="2">
+                        <configuration configurationName="Debug">
+                            <resource resourceType="PROJECT" workspacePath="/«name»"/>
+                        </configuration>
+                        <configuration configurationName="Release">
+                            <resource resourceType="PROJECT" workspacePath="/«name»"/>
+                        </configuration>
+                    </storageModule>
+                    <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+                    <storageModule moduleId="scannerConfiguration">
+                        <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.c.«debugCId»">
+                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+                        </scannerConfigBuildInfo>
+                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.cpp.«debugCppId»">
+                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+                        </scannerConfigBuildInfo>
+                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.c.«releaseCId»">
+                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+                        </scannerConfigBuildInfo>
+                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.cpp.«releaseCppId»">
+                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+                        </scannerConfigBuildInfo>
+                    </storageModule>
                 </cproject>
             ''')
         ])

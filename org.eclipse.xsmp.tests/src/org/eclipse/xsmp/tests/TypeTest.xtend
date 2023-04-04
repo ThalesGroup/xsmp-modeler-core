@@ -22,20 +22,20 @@ import static org.junit.jupiter.api.Assertions.*
 @InjectWith(XsmpcatInjectorProvider)
 class TypeTest {
 
-	static class Type extends TypeImplCustom {
-	}
+    static class Type extends TypeImplCustom {
+    }
 
-	@Test
-	def void checkUuid() {
+    @Test
+    def void checkUuid() {
 
-		var elem = new Type
+        var elem = new Type
 
-		elem.uuid = "aaaa"
-		assertEquals("aaaa", elem.uuid)
-		assertEquals('''/** @uuid aaaa */'''.toString, elem.metadatum.documentation)
+        elem.uuid = "aaaa"
+        assertEquals("aaaa", elem.uuid)
+        assertEquals('''/** @uuid aaaa */'''.toString, elem.metadatum.documentation)
 
-		elem.uuid = null
-		assertEquals(null, elem.uuid)
-		assertEquals(null, elem.metadatum.documentation)
-	}
+        elem.uuid = null
+        assertEquals(null, elem.uuid)
+        assertEquals(null, elem.metadatum.documentation)
+    }
 }
