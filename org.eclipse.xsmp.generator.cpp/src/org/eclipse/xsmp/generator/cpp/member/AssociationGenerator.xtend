@@ -38,6 +38,10 @@ class AssociationGenerator extends AbstractMemberGenerator<Association> {
     }
 
     override initialize(NamedElementWithMembers container, Association member, boolean useGenPattern) {
+        '''
+            // «member.name» initialization
+            «member.name» { }
+        '''
     }
 
     override finalize(Association element) {

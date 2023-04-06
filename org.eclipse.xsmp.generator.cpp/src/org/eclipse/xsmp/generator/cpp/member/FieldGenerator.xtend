@@ -57,6 +57,11 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
     }
 
     override initialize(NamedElementWithMembers container, Field member, boolean useGenPattern) {
+        if (member.^default === null)
+            '''
+                // «member.name» initialization
+                «member.name» { }
+            '''
     }
 
     override finalize(Field element) {

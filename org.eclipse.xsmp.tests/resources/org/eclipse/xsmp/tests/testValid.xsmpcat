@@ -219,7 +219,7 @@ namespace ns
 		 * @param inout
 		 *       a desc1
 		 */
-		def Smp.Bool op (in Float32 in, out Float64 out, inout Duration inout = 42)
+		def Smp.Bool op (in Float32 in, out Float64 out, inout Duration inout = nullptr)
 		property Bool property
 	}
 
