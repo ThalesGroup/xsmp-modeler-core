@@ -348,4 +348,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expression"
         containment="true" resolveProxies="false"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NullptrExpression" eSuperTypes="#//Expression"/>
 </ecore:EPackage>

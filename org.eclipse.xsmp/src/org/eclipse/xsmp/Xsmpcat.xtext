@@ -389,7 +389,7 @@ EnumerationLiteralReference returns Expression:
 Literal returns Expression:
     CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
     ParenthesizedExpression |
-    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction;
+    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction | NullptrExpression;
 
 ParenthesizedExpression returns Expression:
     {ParenthesizedExpression} '(' expr=Expression ')';
@@ -417,6 +417,9 @@ BuiltInFunction returns Expression:
 
 BooleanLiteral returns Expression:
     {BooleanLiteral} ('false' | isTrue?='true');
+
+NullptrExpression returns Expression:
+    {NullptrExpression} 'nullptr';
 
 terminal INTEGER_LITERAL:
     DECIMAL_LITERAL INTEGER_TIME_SUFFIX?

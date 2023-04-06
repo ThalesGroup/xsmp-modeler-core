@@ -703,6 +703,11 @@ public class Solver
     return null;
   }
 
+  private static class Nullptr
+  {
+    public static Nullptr INSTANCE = new Nullptr();
+  }
+
   public Object getValue(Expression e)
   {
     if (e == null)
@@ -735,6 +740,8 @@ public class Solver
         return getValue((StringLiteral) e);
       case XcataloguePackage.UNARY_OPERATION:
         return getValue((UnaryOperation) e);
+      case XcataloguePackage.NULLPTR_EXPRESSION:
+        return Nullptr.INSTANCE;
       default:
         throw new UnsupportedOperationException();
     }

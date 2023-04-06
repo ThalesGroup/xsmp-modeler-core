@@ -56,6 +56,7 @@ import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
+import org.eclipse.xsmp.xcatalogue.NullptrExpression;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
@@ -323,6 +324,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return;
     }
+    if (e instanceof NullptrExpression)
+    {
+      acceptError("Expecting a value, got a pointer.", e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+    }
     switch (type.eClass().getClassifierID())
     {
       case XcataloguePackage.ARRAY:
@@ -346,9 +352,23 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       case XcataloguePackage.STRUCTURE:
         checkStructure((Structure) type, e);
         break;
+      // TODO check class: a constructor should match the provided value
       default:
         // ignore other types
         break;
+    }
+  }
+
+  protected void checkPtr(Type type, Expression e)
+  {
+    if (e == null || type == null || type.eIsProxy())
+    {
+      return;
+    }
+    if (!(e instanceof NullptrExpression))
+    {
+      acceptError("Expecting a pointer, got " + e.getClass().getSimpleName() + ".", e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
   }
 
@@ -1288,7 +1308,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      check(p.getType(), p.getDefault());
+      switch (elementUtil.kind(p))
+      {
+        case BY_PTR:
+          checkPtr(p.getType(), p.getDefault());
+          break;
+        case BY_REF:
+        case BY_VALUE:
+          check(p.getType(), p.getDefault());
+          break;
+        default:
+          break;
+
+      }
     }
 
   }
