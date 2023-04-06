@@ -35,6 +35,7 @@ import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xsmp.xcatalogue.ValueType
+import org.eclipse.xsmp.xcatalogue.NullptrExpression
 
 @Singleton
 class ExpressionGenerator {
@@ -53,7 +54,6 @@ class ExpressionGenerator {
             return '''«e.value.name»'''
         }
         return '''::«fqn.toString("::")»'''
-
     }
 
     def dispatch CharSequence doGenerateExpression(IntegerLiteral t, Type expectedType, NamedElement context) {
@@ -65,12 +65,10 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(BuiltInFunction t, Type expectedType, NamedElement context) {
-
         '''«t.name»(«FOR p : t.parameter SEPARATOR ", "»«p.doGenerateExpression(null, context)»«ENDFOR»)'''
     }
 
     def dispatch CharSequence doGenerateExpression(BuiltInConstant t, Type expectedType, NamedElement context) {
-
         switch (t.name) {
             case "PI":
                 "M_PI"
@@ -84,7 +82,6 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(StringLiteral t, Type expectedType, NamedElement context) {
-
         switch (expectedType.primitiveType ) {
             // convert DateTime and Duration to a number of ns
             case DATE_TIME: {
@@ -110,7 +107,6 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(CollectionLiteral t, Type expectedType, NamedElement context) {
-
         if (expectedType instanceof Array) {
             if (expectedType.itemType instanceof Array)
                 '''{«FOR l : t.elements SEPARATOR ', '»{«l.doGenerateExpression(expectedType.itemType, context)»}«ENDFOR»}'''
@@ -133,23 +129,23 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(UnaryOperation t, Type expectedType, NamedElement context) {
-
         '''«t.feature»«t.operand.doGenerateExpression(expectedType, context)»'''
     }
 
     def dispatch CharSequence doGenerateExpression(Expression t, Type expectedType, NamedElement context) {
-
         '''/*unsupported expression: «t.toString»*/'''
     }
 
     def dispatch CharSequence doGenerateExpression(BinaryOperation t, Type expectedType, NamedElement context) {
-
         '''«t.leftOperand.doGenerateExpression(expectedType, context)»«t.feature»«t.rightOperand.doGenerateExpression(expectedType, context)»'''
     }
 
     def dispatch CharSequence doGenerateExpression(ParenthesizedExpression t, Type expectedType, NamedElement context) {
-
         '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
+    }
+
+    def dispatch CharSequence doGenerateExpression(NullptrExpression t, Type expectedType, NamedElement context) {
+        '''nullptr'''
     }
 
     def CharSequence generateExpression(Expression t, Type expectedType, NamedElement context) {
