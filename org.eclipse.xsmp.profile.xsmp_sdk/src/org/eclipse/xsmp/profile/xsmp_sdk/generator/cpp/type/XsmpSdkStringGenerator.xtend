@@ -19,7 +19,7 @@ class XsmpSdkStringGenerator extends StringGenerator {
     override protected generateHeaderGenBody(String t, boolean useGenPattern) {
         '''
             «t.comment»
-            using «t.name(useGenPattern)» = ::Xsmp::Types::String<«t.length.doGenerateExpression(t,t)»>;
+            using «t.name(useGenPattern)» = ::Xsmp::String<«t.length.doGenerateExpression(t,t)»>;
             
             «t.uuidDeclaration»
             
@@ -30,6 +30,6 @@ class XsmpSdkStringGenerator extends StringGenerator {
     override collectIncludes(String type, IncludeAcceptor acceptor) {
         super.collectIncludes(type, acceptor)
 
-        acceptor.mdkHeader("Xsmp/Types/String.h")
+        acceptor.mdkHeader("Xsmp/String.h")
     }
 }
