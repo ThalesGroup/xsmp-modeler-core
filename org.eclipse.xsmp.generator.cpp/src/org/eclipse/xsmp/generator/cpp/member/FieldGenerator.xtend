@@ -27,8 +27,6 @@ import org.eclipse.xtext.naming.QualifiedName
 
 class FieldGenerator extends AbstractMemberGenerator<Field> {
 
-
-
     override declareGen(NamedElementWithMembers type, Field element, boolean useGenPattern) {
         '''
             «element.comment»
@@ -90,36 +88,30 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
         '''
     }
 
+    protected def dispatch CharSequence construct(QualifiedName name, Array type, CollectionLiteral expression,
+        NamedElement context) {
+
+        val last = name.lastSegment
+        val base = name.skipLast(1)
+        '''
+            «FOR i : 0 ..< expression.elements.size»
+                «construct(base.append(last+"["+i+"]"), type.itemType, expression.elements.get(i),context)»
+            «ENDFOR»
+        '''
+
+    }
+
     protected def dispatch CharSequence construct(QualifiedName name, Structure type, CollectionLiteral expression,
         NamedElement context) {
 
-        if (type instanceof Array) {
-            val last = name.lastSegment
-            val base = name.skipLast(1)
-            '''
-                «FOR i : 0 ..< expression.elements.size»
-                    «construct(base.append(last+"["+i+"]"), type.itemType, expression.elements.get(i),context)»
-                «ENDFOR»
-            '''
+        val fields = type.assignableFields.collect(Collectors.toList)
 
-        } else if (type instanceof Structure) {
-            val fields = type.assignableFields.collect(Collectors.toList)
-            
-            '''
-                «FOR i : 0 ..< expression.elements.size»
-                    «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i),context)»
-                «ENDFOR»
-            '''
-        } else
-            '''{«FOR l : expression.elements SEPARATOR ', '»«l.doGenerateExpression(type, context)»«ENDFOR»}'''
+        '''
+            «FOR i : 0 ..< expression.elements.size»
+                «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i),context)»
+            «ENDFOR»
+        '''
 
-    /* 
-     *         val fields = type.member.filter(Field).filter[!it.static && it.visibility() === VisibilityKind::PUBLIC]
-     *         '''
-     * «FOR i : 0 ..< expression.elements.size»
-     *     «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i), context)»
-     * «ENDFOR»
-     '''*/
     }
 
     override construct(NamedElementWithMembers container, Field element, boolean useGenPattern) {

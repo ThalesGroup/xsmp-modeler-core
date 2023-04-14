@@ -200,7 +200,9 @@ namespace ns
 
 
 	/**
-	 * @platform name="cpp", type="NativeType", namespace="Test", location="Test/NativeType.h"
+	 * @type NativeType
+	 @namespace Test
+	 @location Test/NativeType.h
 	 * @uuid d9806d07-4cf1-4a40-982b-10b6a7e55909
 	 */
 	public native NativeType
