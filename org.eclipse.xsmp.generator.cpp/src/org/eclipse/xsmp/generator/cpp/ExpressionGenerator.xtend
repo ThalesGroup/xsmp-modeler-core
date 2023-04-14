@@ -152,7 +152,13 @@ class ExpressionGenerator {
         '''«t.name»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(CollectionLiteral t, Operation constructor, NamedElement context) {
+    def dispatch CharSequence doGenerateConstructorExpression(Expression t, Operation constructor,
+        NamedElement context) {
+        // TODO ?
+    }
+
+    def dispatch CharSequence doGenerateConstructorExpression(CollectionLiteral t, Operation constructor,
+        NamedElement context) {
         '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).doGenerateExpression(constructor.parameter.get(i).type, context)»«ENDFOR»}'''
     }
 
@@ -160,7 +166,7 @@ class ExpressionGenerator {
         // find a matching constructor if any
         val constructor = expectedType.findConstructor(t);
         if (constructor !== null)
-            t.doGenerateExpression(constructor, context)
+            t.doGenerateConstructorExpression(constructor, context)
         else if (expectedType instanceof Structure)
             t.doGenerateExpression(expectedType, context)
         else if (expectedType instanceof Array)

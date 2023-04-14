@@ -106,7 +106,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.PlatformMapping;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xsmp.xcatalogue.ReferenceType;
@@ -765,20 +764,12 @@ public class SmpGenerator extends AbstractModelConverter
   {
     copy((Type) src, dest);
 
-    for (final PlatformMapping mapping : src.getPlatform())
-    {
-      dest.getPlatform().add((org.eclipse.xsmp.tool.smp.core.types.PlatformMapping) copy(mapping));
-    }
-
-  }
-
-  protected void copy(PlatformMapping src,
-          org.eclipse.xsmp.tool.smp.core.types.PlatformMapping dest)
-  {
-    dest.setName(src.getName());
-    dest.setType(src.getType());
-    dest.setNamespace(src.getNamespace());
-    dest.setLocation(src.getLocation());
+    final var mapping = TypesFactory.eINSTANCE.createPlatformMapping();
+    mapping.setName("cpp");
+    mapping.setLocation(src.getLocation());
+    mapping.setNamespace(src.getNamespace());
+    mapping.setType(src.getType());
+    dest.getPlatform().add(mapping);
   }
 
   protected void copy(Association src, org.eclipse.xsmp.tool.smp.core.types.Association dest)

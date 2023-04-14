@@ -33,7 +33,6 @@ import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.PlatformMapping;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
@@ -232,9 +231,4 @@ final class ElementCreator extends XcatalogueSwitch<EObject>
     return TypesFactory.eINSTANCE.createValueReference();
   }
 
-  @Override
-  public EObject casePlatformMapping(PlatformMapping object)
-  {
-    return TypesFactory.eINSTANCE.createPlatformMapping();
-  }
 }

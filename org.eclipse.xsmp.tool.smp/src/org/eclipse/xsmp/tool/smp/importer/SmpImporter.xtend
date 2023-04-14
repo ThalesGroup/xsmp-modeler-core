@@ -91,8 +91,7 @@ class SmpImporter {
         ElementsPackage.Literals.DOCUMENT__TITLE, ElementsPackage.Literals.DOCUMENT__VERSION,
         TypesPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE, TypesPackage.Literals.ATTRIBUTE_TYPE__USAGE,
         TypesPackage.Literals.PROPERTY__CATEGORY, TypesPackage.Literals.TYPE__UUID, TypesPackage.Literals.INTEGER__UNIT,
-        TypesPackage.Literals.FLOAT__UNIT, TypesPackage.Literals.NATIVE_TYPE__PLATFORM,
-        CataloguePackage.Literals.EVENT_SOURCE__MULTICAST).build();
+        TypesPackage.Literals.FLOAT__UNIT, CataloguePackage.Literals.EVENT_SOURCE__MULTICAST).build();
 
     def doGenerate(Resource resource, IFileSystemAccess2 fsa) {
         // create result resource
@@ -221,7 +220,23 @@ class SmpImporter {
                         @return «param.description»
                     '''.toString
         }
-
+        if (o instanceof NativeType) {
+            var mapping = o.platform.findFirst[name == "cpp"]
+            if (mapping !== null) {
+                if (mapping.location !== null)
+                    m += '''
+                        @location «mapping.location»
+                    '''.toString
+                if (mapping.type !== null)
+                    m += '''
+                        @type «mapping.type»
+                    '''.toString
+                if (mapping.namespace !== null)
+                    m += '''
+                        @namespace «mapping.namespace»
+                    '''.toString
+            }
+        }
         '''
             «IF m.empty && !o.description.nullOrEmpty»/** «o.description.replaceAll("\n", "\n * ")» */ «ENDIF»
             «FOR i : m.filterNull BEFORE '/** \n' + (o.description!==null&& !o.description.isEmpty? ' * ' + o.description.replaceAll("\n", "\n * ")+'\n * \n':'\n') AFTER ' */'» * «i»«ENDFOR»
@@ -288,11 +303,9 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(NativeType o) {
+
         '''
             «o.header»
-            «FOR m : o.platform»
-                «m.generate»
-            «ENDFOR»
             «o.visibility()»native «o.name»
             
         '''
