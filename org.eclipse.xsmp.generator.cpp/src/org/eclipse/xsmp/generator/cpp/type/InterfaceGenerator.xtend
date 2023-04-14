@@ -27,9 +27,6 @@ class InterfaceGenerator extends MemberGenerator<Interface> {
         '''
     }
 
-    override protected generateSourceBody(Interface type) {
-    }
-
     override protected generateHeaderGenBody(Interface t, boolean useGenPattern) {
         '''
             «t.comment»
@@ -45,6 +42,7 @@ class InterfaceGenerator extends MemberGenerator<Interface> {
 
     override protected generateSourceGenBody(Interface t, boolean useGenPattern) {
         '''
+            «t.uuidDefinition»
             «t.defineMembersGen(useGenPattern)»
         '''
     }

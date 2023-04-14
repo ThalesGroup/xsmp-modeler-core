@@ -16,12 +16,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class ContainerGenerator extends AbstractMemberGenerator<Container> {
 
-    override declare(NamedElementWithMembers type, Container element) {
-    }
-
-    override define(NamedElementWithMembers type, Container element) {
-    }
-
     override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
         '''
             «element.comment»
@@ -47,9 +41,6 @@ class ContainerGenerator extends AbstractMemberGenerator<Container> {
         acceptor.mdkHeader("Smp/IContainer.h")
     }
 
-    override initialize(NamedElementWithMembers container, Container member, boolean useGenPattern) {
-    }
-
     override finalize(Container element) {
         '''  
             delete «element.name»;
@@ -57,6 +48,4 @@ class ContainerGenerator extends AbstractMemberGenerator<Container> {
         '''
     }
 
-    override Publish(Container element) {
-    }
 }

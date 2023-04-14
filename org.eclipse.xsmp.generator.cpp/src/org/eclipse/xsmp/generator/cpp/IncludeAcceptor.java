@@ -18,7 +18,7 @@ import org.eclipse.xsmp.xcatalogue.Type;
 
 public class IncludeAcceptor
 {
-  Set<Type> forwardedTypes = new HashSet<>();
+  Set<NamedElement> forwardedTypes = new HashSet<>();
 
   Set<NamedElement> includedTypes = new HashSet<>();
 

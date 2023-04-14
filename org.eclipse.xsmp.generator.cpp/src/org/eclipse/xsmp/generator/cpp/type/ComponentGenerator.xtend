@@ -17,8 +17,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
-import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.xcatalogue.ValueType
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
 abstract class ComponentGenerator extends MemberGenerator<Component> {
@@ -88,7 +86,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
         '''
     }
 
-    override protected generateSourceBody(Component type) {
+    override protected generateSourceBody(Component type, boolean useGenPattern) {
         '''
             «type.name»::«type.name»(
                     ::Smp::String8 name,
@@ -113,7 +111,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
             void «type.name»::DoDisconnect() {
             }
             
-            «type.defineMembers»
+            «type.defineMembers(useGenPattern)»
         '''
     }
 
@@ -209,112 +207,113 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
     override protected generateSourceGenBody(Component t, boolean useGenPattern) {
         val base = t.base()
         '''
+            //--------------------------- Constructor -------------------------
+            «t.name(useGenPattern)»::«t.name(useGenPattern)»(
+                ::Smp::String8 name,
+                ::Smp::String8 description,
+                ::Smp::IObject* parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+            {
+                «FOR f : t.member»
+                    «t.construct(f, useGenPattern)»
+                «ENDFOR»
+            }
             
-                    
-                    //--------------------------- Constructor -------------------------
-                    «t.name(useGenPattern)»::«t.name(useGenPattern)»(
-                        ::Smp::String8 name,
-                        ::Smp::String8 description,
-                        ::Smp::IObject* parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
-                    {
-                    }
-                    
-                    /// Virtual destructor that is called by inherited classes as well.
-                    «t.name(useGenPattern)»::~«t.name(useGenPattern)»() {
-                        «FOR f : t.member»
-                            «f.finalize»
-                        «ENDFOR»
-                    }
+            /// Virtual destructor that is called by inherited classes as well.
+            «t.name(useGenPattern)»::~«t.name(useGenPattern)»() {
+                «FOR f : t.member»
+                    «f.finalize»
+                «ENDFOR»
+            }
             
-                    void «t.name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
+            void «t.name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
+                «IF base !== null»
+                    // Call parent class implementation first
+                    «base»::Publish(receiver);
+                «ENDIF»
+                
+                «FOR m : t.member»«m.Publish»«ENDFOR»
+                
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
+            }
+            
+            
+            
+            void «t.name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+                «IF base !== null»
+                    // Call parent implementation first
+                    «base»::Configure(logger, linkRegistry);
+                    
+                «ENDIF»
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
+            }
+            
+            
+            void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
+                «IF base !== null»
+                    // Call CDK implementation first
+                    «base»::Connect(simulator);
+                    
+                «ENDIF»
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
+            }
+            
+            void «t.name(useGenPattern)»::Disconnect() {
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
+                «IF base !== null»
+                    
+                    // Call parent implementation last, to remove references to the Simulator and its services
+                    «base»::Disconnect();
+                «ENDIF»
+            }
+            
+            void «t.name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
+            }
+            
+            void «t.name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
+            }
+            
+            void «t.name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
+            }
+            
+            void «t.name(useGenPattern)»::DoDisconnect(){
+            }
+            
+            «IF t.useDynamicInvocation»
+                «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::requestHandlers = InitRequestHandlers();
+                
+                «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::InitRequestHandlers()
+                {
+                    RequestHandlers handlers;
+                    «FOR op : t.member.filter(Operation).filter[it.isInvokable]»
+                        «t.generateRqHandlerParam(op, useGenPattern)»
+                    «ENDFOR»
+                    return handlers;
+                }
+                
+                void «t.name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
+                    if (request == nullptr) {
+                        return;
+                    }
+                    auto handler = requestHandlers.find(request->GetOperationName());
+                    if (handler != requestHandlers.end()) {
+                        handler->second(this, request);
+                    }
+                    else {
                         «IF base !== null»
-                            // Call parent class implementation first
-                            «base»::Publish(receiver);
-                        «ENDIF»
-            
-                        «FOR m : t.member»«m.Publish»«ENDFOR»
-                        
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
-                    }
-                    
-            
-            
-                    void «t.name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
-                        «IF base !== null»
-                            // Call parent implementation first
-                            «base»::Configure(logger, linkRegistry);
-                            
-                        «ENDIF»
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
-                    }
-                    
-                    
-                    void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
-                        «IF base !== null»
-                            // Call CDK implementation first
-                            «base»::Connect(simulator);
-                            
-                        «ENDIF»
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
-                    }
-                    
-                    void «t.name(useGenPattern)»::Disconnect() {
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
-                        «IF base !== null»
-                            
-                            // Call parent implementation last, to remove references to the Simulator and its services
-                            «base»::Disconnect();
+                            // pass the request down to the base model
+                            «base»::Invoke(request);
+                        «ELSE»
+                            «InvokeFallback»
                         «ENDIF»
                     }
-                    
-                    void «t.name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoDisconnect(){
-                    }
-                    
-                    «IF t.useDynamicInvocation»
-                        «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::requestHandlers = InitRequestHandlers();
-                        
-                        «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::InitRequestHandlers()
-                        {
-                            RequestHandlers handlers;
-                            «FOR op : t.member.filter(Operation).filter[it.isInvokable]»
-                                «t.generateRqHandlerParam(op, useGenPattern)»
-                            «ENDFOR»
-                            return handlers;
-                        }
-                        
-                        void «t.name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
-                            if (request == nullptr) {
-                                return;
-                            }
-                            auto handler = requestHandlers.find(request->GetOperationName());
-                            if (handler != requestHandlers.end()) {
-                                handler->second(this, request);
-                            }
-                            else {
-                                «IF base !== null»
-                                    // pass the request down to the base model
-                                    «base»::Invoke(request);
-                                «ELSE»
-                                    «InvokeFallback»
-                                «ENDIF»
-                            }
-                        }
-                        
-                    «ENDIF»
-                    const Smp::Uuid& «t.name(useGenPattern)»::GetUuid() const {
-                        return Uuid_«t.name(false)»;
-                    }
-                    
-                    «t.defineMembersGen(useGenPattern)»
+                }
+                
+            «ENDIF»
+            const Smp::Uuid& «t.name(useGenPattern)»::GetUuid() const {
+                return Uuid_«t.name(false)»;
+            }
+            «t.uuidDefinition»
+            «t.defineMembersGen(useGenPattern)»
         '''
     }
 
@@ -323,17 +322,6 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
             // request does not match any operation provided by this model
             //TODO throw InvalidOperationName(request->GetOperationName());
         '''
-    }
-
-    protected def isInvokable(Operation op) {
-        if (op.returnParameter !== null && !( op.returnParameter.type instanceof SimpleType))
-            return false
-
-        for (param : op.parameter)
-            if (!(param.type instanceof ValueType))
-                return false
-
-        return true
     }
 
     protected def useDynamicInvocation(Component e) {

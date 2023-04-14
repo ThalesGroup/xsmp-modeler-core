@@ -24,9 +24,6 @@ class EnumerationGenerator extends AbstractTypeFileGenerator<Enumeration> {
         '''
     }
 
-    override protected generateSourceBody(Enumeration type) {
-    }
-
     override protected generateHeaderGenBody(Enumeration t, boolean useGenPattern) {
         '''
             «t.comment»
@@ -65,6 +62,7 @@ class EnumerationGenerator extends AbstractTypeFileGenerator<Enumeration> {
                     typeState->AddLiteral("«l.name»", «l.description()», «Solver.INSTANCE.getInteger(l.value)»);
                 «ENDFOR»
                 }
+                «t.uuidDefinition»
         '''
     }
 

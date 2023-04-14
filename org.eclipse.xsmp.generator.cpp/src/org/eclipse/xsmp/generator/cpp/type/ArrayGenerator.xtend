@@ -23,8 +23,6 @@ class ArrayGenerator extends AbstractTypeFileGenerator<Array> {
         '''
     }
 
-    override protected generateSourceBody(Array type) {
-    }
 
     override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
         '''
@@ -52,6 +50,7 @@ class ArrayGenerator extends AbstractTypeFileGenerator<Array> {
                         «t.size.doGenerateExpression(null, t)», // size of the array
                         «t.isSimpleArray»);   // is simple array
                 }
+                «t.uuidDefinition»
         '''
     }
 

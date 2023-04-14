@@ -13,7 +13,6 @@ package org.eclipse.xsmp.generator.cpp
 import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xsmp.util.ElementUtil
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.Namespace
@@ -30,8 +29,6 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     @Inject
     protected extension ExpressionGenerator
 
-    @Inject
-    protected extension ElementUtil
 
     @Inject
     protected IProtectionGuardProvider guardProvider;
@@ -52,13 +49,13 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     }
 
-    def protected abstract CharSequence generateHeaderGenBody(T type, boolean useGenPattern)
+    def protected CharSequence generateHeaderGenBody(T type, boolean useGenPattern) {}
 
-    def protected abstract CharSequence generateHeaderBody(T type)
+    def protected CharSequence generateHeaderBody(T type) {}
 
-    def protected abstract CharSequence generateSourceGenBody(T type, boolean useGenPattern)
+    def protected CharSequence generateSourceGenBody(T type, boolean useGenPattern) {}
 
-    def protected abstract CharSequence generateSourceBody(T type)
+    def protected CharSequence generateSourceBody(T type, boolean useGenPattern) {}
 
     def void collectIncludes(T type, IncludeAcceptor acceptor) {
         collectIncludes(acceptor)
@@ -72,7 +69,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
         val fqn = type.fqn(useGenPattern);
         val body = type.generateHeaderGenBody(useGenPattern)
-        if (body !== null)
+        if (body !== null && body.length > 0)
             '''
                 «copyright.getHeaderText(type, useGenPattern, cat)»
                 
@@ -95,7 +92,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     def CharSequence generateHeader(T type, Catalogue cat) {
         val fqn = type.fqn(false);
         val body = type.generateHeaderBody()
-        if (body !== null)
+        if (body !== null && body.length > 0)
             '''
                 «copyright.getHeaderText(type, cat)»
                 
@@ -118,7 +115,12 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
         Catalogue cat) {
         val Set<String> includeList = newHashSet
 
+        // does not include ourself
         acceptor.includedTypes.remove(type)
+
+        if (!useGenPattern)
+            acceptor.forwardedTypes.remove(type)
+
         acceptor.includedTypes.forEach[includeList.add(it.include())]
         acceptor.mdkTypesHeader.forEach[it|includeList.add("#include \"" + it + "\"")]
         acceptor.systemTypesHeader.forEach[it|includeList.add("#include <" + it + ">")]
@@ -160,9 +162,9 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
             null
     }
 
-    def CharSequence generateSource(T type, Catalogue cat) {
-        val body = type.generateSourceBody
-        if (body !== null)
+    def CharSequence generateSource(T type, boolean useGenPattern, Catalogue cat) {
+        val body = type.generateSourceBody(useGenPattern)
+        if (body !== null && body.length > 0)
             '''
                 «copyright.getSourceText(type, cat)»
                 

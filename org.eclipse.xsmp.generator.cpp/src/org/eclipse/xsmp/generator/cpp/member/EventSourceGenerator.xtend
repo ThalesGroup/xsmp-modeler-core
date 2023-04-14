@@ -23,12 +23,6 @@ class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
         return eventType.eventArgs as SimpleType
     }
 
-    override declare(NamedElementWithMembers type, EventSource element) {
-    }
-
-    override define(NamedElementWithMembers type, EventSource element) {
-    }
-
     override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
         '''
             «element.comment»
@@ -53,6 +47,4 @@ class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
         '''
     }
 
-    override Publish(EventSource element) {
-    }
 }

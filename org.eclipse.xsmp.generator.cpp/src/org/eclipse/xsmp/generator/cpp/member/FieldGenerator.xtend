@@ -10,42 +10,37 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.member
 
-import com.google.inject.Inject
+import java.util.stream.Collectors
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.XsmpUtil
-import org.eclipse.xsmp.xcatalogue.Component
+import org.eclipse.xsmp.xcatalogue.Array
+import org.eclipse.xsmp.xcatalogue.Class
+import org.eclipse.xsmp.xcatalogue.CollectionLiteral
+import org.eclipse.xsmp.xcatalogue.Expression
 import org.eclipse.xsmp.xcatalogue.Field
+import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.PrimitiveType
+import org.eclipse.xsmp.xcatalogue.SimpleType
+import org.eclipse.xsmp.xcatalogue.Structure
+import org.eclipse.xsmp.xcatalogue.Type
+import org.eclipse.xtext.naming.QualifiedName
 
 class FieldGenerator extends AbstractMemberGenerator<Field> {
 
-    @Inject
-    XsmpUtil xsmpUtil
 
-    override declare(NamedElementWithMembers type, Field element) {
-    }
-
-    override define(NamedElementWithMembers type, Field element) {
-    }
 
     override declareGen(NamedElementWithMembers type, Field element, boolean useGenPattern) {
+        '''
+            «element.comment»
+            «IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")» «element.name»;
+        '''
 
-        if (element.isStatic)
-            '''
-                «element.comment»
-                static «IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")» «element.name»;
-            '''
-        else
-            '''
-                «element.comment»
-                «IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")» «element.name»«IF element.^default !==null» «element.^default.generateExpression(element.type, type)»«ELSEIF element.eContainer instanceof Component»{}«ENDIF»;
-            '''
     }
 
     override defineGen(NamedElementWithMembers type, Field element, boolean useGenPattern) {
         if (element.isStatic)
             '''
+                // «element.name» initialization
                 «element.type.fqn.toString("::")» «type.name(useGenPattern)»::«element.name»«IF element.^default !==null» «element.^default.generateExpression(element.type, type)»«ELSE»{}«ENDIF»;
             '''
     }
@@ -56,20 +51,88 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
         element.^default?.include(acceptor)
     }
 
-    override initialize(NamedElementWithMembers container, Field member, boolean useGenPattern) {
-        if (member.^default === null)
+    protected def dispatch boolean isDirectListInitializationType(Type type) {
+        true
+    }
+
+    protected def dispatch boolean isDirectListInitializationType(Structure type) {
+        type.member.filter(Field).forall[it.static || it.^default === null]
+    }
+
+    protected def dispatch boolean isDirectListInitializationType(Array type) {
+        type.itemType.isDirectListInitializationType
+    }
+
+    protected def dispatch boolean isDirectListInitializationType(Class type) {
+        false
+    }
+
+    protected def boolean isDirectListInitialization(Field element) {
+        element.^default === null || element.type.isDirectListInitializationType
+    }
+
+    override initialize(NamedElementWithMembers container, Field element, boolean useGenPattern) {
+        if (!element.static && element.isDirectListInitialization)
             '''
-                // «member.name» initialization
-                «member.name» { }
+                // «element.name» initialization
+                «element.name» «IF element.^default !== null» «element.^default.generateExpression(element.type, container)»«ELSE»{}«ENDIF»
             '''
     }
 
-    override finalize(Field element) {
+    protected def dispatch CharSequence construct(QualifiedName name, Type type, Expression expression,
+        NamedElement context) {
+    }
+
+    protected def dispatch CharSequence construct(QualifiedName name, SimpleType type, Expression expression,
+        NamedElement context) {
+        '''
+            «name.toString» = «expression.generateExpression(type, context)»;
+        '''
+    }
+
+    protected def dispatch CharSequence construct(QualifiedName name, Structure type, CollectionLiteral expression,
+        NamedElement context) {
+
+        if (type instanceof Array) {
+            val last = name.lastSegment
+            val base = name.skipLast(1)
+            '''
+                «FOR i : 0 ..< expression.elements.size»
+                    «construct(base.append(last+"["+i+"]"), type.itemType, expression.elements.get(i),context)»
+                «ENDFOR»
+            '''
+
+        } else if (type instanceof Structure) {
+            val fields = type.assignableFields.collect(Collectors.toList)
+            
+            '''
+                «FOR i : 0 ..< expression.elements.size»
+                    «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i),context)»
+                «ENDFOR»
+            '''
+        } else
+            '''{«FOR l : expression.elements SEPARATOR ', '»«l.doGenerateExpression(type, context)»«ENDFOR»}'''
+
+    /* 
+     *         val fields = type.member.filter(Field).filter[!it.static && it.visibility() === VisibilityKind::PUBLIC]
+     *         '''
+     * «FOR i : 0 ..< expression.elements.size»
+     *     «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i), context)»
+     * «ENDFOR»
+     '''*/
+    }
+
+    override construct(NamedElementWithMembers container, Field element, boolean useGenPattern) {
+        if (!element.static && !element.isDirectListInitialization)
+            '''
+                // «element.name» initialization
+                «construct(QualifiedName.create(element.name), element.type, element.^default, container)»
+            '''
     }
 
     override Publish(Field element) {
         if (element.type instanceof PrimitiveType)
-            switch (xsmpUtil.getPrimitiveType(element.type as PrimitiveType)) {
+            switch (element.type.primitiveType) {
                 case BOOL,
                 case CHAR8,
                 case FLOAT32,

@@ -17,17 +17,27 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class SimSatEventSinkGenerator extends EventSinkGenerator {
 
-    protected override collectIncludes(IncludeAcceptor acceptor) {
-        super.collectIncludes(acceptor)
-        acceptor.mdkSource("esa/ecss/smp/cdk/EventSink.h")
+    override collectIncludes(EventSink element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
+
+        if (element.eventArgType !== null)
+            acceptor.mdkSource("esa/ecss/smp/cdk/EventSinkArg.h")
+        else
+            acceptor.mdkSource("esa/ecss/smp/cdk/EventSinkVoid.h")
     }
 
     override initialize(NamedElementWithMembers container, EventSink element, boolean useGenPattern) {
 
-        '''
-            // Event Sink: «element.name»
-            «element.name»{new ::esa::ecss::smp::cdk::EventSink("«element.name»", «element.description()», this, simulator)}
-        '''
+        if (element.eventArgType !== null)
+            '''
+                // Event Sink: «element.name»
+                «element.name»{new ::esa::ecss::smp::cdk::EventSinkArg<::«element.eventArgType.fqn.toString("::")»>("«element.name»", «element.description()», this, simulator, &«container.name(useGenPattern)»::_«element.name»)}
+            '''
+        else
+            '''
+                // Event Sink: «element.name»
+                «element.name»{new ::esa::ecss::smp::cdk::EventSinkVoid("«element.name»", «element.description()», this, simulator, &«container.name(useGenPattern)»::_«element.name»)}
+            '''
     }
 
 }

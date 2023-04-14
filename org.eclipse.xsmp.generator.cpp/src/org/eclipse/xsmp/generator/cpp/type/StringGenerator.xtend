@@ -23,9 +23,6 @@ class StringGenerator extends AbstractTypeFileGenerator<String> {
         '''
     }
 
-    override protected generateSourceBody(String type) {
-    }
-
     override protected generateHeaderGenBody(String t, boolean useGenPattern) {
         '''
             «t.comment»
@@ -49,6 +46,7 @@ class StringGenerator extends AbstractTypeFileGenerator<String> {
                         «t.uuidQfn»,  //UUID
                         «t.length.doGenerateExpression(t, t)»);  //length of the String
                 }
+                «t.uuidDefinition»
         '''
     }
 

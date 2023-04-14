@@ -22,7 +22,7 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
         '''
     }
 
-    override define(NamedElementWithMembers type, EntryPoint element) {
+    override define(NamedElementWithMembers type, EntryPoint element, boolean useGenPattern) {
         '''
             void «type.name»::_«element.name»() {
             }
@@ -47,9 +47,6 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
         acceptor.mdkHeader("Smp/IEntryPoint.h")
-    }
-
-    override initialize(NamedElementWithMembers container, EntryPoint member, boolean useGenPattern) {
     }
 
     override finalize(EntryPoint element) {

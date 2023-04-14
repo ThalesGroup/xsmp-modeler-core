@@ -16,25 +16,38 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
+import org.eclipse.xsmp.xcatalogue.Association;
+import org.eclipse.xsmp.xcatalogue.Attribute;
+import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.Document;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
+import org.eclipse.xsmp.xcatalogue.NativeType;
+import org.eclipse.xsmp.xcatalogue.Operation;
+import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
+import org.eclipse.xsmp.xcatalogue.ReferenceType;
 import org.eclipse.xsmp.xcatalogue.SimpleType;
 import org.eclipse.xsmp.xcatalogue.StringLiteral;
+import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
+import org.eclipse.xsmp.xcatalogue.ValueType;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -45,6 +58,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
 /**
@@ -372,10 +386,10 @@ public class XsmpUtil
   {
     if (t != null)
     {
-      final var qfn = qualifiedNameProvider.getFullyQualifiedName(t);
-      if (qfn != null)
+      final var fqn = qualifiedNameProvider.getFullyQualifiedName(t);
+      if (fqn != null)
       {
-        return qfn;
+        return fqn;
       }
     }
     return QualifiedName.EMPTY;
@@ -577,4 +591,303 @@ public class XsmpUtil
     }
     return LocalDate.now().getYear();
   }
+
+  static final QualifiedName _Static = QualifiedName.create("Attributes", "Static");
+
+  static final QualifiedName _Const = QualifiedName.create("Attributes", "Const");
+
+  static final QualifiedName _Mutable = QualifiedName.create("Attributes", "Mutable");
+
+  static final QualifiedName _ByPointer = QualifiedName.create("Attributes", "ByPointer");
+
+  static final QualifiedName _ByReference = QualifiedName.create("Attributes", "ByReference");
+
+  static final QualifiedName _Abstract = QualifiedName.create("Attributes", "Abstract");
+
+  static final QualifiedName _Virtual = QualifiedName.create("Attributes", "Virtual");
+
+  static final QualifiedName _Constructor = QualifiedName.create("Attributes", "Constructor");
+
+  static final QualifiedName _Forcible = QualifiedName.create("Attributes", "Forcible");
+
+  static final QualifiedName _Failure = QualifiedName.create("Attributes", "Failure");
+
+  static final QualifiedName _ConstGetter = QualifiedName.create("Attributes", "ConstGetter");
+
+  static final QualifiedName _NoConstructor = QualifiedName.create("Attributes", "NoConstructor");
+
+  static final QualifiedName _NoDestructor = QualifiedName.create("Attributes", "NoDestructor");
+
+  static final QualifiedName _SimpleArray = QualifiedName.create("Attributes", "SimpleArray");
+
+  public Attribute attribute(NamedElement o, QualifiedName id)
+  {
+    return o.getMetadatum().getMetadata().stream()
+            .filter(it -> it.getType() != null
+                    && id.equals(qualifiedNameProvider.getFullyQualifiedName(it.getType())))
+            .findFirst().orElse(null);
+  }
+
+  public Expression attributeValue(NamedElement o, QualifiedName id)
+  {
+    final var attribute = attribute(o, id);
+    if (attribute == null)
+    {
+      return null;
+    }
+    if (attribute.getValue() == null)
+    {
+      return ((AttributeType) attribute.getType()).getDefault();
+    }
+    return attribute.getValue();
+  }
+
+  public Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
+  {
+
+    return Solver.INSTANCE.getBoolean(attributeValue(o, id));
+  }
+
+  public boolean isStatic(NamedElement o)
+  {
+    return attributeBoolValue(o, _Static).orElse(false);
+  }
+
+  public boolean isConst(NamedElement o)
+  {
+    return attributeBoolValue(o, _Const).orElse(false);
+  }
+
+  public boolean isMutable(NamedElement o)
+  {
+    return attributeBoolValue(o, _Mutable).orElse(false);
+  }
+
+  public boolean isByPointer(NamedElement o)
+  {
+    return attributeBoolValue(o, _ByPointer).orElse(false);
+  }
+
+  public boolean isByReference(NamedElement o)
+  {
+    return attributeBoolValue(o, _ByReference).orElse(false);
+  }
+
+  public boolean isAbstract(NamedElement o)
+  {
+    return attributeBoolValue(o, _Abstract).orElse(o.eContainer() instanceof Interface);
+  }
+
+  public boolean isVirtual(NamedElement o)
+  {
+    return attributeBoolValue(o, _Virtual).orElse(o.eContainer() instanceof ReferenceType);
+
+  }
+
+  public boolean isConstructor(Operation o)
+  {
+    return attributeBoolValue(o, _Constructor).orElse(false);
+  }
+
+  public boolean isByPointer(Parameter o)
+  {
+
+    return kind(o) == ArgKind.BY_PTR;
+  }
+
+  public boolean isByReference(Parameter o)
+  {
+
+    return kind(o) == ArgKind.BY_REF;
+  }
+
+  public boolean isForcible(Field o)
+  {
+    return attributeBoolValue(o, _Forcible).orElse(false);
+  }
+
+  public boolean isFailure(Field o)
+  {
+    return attributeBoolValue(o, _Failure).orElse(false);
+  }
+
+  public boolean isConstGetter(Property o)
+  {
+    return attributeBoolValue(o, _ConstGetter).orElse(false);
+  }
+
+  public boolean isNoConstructor(Type o)
+  {
+    return attributeBoolValue(o, _NoConstructor).orElse(false);
+  }
+
+  public boolean isNoDestructor(Type o)
+  {
+    return attributeBoolValue(o, _NoDestructor).orElse(false);
+  }
+
+  public boolean isSimpleArray(Array o)
+  {
+    return attributeBoolValue(o, _SimpleArray).orElse(false);
+  }
+
+  public boolean isConst(Parameter o)
+  {
+
+    final var isConst = attributeBoolValue(o, _Const);
+
+    return isConst.orElseGet(() -> {
+      switch (o.getDirection())
+      {
+        case IN:
+          return !(o.getType() instanceof ValueType);
+        case RETURN:
+        case OUT:
+        case INOUT:
+        default:
+          return false;
+      }
+    });
+  }
+
+  public boolean isByPointer(Association o)
+  {
+    return attributeBoolValue(o, _ByPointer).orElse(o.getType() instanceof ReferenceType);
+  }
+
+  public ArgKind kind(Parameter o)
+  {
+
+    final var type = o.getType();
+
+    ArgKind kind;
+    if (type instanceof ReferenceType)
+    {
+      switch (o.getDirection())
+      {
+        case IN:
+          kind = ArgKind.BY_REF;
+          break;
+        case RETURN:
+        case OUT:
+        case INOUT:
+        default:
+          kind = ArgKind.BY_PTR;
+          break;
+      }
+    }
+    else if (type instanceof NativeType || type instanceof ValueType)
+    {
+      switch (o.getDirection())
+      {
+        case IN:
+        case RETURN:
+          kind = ArgKind.BY_VALUE;
+          break;
+        case OUT:
+        case INOUT:
+        default:
+          kind = ArgKind.BY_PTR;
+          break;
+      }
+    }
+    else
+    {
+      kind = ArgKind.BY_VALUE;
+    }
+
+    final var byPtr = attributeBoolValue(o, _ByPointer);
+    final var byReference = attributeBoolValue(o, _ByReference);
+
+    if (!byPtr.isEmpty())
+    {
+      if (byPtr.get())
+      {
+        kind = ArgKind.BY_PTR;
+      }
+      else if (kind == ArgKind.BY_PTR)
+      {
+        kind = ArgKind.BY_VALUE;
+      }
+
+    }
+    if (!byReference.isEmpty())
+    {
+      if (byReference.get())
+      {
+        kind = ArgKind.BY_REF;
+      }
+      else if (kind == ArgKind.BY_REF)
+      {
+        kind = ArgKind.BY_VALUE;
+      }
+    }
+    return kind;
+  }
+
+  public enum ArgKind
+  {
+    BY_VALUE, BY_PTR, BY_REF
+  }
+
+  public VisibilityKind getVisibility(EObject t)
+  {
+    if (t instanceof VisibilityElement)
+    {
+      return ((VisibilityElement) t).getRealVisibility();
+    }
+    return VisibilityKind.PUBLIC;
+  }
+
+  // get all public & non-static fields
+  public Stream<Field> getAssignableFields(Structure structure)
+  {
+    final var fields = structure.getMember().stream().filter(Field.class::isInstance)
+            .map(Field.class::cast)
+            .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it));
+
+    if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
+    {
+      final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
+      if (clazz.getBase() instanceof Structure)
+      {
+        return Streams.concat(getAssignableFields((Structure) clazz.getBase()), fields);
+      }
+    }
+    return fields;
+  }
+
+  public class ParameterSignature
+  {
+    public ParameterSignature(Parameter p)
+    {
+      type = p.getType();
+      isConst = isConst(type);
+      kind = kind(p);
+      optional = p.getDefault() != null;
+    }
+
+    boolean isConst;
+
+    ArgKind kind;
+
+    Type type;
+
+    boolean optional;
+  }
+
+  public Operation findConstructor(Type type, Expression expression)
+  {
+    if (type instanceof NamedElementWithMembers)
+    {
+      // find a public operation with constructor attribute
+      return ((NamedElementWithMembers) type).getMember().stream()
+              .filter(Operation.class::isInstance).map(Operation.class::cast)
+              .filter(this::isConstructor).filter(c -> getVisibility(c) == VisibilityKind.PUBLIC)
+              // check that signature match with expression
+              .filter(it -> false).findFirst().orElse(null);
+    }
+    return null;
+  }
+
 }

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.util.ElementUtil;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
@@ -46,7 +45,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   private static final Logger LOG = Logger.getLogger(XsmpcatResourceDescriptionStrategy.class);
 
   @Inject
-  private ElementUtil elementUtil;
+  private XsmpUtil elementUtil;
 
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;

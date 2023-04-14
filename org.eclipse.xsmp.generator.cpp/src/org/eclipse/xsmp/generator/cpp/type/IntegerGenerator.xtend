@@ -23,9 +23,6 @@ class IntegerGenerator extends AbstractTypeFileGenerator<Integer> {
         '''
     }
 
-    override protected generateSourceBody(Integer type) {
-    }
-
     override protected generateHeaderGenBody(Integer t, boolean useGenPattern) {
         '''
             «t.uuidDeclaration»
@@ -47,6 +44,7 @@ class IntegerGenerator extends AbstractTypeFileGenerator<Integer> {
                 "«t.unit»", //unit
                 «t.generatePrimitiveKind»);  
             }
+            «t.uuidDefinition»
         '''
     }
 

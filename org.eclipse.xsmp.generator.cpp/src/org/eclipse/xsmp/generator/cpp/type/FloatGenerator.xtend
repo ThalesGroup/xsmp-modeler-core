@@ -23,9 +23,6 @@ class FloatGenerator extends AbstractTypeFileGenerator<Float> {
         '''
     }
 
-    override protected generateSourceBody(Float type) {
-    }
-
     override protected generateHeaderGenBody(Float t, boolean useGenPattern) {
         '''
             «t.uuidDeclaration»
@@ -49,6 +46,7 @@ class FloatGenerator extends AbstractTypeFileGenerator<Float> {
                 "«t.unit»", //unit
                 «t.generatePrimitiveKind»);  
             }
+            «t.uuidDefinition»
         '''
     }
 

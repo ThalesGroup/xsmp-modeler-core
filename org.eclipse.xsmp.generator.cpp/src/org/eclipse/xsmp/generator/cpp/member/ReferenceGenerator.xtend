@@ -16,20 +16,11 @@ import org.eclipse.xsmp.xcatalogue.Reference
 
 class ReferenceGenerator extends AbstractMemberGenerator<Reference> {
 
-    override declare(NamedElementWithMembers type, Reference element) {
-    }
-
-    override define(NamedElementWithMembers type, Reference element) {
-    }
-
     override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
         '''
             «element.comment»
             ::Smp::IReference* «element.name»;
         '''
-    }
-
-    override defineGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
     }
 
     override collectIncludes(Reference element, IncludeAcceptor acceptor) {
@@ -44,9 +35,6 @@ class ReferenceGenerator extends AbstractMemberGenerator<Reference> {
         acceptor.mdkHeader("Smp/IReference.h")
     }
 
-    override initialize(NamedElementWithMembers container, Reference member, boolean useGenPattern) {
-    }
-
     override finalize(Reference element) {
         '''  
             delete «element.name»;
@@ -54,6 +42,4 @@ class ReferenceGenerator extends AbstractMemberGenerator<Reference> {
         '''
     }
 
-    override Publish(Reference element) {
-    }
 }
