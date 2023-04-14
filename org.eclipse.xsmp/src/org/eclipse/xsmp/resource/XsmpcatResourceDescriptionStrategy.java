@@ -136,6 +136,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
         // save the usage of the AttributeType
         builder.put("usage",
                 ((AttributeType) eObject).getUsage().stream().collect(Collectors.joining(" ")));
+        builder.put("allowMultiple", Boolean.toString(((AttributeType) eObject).isAllowMultiple()));
       }
     }
     if (eObject instanceof Operation)

@@ -22,6 +22,7 @@ import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Predicate;
@@ -34,6 +35,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class XsmpcatReferenceFilter implements IReferenceFilter
 {
+  @Inject
+  private IQualifiedNameProvider qualifiedNameProvider;
 
   private final Map<EReference, Function<EObject, Predicate<IEObjectDescription>>> builders = ImmutableMap
           .<EReference, Function<EObject, Predicate<IEObjectDescription>>> builder()
@@ -121,13 +124,21 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                           XcataloguePackage.Literals.COMPONENT__BASE, p)
                           && !XsmpUtil.isRecursive((Component) model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
-            final EObject elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
+            final var elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
             if (elem != null)
             {
               final List<String> elemUsages = Stream
                       .concat(Stream.of(elem.eClass().getName()),
                               elem.eClass().getEAllSuperTypes().stream().map(EClass::getName))
                       .collect(Collectors.toList());
+
+              // filter allow multiple
+              if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream()
+                      .anyMatch(a -> qualifiedNameProvider.getFullyQualifiedName(a.getType())
+                              .equals(p.getQualifiedName())))
+              {
+                return false;
+              }
               return XsmpUtil.isVisibleFrom(p, model)
                       && Arrays.stream(getUsages(p)).anyMatch(elemUsages::contains);
             }
@@ -166,6 +177,21 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
     }
     return new String[0];
 
+  }
+
+  boolean allowMuliple(IEObjectDescription d)
+  {
+    final var obj = d.getEObjectOrProxy();
+
+    if (obj instanceof AttributeType)
+    {
+      if (obj.eIsProxy())
+      {
+        return Boolean.parseBoolean(d.getUserData("allowMultiple"));
+      }
+      return ((AttributeType) obj).isAllowMultiple();
+    }
+    return false;
   }
 
   private boolean isValidTypeReference(EObject eObject, EReference reference, IEObjectDescription p)
