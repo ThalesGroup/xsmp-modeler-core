@@ -157,7 +157,11 @@ namespace Tata
 
 	namespace ns
 	{
-		/** @uuid af2f3f68-c7a2-4591-ae90-d4c7aa6c1295 */
+		/**
+		 * @uuid af2f3f68-c7a2-4591-ae90-d4c7aa6c1295
+		 * @type toto
+		 * @namespace titi
+		 */
 		public native tesst
 
 

@@ -206,6 +206,8 @@ public     field  ns1.arraytest   collectionliteral = {    4,   2 ,   3  ,0    ,
 	 {/** 
  * 
  * @uuid af2f3f68-c7a2-4591-ae90-d4c7aa6c1295
+ * @type toto
+ * @namespace titi
  */
 public   native      tesst
 
