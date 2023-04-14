@@ -2616,7 +2616,7 @@ namespace Smp
 	 * Variant that can store a value of any of the simple types. The type attribute defines the type used to represent the value, while the value attribute contains the actual value.
 	 * 
 	 * @uuid d575259e-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="NT_AnySimple"
+	 * @platform name="cpp", type="NT_AnySimple", location="Smp/AnySimple.h"
 	 */
 	public native AnySimple
 
@@ -3718,7 +3718,7 @@ namespace Smp
 	 * A component collection is an ordered collection of components, which allows iterating all members.
 	 * 
 	 * @uuid d55b0e81-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IComponent>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IComponent>", namespace="Smp", location="Smp/IComponent.h"
 	 */
 	public native ComponentCollection
 
@@ -3727,7 +3727,7 @@ namespace Smp
 	 * A failure collection is an ordered collection of failures, which allows iterating all members.
 	 * 
 	 * @uuid d572db3a-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IFailure>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IFailure>", namespace="Smp", location="Smp/IFailure.h"
 	 */
 	public native FailureCollection
 
@@ -3736,7 +3736,7 @@ namespace Smp
 	 * A field collection is an ordered collection of fields, which allows iterating all members.
 	 * 
 	 * @uuid 9b7c7cbe-cc52-11e6-a1c3-13e36fcced83
-	 * @platform name="cpp", type="ICollection<IField>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IField>", namespace="Smp", location="Smp/IField.h"
 	 */
 	public native FieldCollection
 
@@ -3745,7 +3745,7 @@ namespace Smp
 	 * A field collection is an ordered collection of operations, which allows iterating all members.
 	 * 
 	 * @uuid 8a44a5be-cc2d-11e9-abb3-9f6a2356f7e2
-	 * @platform name="cpp", type="ICollection<IOperation>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IOperation>", namespace="Smp", location="Smp/IOperation.h"
 	 */
 	public native OperationCollection
 
@@ -3754,7 +3754,7 @@ namespace Smp
 	 * A parameter collection is an ordered collection of parameters, which allows iterating all members.
 	 * 
 	 * @uuid 0dedc8b4-cc39-11e9-abb3-9f6a2356f7e2
-	 * @platform name="cpp", type="ICollection<IParameter>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IParameter>", namespace="Smp", location="Smp/IParameter.h"
 	 */
 	public native ParameterCollection
 
@@ -3763,7 +3763,7 @@ namespace Smp
 	 * A field collection is an ordered collection of properties, which allows iterating all members.
 	 * 
 	 * @uuid 8a44a5b9-cc2d-11e9-abb3-9f6a2356f7e2
-	 * @platform name="cpp", type="ICollection<IProperty>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IProperty>", namespace="Smp", location="Smp/IProperty.h"
 	 */
 	public native PropertyCollection
 
@@ -3844,7 +3844,7 @@ namespace Smp
 	 * A model collection is an ordered collection of models, which allows iterating all members.
 	 * 
 	 * @uuid d55d57fd-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IModel>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IModel>", namespace="Smp", location="Smp/IModel.h"
 	 */
 	public native ModelCollection
 
@@ -3884,7 +3884,7 @@ namespace Smp
 	 * A service collection is an ordered collection of services, which allows iterating all members.
 	 * 
 	 * @uuid d55d57d5-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IService>", namespace="Smp", location="ICollection.h"
+	 * @platform name="cpp", type="ICollection<IService>", namespace="Smp", location="IService.h"
 	 */
 	public native ServiceCollection
 
@@ -4049,7 +4049,7 @@ namespace Smp
 	 * A reference collection is an ordered collection of references, which allows iterating all members.
 	 * 
 	 * @uuid d55fc83a-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IReference>", namespace="Smp", location="ICollection.h"
+	 * @platform name="cpp", type="ICollection<IReference>", namespace="Smp", location="IReference.h"
 	 */
 	public native ReferenceCollection
 
@@ -4191,7 +4191,7 @@ namespace Smp
 	 * A container collection is an ordered collection of containers, which allows iterating all members.
 	 * 
 	 * @uuid d55d5813-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IContainer>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IContainer>", namespace="Smp", location="Smp/IContainer.h"
 	 */
 	public native ContainerCollection
 
@@ -4254,7 +4254,7 @@ namespace Smp
 	 * An event sink collection is an ordered collection of event sinks, which allows iterating all members.
 	 * 
 	 * @uuid d55d5797-e618-11dc-ab64-bf8df6d7b83a
-	 * @platform name="cpp", type="ICollection<IEventSink>", namespace="Smp", location="Smp/ICollection.h"
+	 * @platform name="cpp", type="ICollection<IEventSink>", namespace="Smp", location="Smp/IEventSink.h"
 	 */
 	public native EventSinkCollection
 }

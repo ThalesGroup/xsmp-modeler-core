@@ -13,49 +13,56 @@ package org.eclipse.xsmp.generator.cpp.member
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Property
+import org.eclipse.xsmp.xcatalogue.Interface
 
 class PropertyGenerator extends AbstractMemberGenerator<Property> {
 
     override declare(NamedElementWithMembers type, Property element) {
-        var virtual = element.virtual
-        var static = element.static
-        var const = element.const
+        if (!(type instanceof Interface)) {
+            var static = element.static
+            if (element.attachedField === null && !static) {
 
-        val getter = '''
-            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»::«element.type.fqn.toString("::")» get_«element.name»() override;
-        '''
+                var const = element.const
 
-        val setter = '''
-            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» «element.name») override;
-        '''
-
-        switch (element.access) {
-            case READ_ONLY: {
-                return getter
-            }
-            case READ_WRITE: {
+                val getter = '''
+                    «IF const»const «ENDIF»::«element.type.fqn.toString("::")» get_«element.name»() override;
                 '''
-                    «getter»
-                    «setter»
+
+                val setter = '''
+                    «IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» «element.name») override;
                 '''
-            }
-            case WRITE_ONLY: {
-                return setter
+
+                switch (element.access) {
+                    case READ_ONLY: {
+                        return getter
+                    }
+                    case READ_WRITE: {
+                        '''
+                            «getter»
+                            «setter»
+                        '''
+                    }
+                    case WRITE_ONLY: {
+                        return setter
+                    }
+                }
             }
         }
     }
 
-    override define(NamedElementWithMembers type, Property element) {
-        if (element.attachedField === null) {
+    override define(NamedElementWithMembers type, Property element, boolean useGenPattern) {
+        if (element.attachedField === null && !(type instanceof Interface)) {
             val getter = '''
-                ::«element.type.fqn.toString("::")» «type.name»::get_«element.name»()
+                ::«element.type.fqn.toString("::")» «type.name(element.static)»::get_«element.name»()
                 {
-                    return {}; // TODO
+                    ::«element.type.fqn.toString("::")» ret {};
+                    return ret;
+                   
                 }
             '''
 
             val setter = '''
-                void «type.name»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
+                void «type.name(element.static)»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
                 {
                      // TODO
                 }
@@ -79,17 +86,23 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
     }
 
     override declareGen(NamedElementWithMembers type, Property element, boolean useGenPattern) {
-        var virtual = element.virtual || useGenPattern
         var static = element.static
         var const = element.const
-        var abstract = element.attachedField === null
+        var abstract = !static && (element.attachedField === null)
+        var virtual = !static && (element.virtual || abstract)
 
         val getter = '''
+            /// Get «element.name».
+            «element.comment»
+            /// @return Current value of property «element.name».
             «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»::«element.type.fqn.toString("::")» get_«element.name»() «IF abstract»=0«ENDIF»;
         '''
 
         val setter = '''
-            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» «element.name») «IF abstract»=0«ENDIF»;
+            /// Set «element.name».
+            «element.comment»
+            /// @param value New value of property «element.name» to set.
+            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» value) «IF abstract»=0«ENDIF»;
         '''
 
         switch (element.access) {
@@ -109,7 +122,7 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
     }
 
     override defineGen(NamedElementWithMembers type, Property element, boolean useGenPattern) {
-        if (element.attachedField !== null) {
+        if (element.attachedField !== null /*&& !element.static*/ ) {
             val getter = '''
                 ::«element.type.fqn.toString("::")» «type.name(useGenPattern)»::get_«element.name»()
                 {

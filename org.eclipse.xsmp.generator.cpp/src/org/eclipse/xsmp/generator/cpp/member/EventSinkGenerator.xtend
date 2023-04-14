@@ -25,7 +25,7 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
 
     protected def args(EventSink element) {
         val argType = element.eventArgType
-        '''::Smp::IObject* sender«IF argType !== null», const ::«argType.fqn.toString("::")» &value«ENDIF»'''
+        '''::Smp::IObject* sender«IF argType !== null», ::«argType.fqn.toString("::")» value«ENDIF»'''
     }
 
     override declare(NamedElementWithMembers type, EventSink element) {
@@ -34,7 +34,7 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
         '''
     }
 
-    override define(NamedElementWithMembers type, EventSink element) {
+    override define(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
         '''
             void «type.name»::_«element.name»(«element.args») {
             }
@@ -69,9 +69,6 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
         acceptor.mdkHeader("Smp/IEventSink.h")
     }
 
-    override initialize(NamedElementWithMembers container, EventSink member, boolean useGenPattern) {
-    }
-
     override finalize(EventSink element) {
         '''  
             delete «element.name»;
@@ -79,6 +76,4 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
         '''
     }
 
-    override Publish(EventSink element) {
-    }
 }

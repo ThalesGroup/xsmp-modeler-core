@@ -26,7 +26,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         acceptor.mdkHeader("Smp/ISimulator.h")
 
         type.eAllContents.filter(LanguageType).filter[!(it instanceof ValueReference)].forEach[acceptor.source(it)]
-        XsmpUtil.dependentPackages(type).forEach[acceptor.mdkSource(it.name + ".h")]
+        XsmpUtil.dependentPackages(type).forEach[acceptor.mdkSource(it.name() + ".h")]
     }
 
     protected def boolean requireFactory(Catalogue t) {
@@ -76,7 +76,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         '''
     }
 
-    def CharSequence generatePkgFile(NamedElement t, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
+    def CharSequence generatePkgFile(Catalogue t, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
 
         '''
             «copyright.getSourceText(t, useGenPattern,cat)»
@@ -84,7 +84,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             // -------------------------------------------------------------------------------
             // --------------------------------- Includes ----------------------------------
             // -------------------------------------------------------------------------------
-            #include "«t.name».h"
+            #include "«t.name()».h"
             #include "Smp/Publication/ITypeRegistry.h"
                             
             #ifdef  WIN32
@@ -324,7 +324,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         '''
     }
 
-    override protected generateSourceBody(Catalogue t) {
+    override protected generateSourceBody(Catalogue t, boolean useGenPattern) {
         '''
             
             // --------------------------------------------------------------------------------

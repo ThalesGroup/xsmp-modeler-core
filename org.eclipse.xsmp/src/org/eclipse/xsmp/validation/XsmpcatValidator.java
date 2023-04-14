@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
-import org.eclipse.xsmp.util.ElementUtil;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -54,9 +53,9 @@ import org.eclipse.xsmp.xcatalogue.EventType;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
+import org.eclipse.xsmp.xcatalogue.KeywordExpression;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
-import org.eclipse.xsmp.xcatalogue.NullptrExpression;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
@@ -126,9 +125,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   @Inject
   private IResourceScopeCache cache;
-
-  @Inject
-  protected ElementUtil elementUtil;
 
   @Inject
   private TypeReferenceConverter typeReferenceConverter;
@@ -324,9 +320,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return;
     }
-    if (e instanceof NullptrExpression)
+    if (e instanceof KeywordExpression)
     {
-      acceptError("Expecting a value, got a pointer.", e, null,
+      acceptError("Expecting a value, got a keyword.", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
     switch (type.eClass().getClassifierID())
@@ -350,9 +346,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         checkString((org.eclipse.xsmp.xcatalogue.String) type, e);
         break;
       case XcataloguePackage.STRUCTURE:
+      case XcataloguePackage.CLASS:
+      case XcataloguePackage.EXCEPTION:
         checkStructure((Structure) type, e);
         break;
-      // TODO check class: a constructor should match the provided value
       default:
         // ignore other types
         break;
@@ -365,7 +362,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return;
     }
-    if (!(e instanceof NullptrExpression))
+    if (!(e instanceof KeywordExpression))
     {
       acceptError("Expecting a pointer, got " + e.getClass().getSimpleName() + ".", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
@@ -480,8 +477,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
     if (e instanceof CollectionLiteral)
     {
-      final List<Field> fields = type.getMember().stream().filter(Field.class::isInstance)
-              .map(Field.class::cast).collect(Collectors.toList());
+
+      final var fields = typeUtil.getAssignableFields(type).collect(Collectors.toList());
+
       final var values = (CollectionLiteral) e;
 
       final var size = values.getElements().size();
@@ -680,7 +678,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkArray(Array elem)
   {
 
-    // check size > 0
+    // check size is positive
     if (elem.getSize() != null)
     {
       solver.getInteger(elem.getSize(), BigInteger.ZERO, INT64_MAX);
@@ -1257,7 +1255,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
 
     // an element cannot be both byPointer and ByReference
-    if (elementUtil.isByPointer(elem) && elementUtil.isByReference(elem))
+    if (typeUtil.isByPointer(elem) && typeUtil.isByReference(elem))
     {
       error("An element cannot have both ByPointer and ByReference attributes.",
               XcataloguePackage.Literals.NAMED_ELEMENT__METADATUM);
@@ -1271,7 +1269,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     // check the constructor name
     if (Objects.equals(op.getName(), ((NamedElement) op.eContainer()).getName())
-            && !elementUtil.isConstructor(op))
+            && !typeUtil.isConstructor(op))
     {
       error("Only a Constructor can have the name of the containing Type.",
               XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
@@ -1308,7 +1306,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      switch (elementUtil.kind(p))
+      switch (typeUtil.kind(p))
       {
         case BY_PTR:
           checkPtr(p.getType(), p.getDefault());
@@ -1489,5 +1487,4 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         break;
     }
   }
-
 }

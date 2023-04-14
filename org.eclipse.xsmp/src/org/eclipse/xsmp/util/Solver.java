@@ -740,7 +740,7 @@ public class Solver
         return getValue((StringLiteral) e);
       case XcataloguePackage.UNARY_OPERATION:
         return getValue((UnaryOperation) e);
-      case XcataloguePackage.NULLPTR_EXPRESSION:
+      case XcataloguePackage.KEYWORD_EXPRESSION:
         return Nullptr.INSTANCE;
       default:
         throw new UnsupportedOperationException();

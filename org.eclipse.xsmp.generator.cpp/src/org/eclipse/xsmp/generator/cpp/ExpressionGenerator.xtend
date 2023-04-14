@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.time.Duration
 import java.time.Instant
+import java.util.stream.Collectors
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
@@ -25,9 +26,9 @@ import org.eclipse.xsmp.xcatalogue.CharacterLiteral
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference
 import org.eclipse.xsmp.xcatalogue.Expression
-import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral
+import org.eclipse.xsmp.xcatalogue.KeywordExpression
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression
 import org.eclipse.xsmp.xcatalogue.StringLiteral
@@ -35,7 +36,8 @@ import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xsmp.xcatalogue.ValueType
-import org.eclipse.xsmp.xcatalogue.NullptrExpression
+import org.eclipse.xsmp.xcatalogue.Operation
+import org.eclipse.xsmp.xcatalogue.BuiltInExpression
 
 @Singleton
 class ExpressionGenerator {
@@ -113,9 +115,11 @@ class ExpressionGenerator {
             else
                 '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType.itemType, context)»«ENDFOR»}'''
         } else if (expectedType instanceof Structure) {
-            val fields = expectedType.member.filter(Field)
-            '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).generateStructMember(fields.get(i).type, context)»«ENDFOR»}'''
-
+            val fields = expectedType.assignableFields.collect(Collectors.toList)
+            if (fields.size >= t.elements.size)
+                '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).generateStructMember(fields.get(i).type, context)»«ENDFOR»}'''
+            else // TODO find constructor
+                '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType, context)»«ENDFOR»}'''
         } else
             '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType, context)»«ENDFOR»}'''
 
@@ -144,12 +148,20 @@ class ExpressionGenerator {
         '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
     }
 
-    def dispatch CharSequence doGenerateExpression(NullptrExpression t, Type expectedType, NamedElement context) {
-        '''nullptr'''
+    def dispatch CharSequence doGenerateExpression(KeywordExpression t, Type expectedType, NamedElement context) {
+        '''«t.name»'''
+    }
+
+    def dispatch CharSequence doGenerateExpression(CollectionLiteral t, Operation constructor, NamedElement context) {
+        '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).doGenerateExpression(constructor.parameter.get(i).type, context)»«ENDFOR»}'''
     }
 
     def CharSequence generateExpression(Expression t, Type expectedType, NamedElement context) {
-        if (expectedType instanceof Structure)
+        // find a matching constructor if any
+        val constructor = expectedType.findConstructor(t);
+        if (constructor !== null)
+            t.doGenerateExpression(constructor, context)
+        else if (expectedType instanceof Structure)
             t.doGenerateExpression(expectedType, context)
         else if (expectedType instanceof Array)
             '''{«t.doGenerateExpression(expectedType, context)»}'''
@@ -170,11 +182,7 @@ class ExpressionGenerator {
     def protected dispatch doInclude(EObject expr, IncludeAcceptor acceptor) {
     }
 
-    def protected dispatch doInclude(BuiltInConstant expr, IncludeAcceptor acceptor) {
-        acceptor.systemHeader("math.h")
-    }
-
-    def protected dispatch doInclude(BuiltInFunction expr, IncludeAcceptor acceptor) {
+    def protected dispatch doInclude(BuiltInExpression expr, IncludeAcceptor acceptor) {
         acceptor.systemHeader("math.h")
     }
 

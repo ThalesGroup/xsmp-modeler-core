@@ -14,6 +14,7 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Class
 import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.xcatalogue.Operation
 
 class ClassGenerator extends MemberGenerator<Class> {
 
@@ -27,15 +28,26 @@ class ClassGenerator extends MemberGenerator<Class> {
         '''
     }
 
-    override protected generateSourceBody(Class type) {
+    protected def CharSequence base(Class t) {
+        '''«IF t.base!==null»: public ::«t.base.fqn.toString("::")»«ENDIF»'''
     }
 
     override protected generateHeaderGenBody(Class t, boolean useGenPattern) {
+
+        val constructor = !t.noConstructor && !t.member.filter(Operation).exists[it.constructor && it.parameter.empty]
+        val destructor = !t.noDestructor
         '''
             «t.comment»
-            class «t.name(useGenPattern)»«IF t.base!==null» : public ::«t.base.fqn.toString("::")»«ENDIF» 
+            class «t.name(useGenPattern)»«t.base()»
             {
-                «t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
+            public:
+                static void _Register(::Smp::Publication::ITypeRegistry* registry);
+                
+                «IF constructor»«t.name(useGenPattern)»() = default;«ENDIF»
+                «IF destructor»~«t.name(useGenPattern)»() noexcept = default;«ENDIF»
+                «t.name(useGenPattern)»(const «t.name(useGenPattern)»&) = default;
+                
+                «t.declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
             };
             
             «t.uuidDeclaration»
@@ -43,19 +55,19 @@ class ClassGenerator extends MemberGenerator<Class> {
     }
 
     override protected generateSourceGenBody(Class t, boolean useGenPattern) {
+        val fields = t.member.filter(Field).filter[!it.static]
         '''
             void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                 ::Smp::Publication::IClassType* pClass = registry->AddClassType(
+                 «IF !fields.empty»auto* type = «ENDIF»registry->AddClassType(
                     "«t.name»"  /// Name
                     ,«t.description()»   /// description
                     ,«t.uuidQfn» /// UUID
                     ,«IF t.base !== null»«t.base.uuidQfn»«ELSE»::Smp::Uuids::Uuid_Void«ENDIF» /// Base Class UUID
                     ); 
                     
-                /// Register the Fields of the Class
-                «FOR l : t.member.filter(Field)»
-                    pClass->AddField(
+                «FOR l : fields BEFORE "/// Register the Fields of the Class\n"»
+                    type->AddField(
                         "«l.name»"
                         ,«l.description()»
                         ,«l.type.uuidQfn»  ///UUID of the Field Type
@@ -67,6 +79,15 @@ class ClassGenerator extends MemberGenerator<Class> {
                         );  
                 «ENDFOR»
             }
+            «t.defineMembersGen(useGenPattern)»
+            
+            «t.uuidDefinition»
+        '''
+    }
+
+    override protected CharSequence generateSourceBody(Class t, boolean useGenPattern) {
+        '''
+            «t.defineMembers(useGenPattern)»
         '''
     }
 

@@ -16,12 +16,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class AssociationGenerator extends AbstractMemberGenerator<Association> {
 
-    override declare(NamedElementWithMembers type, Association element) {
-    }
-
-    override define(NamedElementWithMembers type, Association element) {
-    }
-
     override declareGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
         '''    
             «element.comment»
@@ -29,24 +23,17 @@ class AssociationGenerator extends AbstractMemberGenerator<Association> {
         '''
     }
 
-    override defineGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
-    }
-
     override collectIncludes(Association element, IncludeAcceptor acceptor) {
         super.collectIncludes(element, acceptor)
         acceptor.include(element.type)
     }
 
-    override initialize(NamedElementWithMembers container, Association member, boolean useGenPattern) {
-        '''
-            // «member.name» initialization
-            «member.name» { }
-        '''
+    override initialize(NamedElementWithMembers container, Association element, boolean useGenPattern) {
+        if (!element.isStatic)
+            '''
+                // «element.name» initialization
+                «element.name» «IF element.^default !== null»«element.^default.generateExpression(element.type, container)»«ELSE»{ }«ENDIF»
+            '''
     }
 
-    override finalize(Association element) {
-    }
-
-    override Publish(Association element) {
-    }
 }

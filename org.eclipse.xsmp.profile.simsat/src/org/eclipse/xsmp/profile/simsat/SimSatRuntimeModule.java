@@ -13,6 +13,8 @@ package org.eclipse.xsmp.profile.simsat;
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
+import org.eclipse.xsmp.generator.cpp.GeneratorExtension;
+import org.eclipse.xsmp.generator.cpp.member.ConstantGenerator;
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EntryPointGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EventSinkGenerator;
@@ -20,11 +22,14 @@ import org.eclipse.xsmp.generator.cpp.member.EventSourceGenerator;
 import org.eclipse.xsmp.generator.cpp.member.ReferenceGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
+import org.eclipse.xsmp.generator.cpp.type.ExceptionGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.SimSatGenerator;
+import org.eclipse.xsmp.profile.simsat.generator.SimSatGeneratorExtension;
 import org.eclipse.xsmp.profile.simsat.generator.SimSatOutputConfigurationProvider;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.SimSatCatalogueGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.SimSatCopyrightProvider;
+import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatConstantGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatContainerGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatEntryPointGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatEventSinkGenerator;
@@ -32,6 +37,7 @@ import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatEventSourceGen
 import org.eclipse.xsmp.profile.simsat.generator.cpp.member.SimSatReferenceGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.type.SimSatArrayGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.type.SimSatComponentGenerator;
+import org.eclipse.xsmp.profile.simsat.generator.cpp.type.SimSatExceptionGenerator;
 import org.eclipse.xsmp.profile.simsat.generator.cpp.type.SimSatStringGenerator;
 import org.eclipse.xsmp.profile.simsat.validation.SimSatValidator;
 import org.eclipse.xtext.generator.IGenerator2;
@@ -106,6 +112,21 @@ public class SimSatRuntimeModule extends XsmpcatExtensionRuntimeModule
   public Class< ? extends StringGenerator> bindStringGenerator()
   {
     return SimSatStringGenerator.class;
+  }
+
+  public Class< ? extends ExceptionGenerator> bindExceptionGenerator()
+  {
+    return SimSatExceptionGenerator.class;
+  }
+
+  public Class< ? extends ConstantGenerator> bindConstantGenerator()
+  {
+    return SimSatConstantGenerator.class;
+  }
+
+  public Class< ? extends GeneratorExtension> bindGeneratorExtension()
+  {
+    return SimSatGeneratorExtension.class;
   }
 
   public Class< ? extends CppCopyrightNoticeProvider> bindCopyrightProvider()

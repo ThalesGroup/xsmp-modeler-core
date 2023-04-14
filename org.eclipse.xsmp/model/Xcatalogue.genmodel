@@ -113,41 +113,7 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//VisibilityElement/realVisibility"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//VisibilityElement/useVisibility"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="Xcatalogue.ecore#//Expression">
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/getString">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/getString/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/getDecimal">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/getDecimal/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/getInteger">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/getInteger/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/getBoolean">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/getBoolean/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/solve">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/solve/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/doGetString">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/doGetString/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/doGetDecimal">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/doGetDecimal/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/doGetInteger">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/doGetInteger/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/doGetBoolean">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/doGetBoolean/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/getEnum">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/getEnum/acceptor"/>
-      </genOperations>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//Expression/doGetEnum">
-        <genParameters ecoreParameter="Xcatalogue.ecore#//Expression/doGetEnum/acceptor"/>
-      </genOperations>
-    </genClasses>
+    <genClasses image="false" ecoreClass="Xcatalogue.ecore#//Expression"/>
     <genClasses ecoreClass="Xcatalogue.ecore#//CollectionLiteral">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//CollectionLiteral/elements"/>
     </genClasses>
@@ -234,6 +200,7 @@
     <genClasses ecoreClass="Xcatalogue.ecore#//Service"/>
     <genClasses ecoreClass="Xcatalogue.ecore#//Association">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Association/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Association/default"/>
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//Constant">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Constant/type"/>
@@ -293,5 +260,6 @@
     <genClasses ecoreClass="Xcatalogue.ecore#//ParenthesizedExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//ParenthesizedExpression/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Xcatalogue.ecore#//NullptrExpression"/>
   </genPackages>
 </genmodel:GenModel>

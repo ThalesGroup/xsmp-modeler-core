@@ -19,8 +19,8 @@ import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.xsmp.util.ElementUtil;
 import org.eclipse.xsmp.util.Solver;
+import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
@@ -62,7 +62,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   protected IQualifiedNameProvider qualifiedNameProvider;
 
   @Inject
-  private ElementUtil elementUtil;
+  private XsmpUtil elementUtil;
 
   @Inject
   protected IImageHelper imageHelper;

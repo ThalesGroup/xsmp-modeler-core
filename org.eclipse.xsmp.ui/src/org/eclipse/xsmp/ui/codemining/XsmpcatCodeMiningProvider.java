@@ -14,7 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.codemining.ICodeMining;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
-import org.eclipse.xsmp.util.ElementUtil;
+import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
@@ -37,7 +37,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 {
 
   @Inject
-  private ElementUtil elementUtil;
+  private XsmpUtil elementUtil;
 
   @Inject
   private XsmpcatGrammarAccess ga;

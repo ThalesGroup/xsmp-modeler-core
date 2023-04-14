@@ -16,12 +16,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class ConstantGenerator extends AbstractMemberGenerator<Constant> {
 
-    override declare(NamedElementWithMembers type, Constant element) {
-    }
-
-    override define(NamedElementWithMembers type, Constant element) {
-    }
-
     override declareGen(NamedElementWithMembers type, Constant element, boolean useGenPattern) {
         '''
             «element.comment»
@@ -31,7 +25,7 @@ class ConstantGenerator extends AbstractMemberGenerator<Constant> {
 
     override defineGen(NamedElementWithMembers type, Constant element, boolean useGenPattern) {
         '''
-            constexpr ::«element.type.fqn.toString("::")» «type.name(true)»::«element.name»;
+            constexpr ::«element.type.fqn.toString("::")» «type.name(useGenPattern)»::«element.name»;
         '''
     }
 
@@ -41,12 +35,4 @@ class ConstantGenerator extends AbstractMemberGenerator<Constant> {
         element.value.include(acceptor)
     }
 
-    override initialize(NamedElementWithMembers container, Constant member, boolean useGenPattern) {
-    }
-
-    override finalize(Constant element) {
-    }
-
-    override Publish(Constant element) {
-    }
 }

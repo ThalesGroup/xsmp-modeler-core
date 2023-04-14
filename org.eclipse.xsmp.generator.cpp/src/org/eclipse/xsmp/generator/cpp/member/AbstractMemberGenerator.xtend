@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.generator.cpp.ExpressionGenerator
 import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.ElementUtil
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 abstract class AbstractMemberGenerator<T extends EObject> {
@@ -24,28 +23,27 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     protected extension GeneratorExtension
     @Inject
     protected extension ExpressionGenerator
-    @Inject
-    protected extension ElementUtil
+ 
 
     /**
      * Declare a member it its container (INCLUDE)
      */
-    def abstract CharSequence declare(NamedElementWithMembers container, T member)
+    def CharSequence declare(NamedElementWithMembers container, T member) {}
 
     /**
      * Define a member it its container (SOURCE)
      */
-    def abstract CharSequence define(NamedElementWithMembers container, T member)
+    def CharSequence define(NamedElementWithMembers container, T member, boolean useGenPattern) {}
 
     /**
      * Declare a member it its container (INCLUDE-GEN)
      */
-    def abstract CharSequence declareGen(NamedElementWithMembers container, T member, boolean useGenPattern)
+    def CharSequence declareGen(NamedElementWithMembers container, T member, boolean useGenPattern) {}
 
     /**
      * Define a member it its container (SOURCE-GEN)
      */
-    def abstract CharSequence defineGen(NamedElementWithMembers container, T member, boolean useGenPattern)
+    def CharSequence defineGen(NamedElementWithMembers container, T member, boolean useGenPattern) {}
 
     /**
      * Collect all includes required by this member
@@ -57,9 +55,20 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     protected def void collectIncludes(IncludeAcceptor acceptor) {
     }
 
-    def abstract CharSequence initialize(NamedElementWithMembers container, T member, boolean useGenPattern)
+    /**
+     * The direct list initialization of the member in the parent constructor initializer-list
+     */
+    def CharSequence initialize(NamedElementWithMembers container, T member, boolean useGenPattern) {}
 
-    def abstract CharSequence finalize(T element)
+    /**
+     * Construction of the member in the parent constructor body
+     */
+    def CharSequence construct(NamedElementWithMembers container, T member, boolean useGenPattern) {}
 
-    def abstract CharSequence Publish(T element)
+    /**
+     * The finalization of the member in the parent destructor
+     */
+    def CharSequence finalize(T element) {}
+
+    def CharSequence Publish(T element) {}
 }

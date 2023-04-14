@@ -14,6 +14,8 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import java.util.stream.Collectors
+import java.util.List
 
 class StructureGenerator extends MemberGenerator<Structure> {
 
@@ -27,11 +29,9 @@ class StructureGenerator extends MemberGenerator<Structure> {
         '''
     }
 
-    override protected generateSourceBody(Structure type) {
-    }
-
     override protected generateHeaderGenBody(Structure t, boolean useGenPattern) {
-        val hasConstructor = t.member.filter(Field).exists[it.^default !== null]
+        val fields = t.member.filter(Field).filter[!it.static]
+        val hasConstructor = fields.exists[it.^default !== null]
         '''
             «t.comment»
             struct «t.name(useGenPattern)» 
@@ -39,13 +39,12 @@ class StructureGenerator extends MemberGenerator<Structure> {
                 «t.declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                    «t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !== null»«f.^default.generateExpression(f.type, f)»«ELSE»{}«ENDIF»«ENDFOR»):
-                            «FOR f : t.member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
-                    ~«t.name(useGenPattern)»() = default;
-                    «t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;
-                    «t.name(useGenPattern)»(«t.name(useGenPattern)» &&) = default;
-                    «t.name(useGenPattern)»& operator=(const «t.name(useGenPattern)» &) = default;
-                    
+                «t.name(useGenPattern)»(/*«FOR f : fields SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !==null» «f.^default.generateExpression(f.type, t)»«ELSE»{}«ENDIF»«ENDFOR»*/);
+                ~«t.name(useGenPattern)»() noexcept;
+                «t.name(useGenPattern)»(const «t.name(useGenPattern)» &);
+                «t.name(useGenPattern)»(«t.name(useGenPattern)» &&);
+                «t.name(useGenPattern)»& operator=(const «t.name(useGenPattern)» &);
+                
                 «ENDIF»
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
             };
@@ -54,18 +53,27 @@ class StructureGenerator extends MemberGenerator<Structure> {
         '''
     }
 
+    protected def Iterable<CharSequence> initializerList(Structure t, List<Field> fields, boolean useGenPattern) {
+        var List<CharSequence> list = newArrayList
+        for (c : fields)
+            list += t.initialize(c, useGenPattern)
+        return list.filterNull
+    }
+
     override protected generateSourceGenBody(Structure t, boolean useGenPattern) {
+        val fields = t.assignableFields.collect(Collectors.toList)
+        val hasConstructor = fields.exists[it.^default !== null]
         '''
             void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                 «IF !t.member.filter(Field).empty»::Smp::Publication::IStructureType* pStructure = «ENDIF»registry->AddStructureType(
+                 «IF !fields.empty»auto* pStructure = «ENDIF»registry->AddStructureType(
                     "«t.name»"  /// Name
                     ,«t.description()»   /// description
                     ,«t.uuidQfn» /// UUID
                     ); 
                     
                 
-                «FOR l : t.member.filter(Field) BEFORE "/// Register the Fields of the Structure\n"»
+                «FOR l : fields BEFORE "/// Register the Fields of the Structure\n"»
                     pStructure->AddField(
                         "«l.name»"
                         ,«l.description()»
@@ -78,6 +86,22 @@ class StructureGenerator extends MemberGenerator<Structure> {
                         );  
                 «ENDFOR»
             }
+            «IF hasConstructor»
+                «t.name(useGenPattern)»::«t.name(useGenPattern)»(/*«FOR f : fields SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name»«ENDFOR»*/)
+                                        «FOR f : t.initializerList(fields, useGenPattern) BEFORE ':' SEPARATOR ", "»«f»«ENDFOR» 
+                {
+                 «FOR f : t.member»
+                     «t.construct(f, useGenPattern)»
+                 «ENDFOR»
+                }
+                «t.name(useGenPattern)»::~«t.name(useGenPattern)»() noexcept = default;
+                «t.name(useGenPattern)»::«t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;
+                «t.name(useGenPattern)»::«t.name(useGenPattern)»(«t.name(useGenPattern)» &&) = default;
+                «t.name(useGenPattern)»& «t.name(useGenPattern)»::operator=(const «t.name(useGenPattern)» &) = default;
+            «ENDIF»
+            «t.defineMembersGen(useGenPattern)»
+            
+            «t.uuidDefinition»
         '''
     }
 

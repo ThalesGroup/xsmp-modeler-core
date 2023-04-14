@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.ElementUtil.ArgKind
+import org.eclipse.xsmp.util.XsmpUtil.ArgKind
 import org.eclipse.xsmp.util.Solver
+import org.eclipse.xsmp.xcatalogue.AttributeType
 import org.eclipse.xsmp.xcatalogue.Enumeration
-import org.eclipse.xsmp.xcatalogue.Interface
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
@@ -34,7 +34,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
         var operator = o.attribute(QualifiedName.create("Attributes", "Operator"))
         if (operator !== null) {
-            val value = Solver.INSTANCE.getEnum(operator.value, operator.type as Enumeration)
+            val value = Solver.INSTANCE.getEnum(operator.value, (operator.type as AttributeType).type as Enumeration)
 
             if (value !== null) {
                 switch (value.name) {
@@ -102,7 +102,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         }
     }
 
-    override define(NamedElementWithMembers type, Operation element) {
+    override define(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
 
         if (!element.abstract)
             '''
@@ -114,33 +114,17 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
                     «ENDIF» 
                 }
             '''
+
     }
 
     override declareGen(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
-        var virtual = element.virtual || useGenPattern
-        var abstract = element.abstract || useGenPattern
-        if (element.eContainer instanceof Interface) {
-            virtual = true
-            abstract = true
-        }
+
+        val abstract = element.abstract || useGenPattern
+        val virtual = element.virtual || abstract
         '''
             «element.comment»
             «IF virtual»virtual «ENDIF»«element.returnType»«element.name()»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»)«IF abstract»=0«ENDIF»;
         '''
-    }
-
-    override defineGen(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
-        var abstract = element.abstract || useGenPattern
-        if (!abstract)
-            '''
-                «element.returnType»«type.name»::«element.name()»(«FOR p : element.parameter SEPARATOR ', '»«p.generateParameter(false)»«ENDFOR»)
-                {
-                    «IF element.returnParameter!==null»
-                        «element.returnParameter.type()» ret {};
-                        return ret;
-                    «ENDIF» 
-                }
-            '''
     }
 
     override collectIncludes(Operation element, IncludeAcceptor acceptor) {
@@ -169,22 +153,24 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
     }
 
     override Publish(Operation element) {
-        val r = element.returnParameter
-        '''
-            {
-                // Publish operation «element.name»
-                «IF !element.parameter.empty || r !== null »
-                    ::Smp::Publication::IPublishOperation* operation = 
-                «ENDIF»
-                receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
-                «FOR p : element.parameter»
-                    operation->PublishParameter("«p.name»", «p.description()», «p.type.uuidQfn», «p.direction.generatePDK»);
-                «ENDFOR»
-                «IF r !== null »
-                    operation->PublishParameter("«r.name»", «r.description()», «r.type.uuidQfn», «r.direction.generatePDK»);
-                «ENDIF»
-            }
-        '''
+        if (element.isInvokable) {
+            val r = element.returnParameter
+            '''
+                {
+                    // Publish operation «element.name»
+                    «IF !element.parameter.empty || r !== null »
+                        ::Smp::Publication::IPublishOperation* operation = 
+                    «ENDIF»
+                    receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
+                    «FOR p : element.parameter»
+                        operation->PublishParameter("«p.name»", «p.description()», «p.type.uuidQfn», «p.direction.generatePDK»);
+                    «ENDFOR»
+                    «IF r !== null »
+                        operation->PublishParameter("«r.name»", «r.description()», «r.type.uuidQfn», «r.direction.generatePDK»);
+                    «ENDIF»
+                }
+            '''
+        }
     }
 
     protected def CharSequence build(ArgKind kind) {

@@ -195,7 +195,7 @@ StructMember returns ecore::EObject:
 
 fragment AssociationDeclaration *:
     modifiers+=VisibilityModifiers*
-    'association' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID;
+    'association' modifiers+=VisibilityModifiers* type=[Type|QualifiedName] name=ValidID (=>'=' default=Expression)?;
 
 ClassMember returns ecore::EObject:
     {Metadatum}
@@ -389,7 +389,7 @@ EnumerationLiteralReference returns Expression:
 Literal returns Expression:
     CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
     ParenthesizedExpression |
-    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction | NullptrExpression;
+    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction | KeywordExpression;
 
 ParenthesizedExpression returns Expression:
     {ParenthesizedExpression} '(' expr=Expression ')';
@@ -418,8 +418,8 @@ BuiltInFunction returns Expression:
 BooleanLiteral returns Expression:
     {BooleanLiteral} ('false' | isTrue?='true');
 
-NullptrExpression returns Expression:
-    {NullptrExpression} 'nullptr';
+KeywordExpression returns Expression:
+    {KeywordExpression} name=('nullptr'|'this');
 
 terminal INTEGER_LITERAL:
     DECIMAL_LITERAL INTEGER_TIME_SUFFIX?

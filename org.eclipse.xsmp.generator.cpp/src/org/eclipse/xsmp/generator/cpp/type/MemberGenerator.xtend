@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.generator.cpp.AbstractFileGenerator
 import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.generator.cpp.member.AbstractMemberGenerator
 import org.eclipse.xsmp.generator.cpp.member.AssociationGenerator
 import org.eclipse.xsmp.generator.cpp.member.ConstantGenerator
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator
@@ -27,7 +26,6 @@ import org.eclipse.xsmp.generator.cpp.member.FieldGenerator
 import org.eclipse.xsmp.generator.cpp.member.OperationGenerator
 import org.eclipse.xsmp.generator.cpp.member.PropertyGenerator
 import org.eclipse.xsmp.generator.cpp.member.ReferenceGenerator
-import org.eclipse.xsmp.util.ElementUtil
 import org.eclipse.xsmp.xcatalogue.Association
 import org.eclipse.xsmp.xcatalogue.Constant
 import org.eclipse.xsmp.xcatalogue.Container
@@ -40,12 +38,9 @@ import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Property
 import org.eclipse.xsmp.xcatalogue.Reference
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage
 
 abstract class MemberGenerator<T extends NamedElementWithMembers> extends AbstractFileGenerator<T> {
 
-    @Inject
-    protected extension ElementUtil
 
     @Inject
     protected extension GeneratorExtension
@@ -89,6 +84,54 @@ abstract class MemberGenerator<T extends NamedElementWithMembers> extends Abstra
         type.member.forEach[it.collectMemberIncludes(acceptor)]
     }
 
+    /* include */
+    // protected def void collectMemberIncludes(EObject member, IncludeAcceptor acceptor) {
+    // member.generator?.collectIncludes(member, acceptor)
+    // }
+    protected def dispatch collectMemberIncludes(EObject c, IncludeAcceptor acceptor) {
+    }
+
+    protected def dispatch collectMemberIncludes(Constant c, IncludeAcceptor acceptor) {
+        constantGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Property c, IncludeAcceptor acceptor) {
+        propertyGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Operation c, IncludeAcceptor acceptor) {
+        operationGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(EntryPoint c, IncludeAcceptor acceptor) {
+        entryPointGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(EventSink c, IncludeAcceptor acceptor) {
+        eventSinkGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(EventSource c, IncludeAcceptor acceptor) {
+        eventSourceGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Field c, IncludeAcceptor acceptor) {
+        fieldGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Association c, IncludeAcceptor acceptor) {
+        associationGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Container c, IncludeAcceptor acceptor) {
+        containerGenerator.collectIncludes(c, acceptor)
+    }
+
+    protected def dispatch collectMemberIncludes(Reference c, IncludeAcceptor acceptor) {
+        referenceGenerator.collectIncludes(c, acceptor)
+    }
+
+    /* declare */
     protected def declare(T type, Constant c) {
         constantGenerator.declare(type, c)
     }
@@ -209,8 +252,51 @@ abstract class MemberGenerator<T extends NamedElementWithMembers> extends Abstra
         referenceGenerator.initialize(type, c, useGenPattern)
     }
 
+    protected def dispatch construct(T type, EObject c, boolean useGenPattern) {
+    }
+
+    protected def dispatch construct(T type, Constant c, boolean useGenPattern) {
+        constantGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Property c, boolean useGenPattern) {
+        propertyGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Operation c, boolean useGenPattern) {
+        operationGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, EntryPoint c, boolean useGenPattern) {
+        entryPointGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, EventSink c, boolean useGenPattern) {
+        eventSinkGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, EventSource c, boolean useGenPattern) {
+        eventSourceGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Field c, boolean useGenPattern) {
+        fieldGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Association c, boolean useGenPattern) {
+        associationGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Container c, boolean useGenPattern) {
+        containerGenerator.construct(type, c, useGenPattern)
+    }
+
+    protected def dispatch construct(T type, Reference c, boolean useGenPattern) {
+        referenceGenerator.construct(type, c, useGenPattern)
+    }
+
     def declare(EObject o, VisibilityKind initialVisibility, CharSequence declaration, StringBuilder buffer) {
-        val visibility = o.visibility()
+        val visibility = o.visibility
 
         if (declaration !== null)
             buffer.append(
@@ -278,10 +364,10 @@ abstract class MemberGenerator<T extends NamedElementWithMembers> extends Abstra
         return buffer
     }
 
-    def CharSequence defineMembers(T container) {
+    def CharSequence defineMembers(T container, boolean useGenPattern) {
         '''
             «FOR m : container.member»
-                «define(container, m)»
+                «define(container, m, useGenPattern)»
             «ENDFOR»
         '''
     }
@@ -321,61 +407,180 @@ abstract class MemberGenerator<T extends NamedElementWithMembers> extends Abstra
         return list.filterNull
     }
 
-    @SuppressWarnings("rawtypes")
-    protected def AbstractMemberGenerator getGenerator(EObject member) {
-        switch (member.eClass().getClassifierID()) {
-            case XcataloguePackage.ASSOCIATION:
-                return associationGenerator
-            case XcataloguePackage.CONSTANT:
-                return constantGenerator
-            case XcataloguePackage.CONTAINER:
-                return containerGenerator
-            case XcataloguePackage.ENTRY_POINT:
-                return entryPointGenerator
-            case XcataloguePackage.EVENT_SINK:
-                return eventSinkGenerator
-            case XcataloguePackage.EVENT_SOURCE:
-                return eventSourceGenerator
-            case XcataloguePackage.FIELD:
-                return fieldGenerator
-            case XcataloguePackage.OPERATION:
-                return operationGenerator
-            case XcataloguePackage.PROPERTY:
-                return propertyGenerator
-            case XcataloguePackage.REFERENCE:
-                return referenceGenerator
-            default:
-                return null
-        }
-    }
-
-    /* defineUser */
-    def CharSequence define(T container, EObject member) {
-        member.generator?.define(container, member)
-    }
-
     /* define */
-    def CharSequence defineGen(T container, EObject member, boolean useGenPattern) {
-        member.generator?.defineGen(container, member, useGenPattern)
+    protected def dispatch define(T type, EObject c, boolean useGenPattern) {
     }
 
-    /* include */
-    protected def void collectMemberIncludes(EObject member, IncludeAcceptor acceptor) {
-        member.generator?.collectIncludes(member, acceptor)
+    protected def dispatch define(T type, Constant c, boolean useGenPattern) {
+        constantGenerator.define(type, c, useGenPattern)
     }
 
-    /* initialize
-     * def CharSequence initialize(T container, EObject member, boolean useGenPattern) {
-     *     member.generator?.initialize(container, member, useGenPattern)
-     } */
+    protected def dispatch define(T type, Property c, boolean useGenPattern) {
+        propertyGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, Operation c, boolean useGenPattern) {
+        operationGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, EntryPoint c, boolean useGenPattern) {
+        entryPointGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, EventSink c, boolean useGenPattern) {
+        eventSinkGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, EventSource c, boolean useGenPattern) {
+        eventSourceGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, Field c, boolean useGenPattern) {
+        fieldGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, Association c, boolean useGenPattern) {
+        associationGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, Container c, boolean useGenPattern) {
+        containerGenerator.define(type, c, useGenPattern)
+    }
+
+    protected def dispatch define(T type, Reference c, boolean useGenPattern) {
+        referenceGenerator.define(type, c, useGenPattern)
+    }
+
+    /* define Gen*/
+    protected def dispatch defineGen(T type, EObject c, boolean useGenPattern) {
+    }
+
+    protected def dispatch defineGen(T type, Constant c, boolean useGenPattern) {
+        constantGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Property c, boolean useGenPattern) {
+        propertyGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Operation c, boolean useGenPattern) {
+        operationGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, EntryPoint c, boolean useGenPattern) {
+        entryPointGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, EventSink c, boolean useGenPattern) {
+        eventSinkGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, EventSource c, boolean useGenPattern) {
+        eventSourceGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Field c, boolean useGenPattern) {
+        fieldGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Association c, boolean useGenPattern) {
+        associationGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Container c, boolean useGenPattern) {
+        containerGenerator.defineGen(type, c, useGenPattern)
+    }
+
+    protected def dispatch defineGen(T type, Reference c, boolean useGenPattern) {
+        referenceGenerator.defineGen(type, c, useGenPattern)
+    }
+
     /* finalize */
-    def CharSequence finalize(EObject member) {
-        member.generator?.finalize(member)
+    protected def dispatch finalize(EObject c) {
+    }
+
+    protected def dispatch finalize(Constant c) {
+        constantGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Property c) {
+        propertyGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Operation c) {
+        operationGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(EntryPoint c) {
+        entryPointGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(EventSink c) {
+        eventSinkGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(EventSource c) {
+        eventSourceGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Field c) {
+        fieldGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Association c) {
+        associationGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Container c) {
+        containerGenerator.finalize(c)
+    }
+
+    protected def dispatch finalize(Reference c) {
+        referenceGenerator.finalize(c)
     }
 
     /* Publish */
-    def CharSequence Publish(EObject member) {
-        member.generator?.Publish(member)
+    protected def dispatch Publish(EObject c) {
+    }
+
+    protected def dispatch Publish(Constant c) {
+        constantGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Property c) {
+        propertyGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Operation c) {
+        operationGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(EntryPoint c) {
+        entryPointGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(EventSink c) {
+        eventSinkGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(EventSource c) {
+        eventSourceGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Field c) {
+        fieldGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Association c) {
+        associationGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Container c) {
+        containerGenerator.Publish(c)
+    }
+
+    protected def dispatch Publish(Reference c) {
+        referenceGenerator.Publish(c)
     }
 
 }

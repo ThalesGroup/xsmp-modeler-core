@@ -28,8 +28,10 @@ import org.eclipse.xsmp.generator.cpp.type.ExceptionGenerator;
 import org.eclipse.xsmp.generator.cpp.type.FloatGenerator;
 import org.eclipse.xsmp.generator.cpp.type.IntegerGenerator;
 import org.eclipse.xsmp.generator.cpp.type.InterfaceGenerator;
+import org.eclipse.xsmp.generator.cpp.type.NativeTypeGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
+import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.Type;
@@ -49,6 +51,9 @@ public class CppGenerator extends AbstractGenerator
 
   @Inject
   protected GeneratorExtension ext;
+
+  @Inject
+  protected XsmpUtil xsmpUtil;
 
   @Inject
   protected IGenerationStrategy generationStrategy;
@@ -85,15 +90,15 @@ public class CppGenerator extends AbstractGenerator
     final var acceptor = new IncludeAcceptor();
     catalogueGenerator.collectIncludes(cat, acceptor);
 
-    final var path = ext.fqn(cat).toString("/");
+    final var name = ext.name(cat);
 
-    generateFile(fsa, path + ".cpp", CppOutputConfigurationProvider.SRC_GEN,
+    generateFile(fsa, name + ".cpp", CppOutputConfigurationProvider.SRC_GEN,
             catalogueGenerator.generateSourceGen(cat, false, acceptor, cat));
 
-    generateFile(fsa, path + ".h", CppOutputConfigurationProvider.INCLUDE_GEN,
+    generateFile(fsa, name + ".h", CppOutputConfigurationProvider.INCLUDE_GEN,
             catalogueGenerator.generateHeaderGen(cat, false, acceptor, cat));
 
-    generateFile(fsa, path + ".pkg.cpp", CppOutputConfigurationProvider.SRC_GEN,
+    generateFile(fsa, name + ".pkg.cpp", CppOutputConfigurationProvider.SRC_GEN,
             catalogueGenerator.generatePkgFile(cat, false, acceptor, cat));
 
     cat.getMember().stream().filter(Namespace.class::isInstance)
@@ -129,32 +134,28 @@ public class CppGenerator extends AbstractGenerator
     final var acceptor = new IncludeAcceptor();
     typeGenerator.collectIncludes(type, acceptor);
 
-    var useGenerationGapPattern = generationStrategy.useGenerationGapPattern(type);
+    var includePath = xsmpUtil.fqn(type).toString("/") + ".h";
 
-    var includePath = ext.fqn(type).toString("/") + ".h";
+    var sourcePath = xsmpUtil.fqn(type).toString("/") + ".cpp";
 
-    var sourcePath = ext.fqn(type).toString("/") + ".cpp";
-
-    if (useGenerationGapPattern)
-    {
-      // generate header in include directory if file does not exist
-      if (!fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
-      {
-        generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
-                typeGenerator.generateHeader(type, cat));
-      }
-      // generate source in src directory if file does not exist
-      if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
-      {
-        generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
-                typeGenerator.generateSource(type, cat));
-      }
-
-    }
-    // if files already exist in src/include directories, use the generation gap
+    // if files already exist in include directories, use the generation gap
     // pattern
-    useGenerationGapPattern |= fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE)
-            || fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC);
+    final var useGenerationGapPattern = generationStrategy.useGenerationGapPattern(type)
+            || fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE);
+
+    // generate header in include directory if file does not exist
+    if (useGenerationGapPattern && !fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
+    {
+      generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
+              typeGenerator.generateHeader(type, cat));
+    }
+
+    // generate source in src directory if file does not exist
+    if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
+    {
+      generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
+              typeGenerator.generateSource(type, useGenerationGapPattern, cat));
+    }
 
     if (useGenerationGapPattern)
     {
@@ -204,6 +205,9 @@ public class CppGenerator extends AbstractGenerator
   @Inject
   protected ComponentGenerator componentGenerator;
 
+  @Inject
+  protected NativeTypeGenerator nativeTypeGenerator;
+
   @SuppressWarnings("rawtypes")
   protected AbstractFileGenerator getGenerator(Type t)
   {
@@ -230,6 +234,8 @@ public class CppGenerator extends AbstractGenerator
       case XcataloguePackage.MODEL:
       case XcataloguePackage.SERVICE:
         return componentGenerator;
+      case XcataloguePackage.NATIVE_TYPE:
+        return nativeTypeGenerator;
       default:
         return null;
     }
