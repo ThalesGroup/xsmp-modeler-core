@@ -25,14 +25,14 @@ class NativeTypeGenerator extends AbstractTypeFileGenerator<NativeType> {
 
     override protected generateHeaderGenBody(NativeType type, boolean useGenPattern) {
 
-        val platform = type.platform.findFirst["cpp" == it.name]
-        if (platform !== null && platform.type !== null) {
+       // val platform = type.platform.findFirst["cpp" == it.name]
+       // if (platform !== null && platform.type !== null) {
             '''
                 «type.comment»
-                 using «type.name(useGenPattern)» = ::«IF platform.namespace !== null && !platform.namespace.empty»«platform.namespace»::«ENDIF»«platform.type»;
+                 using «type.name(useGenPattern)» = ::«IF type.namespace !== null && !type.namespace.empty»«type.namespace»::«ENDIF»«type.type»;
                  «type.uuidDeclaration»
             '''
-        }
+       // }
 
     }
 
@@ -44,9 +44,8 @@ class NativeTypeGenerator extends AbstractTypeFileGenerator<NativeType> {
 
     override collectIncludes(NativeType type, IncludeAcceptor acceptor) {
         super.collectIncludes(type, acceptor)
-        val platform = type.platform.findFirst["cpp" == it.name]
-        if (platform !== null && platform.location !== null) {
-            acceptor.systemHeader(platform.location)
+        if (type.location !== null) {
+            acceptor.systemHeader(type.location)
         }
     }
 

@@ -38,7 +38,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.PlatformMapping;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xsmp.xcatalogue.Type;
@@ -237,30 +236,6 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
       }
       styledLabel.append("]", StyledString.DECORATIONS_STYLER);
     }
-    return styledLabel;
-  }
-
-  public Object text(PlatformMapping elem)
-  {
-
-    final var label = elem.getName();
-    final var styledLabel = new StyledString();
-    if (label != null)
-    {
-      styledLabel.append(label);
-    }
-    var type = elem.getType();
-    if (type != null)
-    {
-      final var namespace = elem.getNamespace();
-      if (namespace != null)
-      {
-        type = namespace + "::" + type;
-      }
-
-      styledLabel.append(" : " + type, StyledString.DECORATIONS_STYLER);
-    }
-
     return styledLabel;
   }
 

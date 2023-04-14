@@ -641,12 +641,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         final var fea = feature.getName();
 
         warning("The " + type.eClass().getName() + " "
-                + qualifiedNameProvider.getFullyQualifiedName(type) + " cannot be "
-                + (startWithVowel(fea) ? "an " : "a ") + fea + " of "
-                + qualifiedNameProvider.getFullyQualifiedName(source) + "; "
-                + (startWithVowel(fea) ? "an " : "a ") + fea + " must be "
-                + (startWithVowel(expectedType.getName()) ? "an " : "a ") + expectedType.getName()
-                + " Type.", feature, index, XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+                + qualifiedNameProvider.getFullyQualifiedName(type) + " cannot be the " + fea
+                + " of " + qualifiedNameProvider.getFullyQualifiedName(source).getLastSegment()
+                + "; expecting " + (startWithVowel(expectedType.getName()) ? "an " : "a ")
+                + expectedType.getName() + " Type.", feature, index,
+                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
       else
       {

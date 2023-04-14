@@ -16,7 +16,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.xsmp.xcatalogue.Namespace;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
 import com.google.inject.Inject;
@@ -48,7 +47,6 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
     if (childrenFeatures == null)
     {
       super.getChildrenFeatures(object);
-      childrenFeatures.add(XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM);
     }
     return childrenFeatures;
   }
@@ -62,7 +60,7 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
   {
     switch (notification.getFeatureID(Namespace.class))
     {
-      case XcataloguePackage.NATIVE_TYPE__PLATFORM:
+      case XcataloguePackage.NATIVE_TYPE__LOCATION:
         updateChildren(notification);
         fireNotifyChanged(
                 new ViewerNotification(notification, notification.getNotifier(), true, false));
@@ -70,19 +68,6 @@ public class NativeTypeItemProvider extends LanguageTypeItemProvider
       default:
         super.notifyChanged(notification);
     }
-  }
-
-  /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
-   */
-  @Override
-  protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
-  {
-    super.collectNewChildDescriptors(newChildDescriptors, object);
-
-    newChildDescriptors.add(createChildParameter(XcataloguePackage.Literals.NATIVE_TYPE__PLATFORM,
-            XcatalogueFactory.eINSTANCE.createPlatformMapping()));
   }
 
 }

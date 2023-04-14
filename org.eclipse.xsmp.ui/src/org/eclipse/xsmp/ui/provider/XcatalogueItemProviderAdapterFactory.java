@@ -355,14 +355,6 @@ public class XcatalogueItemProviderAdapterFactory extends XcatalogueAdapterFacto
   protected ReferenceItemProvider referenceItemProvider;
 
   /**
-   * This keeps track of the one adapter used for all
-   * {@link org.eclipse.xsmp.xcatalogue.PlatformMapping}
-   * instances.
-   */
-  @Inject
-  protected PlatformMappingItemProvider platformMappingItemProvider;
-
-  /**
    * This constructs an instance.
    */
   public XcatalogueItemProviderAdapterFactory()
@@ -820,15 +812,6 @@ public class XcatalogueItemProviderAdapterFactory extends XcatalogueAdapterFacto
   {
 
     return valueReferenceItemProvider;
-  }
-
-  /**
-   * This creates an adapter for a {@link org.eclipse.xsmp.xcatalogue.PlatformMapping}.
-   */
-  @Override
-  public Adapter createPlatformMappingAdapter()
-  {
-    return platformMappingItemProvider;
   }
 
   /**

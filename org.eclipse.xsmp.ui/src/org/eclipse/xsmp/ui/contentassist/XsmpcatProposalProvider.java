@@ -200,9 +200,18 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       }
       else if (obj instanceof NativeType)
       {
-        acceptor.accept(createTagProposal(
-                "@platform name=\"cpp\", type=\"typeName\", namespace=\"ns::nns\", location=\"ns/nns/typeName.h\"",
-                context));
+        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__TYPE))
+        {
+          acceptor.accept(createTagProposal("@type ", context));
+        }
+        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__NAMESPACE))
+        {
+          acceptor.accept(createTagProposal("@namespace ", context));
+        }
+        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__LOCATION))
+        {
+          acceptor.accept(createTagProposal("@location ", context));
+        }
       }
       else
       {
