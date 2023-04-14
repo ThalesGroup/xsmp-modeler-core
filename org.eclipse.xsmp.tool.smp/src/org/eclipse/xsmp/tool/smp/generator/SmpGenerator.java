@@ -78,6 +78,7 @@ import org.eclipse.xsmp.tool.smp.core.types.VisibilityKind;
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Interface;
 import org.eclipse.xsmp.tool.smp.smdl.package_.PackageFactory;
 import org.eclipse.xsmp.tool.smp.util.SmpURIConverter;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
@@ -260,9 +261,11 @@ public class SmpGenerator extends AbstractModelConverter
           {
             id = eObjectToIdMap.get(container) + "." + id;
           }
-          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID should be
+          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID should
+          // be
           // prefixed with "Smp."
-          if ("ecss_smp_smp".equals(container.getName()) && "Attributes".equals(id))
+          if ("ecss_smp_smp".equals(container.getName())
+                  && QualifiedNames._Attributes.toString().equals(id))
           {
             id = "Smp." + id;
           }

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
@@ -52,7 +53,6 @@ import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
@@ -309,7 +309,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           cproposal.setPriority(cproposal.getPriority() + 10);
         }
         // decrease the priority for Smp types
-        else if (candidate.getQualifiedName().startsWith(QualifiedName.create("Smp")))
+        else if (candidate.getQualifiedName().startsWith(QualifiedNames._Smp))
         {
           cproposal.setPriority(cproposal.getPriority() - 10);
         }

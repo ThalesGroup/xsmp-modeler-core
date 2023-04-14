@@ -20,9 +20,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.xsmp.ui.contentassist.IReferenceFilter;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScope;
@@ -48,8 +48,6 @@ public class XsmpcatCrossReferenceTemplateVariableResolver
 
   @Inject
   private IReferenceFilter referenceFilter;
-
-  private static final QualifiedName SmpQualifiedName = QualifiedName.create("Smp");
 
   @Override
   public List<String> resolveValues(TemplateVariable variable, XtextTemplateContext castedContext)
@@ -116,13 +114,13 @@ public class XsmpcatCrossReferenceTemplateVariableResolver
         return 1;
       }
 
-      if (r.getQualifiedName().startsWith(SmpQualifiedName)
-              && !l.getQualifiedName().startsWith(SmpQualifiedName))
+      if (r.getQualifiedName().startsWith(QualifiedNames._Smp)
+              && !l.getQualifiedName().startsWith(QualifiedNames._Smp))
       {
         return -1;
       }
-      if (l.getQualifiedName().startsWith(SmpQualifiedName)
-              && !r.getQualifiedName().startsWith(SmpQualifiedName))
+      if (l.getQualifiedName().startsWith(QualifiedNames._Smp)
+              && !r.getQualifiedName().startsWith(QualifiedNames._Smp))
       {
         return 1;
       }

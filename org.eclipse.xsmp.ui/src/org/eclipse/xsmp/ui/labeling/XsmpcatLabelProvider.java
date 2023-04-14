@@ -19,6 +19,7 @@ import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
@@ -196,12 +197,12 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
 
   public Object text(Float elem)
   {
-    return text(elem, elem.getPrimitiveType(), QualifiedName.create("Smp", "Float64"));
+    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp.Float64);
   }
 
   public Object text(Integer elem)
   {
-    return text(elem, elem.getPrimitiveType(), QualifiedName.create("Smp", "Int32"));
+    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp.Int32);
   }
 
   public Object text(ValueReference elem)
