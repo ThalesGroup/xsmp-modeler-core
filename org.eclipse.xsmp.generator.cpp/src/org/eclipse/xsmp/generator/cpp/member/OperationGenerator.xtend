@@ -11,8 +11,9 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.XsmpUtil.ArgKind
+import org.eclipse.xsmp.util.QualifiedNames
 import org.eclipse.xsmp.util.Solver
+import org.eclipse.xsmp.util.XsmpUtil.ArgKind
 import org.eclipse.xsmp.xcatalogue.AttributeType
 import org.eclipse.xsmp.xcatalogue.Enumeration
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
@@ -23,7 +24,6 @@ import org.eclipse.xsmp.xcatalogue.ReferenceType
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.naming.QualifiedName
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
@@ -32,7 +32,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         if (o.isConstructor)
             return EcoreUtil2.getContainerOfType(o, NamedElementWithMembers).name
 
-        var operator = o.attribute(QualifiedName.create("Attributes", "Operator"))
+        var operator = o.attribute(QualifiedNames.Attributes.Operator)
         if (operator !== null) {
             val value = Solver.INSTANCE.getEnum(operator.value, (operator.type as AttributeType).type as Enumeration)
 

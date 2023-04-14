@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -69,7 +70,6 @@ import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -593,19 +593,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     return checkTypeReference(type, source, feature, -1);
   }
 
-  public static final QualifiedName operatorKind = QualifiedName.create("Attributes",
-          "OperatorKind");
-
-  public static final QualifiedName fieldUpdateKind = QualifiedName.create("Attributes",
-          "FieldUpdateKind");
-
   protected boolean checkTypeReference(Type type, EObject source, EReference feature, int index)
   {
 
     final var result = doCheckTypeReference(type, source, feature, index);
     final var fqn = qualifiedNameProvider.getFullyQualifiedName(type);
     // check that these specifics types are not referred
-    if (operatorKind.equals(fqn) || fieldUpdateKind.equals(fqn))
+    if (QualifiedNames.Attributes.OperatorKind.equals(fqn)
+            || QualifiedNames.Attributes.FieldUpdateKind.equals(fqn))
     {
       error("Cannot refers to type " + fqn + ".", source, feature, index,
               XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);

@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
 import org.eclipse.xsmp.xcatalogue.ImportSection;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -53,9 +54,6 @@ import com.google.inject.Singleton;
 public class XsmpcatImportedNamespaceScopeProvider
         extends AbstractGlobalScopeDelegatingScopeProvider
 {
-  protected static final QualifiedName SMP_ATTRIBUTES_NS = QualifiedName.create("Attributes");
-
-  protected static final QualifiedName SMP_NS = QualifiedName.create("Smp");
 
   @Inject
   private IResourceScopeCache cache;
@@ -145,8 +143,9 @@ public class XsmpcatImportedNamespaceScopeProvider
    */
   protected List<ImportNormalizer> getImplicitImports(boolean ignoreCase)
   {
-    return Lists.<ImportNormalizer> newArrayList(doCreateImportNormalizer(SMP_NS, true, ignoreCase),
-            doCreateImportNormalizer(SMP_ATTRIBUTES_NS, true, ignoreCase));
+    return Lists.<ImportNormalizer> newArrayList(
+            doCreateImportNormalizer(QualifiedNames._Smp, true, ignoreCase),
+            doCreateImportNormalizer(QualifiedNames._Attributes, true, ignoreCase));
   }
 
   protected List<ImportNormalizer> getImportedNamespaceResolvers(final EObject context,

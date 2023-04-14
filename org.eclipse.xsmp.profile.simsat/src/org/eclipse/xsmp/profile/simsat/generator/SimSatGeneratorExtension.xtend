@@ -15,6 +15,7 @@ import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.Document
+import org.eclipse.xsmp.util.QualifiedNames
 
 @Singleton
 class SimSatGeneratorExtension extends GeneratorExtension {
@@ -26,7 +27,7 @@ class SimSatGeneratorExtension extends GeneratorExtension {
             class UuidProvider_«t.name»
             {
             public:
-                static constexpr ::Smp::Uuid UUID{«t.uuid.trim.split("-").map(it | "0x" + it + "U").join(", ")»};
+                static constexpr ::Smp::Uuid UUID{«t.uuid()»};
             };
         '''
     }
@@ -42,7 +43,7 @@ class SimSatGeneratorExtension extends GeneratorExtension {
         val fqn = qualifiedNameProvider.getFullyQualifiedName(t)
 
         // In Smp, Uuids are in a separate namespace ::Smp::Uuids::
-        if (fqn.firstSegment == "Smp")
+        if (fqn.startsWith(QualifiedNames._Smp))
             '''::Smp::Uuids::Uuid_«t.name»'''
         else
             '''::«(t.eContainer as NamedElement).fqn.toString("::")»::UuidProvider_«t.name»::UUID'''

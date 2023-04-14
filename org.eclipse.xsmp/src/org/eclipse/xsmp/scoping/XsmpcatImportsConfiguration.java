@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
 import org.eclipse.xsmp.xcatalogue.ImportSection;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -110,8 +111,8 @@ public class XsmpcatImportsConfiguration
   {
     final Set<String> implicitlyImportedPackages = newHashSetWithExpectedSize(2);
 
-    implicitlyImportedPackages.add("Smp");
-    implicitlyImportedPackages.add("Attributes");
+    implicitlyImportedPackages.add(QualifiedNames._Smp.toString());
+    implicitlyImportedPackages.add(QualifiedNames._Attributes.toString());
     return implicitlyImportedPackages;
   }
 
