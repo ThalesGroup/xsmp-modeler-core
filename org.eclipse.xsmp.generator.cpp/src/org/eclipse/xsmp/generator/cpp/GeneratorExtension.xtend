@@ -76,37 +76,37 @@ class GeneratorExtension extends XsmpUtil {
     }
 
     val includes = ImmutableMap.<QualifiedName, String>builder() // map default Smp types
-    .put(QualifiedNames.Smp.Char8, "Smp/PrimitiveTypes") // Char8
-    .put(QualifiedNames.Smp.String8, "Smp/PrimitiveTypes") // String8
-    .put(QualifiedNames.Smp.Float32, "Smp/PrimitiveTypes") // Float32
-    .put(QualifiedNames.Smp.Float64, "Smp/PrimitiveTypes") // Float64
-    .put(QualifiedNames.Smp.Int8, "Smp/PrimitiveTypes") // Int8
-    .put(QualifiedNames.Smp.UInt8, "Smp/PrimitiveTypes") // UInt8
-    .put(QualifiedNames.Smp.Int16, "Smp/PrimitiveTypes") // Int16
-    .put(QualifiedNames.Smp.UInt16, "Smp/PrimitiveTypes") // UInt16
-    .put(QualifiedNames.Smp.Int32, "Smp/PrimitiveTypes") // Int32
-    .put(QualifiedNames.Smp.UInt32, "Smp/PrimitiveTypes") // UInt32
-    .put(QualifiedNames.Smp.Int64, "Smp/PrimitiveTypes") // Int64
-    .put(QualifiedNames.Smp.UInt64, "Smp/PrimitiveTypes") // UInt64
-    .put(QualifiedNames.Smp.Bool, "Smp/PrimitiveTypes") // Bool
-    .put(QualifiedNames.Smp.DateTime, "Smp/PrimitiveTypes") // DateTime
-    .put(QualifiedNames.Smp.Duration, "Smp/PrimitiveTypes") // Duration
-    .put(QualifiedNames.Smp.PrimitiveTypeKind, "Smp/PrimitiveTypes") // PrimitiveTypeKind
-    .put(QualifiedNames.Smp.EventSourceCollection, "Smp/IEventSource") // EventSourceCollection
-    .put(QualifiedNames.Smp.EntryPointCollection, "Smp/IEntryPoint") // EntryPointCollection
-    .put(QualifiedNames.Smp.FactoryCollection, "Smp/IFactory") // FactoryCollection
-    .put(QualifiedNames.Smp.FailureCollection, "Smp/IFailure") // FailureCollection
-    .put(QualifiedNames.Smp.FieldCollection, "Smp/IField") // FieldCollection
-    .put(QualifiedNames.Smp.ComponentCollection, "Smp/IComponent") // ComponentCollection
-    .put(QualifiedNames.Smp.OperationCollection, "Smp/IOperation") // OperationCollection
-    .put(QualifiedNames.Smp.ParameterCollection, "Smp/IParameter") // ParameterCollection
-    .put(QualifiedNames.Smp.PropertyCollection, "Smp/IProperty") // PropertyCollection
-    .put(QualifiedNames.Smp.AnySimpleArray, "Smp/AnySimple") // AnySimpleArray
-    .put(QualifiedNames.Smp.ModelCollection, "Smp/IModel") // ModelCollection
-    .put(QualifiedNames.Smp.ServiceCollection, "Smp/IService") // ServiceCollection
-    .put(QualifiedNames.Smp.ReferenceCollection, "Smp/IReference") // ReferenceCollection
-    .put(QualifiedNames.Smp.ContainerCollection, "Smp/IContainer") // ContainerCollection
-    .put(QualifiedNames.Smp.EventSinkCollection, "Smp/IEventSink") // EventSinkCollection
+    .put(QualifiedNames.Smp_Char8, "Smp/PrimitiveTypes") // Char8
+    .put(QualifiedNames.Smp_String8, "Smp/PrimitiveTypes") // String8
+    .put(QualifiedNames.Smp_Float32, "Smp/PrimitiveTypes") // Float32
+    .put(QualifiedNames.Smp_Float64, "Smp/PrimitiveTypes") // Float64
+    .put(QualifiedNames.Smp_Int8, "Smp/PrimitiveTypes") // Int8
+    .put(QualifiedNames.Smp_UInt8, "Smp/PrimitiveTypes") // UInt8
+    .put(QualifiedNames.Smp_Int16, "Smp/PrimitiveTypes") // Int16
+    .put(QualifiedNames.Smp_UInt16, "Smp/PrimitiveTypes") // UInt16
+    .put(QualifiedNames.Smp_Int32, "Smp/PrimitiveTypes") // Int32
+    .put(QualifiedNames.Smp_UInt32, "Smp/PrimitiveTypes") // UInt32
+    .put(QualifiedNames.Smp_Int64, "Smp/PrimitiveTypes") // Int64
+    .put(QualifiedNames.Smp_UInt64, "Smp/PrimitiveTypes") // UInt64
+    .put(QualifiedNames.Smp_Bool, "Smp/PrimitiveTypes") // Bool
+    .put(QualifiedNames.Smp_DateTime, "Smp/PrimitiveTypes") // DateTime
+    .put(QualifiedNames.Smp_Duration, "Smp/PrimitiveTypes") // Duration
+    .put(QualifiedNames.Smp_PrimitiveTypeKind, "Smp/PrimitiveTypes") // PrimitiveTypeKind
+    .put(QualifiedNames.Smp_EventSourceCollection, "Smp/IEventSource") // EventSourceCollection
+    .put(QualifiedNames.Smp_EntryPointCollection, "Smp/IEntryPoint") // EntryPointCollection
+    .put(QualifiedNames.Smp_FactoryCollection, "Smp/IFactory") // FactoryCollection
+    .put(QualifiedNames.Smp_FailureCollection, "Smp/IFailure") // FailureCollection
+    .put(QualifiedNames.Smp_FieldCollection, "Smp/IField") // FieldCollection
+    .put(QualifiedNames.Smp_ComponentCollection, "Smp/IComponent") // ComponentCollection
+    .put(QualifiedNames.Smp_OperationCollection, "Smp/IOperation") // OperationCollection
+    .put(QualifiedNames.Smp_ParameterCollection, "Smp/IParameter") // ParameterCollection
+    .put(QualifiedNames.Smp_PropertyCollection, "Smp/IProperty") // PropertyCollection
+    .put(QualifiedNames.Smp_AnySimpleArray, "Smp/AnySimple") // AnySimpleArray
+    .put(QualifiedNames.Smp_ModelCollection, "Smp/IModel") // ModelCollection
+    .put(QualifiedNames.Smp_ServiceCollection, "Smp/IService") // ServiceCollection
+    .put(QualifiedNames.Smp_ReferenceCollection, "Smp/IReference") // ReferenceCollection
+    .put(QualifiedNames.Smp_ContainerCollection, "Smp/IContainer") // ContainerCollection
+    .put(QualifiedNames.Smp_EventSinkCollection, "Smp/IEventSink") // EventSinkCollection
     .build()
 
     def dispatch String include(NamedElement type) {
@@ -125,7 +125,7 @@ class GeneratorExtension extends XsmpUtil {
 
     def CharSequence viewKind(NamedElement t) {
 
-        var value = t.attributeValue(QualifiedNames.Attributes.View)
+        var value = t.attributeValue(QualifiedNames.Attributes_View)
         if (value !== null)
             '''«value.doGenerateExpression(null, t.eContainer as NamedElement)»'''
         else
@@ -158,7 +158,7 @@ class GeneratorExtension extends XsmpUtil {
         val fqn = qualifiedNameProvider.getFullyQualifiedName(t)
 
         // In Smp, Uuids are in a separate namespace ::Smp::Uuids::
-        if (fqn.startsWith(QualifiedNames._Smp))
+        if (fqn.startsWith(QualifiedNames.Smp))
             '''::Smp::Uuids::Uuid_«t.name»'''
         else
             '''::«(t.eContainer as NamedElement).fqn.toString("::")»::Uuid_«t.name»'''

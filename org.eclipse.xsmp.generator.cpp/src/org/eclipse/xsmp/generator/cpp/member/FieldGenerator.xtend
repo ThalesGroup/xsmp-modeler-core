@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.member
 
-import java.util.stream.Collectors
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.Class
@@ -104,7 +103,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
     protected def dispatch CharSequence construct(QualifiedName name, Structure type, CollectionLiteral expression,
         NamedElement context) {
 
-        val fields = type.assignableFields.collect(Collectors.toList)
+        val fields = type.assignableFields
 
         '''
             «FOR i : 0 ..< expression.elements.size»

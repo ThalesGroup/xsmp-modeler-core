@@ -144,8 +144,8 @@ public class XsmpcatImportedNamespaceScopeProvider
   protected List<ImportNormalizer> getImplicitImports(boolean ignoreCase)
   {
     return Lists.<ImportNormalizer> newArrayList(
-            doCreateImportNormalizer(QualifiedNames._Smp, true, ignoreCase),
-            doCreateImportNormalizer(QualifiedNames._Attributes, true, ignoreCase));
+            doCreateImportNormalizer(QualifiedNames.Smp, true, ignoreCase),
+            doCreateImportNormalizer(QualifiedNames.Attributes, true, ignoreCase));
   }
 
   protected List<ImportNormalizer> getImportedNamespaceResolvers(final EObject context,

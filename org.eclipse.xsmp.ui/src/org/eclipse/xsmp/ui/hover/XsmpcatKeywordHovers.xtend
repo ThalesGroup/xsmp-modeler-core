@@ -104,8 +104,8 @@ class XsmpcatKeywordHovers {
                 <br />A Service can reference one or more interfaces via the <b>Interface</b> links (inherited from Component), where at least one of them must be derived from Smp::IService, which qualifies it as a service interface.</p>
             '''
             // Array
-            case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0_0_0,
-            case ga.namespaceMemberAccess.usingKeyword_3_7_2_0_0_1: '''
+            case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0_0,
+            case ga.namespaceMemberAccess.usingKeyword_3_7_2_0_1: '''
                 <p><code><strong><span style="color: #7f0055;">array</span></strong> <em>name</em> = <em>type</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
                 <br/>
                 <p>An <b>Array</b> type defines a fixed-size array of identically typed elements, where ItemType defines the type of the array items, and Size defines the number of array items.

@@ -15,11 +15,12 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -35,10 +36,10 @@ import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
+import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.ReferenceType;
@@ -60,7 +61,6 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
 /**
@@ -100,21 +100,21 @@ public class XsmpUtil
 
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
           .<QualifiedName, PrimitiveTypeKind> builder()
-          .put(QualifiedNames.Smp.Char8, PrimitiveTypeKind.CHAR8)
-          .put(QualifiedNames.Smp.String8, PrimitiveTypeKind.STRING8)
-          .put(QualifiedNames.Smp.Float32, PrimitiveTypeKind.FLOAT32)
-          .put(QualifiedNames.Smp.Float64, PrimitiveTypeKind.FLOAT64)
-          .put(QualifiedNames.Smp.Int8, PrimitiveTypeKind.INT8)
-          .put(QualifiedNames.Smp.UInt8, PrimitiveTypeKind.UINT8)
-          .put(QualifiedNames.Smp.Int16, PrimitiveTypeKind.INT16)
-          .put(QualifiedNames.Smp.UInt16, PrimitiveTypeKind.UINT16)
-          .put(QualifiedNames.Smp.Int32, PrimitiveTypeKind.INT32)
-          .put(QualifiedNames.Smp.UInt32, PrimitiveTypeKind.UINT32)
-          .put(QualifiedNames.Smp.Int64, PrimitiveTypeKind.INT64)
-          .put(QualifiedNames.Smp.UInt64, PrimitiveTypeKind.UINT64)
-          .put(QualifiedNames.Smp.Bool, PrimitiveTypeKind.BOOL)
-          .put(QualifiedNames.Smp.DateTime, PrimitiveTypeKind.DATE_TIME)
-          .put(QualifiedNames.Smp.Duration, PrimitiveTypeKind.DURATION).build();
+          .put(QualifiedNames.Smp_Char8, PrimitiveTypeKind.CHAR8)
+          .put(QualifiedNames.Smp_String8, PrimitiveTypeKind.STRING8)
+          .put(QualifiedNames.Smp_Float32, PrimitiveTypeKind.FLOAT32)
+          .put(QualifiedNames.Smp_Float64, PrimitiveTypeKind.FLOAT64)
+          .put(QualifiedNames.Smp_Int8, PrimitiveTypeKind.INT8)
+          .put(QualifiedNames.Smp_UInt8, PrimitiveTypeKind.UINT8)
+          .put(QualifiedNames.Smp_Int16, PrimitiveTypeKind.INT16)
+          .put(QualifiedNames.Smp_UInt16, PrimitiveTypeKind.UINT16)
+          .put(QualifiedNames.Smp_Int32, PrimitiveTypeKind.INT32)
+          .put(QualifiedNames.Smp_UInt32, PrimitiveTypeKind.UINT32)
+          .put(QualifiedNames.Smp_Int64, PrimitiveTypeKind.INT64)
+          .put(QualifiedNames.Smp_UInt64, PrimitiveTypeKind.UINT64)
+          .put(QualifiedNames.Smp_Bool, PrimitiveTypeKind.BOOL)
+          .put(QualifiedNames.Smp_DateTime, PrimitiveTypeKind.DATE_TIME)
+          .put(QualifiedNames.Smp_Duration, PrimitiveTypeKind.DURATION).build();
 
   public static PrimitiveTypeKind getPrimitiveType(IEObjectDescription d)
   {
@@ -388,15 +388,18 @@ public class XsmpUtil
 
   }
 
+  /**
+   * return the full qualified name of the element
+   *
+   * @param t
+   *          the element
+   * @return the QualifiedName
+   */
   public QualifiedName fqn(NamedElement t)
   {
     if (t != null)
     {
-      final var fqn = qualifiedNameProvider.getFullyQualifiedName(t);
-      if (fqn != null)
-      {
-        return fqn;
-      }
+      return qualifiedNameProvider.getFullyQualifiedName(t);
     }
     return QualifiedName.EMPTY;
   }
@@ -626,47 +629,58 @@ public class XsmpUtil
             () -> Solver.INSTANCE.getBoolean(attributeValue(o, id)));
   }
 
+  protected boolean attributeBoolValue(NamedElement o, QualifiedName id, boolean defaultValue)
+  {
+    return attributeBoolValue(o, id).orElse(defaultValue);
+  }
+
+  protected boolean attributeBoolValue(NamedElement o, QualifiedName id,
+          Supplier<Boolean> defaultValue)
+  {
+    return attributeBoolValue(o, id).orElseGet(defaultValue);
+  }
+
   public boolean isStatic(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Static).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Static, false);
   }
 
   public boolean isConst(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Const).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Const, false);
   }
 
   public boolean isMutable(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Mutable).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Mutable, false);
   }
 
   public boolean isByPointer(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.ByPointer).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_ByPointer, false);
   }
 
   public boolean isByReference(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.ByReference).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_ByReference, false);
   }
 
   public boolean isAbstract(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Abstract)
-            .orElse(o.eContainer() instanceof Interface);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Abstract,
+            () -> o.eContainer() instanceof Interface);
   }
 
   public boolean isVirtual(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Virtual)
-            .orElse(o.eContainer() instanceof ReferenceType);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Virtual,
+            () -> o.eContainer() instanceof ReferenceType);
 
   }
 
   public boolean isConstructor(Operation o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Constructor).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Constructor, false);
   }
 
   public boolean isByPointer(Parameter o)
@@ -683,40 +697,37 @@ public class XsmpUtil
 
   public boolean isForcible(Field o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Forcible).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Forcible, false);
   }
 
   public boolean isFailure(Field o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.Failure).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_Failure, false);
   }
 
   public boolean isConstGetter(Property o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.ConstGetter).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_ConstGetter, false);
   }
 
   public boolean isNoConstructor(Type o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.NoConstructor).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_NoConstructor, false);
   }
 
   public boolean isNoDestructor(Type o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.NoDestructor).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_NoDestructor, false);
   }
 
   public boolean isSimpleArray(Array o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.SimpleArray).orElse(false);
+    return attributeBoolValue(o, QualifiedNames.Attributes_SimpleArray, false);
   }
 
   public boolean isConst(Parameter o)
   {
-
-    final var isConst = attributeBoolValue(o, QualifiedNames.Attributes.Const);
-
-    return isConst.orElseGet(() -> {
+    return attributeBoolValue(o, QualifiedNames.Attributes_Const, () -> {
       switch (o.getDirection())
       {
         case IN:
@@ -732,47 +743,49 @@ public class XsmpUtil
 
   public boolean isByPointer(Association o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes.ByPointer)
-            .orElse(o.getType() instanceof ReferenceType);
+    return attributeBoolValue(o, QualifiedNames.Attributes_ByPointer,
+            () -> o.getType() instanceof ReferenceType);
+  }
+
+  protected ArgKind kind(ParameterDirectionKind direction, Type type)
+  {
+    if (type instanceof ReferenceType)
+    {
+      switch (direction)
+      {
+        case IN:
+          return ArgKind.BY_REF;
+        case INOUT:
+        case OUT:
+        case RETURN:
+          return ArgKind.BY_PTR;
+        default:
+          throw new UnsupportedOperationException();
+      }
+    }
+
+    if (type instanceof NativeType || type instanceof ValueType)
+    {
+      switch (direction)
+      {
+        case IN:
+        case RETURN:
+          return ArgKind.BY_VALUE;
+        case INOUT:
+        case OUT:
+          return ArgKind.BY_PTR;
+        default:
+          throw new UnsupportedOperationException();
+      }
+    }
+    return ArgKind.BY_VALUE;
   }
 
   public ArgKind kind(Parameter o)
   {
+    var kind = kind(o.getDirection(), o.getType());
 
-    final var type = o.getType();
-
-    ArgKind kind;
-    if (type instanceof ReferenceType)
-    {
-      switch (o.getDirection())
-      {
-        case IN:
-          kind = ArgKind.BY_REF;
-          break;
-        default: // RETURN, OUT, INOUT
-          kind = ArgKind.BY_PTR;
-          break;
-      }
-    }
-    else if (type instanceof NativeType || type instanceof ValueType)
-    {
-      switch (o.getDirection())
-      {
-        case IN:
-        case RETURN:
-          kind = ArgKind.BY_VALUE;
-          break;
-        default: // OUT, INOUT
-          kind = ArgKind.BY_PTR;
-          break;
-      }
-    }
-    else
-    {
-      kind = ArgKind.BY_VALUE;
-    }
-
-    final var byPtr = attributeBoolValue(o, QualifiedNames.Attributes.ByPointer);
+    final var byPtr = attributeBoolValue(o, QualifiedNames.Attributes_ByPointer);
 
     if (byPtr.isPresent())
     {
@@ -786,7 +799,7 @@ public class XsmpUtil
       }
 
     }
-    final var byReference = attributeBoolValue(o, QualifiedNames.Attributes.ByReference);
+    final var byReference = attributeBoolValue(o, QualifiedNames.Attributes_ByReference);
 
     if (byReference.isPresent())
     {
@@ -817,54 +830,24 @@ public class XsmpUtil
   }
 
   // get all public & non-static fields
-  public Stream<Field> getAssignableFields(Structure structure)
+  public List<Field> getAssignableFields(Structure structure)
   {
-    final var fields = structure.getMember().stream().filter(Field.class::isInstance)
-            .map(Field.class::cast)
-            .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it));
+    return cache.get(Tuples.pair(structure, "assignableFields"), structure.eResource(), () -> {
+      final var fields = structure.getMember().stream().filter(Field.class::isInstance)
+              .map(Field.class::cast)
+              .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
+              .collect(Collectors.toList());
 
-    if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
-    {
-      final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
-      if (clazz.getBase() instanceof Structure)
+      if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
       {
-        return Streams.concat(getAssignableFields((Structure) clazz.getBase()), fields);
+        final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
+        if (clazz.getBase() instanceof Structure)
+        {
+          fields.addAll(0, getAssignableFields((Structure) clazz.getBase()));
+        }
       }
-    }
-    return fields;
-  }
-
-  public class ParameterSignature
-  {
-    public ParameterSignature(Parameter p)
-    {
-      type = p.getType();
-      isConst = isConst(type);
-      kind = kind(p);
-      optional = p.getDefault() != null;
-    }
-
-    boolean isConst;
-
-    ArgKind kind;
-
-    Type type;
-
-    boolean optional;
-  }
-
-  public Operation findConstructor(Type type, Expression expression)
-  {
-    if (type instanceof NamedElementWithMembers)
-    {
-      // find a public operation with constructor attribute
-      return ((NamedElementWithMembers) type).getMember().stream()
-              .filter(Operation.class::isInstance).map(Operation.class::cast)
-              .filter(this::isConstructor).filter(c -> getVisibility(c) == VisibilityKind.PUBLIC)
-              // TODO check that signature match with expression
-              .filter(it -> false).findFirst().orElse(null);
-    }
-    return null;
+      return fields;
+    });
   }
 
   public boolean isInvokable(Operation op)

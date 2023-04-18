@@ -10,12 +10,11 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
+import java.util.List
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import java.util.stream.Collectors
-import java.util.List
 
 class StructureGenerator extends MemberGenerator<Structure> {
 
@@ -61,7 +60,7 @@ class StructureGenerator extends MemberGenerator<Structure> {
     }
 
     override protected generateSourceGenBody(Structure t, boolean useGenPattern) {
-        val fields = t.assignableFields.collect(Collectors.toList)
+        val fields = t.assignableFields
         val hasConstructor = fields.exists[it.^default !== null]
         '''
             void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 

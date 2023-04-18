@@ -265,7 +265,7 @@ public class SmpGenerator extends AbstractModelConverter
           // be
           // prefixed with "Smp."
           if ("ecss_smp_smp".equals(container.getName())
-                  && QualifiedNames._Attributes.toString().equals(id))
+                  && QualifiedNames.Attributes.toString().equals(id))
           {
             id = "Smp." + id;
           }

@@ -32,7 +32,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         if (o.isConstructor)
             return EcoreUtil2.getContainerOfType(o, NamedElementWithMembers).name
 
-        var operator = o.attribute(QualifiedNames.Attributes.Operator)
+        var operator = o.attribute(QualifiedNames.Attributes_Operator)
         if (operator !== null) {
             val value = Solver.INSTANCE.getEnum(operator.value, (operator.type as AttributeType).type as Enumeration)
 

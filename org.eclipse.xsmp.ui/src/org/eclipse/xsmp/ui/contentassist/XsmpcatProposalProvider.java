@@ -309,7 +309,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           cproposal.setPriority(cproposal.getPriority() + 10);
         }
         // decrease the priority for Smp types
-        else if (candidate.getQualifiedName().startsWith(QualifiedNames._Smp))
+        else if (candidate.getQualifiedName().startsWith(QualifiedNames.Smp))
         {
           cproposal.setPriority(cproposal.getPriority() - 10);
         }

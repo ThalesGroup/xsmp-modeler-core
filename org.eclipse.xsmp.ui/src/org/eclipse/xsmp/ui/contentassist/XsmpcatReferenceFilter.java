@@ -134,8 +134,8 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
 
               // filter allow multiple
               if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream()
-                      .anyMatch(a -> qualifiedNameProvider.getFullyQualifiedName(a.getType())
-                              .equals(p.getQualifiedName())))
+                      .anyMatch(a -> a.getType() != null && qualifiedNameProvider
+                              .getFullyQualifiedName(a.getType()).equals(p.getQualifiedName())))
               {
                 return false;
               }
@@ -202,8 +202,8 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
       return false;
     }
     final var fqn = p.getQualifiedName();
-    if (fqn.equals(QualifiedNames.Attributes.FieldUpdateKind)
-            || fqn.equals(QualifiedNames.Attributes.OperatorKind))
+    if (fqn.equals(QualifiedNames.Attributes_FieldUpdateKind)
+            || fqn.equals(QualifiedNames.Attributes_OperatorKind))
     {
       return false;
     }
