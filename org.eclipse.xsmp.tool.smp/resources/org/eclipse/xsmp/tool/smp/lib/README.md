@@ -1,0 +1,1 @@
+Files [ecss.smp.smpcat](ecss.smp.smpcat) and [ecss.smp.smppkg](ecss.smp.smppkg) are released under the [ESA Community License - type 2](https://essr.esa.int/license/european-space-agency-community-license-v2-4-weak-copyleft-type-2).
