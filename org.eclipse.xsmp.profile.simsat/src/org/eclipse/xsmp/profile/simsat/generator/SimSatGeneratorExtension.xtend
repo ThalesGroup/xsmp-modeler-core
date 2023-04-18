@@ -43,7 +43,7 @@ class SimSatGeneratorExtension extends GeneratorExtension {
         val fqn = qualifiedNameProvider.getFullyQualifiedName(t)
 
         // In Smp, Uuids are in a separate namespace ::Smp::Uuids::
-        if (fqn.startsWith(QualifiedNames._Smp))
+        if (fqn.startsWith(QualifiedNames.Smp))
             '''::Smp::Uuids::Uuid_«t.name»'''
         else
             '''::«(t.eContainer as NamedElement).fqn.toString("::")»::UuidProvider_«t.name»::UUID'''

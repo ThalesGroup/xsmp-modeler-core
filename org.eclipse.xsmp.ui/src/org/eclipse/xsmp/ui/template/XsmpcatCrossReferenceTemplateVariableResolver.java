@@ -114,13 +114,13 @@ public class XsmpcatCrossReferenceTemplateVariableResolver
         return 1;
       }
 
-      if (r.getQualifiedName().startsWith(QualifiedNames._Smp)
-              && !l.getQualifiedName().startsWith(QualifiedNames._Smp))
+      if (r.getQualifiedName().startsWith(QualifiedNames.Smp)
+              && !l.getQualifiedName().startsWith(QualifiedNames.Smp))
       {
         return -1;
       }
-      if (l.getQualifiedName().startsWith(QualifiedNames._Smp)
-              && !r.getQualifiedName().startsWith(QualifiedNames._Smp))
+      if (l.getQualifiedName().startsWith(QualifiedNames.Smp)
+              && !r.getQualifiedName().startsWith(QualifiedNames.Smp))
       {
         return 1;
       }

@@ -121,13 +121,13 @@ class SmpImporter {
         else
             value = e.name
 
-        return value // .replaceFirst("^(Smp|Attributes)\\.", "")
+        return value
     }
 
     def CharSequence qfn(ElementReference<?> e) {
         var value = ""
         if (e === null)
-            return "__null_reference__"
+            return "typename"
         var href = e.ref
         if (href === null || href.eIsProxy)
             return e.title
@@ -138,7 +138,7 @@ class SmpImporter {
         else
             value = href.name
 
-        return value // .replaceFirst("^(Smp|Attributes)\\.", "")
+        return value
     }
 
     def dispatch CharSequence generate(EObject o) {

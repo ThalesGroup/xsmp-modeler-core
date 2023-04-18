@@ -14,13 +14,13 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.time.Duration
 import java.time.Instant
-import java.util.stream.Collectors
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.BinaryOperation
 import org.eclipse.xsmp.xcatalogue.BooleanLiteral
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant
+import org.eclipse.xsmp.xcatalogue.BuiltInExpression
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
@@ -36,8 +36,6 @@ import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xsmp.xcatalogue.ValueType
-import org.eclipse.xsmp.xcatalogue.Operation
-import org.eclipse.xsmp.xcatalogue.BuiltInExpression
 
 @Singleton
 class ExpressionGenerator {
@@ -115,7 +113,7 @@ class ExpressionGenerator {
             else
                 '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType.itemType, context)»«ENDFOR»}'''
         } else if (expectedType instanceof Structure) {
-            val fields = expectedType.assignableFields.collect(Collectors.toList)
+            val fields = expectedType.assignableFields
             if (fields.size >= t.elements.size)
                 '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).generateStructMember(fields.get(i).type, context)»«ENDFOR»}'''
             else // TODO find constructor
@@ -152,22 +150,8 @@ class ExpressionGenerator {
         '''«t.name»'''
     }
 
-    def dispatch CharSequence doGenerateConstructorExpression(Expression t, Operation constructor,
-        NamedElement context) {
-        // TODO ?
-    }
-
-    def dispatch CharSequence doGenerateConstructorExpression(CollectionLiteral t, Operation constructor,
-        NamedElement context) {
-        '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).doGenerateExpression(constructor.parameter.get(i).type, context)»«ENDFOR»}'''
-    }
-
     def CharSequence generateExpression(Expression t, Type expectedType, NamedElement context) {
-        // find a matching constructor if any
-        val constructor = expectedType.findConstructor(t);
-        if (constructor !== null)
-            t.doGenerateConstructorExpression(constructor, context)
-        else if (expectedType instanceof Structure)
+        if (expectedType instanceof Structure)
             t.doGenerateExpression(expectedType, context)
         else if (expectedType instanceof Array)
             '''{«t.doGenerateExpression(expectedType, context)»}'''

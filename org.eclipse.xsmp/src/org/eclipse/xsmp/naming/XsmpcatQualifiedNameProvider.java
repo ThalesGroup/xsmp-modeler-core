@@ -13,6 +13,7 @@ package org.eclipse.xsmp.naming;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -40,31 +41,24 @@ public class XsmpcatQualifiedNameProvider extends IQualifiedNameProvider.Abstrac
   /**
    * Computes the fully qualified name for the given object, if any.
    */
-  protected QualifiedName computeFullyQualifiedName(EObject obj)
+  protected QualifiedName computeFullyQualifiedName(final NamedElement obj)
   {
-    if (!(obj instanceof NamedElement))
-    {
-      return null;
-    }
-    final var name = ((NamedElement) obj).getName();
+    final var name = obj.getName();
     if (name == null || name.isEmpty())
     {
       return QualifiedName.EMPTY;
     }
     final var qualifiedNameFromConverter = converter.toQualifiedName(name);
-    while ((obj = obj.eContainer()) != null)
+
+    final var parent = EcoreUtil2.getContainerOfType(obj.eContainer(), NamedElement.class);
+
+    if (parent instanceof Document || parent == null)
     {
-      if (obj instanceof Document)
-      {
-        break;
-      }
-      final var parentsQualifiedName = getFullyQualifiedName(obj);
-      if (parentsQualifiedName != null)
-      {
-        return parentsQualifiedName.append(qualifiedNameFromConverter);
-      }
+      return qualifiedNameFromConverter;
     }
-    return qualifiedNameFromConverter;
+
+    return getFullyQualifiedName(parent).append(qualifiedNameFromConverter);
+
   }
 
   /**
@@ -74,12 +68,12 @@ public class XsmpcatQualifiedNameProvider extends IQualifiedNameProvider.Abstrac
   @Override
   public QualifiedName getFullyQualifiedName(final EObject obj)
   {
-    if (obj == null)
+    if (!(obj instanceof NamedElement))
     {
-      return QualifiedName.EMPTY;
+      return null;
     }
     return cache.get(Tuples.pair(obj, "fqn"), obj.eResource(),
-            () -> computeFullyQualifiedName(obj));
+            () -> computeFullyQualifiedName((NamedElement) obj));
   }
 
 }

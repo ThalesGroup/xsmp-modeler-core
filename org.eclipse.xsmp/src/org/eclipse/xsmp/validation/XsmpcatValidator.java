@@ -316,43 +316,60 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   protected void check(Type type, Expression e)
   {
+    check(type, e, false);
+  }
+
+  protected void check(Type type, Expression e, boolean byPointer)
+  {
     if (e == null || type == null || type.eIsProxy())
     {
       return;
     }
-    if (e instanceof KeywordExpression)
+
+    if (byPointer)
+    {
+      if (!(e instanceof KeywordExpression))
+      {
+        acceptError("Expecting a pointer, got " + e.getClass().getSimpleName() + ".", e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+      }
+    }
+    else if (e instanceof KeywordExpression)
     {
       acceptError("Expecting a value, got a keyword.", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
-    switch (type.eClass().getClassifierID())
+    else
     {
-      case XcataloguePackage.ARRAY:
-        checkArray((Array) type, e);
-        break;
-      case XcataloguePackage.ENUMERATION:
-        checkEnumeration((Enumeration) type, e);
-        break;
-      case XcataloguePackage.FLOAT:
-        checkFloat((org.eclipse.xsmp.xcatalogue.Float) type, e);
-        break;
-      case XcataloguePackage.INTEGER:
-        checkInteger((org.eclipse.xsmp.xcatalogue.Integer) type, e);
-        break;
-      case XcataloguePackage.PRIMITIVE_TYPE:
-        checkPrimitiveType((PrimitiveType) type, e);
-        break;
-      case XcataloguePackage.STRING:
-        checkString((org.eclipse.xsmp.xcatalogue.String) type, e);
-        break;
-      case XcataloguePackage.STRUCTURE:
-      case XcataloguePackage.CLASS:
-      case XcataloguePackage.EXCEPTION:
-        checkStructure((Structure) type, e);
-        break;
-      default:
-        // ignore other types
-        break;
+      switch (type.eClass().getClassifierID())
+      {
+        case XcataloguePackage.ARRAY:
+          checkArray((Array) type, e);
+          break;
+        case XcataloguePackage.ENUMERATION:
+          checkEnumeration((Enumeration) type, e);
+          break;
+        case XcataloguePackage.FLOAT:
+          checkFloat((org.eclipse.xsmp.xcatalogue.Float) type, e);
+          break;
+        case XcataloguePackage.INTEGER:
+          checkInteger((org.eclipse.xsmp.xcatalogue.Integer) type, e);
+          break;
+        case XcataloguePackage.PRIMITIVE_TYPE:
+          checkPrimitiveType((PrimitiveType) type, e);
+          break;
+        case XcataloguePackage.STRING:
+          checkString((org.eclipse.xsmp.xcatalogue.String) type, e);
+          break;
+        case XcataloguePackage.STRUCTURE:
+        case XcataloguePackage.CLASS:
+        case XcataloguePackage.EXCEPTION:
+          checkStructure((Structure) type, e);
+          break;
+        default:
+          // ignore other types
+          break;
+      }
     }
   }
 
@@ -478,7 +495,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (e instanceof CollectionLiteral)
     {
 
-      final var fields = typeUtil.getAssignableFields(type).collect(Collectors.toList());
+      final var fields = typeUtil.getAssignableFields(type);
 
       final var values = (CollectionLiteral) e;
 
@@ -595,17 +612,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   protected boolean checkTypeReference(Type type, EObject source, EReference feature, int index)
   {
-
-    final var result = doCheckTypeReference(type, source, feature, index);
-    final var fqn = qualifiedNameProvider.getFullyQualifiedName(type);
-    // check that these specifics types are not referred
-    if (QualifiedNames.Attributes.OperatorKind.equals(fqn)
-            || QualifiedNames.Attributes.FieldUpdateKind.equals(fqn))
+    if (doCheckTypeReference(type, source, feature, index))
     {
-      error("Cannot refers to type " + fqn + ".", source, feature, index,
-              XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+      final var fqn = qualifiedNameProvider.getFullyQualifiedName(type);
+      // check that these specifics types are not referred
+      if (QualifiedNames.Attributes_OperatorKind.equals(fqn)
+              || QualifiedNames.Attributes_FieldUpdateKind.equals(fqn))
+      {
+        error("Cannot refers to type " + fqn + ".", source, feature, index,
+                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+      }
+      return true;
     }
-    return result;
+    return false;
   }
 
   protected boolean doCheckTypeReference(Type type, EObject source, EReference feature, int index)
@@ -704,7 +723,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var node = NodeModelUtils.findActualNodeFor(elem);
     for (final var n : node.getAsTreeIterable())
     {
-      if (n.getGrammarElement() == ga.getNamespaceMemberAccess().getUsingKeyword_3_7_2_0_0_1())
+      if (n.getGrammarElement() == ga.getNamespaceMemberAccess().getUsingKeyword_3_7_2_0_1())
       {
         addIssue("'using' keyword is deprecated. Replace with 'array'.", elem, n.getOffset(),
                 n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_MODEL_PART);
@@ -909,6 +928,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkAssociation(Association elem)
   {
     checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ASSOCIATION__TYPE);
+
+    check(elem.getType(), elem.getDefault(), typeUtil.isByPointer(elem));
   }
 
   @Check
@@ -1188,7 +1209,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
     elem.check(getChain());
 
-    if (!VALID_ID_PATTERN.matcher(elem.getName()).matches())
+    if (elem.getName() != null && !VALID_ID_PATTERN.matcher(elem.getName()).matches())
     {
       error("An Element Name shall only contain letters, digits, and the underscore.",
               XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
@@ -1300,19 +1321,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      switch (typeUtil.kind(p))
-      {
-        case BY_PTR:
-          checkPtr(p.getType(), p.getDefault());
-          break;
-        case BY_REF:
-        case BY_VALUE:
-          check(p.getType(), p.getDefault());
-          break;
-        default:
-          break;
+      check(p.getType(), p.getDefault(), typeUtil.isByPointer(p));
 
-      }
     }
 
   }

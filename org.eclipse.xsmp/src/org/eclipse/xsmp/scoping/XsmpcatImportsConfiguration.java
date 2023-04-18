@@ -111,8 +111,8 @@ public class XsmpcatImportsConfiguration
   {
     final Set<String> implicitlyImportedPackages = newHashSetWithExpectedSize(2);
 
-    implicitlyImportedPackages.add(QualifiedNames._Smp.toString());
-    implicitlyImportedPackages.add(QualifiedNames._Attributes.toString());
+    implicitlyImportedPackages.add(QualifiedNames.Smp.toString());
+    implicitlyImportedPackages.add(QualifiedNames.Attributes.toString());
     return implicitlyImportedPackages;
   }
 

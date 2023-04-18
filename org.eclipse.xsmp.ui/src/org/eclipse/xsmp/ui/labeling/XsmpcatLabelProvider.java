@@ -197,12 +197,12 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
 
   public Object text(Float elem)
   {
-    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp.Float64);
+    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp_Float64);
   }
 
   public Object text(Integer elem)
   {
-    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp.Int32);
+    return text(elem, elem.getPrimitiveType(), QualifiedNames.Smp_Int32);
   }
 
   public Object text(ValueReference elem)

@@ -440,7 +440,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.surround(parentRegion.feature(ATTRIBUTE_TYPE__TYPE), this::oneSpace);
 
     doc.surround(
-            parentRegion.keyword(ga.getNamespaceMemberAccess().getEqualsSignKeyword_3_15_6_0()),
+            parentRegion.keyword(ga.getNamespaceMemberAccess().getEqualsSignKeyword_3_15_5_0()),
             this::oneSpace);
     doc.format(parent.getDefault());
   }
@@ -498,7 +498,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
             this::oneSpace);
     doc.append(parentRegion.feature(FIELD__TYPE), this::oneSpace);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
-    doc.surround(parentRegion.keyword(ga.getFieldDeclarationAccess().getEqualsSignKeyword_5_0()),
+    doc.surround(parentRegion.keyword(ga.getFieldDeclarationAccess().getEqualsSignKeyword_4_0()),
             this::oneSpace);
     doc.format(parent.getDefault());
   }
@@ -512,7 +512,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
             this::oneSpace);
     doc.surround(parentRegion.feature(CONSTANT__TYPE), this::oneSpace);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
-    doc.surround(parentRegion.keyword(ga.getConstantDeclarationAccess().getEqualsSignKeyword_5_0()),
+    doc.surround(parentRegion.keyword(ga.getConstantDeclarationAccess().getEqualsSignKeyword_4_0()),
             this::oneSpace);
     doc.format(parent.getValue());
   }
@@ -526,6 +526,10 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
             this::oneSpace);
     doc.surround(parentRegion.feature(ASSOCIATION__TYPE), this::oneSpace);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
+    doc.surround(
+            parentRegion.keyword(ga.getAssociationDeclarationAccess().getEqualsSignKeyword_4_0()),
+            this::oneSpace);
+    doc.format(parent.getDefault());
   }
 
   protected void format(Property parent, IFormattableDocument doc)
@@ -538,19 +542,19 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.surround(parentRegion.feature(PROPERTY__TYPE), this::oneSpace);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
 
-    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getGetKeyword_5_0()),
+    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getGetKeyword_4_0()),
             this::oneSpace);
-    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getSetKeyword_6_0()),
+    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getSetKeyword_5_0()),
+            this::oneSpace);
+    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getThrowsKeyword_4_1()),
             this::oneSpace);
     doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getThrowsKeyword_5_1()),
             this::oneSpace);
-    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getThrowsKeyword_6_1()),
-            this::oneSpace);
 
     formatList(parent, PROPERTY__GET_RAISES, doc,
-            ga.getPropertyDeclarationAccess().getCommaKeyword_5_3_0());
+            ga.getPropertyDeclarationAccess().getCommaKeyword_4_3_0());
     formatList(parent, PROPERTY__SET_RAISES, doc,
-            ga.getPropertyDeclarationAccess().getCommaKeyword_6_3_0());
+            ga.getPropertyDeclarationAccess().getCommaKeyword_5_3_0());
 
     doc.surround(parentRegion.keyword("->"), this::oneSpace);
   }
@@ -633,21 +637,21 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
 
     doc.surround(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
     final var open = parentRegion
-            .keyword(ga.getOperationDeclarationAccess().getLeftParenthesisKeyword_5());
+            .keyword(ga.getOperationDeclarationAccess().getLeftParenthesisKeyword_4());
     final var close = parentRegion
-            .keyword(ga.getOperationDeclarationAccess().getRightParenthesisKeyword_7());
+            .keyword(ga.getOperationDeclarationAccess().getRightParenthesisKeyword_6());
     doc.append(open, this::noSpace);
     doc.prepend(open, this::oneSpace);
     doc.prepend(close, this::noSpace);
     doc.interior(open, close, this::indent);
 
     formatCollection(parent.getParameter(), open, close, doc,
-            ga.getOperationDeclarationAccess().getCommaKeyword_6_1_0());
+            ga.getOperationDeclarationAccess().getCommaKeyword_5_1_0());
 
-    doc.surround(parentRegion.keyword(ga.getOperationDeclarationAccess().getThrowsKeyword_8_0()),
+    doc.surround(parentRegion.keyword(ga.getOperationDeclarationAccess().getThrowsKeyword_7_0()),
             this::oneSpace);
     formatList(parent, OPERATION__RAISED_EXCEPTION, doc,
-            ga.getOperationDeclarationAccess().getCommaKeyword_8_2_0());
+            ga.getOperationDeclarationAccess().getCommaKeyword_7_2_0());
 
     if (parent.getReturnParameter() != null)
     {
@@ -700,7 +704,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     final var parentRegion = regionFor(parent);
     doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getUsingKeyword_3_8_2()),
             this::oneSpace);
-    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getArrayKeyword_3_7_2_0_0_0()),
+    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getArrayKeyword_3_7_2_0_0()),
             this::oneSpace);
 
     doc.surround(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
@@ -825,12 +829,12 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
 
     doc.append(
             parentRegion
-                    .keyword(ga.getNamespaceMemberAccess().getLeftSquareBracketKeyword_3_12_4()),
+                    .keyword(ga.getNamespaceMemberAccess().getLeftSquareBracketKeyword_3_12_4_0()),
             this::noSpace);
     doc.format(parent.getLength());
     doc.prepend(
             parentRegion
-                    .keyword(ga.getNamespaceMemberAccess().getRightSquareBracketKeyword_3_12_6()),
+                    .keyword(ga.getNamespaceMemberAccess().getRightSquareBracketKeyword_3_12_4_2()),
             this::noSpace);
   }
 

@@ -55,12 +55,12 @@ class XsmpcatValidatorTest {
     def void checkNameISReservedKeyword() {
         val model = '''
             catalogue Test
-            namespace default
+            namespace constexpr
             {}
         '''
         model.parse => [
             assertNumberOfIssues(1)
-            assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("default"), 7,
+            assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("constexpr"), 9,
                 "An Element Name shall not be an ISO/ANSI C++ keyword.")
         ]
     }
