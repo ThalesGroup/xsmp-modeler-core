@@ -140,9 +140,18 @@ class SmpImporter {
 
         return value
     }
+    def CharSequence name(ElementReference<?> e) {
+        if (e === null)
+            return "__name__"
+        var href = e.ref
+        if (href === null || href.eIsProxy)
+            return e.title
+
+        return href.name
+    }
 
     def dispatch CharSequence generate(EObject o) {
-        ''' /* «o.toString» */'''
+        ''' /* TODO implements import of «o.eClass.name»: «o.toString» */'''
     }
 
     def dispatch CharSequence generate(PlatformMapping o) {
@@ -488,6 +497,8 @@ class SmpImporter {
             ''''''
         else if (lower === 0 && upper === -1)
             '''[*]'''
+        else if (lower === 0 && upper === 1)
+            '''?'''
         else if (lower === 1 && upper === -1)
             '''[+]'''
         else if (lower === upper)
@@ -517,6 +528,16 @@ class SmpImporter {
         '''
             «o.header»
             entrypoint «o.name»
+            «IF !o.input.empty || !o.output.empty»
+                {
+                «FOR in : o.input»
+                    in «in.name»
+                «ENDFOR»
+                «FOR out : o.output»
+                    out «out.name»
+                «ENDFOR»
+                }
+            «ENDIF»
         '''
     }
 

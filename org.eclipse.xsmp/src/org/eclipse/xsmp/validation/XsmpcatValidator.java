@@ -996,7 +996,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
     for (var i = 0; i < f.getOutput().size(); ++i)
     {
-      final var field = f.getInput().get(i);
+      final var field = f.getOutput().get(i);
 
       checkFieldReferenceVisibility(field, f, XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, i);
       if (!field.isOutput())
