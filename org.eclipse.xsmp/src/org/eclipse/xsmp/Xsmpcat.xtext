@@ -303,7 +303,7 @@ ReturnParameter returns Parameter:
 
 Parameter:
     metadatum=ParameterMetadatum
-    (=>direction=ParameterDirectionKind type=[Type|QualifiedName] | type=[Type|QualifiedName]) (name=ValidID | 'default'
+    (=>direction=ParameterDirectionKind (type=[Type|QualifiedName] | 'typename') | (type=[Type|QualifiedName] | 'typename')) (name=ValidID | 'default'
     ) ('='
     default=Expression)?;
 

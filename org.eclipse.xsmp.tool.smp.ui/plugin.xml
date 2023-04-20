@@ -54,26 +54,4 @@
 			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="xsmpcat"/>
 	</extension>
-	<!-- adding resource factories -->
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
-			type="smpcat">
-		</parser>
-	</extension>
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
-			type="smppkg">
-		</parser>
-	</extension>
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl"
-			type="smpcfg">
-		</parser>
-	</extension>
 </plugin>
