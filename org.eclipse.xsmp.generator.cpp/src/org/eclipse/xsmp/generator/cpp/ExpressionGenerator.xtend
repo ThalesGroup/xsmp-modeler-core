@@ -36,6 +36,8 @@ import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xsmp.xcatalogue.ValueType
+import org.eclipse.xsmp.xcatalogue.Enumeration
+import org.eclipse.xsmp.util.Solver
 
 @Singleton
 class ExpressionGenerator {
@@ -57,7 +59,11 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(IntegerLiteral t, Type expectedType, NamedElement context) {
-        '''«t.text.replace("'","")»'''
+
+        if (expectedType instanceof Enumeration) {
+            '''::«Solver.INSTANCE.getEnum(t,expectedType).fqn.toString("::")»'''
+        } else
+            '''«t.text.replace("'","")»'''
     }
 
     def dispatch CharSequence doGenerateExpression(FloatingLiteral t, Type expectedType, NamedElement context) {
