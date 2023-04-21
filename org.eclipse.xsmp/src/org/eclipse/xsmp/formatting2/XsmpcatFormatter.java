@@ -56,6 +56,7 @@ import org.eclipse.xsmp.xcatalogue.Class;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Container;
+import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.EntryPoint;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
@@ -603,6 +604,24 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.append(parentRegion.keyword(ga.getEntryPointDeclarationAccess().getEntrypointKeyword_0()),
             this::oneSpace);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
+
+    final var open = parentRegion
+            .keyword(ga.getEntryPointDeclarationAccess().getLeftCurlyBracketKeyword_2_0());
+    final var close = parentRegion
+            .keyword(ga.getEntryPointDeclarationAccess().getRightCurlyBracketKeyword_2_2());
+    doc.surround(open, this::newLine);
+    doc.prepend(close, this::newLine);
+
+    doc.interior(open, close, this::indent);
+
+    final var allRegions = allRegionsFor(parent);
+
+    allRegions.keywords(ga.getEntryPointDeclarationAccess().getOutKeyword_2_1_1_0(),
+            ga.getEntryPointDeclarationAccess().getInKeyword_2_1_0_0()).forEach(kw -> {
+              doc.prepend(kw, this::newLine);
+              doc.append(kw, this::oneSpace);
+            });
+
   }
 
   protected void format(EventSink parent, IFormattableDocument doc)
@@ -884,12 +903,22 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.format(parent.getExpr());
   }
 
+  protected void format(DesignatedInitializer parent, IFormattableDocument doc)
+  {
+    final var region = regionFor(parent);
+    doc.append(region.keyword(ga.getDesignatedInitializerAccess().getFullStopKeyword_1()),
+            this::noSpace);
+    doc.surround(region.keyword(ga.getDesignatedInitializerAccess().getEqualsSignKeyword_3()),
+            this::oneSpace);
+    doc.format(parent.getExpr());
+  }
+
   protected void formatCollection(Collection< ? extends EObject> elements, ISemanticRegion open,
           ISemanticRegion close, IFormattableDocument doc, Keyword separator)
   {
     if (close == null || open == null)
     {
-      // Broke, no nothing
+      // broken, do nothing
     }
     else if (elements.isEmpty())
     {

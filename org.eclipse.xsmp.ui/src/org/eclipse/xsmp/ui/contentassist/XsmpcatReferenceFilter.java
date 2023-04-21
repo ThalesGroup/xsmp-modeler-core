@@ -20,9 +20,9 @@ import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Predicate;
@@ -35,8 +35,9 @@ import com.google.inject.Singleton;
 @Singleton
 public class XsmpcatReferenceFilter implements IReferenceFilter
 {
+
   @Inject
-  private IQualifiedNameProvider qualifiedNameProvider;
+  XsmpUtil xsmpUtil;
 
   private final Map<EReference, Function<EObject, Predicate<IEObjectDescription>>> builders = ImmutableMap
           .<EReference, Function<EObject, Predicate<IEObjectDescription>>> builder()
@@ -134,8 +135,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
 
               // filter allow multiple
               if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream()
-                      .anyMatch(a -> a.getType() != null && qualifiedNameProvider
-                              .getFullyQualifiedName(a.getType()).equals(p.getQualifiedName())))
+                      .anyMatch(a -> xsmpUtil.fqn(a.getType()).equals(p.getQualifiedName())))
               {
                 return false;
               }
@@ -144,7 +144,8 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
             }
             return false;
           })
-
+          .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
+                  model -> p -> XsmpUtil.getVisibility(p) == VisibilityKind.PUBLIC)
           // build the map
           .build();
 
@@ -177,6 +178,11 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
     }
     return new String[0];
 
+  }
+
+  boolean isValidDesignatedField(IEObjectDescription d)
+  {
+    return XsmpUtil.getVisibility(d) == VisibilityKind.PUBLIC && !xsmpUtil.isStatic(d);
   }
 
   boolean allowMuliple(IEObjectDescription d)

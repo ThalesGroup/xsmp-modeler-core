@@ -30,6 +30,8 @@ import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
+import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
+import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
@@ -61,6 +63,7 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -640,6 +643,27 @@ public class XsmpUtil
     return attributeBoolValue(o, id).orElseGet(defaultValue);
   }
 
+  public boolean isStatic(IEObjectDescription o)
+  {
+    final var obj = o.getEObjectOrProxy();
+    if (obj.eIsProxy())
+    {
+      try
+      {
+        return Boolean.parseBoolean(o.getUserData("static"));
+      }
+      catch (final Exception e)
+      {
+        // ignore
+      }
+    }
+    else if (obj instanceof NamedElement)
+    {
+      return isStatic((NamedElement) obj);
+    }
+    return false;
+  }
+
   public boolean isStatic(NamedElement o)
   {
     return attributeBoolValue(o, QualifiedNames.Attributes_Static, false);
@@ -832,12 +856,12 @@ public class XsmpUtil
   // get all public & non-static fields
   public List<Field> getAssignableFields(Structure structure)
   {
+
     return cache.get(Tuples.pair(structure, "assignableFields"), structure.eResource(), () -> {
       final var fields = structure.getMember().stream().filter(Field.class::isInstance)
               .map(Field.class::cast)
               .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
               .collect(Collectors.toList());
-
       if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
       {
         final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
@@ -848,6 +872,26 @@ public class XsmpUtil
       }
       return fields;
     });
+
+  }
+
+  // get all non-static fields
+  public Iterable<Field> getFields(Structure structure)
+  {
+
+    final var fields = Iterables.filter(Iterables.filter(structure.getMember(), Field.class),
+            it -> !isStatic(it));
+
+    if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
+    {
+      final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
+      if (clazz.getBase() instanceof Structure)
+      {
+        return Iterables.concat(getFields((Structure) clazz.getBase()), fields);
+      }
+    }
+    return fields;
+
   }
 
   public boolean isInvokable(Operation op)
@@ -868,5 +912,88 @@ public class XsmpUtil
       return true;
     });
 
+  }
+
+  private Type findType(Expression e)
+  {
+    final var parent = e.eContainer();
+    switch (parent.eClass().getClassifierID())
+    {
+      case XcataloguePackage.FIELD:
+        return ((Field) parent).getType();
+      case XcataloguePackage.CONSTANT:
+        return ((Constant) parent).getType();
+      case XcataloguePackage.ASSOCIATION:
+        return ((Association) parent).getType();
+      case XcataloguePackage.PARAMETER:
+        return ((Parameter) parent).getType();
+      case XcataloguePackage.ATTRIBUTE:
+      {
+        final var type = ((Attribute) parent).getType();
+        return type instanceof AttributeType ? ((AttributeType) type).getType() : type;
+      }
+      case XcataloguePackage.ATTRIBUTE_TYPE:
+        return ((AttributeType) parent).getType();
+      case XcataloguePackage.COLLECTION_LITERAL:
+      {
+        final var collection = (CollectionLiteral) parent;
+        final var type = getType(collection);
+        if (type instanceof Array)
+        {
+          return ((Array) type).getItemType();
+        }
+        if (type instanceof Structure)
+        {
+          final var fields = getAssignableFields((Structure) type);
+          final var index = collection.getElements().indexOf(e);
+          if (index >= 0 && index < fields.size())
+          {
+            return fields.get(index).getType();
+          }
+        }
+        return null;
+      }
+      default:
+        return parent instanceof Expression ? getType((Expression) parent) : null;
+    }
+  }
+
+  public Type getType(Expression e)
+  {
+    return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+  }
+
+  private Field findField(Expression e)
+  {
+    final var parent = e.eContainer();
+    switch (parent.eClass().getClassifierID())
+    {
+      case XcataloguePackage.FIELD:
+        return (Field) parent;
+
+      case XcataloguePackage.COLLECTION_LITERAL:
+      {
+        final var collection = (CollectionLiteral) parent;
+        final var type = getType(collection);
+
+        if (type instanceof Structure)
+        {
+          final var fields = getAssignableFields((Structure) type);
+          final var index = collection.getElements().indexOf(e);
+          if (index >= 0 && index < fields.size())
+          {
+            return fields.get(index);
+          }
+        }
+        return null;
+      }
+      default:
+        return null;
+    }
+  }
+
+  public Field getField(Expression e)
+  {
+    return cache.get(Tuples.pair(e, "Field"), e.eResource(), () -> findField(e));
   }
 }
