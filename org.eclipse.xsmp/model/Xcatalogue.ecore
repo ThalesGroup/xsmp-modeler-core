@@ -178,7 +178,7 @@
         containment="true" resolveProxies="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="feature" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteralReference" eSuperTypes="#//Expression">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElementReference" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Array" eSuperTypes="#//ValueType">

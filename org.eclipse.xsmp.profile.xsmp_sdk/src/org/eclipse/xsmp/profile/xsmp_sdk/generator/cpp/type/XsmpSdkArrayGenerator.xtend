@@ -19,7 +19,7 @@ class XsmpSdkArrayGenerator extends ArrayGenerator {
     override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
         '''
             «t.comment»
-            using «t.name(useGenPattern)»= ::Xsmp::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression(t,t)»«IF t.isSimpleArray», true«ENDIF»>;
+            using «t.name(useGenPattern)»= ::Xsmp::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()»«IF t.isSimpleArray», true«ENDIF»>;
             
             «t.uuidDeclaration»
             

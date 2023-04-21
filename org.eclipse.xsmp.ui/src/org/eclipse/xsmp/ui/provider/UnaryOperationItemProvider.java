@@ -191,7 +191,7 @@ public class UnaryOperationItemProvider extends ExpressionItemProvider
 
     newChildDescriptors
             .add(createChildParameter(XcataloguePackage.Literals.UNARY_OPERATION__OPERAND,
-                    XcatalogueFactory.eINSTANCE.createEnumerationLiteralReference()));
+                    XcatalogueFactory.eINSTANCE.createNamedElementReference()));
   }
 
 }

@@ -27,7 +27,7 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                 «t.declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                    «t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !== null»«f.^default.generateExpression(f.type, f)»«ELSE»{}«ENDIF»«ENDFOR»):
+                    «t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !== null»«f.^default.generateExpression()»«ELSE»{}«ENDIF»«ENDFOR»):
                             «FOR f : t.member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
                     ~«t.name(useGenPattern)»() = default;
                     «t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;

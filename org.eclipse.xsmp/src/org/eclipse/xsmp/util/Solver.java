@@ -21,7 +21,7 @@ import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference;
+import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral;
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral;
@@ -674,7 +674,7 @@ public class Solver
     return null;
   }
 
-  protected Object getValue(EnumerationLiteralReference e)
+  protected Object getValue(NamedElementReference e)
   {
     final var value = e.getValue();
     if (value == null || value.eIsProxy())
@@ -760,8 +760,8 @@ public class Solver
         return getValue((CharacterLiteral) e);
       case XcataloguePackage.COLLECTION_LITERAL:
         return getValue((CollectionLiteral) e);
-      case XcataloguePackage.ENUMERATION_LITERAL_REFERENCE:
-        return getValue((EnumerationLiteralReference) e);
+      case XcataloguePackage.NAMED_ELEMENT_REFERENCE:
+        return getValue((NamedElementReference) e);
       case XcataloguePackage.FLOATING_LITERAL:
         return ((FloatingLiteral) e).getValue();
       case XcataloguePackage.INTEGER_LITERAL:
@@ -1082,15 +1082,15 @@ public class Solver
     return value;
   }
 
-  public EnumerationLiteral getEnum(Expression e, Enumeration type)
+  public EnumerationLiteral getEnumerationLiteral(Expression e, Enumeration expectedType)
   {
     final var value = getValue(e);
     if (value instanceof EnumerationLiteral)
     {
       final var literal = (EnumerationLiteral) value;
-      if (literal.eContainer() != type)
+      if (literal.eContainer() != expectedType)
       {
-        acceptor.acceptError("Incompatible enumeration Type: expecting " + type.getName(), e, null,
+        acceptor.acceptError("Incompatible enumeration Type: expecting " + expectedType.getName(), e, null,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
       }
       return literal;
@@ -1100,7 +1100,7 @@ public class Solver
 
     if (integer != null)
     {
-      final var literal = type.getLiteral().stream()
+      final var literal = expectedType.getLiteral().stream()
               .filter(l -> integer.equals(Solver.INSTANCE.getInteger(l.getValue()))).findFirst();
 
       if (literal.isPresent())
@@ -1112,12 +1112,25 @@ public class Solver
       }
 
       acceptor.acceptError(
-              "Could not convert " + integer + " to Enumeration " + type.getName() + ".", e, null,
+              "Could not convert " + integer + " to Enumeration " + expectedType.getName() + ".", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
               XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
     }
 
     return null;
+  }
+
+  public BigInteger getEnumValue(Expression e)
+  {
+    final var value = getValue(e);
+    if (value instanceof EnumerationLiteral)
+    {
+      final var literal = (EnumerationLiteral) value;
+
+      return getInteger(literal.getValue());
+    }
+
+    return getInteger(e);
   }
 
   public Optional<Boolean> getBoolean(Expression e)

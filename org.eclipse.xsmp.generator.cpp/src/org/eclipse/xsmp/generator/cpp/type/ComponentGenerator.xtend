@@ -367,9 +367,9 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
         return bases;
     }
 
-    def CharSequence initParameter(Parameter p, NamedElement context) {
+    def CharSequence initParameter(Parameter p, NamedElementWithMembers parent) {
         '''
-            ::«p.type.fqn.toString("::")» p_«p.name»«p.^default?.generateExpression(p.type, context)»;
+            ::«p.type.fqn.toString("::")» p_«p.name»«p.^default?.generateExpression()»;
         '''
     }
 

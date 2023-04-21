@@ -16,14 +16,14 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class ContainerGenerator extends AbstractMemberGenerator<Container> {
 
-    override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Container element, boolean useGenPattern) {
         '''
             «element.comment»
             ::Smp::IContainer* «element.name»;
         '''
     }
 
-    override defineGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+    override defineGen(NamedElementWithMembers parent, Container element, boolean useGenPattern) {
     }
 
     override collectIncludes(Container element, IncludeAcceptor acceptor) {

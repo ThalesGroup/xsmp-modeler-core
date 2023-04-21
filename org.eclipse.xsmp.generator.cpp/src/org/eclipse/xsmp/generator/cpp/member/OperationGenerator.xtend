@@ -34,7 +34,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
         var operator = o.attribute(QualifiedNames.Attributes_Operator)
         if (operator !== null) {
-            val value = Solver.INSTANCE.getEnum(operator.value, (operator.type as AttributeType).type as Enumeration)
+            val value = Solver.INSTANCE.getEnumerationLiteral(operator.value, (operator.type as AttributeType).type as Enumeration)
 
             if (value !== null) {
                 switch (value.name) {
@@ -189,7 +189,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
     protected def CharSequence generateParameter(Parameter t, boolean withDefault) {
 //«t.comment»
         '''
-            «t.type()» «t.name»«IF t.^default !==null && withDefault» = «t.^default.doGenerateExpression(t.type, t)»«ENDIF» 
+            «t.type()» «t.name»«IF t.^default !==null && withDefault» = «t.^default.doGenerateExpression()»«ENDIF» 
         '''
     }
 

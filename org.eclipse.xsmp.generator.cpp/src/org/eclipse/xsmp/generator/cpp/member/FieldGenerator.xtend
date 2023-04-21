@@ -16,7 +16,6 @@ import org.eclipse.xsmp.xcatalogue.Class
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
 import org.eclipse.xsmp.xcatalogue.Expression
 import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.PrimitiveType
 import org.eclipse.xsmp.xcatalogue.SimpleType
@@ -26,7 +25,7 @@ import org.eclipse.xtext.naming.QualifiedName
 
 class FieldGenerator extends AbstractMemberGenerator<Field> {
 
-    override declareGen(NamedElementWithMembers type, Field element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
         '''
             «element.comment»
             «IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")» «element.name»;
@@ -34,11 +33,11 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
 
     }
 
-    override defineGen(NamedElementWithMembers type, Field element, boolean useGenPattern) {
+    override defineGen(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
         if (element.isStatic)
             '''
                 // «element.name» initialization
-                «element.type.fqn.toString("::")» «type.name(useGenPattern)»::«element.name»«IF element.^default !==null» «element.^default.generateExpression(element.type, type)»«ELSE»{}«ENDIF»;
+                «element.type.fqn.toString("::")» «parent.name(useGenPattern)»::«element.name»«IF element.^default !==null» «element.^default.generateExpression()»«ELSE»{}«ENDIF»;
             '''
     }
 
@@ -68,27 +67,27 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
         element.^default === null || element.type.isDirectListInitializationType
     }
 
-    override initialize(NamedElementWithMembers container, Field element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
         if (!element.static && element.isDirectListInitialization)
             '''
                 // «element.name» initialization
-                «element.name» «IF element.^default !== null» «element.^default.generateExpression(element.type, container)»«ELSE»{}«ENDIF»
+                «element.name» «IF element.^default !== null» «element.^default.generateExpression()»«ELSE»{}«ENDIF»
             '''
     }
 
     protected def dispatch CharSequence construct(QualifiedName name, Type type, Expression expression,
-        NamedElement context) {
+        NamedElementWithMembers context) {
     }
 
     protected def dispatch CharSequence construct(QualifiedName name, SimpleType type, Expression expression,
-        NamedElement context) {
+        NamedElementWithMembers parent) {
         '''
-            «name.toString» = «expression.generateExpression(type, context)»;
+            «name.toString» = «expression.generateExpression()»;
         '''
     }
 
     protected def dispatch CharSequence construct(QualifiedName name, Array type, CollectionLiteral expression,
-        NamedElement context) {
+        NamedElementWithMembers context) {
 
         val last = name.lastSegment
         val base = name.skipLast(1)
@@ -101,7 +100,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
     }
 
     protected def dispatch CharSequence construct(QualifiedName name, Structure type, CollectionLiteral expression,
-        NamedElement context) {
+        NamedElementWithMembers context) {
 
         val fields = type.assignableFields
 

@@ -17,7 +17,7 @@ import org.eclipse.xtext.validation.SeverityConverter;
 
 public class XsmpcatIssueCodesProvider extends ConfigurableIssueCodesProvider
 {
-  protected static final String ISSUE_CODE_PREFIX = "org.eclipse.xsmp..";
+  protected static final String ISSUE_CODE_PREFIX = "org.eclipse.xsmp.validation.";
 
   public static final String DUPLICATE_ENUMERATION_VALUE = ISSUE_CODE_PREFIX
           + "invalid_enumeration_value";

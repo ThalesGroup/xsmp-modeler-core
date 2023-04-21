@@ -23,21 +23,15 @@ class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
         return eventType.eventArgs as SimpleType
     }
 
-    override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EventSource element, boolean useGenPattern) {
         '''
             «element.comment»
             ::Smp::IEventSource* «element.name»;
         '''
     }
 
-    override defineGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
-    }
-
     protected override collectIncludes(IncludeAcceptor acceptor) {
         acceptor.mdkHeader("Smp/IEventSource.h")
-    }
-
-    override initialize(NamedElementWithMembers container, EventSource member, boolean useGenPattern) {
     }
 
     override finalize(EventSource element) {

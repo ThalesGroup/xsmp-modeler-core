@@ -173,7 +173,7 @@ public class BinaryOperationItemProvider extends ExpressionItemProvider
 
     newChildDescriptors
             .add(createChildParameter(XcataloguePackage.Literals.BINARY_OPERATION__LEFT_OPERAND,
-                    XcatalogueFactory.eINSTANCE.createEnumerationLiteralReference()));
+                    XcatalogueFactory.eINSTANCE.createNamedElementReference()));
 
   }
 

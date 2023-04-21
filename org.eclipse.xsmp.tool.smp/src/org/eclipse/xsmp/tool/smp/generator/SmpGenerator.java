@@ -834,7 +834,7 @@ public class SmpGenerator extends AbstractModelConverter
         case UINT8:
           return uint8Value(value);
         case ENUM:
-          return enumValue(value, (Enumeration) type);
+          return enumValue(value);
         case NONE:
           switch (type.eClass().getClassifierID())
           {
@@ -843,7 +843,7 @@ public class SmpGenerator extends AbstractModelConverter
             case XcataloguePackage.STRUCTURE:
             case XcataloguePackage.CLASS:
             case XcataloguePackage.EXCEPTION:
-              return convert((CollectionLiteral) value, (Structure) type);
+              return convert((CollectionLiteral) value);
             default:
               break;
           }
@@ -892,16 +892,15 @@ public class SmpGenerator extends AbstractModelConverter
       case UINT8:
         return uint8ArrayValue(value);
       case ENUM:
-        return enumArrayValue(value, (Enumeration) itemType);
+        return enumArrayValue(value);
       case NONE:
-        return arrayValue(value, itemType);
-      default:
-        return null;
+        return arrayValue(value);
     }
+    return null;
 
   }
 
-  private Value convert(CollectionLiteral value, Structure type)
+  private Value convert(CollectionLiteral value)
   {
     final var v = TypesFactory.eINSTANCE.createStructureValue();
 
@@ -994,7 +993,7 @@ public class SmpGenerator extends AbstractModelConverter
     return v;
   }
 
-  private ArrayValue arrayValue(CollectionLiteral value, Type itemType)
+  private ArrayValue arrayValue(CollectionLiteral value)
   {
     final var v = TypesFactory.eINSTANCE.createArrayValue();
     value.getElements().forEach(i -> v.getItemValue().add(convert(i)));
@@ -1026,10 +1025,10 @@ public class SmpGenerator extends AbstractModelConverter
     return v;
   }
 
-  private EnumerationArrayValue enumArrayValue(CollectionLiteral value, Enumeration type)
+  private EnumerationArrayValue enumArrayValue(CollectionLiteral value)
   {
     final var v = TypesFactory.eINSTANCE.createEnumerationArrayValue();
-    value.getElements().forEach(i -> v.getItemValue().add(enumValue(i, type)));
+    value.getElements().forEach(i -> v.getItemValue().add(enumValue(i)));
     updateField(v, value);
     return v;
   }
@@ -1150,11 +1149,10 @@ public class SmpGenerator extends AbstractModelConverter
     return v;
   }
 
-  private EnumerationValue enumValue(Expression expression, Enumeration type)
+  private EnumerationValue enumValue(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createEnumerationValue();
-    v.setValue(Solver.INSTANCE.getInteger(Solver.INSTANCE.getEnum(expression, type).getValue())
-            .intValue());
+    v.setValue(Solver.INSTANCE.getEnumValue(expression).intValue());
     updateField(v, expression);
     return v;
   }

@@ -17,7 +17,7 @@ import org.eclipse.xsmp.xcatalogue.String
 
 class SimSatConstantGenerator extends ConstantGenerator {
 
-    override declareGen(NamedElementWithMembers type, Constant element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
 
         if (element.type instanceof String)
             '''
@@ -25,17 +25,17 @@ class SimSatConstantGenerator extends ConstantGenerator {
                 static const ::«element.type.fqn.toString("::")» «element.name»;
             '''
         else
-            super.declareGen(type, element, useGenPattern)
+            super.declareGen(parent, element, useGenPattern)
 
     }
 
-    override defineGen(NamedElementWithMembers type, Constant element, boolean useGenPattern) {
+    override defineGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
         if (element.type instanceof String)
             '''
-                const ::«element.type.fqn.toString("::")» «type.name(useGenPattern)»::«element.name»«element.value.generateExpression(element.type, type)»;
+                const ::«element.type.fqn.toString("::")» «parent.name(useGenPattern)»::«element.name»«element.value.generateExpression()»;
             '''
         else
-            super.defineGen(type, element, useGenPattern)
+            super.defineGen(parent, element, useGenPattern)
     }
 
 }

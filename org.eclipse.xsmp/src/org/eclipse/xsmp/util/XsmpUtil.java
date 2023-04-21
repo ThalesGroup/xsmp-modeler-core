@@ -35,9 +35,11 @@ import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
+import org.eclipse.xsmp.xcatalogue.Float;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
@@ -59,6 +61,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Tuples;
 
@@ -82,6 +85,9 @@ public class XsmpUtil
 
   @Inject
   protected IResourceScopeCache cache;
+
+  @Inject
+  protected IResourceDescriptionsProvider resourceDescriptionProvider;
 
   /**
    * Enumeration with SMP primitive type kinds
@@ -288,22 +294,39 @@ public class XsmpUtil
                     || from.eResource() == type.eResource());
   }
 
-  public static boolean isVisibleFrom(Field field, EObject from)
+  public static boolean isVisibleFrom(VisibilityElement field, EObject from)
   {
-    final var elemContainer = EcoreUtil2.getContainerOfType(from, Type.class);
-
-    final var fieldContainer = EcoreUtil2.getContainerOfType(field, Type.class);
-
-    return field.getRealVisibility() != VisibilityKind.PRIVATE || elemContainer == fieldContainer;
-
+    return getMinVisibility(field, from).getValue() >= field.getRealVisibility().getValue();
   }
 
-  public static VisibilityKind getMinVisibility(Field field, EObject from)
+  private static VisibilityKind getMinVisibility(VisibilityElement fieldOrConstant, EObject from,
+          VisibilityKind min)
   {
-    if (field != null && !field.eIsProxy() && (field.getRealVisibility() != VisibilityKind.PRIVATE
-            || !EcoreUtil.isAncestor(field.eContainer(), from)))
+
+    final var container = EcoreUtil2.getContainerOfType(from, NamedElementWithMembers.class);
+
+    if (EcoreUtil.isAncestor(container, fieldOrConstant))
     {
-      return VisibilityKind.PROTECTED;
+      return min;
+    }
+
+    if (container instanceof ItemWithBase)
+    {
+      final var base = ((ItemWithBase) container).getBase();
+      if (base != null)
+      {
+        return getMinVisibility(fieldOrConstant, base, VisibilityKind.PROTECTED);
+      }
+    }
+
+    return VisibilityKind.PUBLIC;
+  }
+
+  public static VisibilityKind getMinVisibility(VisibilityElement fieldOrConstant, EObject from)
+  {
+    if (fieldOrConstant != null && !fieldOrConstant.eIsProxy())
+    {
+      return getMinVisibility(fieldOrConstant, from, VisibilityKind.PRIVATE);
     }
 
     return VisibilityKind.PRIVATE;
@@ -318,9 +341,9 @@ public class XsmpUtil
       {
         return doIsVisibleFrom((Type) obj, from);
       }
-      if (obj instanceof Field)
+      if (obj instanceof VisibilityElement)
       {
-        return isVisibleFrom((Field) obj, from);
+        return isVisibleFrom((VisibilityElement) obj, from);
       }
     }
 
@@ -914,9 +937,31 @@ public class XsmpUtil
 
   }
 
-  private Type findType(Expression e)
+  private Type findType(EObject e, QualifiedName name)
   {
-    final var parent = e.eContainer();
+
+    final var resource = e.eResource();
+    if (resource != null)
+    {
+      final var rs = resource.getResourceSet();
+      if (rs != null)
+      {
+        final var it = resourceDescriptionProvider.getResourceDescriptions(rs)
+                .getExportedObjects(XcataloguePackage.Literals.PRIMITIVE_TYPE, name, false)
+                .iterator();
+        if (it.hasNext())
+        {
+          return (Type) it.next().getEObjectOrProxy();
+        }
+      }
+
+    }
+    return null;
+  }
+
+  private Type findType(EObject parent)
+  {
+
     switch (parent.eClass().getClassifierID())
     {
       case XcataloguePackage.FIELD:
@@ -927,6 +972,24 @@ public class XsmpUtil
         return ((Association) parent).getType();
       case XcataloguePackage.PARAMETER:
         return ((Parameter) parent).getType();
+      case XcataloguePackage.STRING:
+      case XcataloguePackage.ARRAY:
+      case XcataloguePackage.MULTIPLICITY:
+        return findType(parent, QualifiedNames.Smp_Int64);
+      case XcataloguePackage.FLOAT:
+      {
+        final var type = ((Float) parent).getPrimitiveType();
+        return type != null ? type : findType(parent, QualifiedNames.Smp_Float64);
+      }
+      case XcataloguePackage.INTEGER:
+      {
+        final var type = ((org.eclipse.xsmp.xcatalogue.Integer) parent).getPrimitiveType();
+        return type != null ? type : findType(parent, QualifiedNames.Smp_Int32);
+      }
+      case XcataloguePackage.ENUMERATION_LITERAL:
+        return findType(parent, QualifiedNames.Smp_Int32);
+      case XcataloguePackage.ENUMERATION:
+        return (Type) parent;
       case XcataloguePackage.ATTRIBUTE:
       {
         final var type = ((Attribute) parent).getType();
@@ -937,25 +1000,42 @@ public class XsmpUtil
       case XcataloguePackage.COLLECTION_LITERAL:
       {
         final var collection = (CollectionLiteral) parent;
-        final var type = getType(collection);
-        if (type instanceof Array)
-        {
-          return ((Array) type).getItemType();
-        }
-        if (type instanceof Structure)
-        {
-          final var fields = getAssignableFields((Structure) type);
-          final var index = collection.getElements().indexOf(e);
-          if (index >= 0 && index < fields.size())
-          {
-            return fields.get(index).getType();
-          }
-        }
-        return null;
+        return getType(collection);
       }
       default:
         return parent instanceof Expression ? getType((Expression) parent) : null;
     }
+  }
+
+  private Type findType(Expression e)
+  {
+    final var parent = e.eContainer();
+
+    final var type = getType(parent);
+
+    if (parent instanceof CollectionLiteral)
+    {
+      if (type instanceof Array)
+      {
+        return ((Array) type).getItemType();
+      }
+      if (type instanceof Structure)
+      {
+        final var collection = (CollectionLiteral) parent;
+        final var fields = getAssignableFields((Structure) type);
+        final var index = collection.getElements().indexOf(e);
+        if (index >= 0 && index < fields.size())
+        {
+          return fields.get(index).getType();
+        }
+      }
+    }
+    return type;
+  }
+
+  public Type getType(EObject e)
+  {
+    return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
   }
 
   public Type getType(Expression e)

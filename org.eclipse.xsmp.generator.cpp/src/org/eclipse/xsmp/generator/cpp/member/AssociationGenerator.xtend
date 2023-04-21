@@ -32,7 +32,7 @@ class AssociationGenerator extends AbstractMemberGenerator<Association> {
         if (!element.isStatic)
             '''
                 // «element.name» initialization
-                «element.name» «IF element.^default !== null»«element.^default.generateExpression(element.type, container)»«ELSE»{ }«ENDIF»
+                «element.name» «IF element.^default !== null»«element.^default.generateExpression()»«ELSE»{ }«ENDIF»
             '''
     }
 

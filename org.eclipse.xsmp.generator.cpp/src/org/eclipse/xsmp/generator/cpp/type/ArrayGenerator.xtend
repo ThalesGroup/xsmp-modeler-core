@@ -29,7 +29,7 @@ class ArrayGenerator extends AbstractTypeFileGenerator<Array> {
             «t.comment»
             struct «t.name(useGenPattern)» 
             { 
-                ::«t.itemType.fqn.toString("::")» internalArray[«t.size.doGenerateExpression(null, t)»];
+                ::«t.itemType.fqn.toString("::")» internalArray[«t.size.doGenerateExpression()»];
             };
             
             «t.uuidDeclaration»
@@ -47,7 +47,7 @@ class ArrayGenerator extends AbstractTypeFileGenerator<Array> {
                         «t.uuidQfn»,  //UUID
                         «t.itemType.uuidQfn»,
                         sizeof(::«t.itemType.fqn.toString("::")»),
-                        «t.size.doGenerateExpression(null, t)», // size of the array
+                        «t.size.doGenerateExpression()», // size of the array
                         «t.isSimpleArray»);   // is simple array
                 }
                 «t.uuidDefinition»

@@ -39,8 +39,8 @@ class IntegerGenerator extends AbstractTypeFileGenerator<Integer> {
                     "«t.name»", //Name
                     «t.description()», //description
                     «t.uuidQfn», //UUID
-                «IF t.minimum !== null»«t.minimum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::min()«ENDIF», //minimum
-                «IF t.maximum !== null»«t.maximum.doGenerateExpression(t, t)»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::max()«ENDIF», //maximum
+                «IF t.minimum !== null»«t.minimum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::min()«ENDIF», //minimum
+                «IF t.maximum !== null»«t.maximum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Int32«ENDIF»>::max()«ENDIF», //maximum
                 "«t.unit»", //unit
                 «t.generatePrimitiveKind»);  
             }

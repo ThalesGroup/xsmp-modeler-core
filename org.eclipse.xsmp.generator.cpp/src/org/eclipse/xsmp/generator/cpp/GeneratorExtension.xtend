@@ -127,7 +127,7 @@ class GeneratorExtension extends XsmpUtil {
 
         var value = t.attributeValue(QualifiedNames.Attributes_View)
         if (value !== null)
-            '''«value.doGenerateExpression(null, t.eContainer as NamedElement)»'''
+            '''«value.doGenerateExpression()»'''
         else
             '''::Smp::ViewKind::VK_None'''
     }
@@ -175,7 +175,7 @@ class GeneratorExtension extends XsmpUtil {
                 return '''1'''
             else
                 return '''0'''
-        return t.multiplicity.lower.doGenerateExpression(null, t.eContainer as NamedElement)
+        return t.multiplicity.lower.doGenerateExpression()
 
     }
 
@@ -190,9 +190,9 @@ class GeneratorExtension extends XsmpUtil {
             if (t.multiplicity.aux)
                 return "-1"
             else
-                return t.multiplicity.lower.doGenerateExpression(null, t.eContainer as NamedElement)
+                return t.multiplicity.lower.doGenerateExpression()
 
-        return t.multiplicity.upper.doGenerateExpression(null, t.eContainer as NamedElement)
+        return t.multiplicity.upper.doGenerateExpression()
     }
 
     /**

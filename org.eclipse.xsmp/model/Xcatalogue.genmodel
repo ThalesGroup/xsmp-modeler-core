@@ -150,8 +150,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//UnaryOperation/operand"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//UnaryOperation/feature"/>
     </genClasses>
-    <genClasses ecoreClass="Xcatalogue.ecore#//EnumerationLiteralReference">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//EnumerationLiteralReference/value"/>
+    <genClasses ecoreClass="Xcatalogue.ecore#//NamedElementReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//NamedElementReference/value"/>
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//Array">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Array/itemType"/>

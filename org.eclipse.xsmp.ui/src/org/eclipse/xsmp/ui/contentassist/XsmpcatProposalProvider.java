@@ -12,38 +12,29 @@ package org.eclipse.xsmp.ui.contentassist;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.EventSource;
-import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NativeType;
-import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
@@ -61,6 +52,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.inject.Inject;
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist on how to
@@ -371,93 +363,46 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
             .forEach(cst -> acceptor.accept(createCompletionProposal(cst.getName(), context, cst)));
   }
 
+  @Inject
+  protected XsmpUtil xsmpUtil;
+
   @Override
-  public void completeEnumerationLiteralReference_Value(EObject model, Assignment assignment,
+  public void completeNamedElementReference_Value(EObject model, Assignment assignment,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
+    EObject ctx;
 
-    Type expectedType = null;
-
-    final List<EObject> parents = new ArrayList<>();
-
-    var ctx = model;
-    if (EcoreUtil.isAncestor(ctx, context.getPreviousModel()))
+    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
+    if (cur != null)
     {
-      ctx = context.getPreviousModel();
-    }
-    while (expectedType == null && ctx != null)
-    {
-      switch (ctx.eClass().getClassifierID())
-      {
-        case XcataloguePackage.CONSTANT:
-          expectedType = ((Constant) ctx).getType();
-          break;
-        case XcataloguePackage.FIELD:
-          expectedType = ((Field) ctx).getType();
-          break;
-        case XcataloguePackage.PARAMETER:
-          expectedType = ((Parameter) ctx).getType();
-          break;
-        case XcataloguePackage.ATTRIBUTE:
-          expectedType = ((AttributeType) ((Attribute) ctx).getType()).getType();
-          break;
-        default:
-
-          parents.add(ctx);
-          break;
-      }
-      ctx = ctx.eContainer();
-    }
-    if (expectedType == null)
-    {
-      return;
-    }
-    for (var i = parents.size() - 1; i >= 0; i--)
-    {
-      final var parent = parents.get(i);
-      switch (expectedType.eClass().getClassifierID())
-      {
-        case XcataloguePackage.STRUCTURE:
-          final var structure = (Structure) expectedType;
-          var index = 0;
-
-          if (parent instanceof CollectionLiteral)
-          {
-            final var collection = (CollectionLiteral) parent;
-            final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-            index = collection.getElements().indexOf(cur);
-            if (index == -1)
-            {
-              index = ((CollectionLiteral) parent).getElements().size();
-            }
-          }
-          final var field = structure.getMember().stream().filter(Field.class::isInstance)
-                  .map(Field.class::cast).skip(index).findFirst().orElse(null);
-          if (field != null)
-          {
-            expectedType = field.getType();
-          }
-          break;
-        case XcataloguePackage.ARRAY:
-          expectedType = ((Array) expectedType).getItemType();
-          break;
-        default:
-          break;
-      }
-    }
-    final Predicate<IEObjectDescription> filter;
-    if (expectedType instanceof Enumeration)
-    {
-      final var enumeration = (Enumeration) expectedType;
-      // provide only literals for the enumeration
-      filter = d -> enumeration.getLiteral()
-              .contains(EcoreUtil.resolve(d.getEObjectOrProxy(), enumeration));
+      ctx = cur;
     }
     else
     {
-      // remove enumeration literals
-      filter = d -> !(d.getEObjectOrProxy() instanceof EnumerationLiteral);
+      ctx = model;
     }
+    final var expectedType = xsmpUtil.getType(ctx);
+
+    final Predicate<IEObjectDescription> filter;
+
+    filter = d -> {
+      final var obj = d.getEObjectOrProxy();
+      final Type type;
+      if (obj instanceof Constant && XsmpUtil.isVisibleFrom(d, ctx))
+      {
+        type = ((Constant) obj).getType();
+      }
+      else if (obj instanceof EnumerationLiteral)
+      {
+        type = (Type) obj.eContainer();
+      }
+      else
+      {
+        type = null;
+      }
+      return expectedType == type;
+
+    };
 
     lookupCrossReference((CrossReference) assignment.getTerminal(), context, acceptor, filter);
   }

@@ -122,7 +122,7 @@ public class CollectionLiteralItemProvider extends ExpressionItemProvider
 
     newChildDescriptors
             .add(createChildParameter(XcataloguePackage.Literals.COLLECTION_LITERAL__ELEMENTS,
-                    XcatalogueFactory.eINSTANCE.createEnumerationLiteralReference()));
+                    XcatalogueFactory.eINSTANCE.createNamedElementReference()));
   }
 
 }
