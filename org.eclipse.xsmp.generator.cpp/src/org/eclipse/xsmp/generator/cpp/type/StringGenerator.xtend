@@ -28,7 +28,7 @@ class StringGenerator extends AbstractTypeFileGenerator<String> {
             «t.comment»
             struct «t.name(useGenPattern)» 
             { 
-                ::Smp::Char8 internalString[«t.length.doGenerateExpression(t, t)» + 1];
+                ::Smp::Char8 internalString[«t.length.doGenerateExpression()» + 1];
             };
             
             «t.uuidDeclaration»
@@ -44,7 +44,7 @@ class StringGenerator extends AbstractTypeFileGenerator<String> {
                         "«t.name»",  //Name
                         «t.description()»,   //description
                         «t.uuidQfn»,  //UUID
-                        «t.length.doGenerateExpression(t, t)»);  //length of the String
+                        «t.length.doGenerateExpression()»);  //length of the String
                 }
                 «t.uuidDefinition»
         '''

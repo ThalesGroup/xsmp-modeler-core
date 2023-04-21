@@ -98,24 +98,24 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
         '''
     }
 
-    override CharSequence initParameter(Parameter p, NamedElement context) {
+    override CharSequence initParameter(Parameter p, NamedElementWithMembers parent) {
         switch (p.direction) {
             case IN,
             case INOUT: {
                 // declare and initialize the parameter
                 if (p.type instanceof SimpleType)
                     '''
-                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.generatePrimitiveKind»«IF p.^default !== null», «p.^default.generateExpression(p.type, context)»«ENDIF»);
+                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.generatePrimitiveKind»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
                     '''
                 else
                     '''
-                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.uuidQfn»«IF p.^default !== null», «p.^default.generateExpression(p.type, context)»«ENDIF»);
+                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.uuidQfn»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
                     '''
             }
             default: {
                 // only declare the parameter
                 '''
-                    ::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression(p.type, context)»;
+                    ::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression()»;
                 '''
             }
         }

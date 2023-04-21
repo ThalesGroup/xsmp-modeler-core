@@ -24,6 +24,7 @@ import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
+import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -113,20 +114,24 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   {
 
     // save the deprecated state
-    if (eObject instanceof NamedElement)
+    if (eObject instanceof NamedElement && ((NamedElement) eObject).isDeprecated())
     {
-      builder.put("deprecated", Boolean.toString(((NamedElement) eObject).isDeprecated()));
+      builder.put("deprecated", Boolean.toString(true));
     }
 
-    if (eObject instanceof Field)
+    if (eObject instanceof Field && elementUtil.isStatic((NamedElement) eObject))
     {
-      builder.put("static", Boolean.toString(elementUtil.isStatic((NamedElement) eObject)));
+      builder.put("static", Boolean.toString(true));
     }
 
     // save the visibility of the VisibilityElement
     if (eObject instanceof VisibilityElement)
     {
-      builder.put("visibility", ((VisibilityElement) eObject).getRealVisibility().getName());
+      final var visibility = ((VisibilityElement) eObject).getRealVisibility();
+      if (visibility != VisibilityKind.PUBLIC)
+      {
+        builder.put("visibility", visibility.getName());
+      }
     }
 
     if (eObject instanceof Type)

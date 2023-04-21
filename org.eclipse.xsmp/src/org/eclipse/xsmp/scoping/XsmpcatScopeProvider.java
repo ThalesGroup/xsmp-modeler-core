@@ -14,12 +14,10 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.eclipse.xtext.scoping.impl.MultimapBasedScope;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -39,21 +37,18 @@ public class XsmpcatScopeProvider extends AbstractXsmpcatScopeProvider
           DesignatedInitializerScopeProvider designatedInitializerScopeProvider)
   {
     scopes = ImmutableMap.<EReference, IScopeProvider> builder()
-            .put(XcataloguePackage.Literals.ENUMERATION_LITERAL_REFERENCE__VALUE,
-                    this::getLiteralReferenceScope)
-            .put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, baseScopeProvider::getScope)
+            .put(XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
+
+                    (var context, var reference) -> MultimapBasedScope.createScope(
+                            super.getScope(context, reference),
+                            baseScopeProvider.getScope(context, reference).getAllElements(), false)
+
+            ).put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, baseScopeProvider::getScope)
             .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT, baseScopeProvider::getScope)
             .put(XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, baseScopeProvider::getScope)
             .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
                     designatedInitializerScopeProvider::getScope)
             .build();
-  }
-
-  private IScope getLiteralReferenceScope(EObject context, EReference reference)
-  {
-    return new FilteringScope(super.getScope(context, reference),
-            elem -> elem.getEObjectOrProxy() instanceof EnumerationLiteral
-                    || elem.getEObjectOrProxy() instanceof Constant);
   }
 
   /**

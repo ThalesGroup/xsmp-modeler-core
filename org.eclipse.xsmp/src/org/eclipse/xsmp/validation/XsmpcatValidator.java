@@ -71,6 +71,7 @@ import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.KeywordExpression;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
@@ -182,7 +183,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   private void checkEnumeration(Enumeration type, Expression e)
   {
-    solver.getEnum(e, type);
+    solver.getEnumerationLiteral(e, type);
   }
 
   private void checkFloat(org.eclipse.xsmp.xcatalogue.Float type, Expression e)
@@ -1444,4 +1445,29 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
+  @Check
+  protected void checkNamedElementReference(NamedElementReference literal)
+  {
+
+    EObject value = literal.getValue();
+    if (value instanceof EnumerationLiteral)
+    {
+      value = value.eContainer();
+    }
+    if (value instanceof VisibilityElement)
+    {
+      final var elem = (VisibilityElement) value;
+      // check that the referenced type is visible
+      final var minVisibility = XsmpUtil.getMinVisibility(elem, literal);
+      if (elem.getRealVisibility().getValue() > minVisibility.getValue())
+      {
+        error("The " + elem.eClass().getName() + " "
+                + qualifiedNameProvider.getFullyQualifiedName(elem) + " is not visible.", literal,
+                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
+                XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, elem.getName(),
+                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
+                minVisibility.getName());
+      }
+    }
+  }
 }

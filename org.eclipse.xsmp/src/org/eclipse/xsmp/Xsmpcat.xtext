@@ -396,13 +396,13 @@ UnaryOperation returns Expression:
 OpUnary:
     "!" | "-" | "+" | "~";
 
-EnumerationLiteralReference returns Expression:
-    {EnumerationLiteralReference} value=[NamedElement|QualifiedName];
+NamedElementReference returns Expression:
+    {NamedElementReference} value=[NamedElement|QualifiedName];
 
 Literal returns Expression:
     CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
     ParenthesizedExpression |
-    EnumerationLiteralReference | BuiltInConstant | BuiltInFunction | KeywordExpression;
+    NamedElementReference | BuiltInConstant | BuiltInFunction | KeywordExpression;
 
 ParenthesizedExpression returns Expression:
     {ParenthesizedExpression} '(' expr=Expression ')';

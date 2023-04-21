@@ -38,7 +38,7 @@ class StructureGenerator extends MemberGenerator<Structure> {
                 «t.declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                «t.name(useGenPattern)»(/*«FOR f : fields SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !==null» «f.^default.generateExpression(f.type, t)»«ELSE»{}«ENDIF»«ENDFOR»*/);
+                «t.name(useGenPattern)»(/*«FOR f : fields SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !==null» «f.^default.generateExpression()»«ELSE»{}«ENDIF»«ENDFOR»*/);
                 ~«t.name(useGenPattern)»() noexcept;
                 «t.name(useGenPattern)»(const «t.name(useGenPattern)» &);
                 «t.name(useGenPattern)»(«t.name(useGenPattern)» &&);

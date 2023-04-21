@@ -17,8 +17,6 @@ import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
@@ -57,7 +55,7 @@ public class DefaultValueProvider
       case XcataloguePackage.INTEGER:
       case XcataloguePackage.STRING:
       case XcataloguePackage.PRIMITIVE_TYPE:
-        switch (typeUtil.getPrimitiveType((PrimitiveType) t))
+        switch (typeUtil.getPrimitiveType(t))
         {
           case BOOL:
             return "false";
@@ -84,9 +82,10 @@ public class DefaultValueProvider
         }
         break;
       case XcataloguePackage.STRUCTURE:
+        final var fields = typeUtil.getAssignableFields((Structure) t);
+
         return "{" + java.lang.String.join(", ",
-                ((Structure) t).getMember().stream().filter(Field.class::isInstance)
-                        .map(m -> getDefautValue(((Field) m).getType()))
+                fields.stream().map(f -> "." + f.getName() + " = " + getDefautValue(f.getType()))
                         .collect(Collectors.joining(", ")))
                 + "}";
       default:

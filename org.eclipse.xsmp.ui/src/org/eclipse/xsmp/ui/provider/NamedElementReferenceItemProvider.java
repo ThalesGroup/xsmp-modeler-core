@@ -21,15 +21,15 @@ import com.google.inject.Inject;
 
 /**
  * This is the item provider adapter for a
- * {@link org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference} object.
+ * {@link org.eclipse.xsmp.xcatalogue.NamedElementReference} object.
  */
-public class EnumerationLiteralReferenceItemProvider extends ExpressionItemProvider
+public class NamedElementReferenceItemProvider extends ExpressionItemProvider
 {
   /**
    * This constructs an instance from a factory and a notifier.
    */
   @Inject
-  public EnumerationLiteralReferenceItemProvider(
+  public NamedElementReferenceItemProvider(
           XcatalogueItemProviderAdapterFactory adapterFactory)
   {
     super(adapterFactory);
@@ -57,11 +57,11 @@ public class EnumerationLiteralReferenceItemProvider extends ExpressionItemProvi
   {
     itemPropertyDescriptors.add(createItemPropertyDescriptor(
             ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-            getResourceLocator(), getString("_UI_EnumerationLiteralReference_value_feature"),
+            getResourceLocator(), getString("_UI_NamedElementReference_value_feature"),
             getString("_UI_PropertyDescriptor_description",
-                    "_UI_EnumerationLiteralReference_value_feature",
-                    "_UI_EnumerationLiteralReference_type"),
-            XcataloguePackage.Literals.ENUMERATION_LITERAL_REFERENCE__VALUE, true, false, true,
+                    "_UI_NamedElementReference_value_feature",
+                    "_UI_NamedElementReference_type"),
+            XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, true, false, true,
             null, null, null));
   }
 
@@ -71,7 +71,7 @@ public class EnumerationLiteralReferenceItemProvider extends ExpressionItemProvi
   @Override
   public Object getStyledText(Object object)
   {
-    return new StyledString(getString("_UI_EnumerationLiteralReference_type"));
+    return new StyledString(getString("_UI_NamedElementReference_type"));
   }
 
 }

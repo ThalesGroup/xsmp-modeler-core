@@ -19,7 +19,7 @@ class SimSatStringGenerator extends StringGenerator {
     override protected generateHeaderGenBody(String t, boolean useGenPattern) {
         '''
             «t.comment»
-            using «t.name(useGenPattern)» = ::esa::ecss::smp::cdk::String<«t.length.doGenerateExpression(t,t)»>;
+            using «t.name(useGenPattern)» = ::esa::ecss::smp::cdk::String<«t.length.doGenerateExpression()»>;
             
             «t.uuidDeclaration»
             

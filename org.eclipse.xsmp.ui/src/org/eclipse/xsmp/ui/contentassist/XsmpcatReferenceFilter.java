@@ -17,6 +17,8 @@ import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Component;
+import org.eclipse.xsmp.xcatalogue.Constant;
+import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
@@ -146,6 +148,12 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
           })
           .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
                   model -> p -> XsmpUtil.getVisibility(p) == VisibilityKind.PUBLIC)
+
+          .put(XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
+                  model -> p -> XsmpUtil.isVisibleFrom(p, model)
+                          && (p.getEObjectOrProxy() instanceof EnumerationLiteral
+                                  || p.getEObjectOrProxy() instanceof Constant))
+
           // build the map
           .build();
 

@@ -270,31 +270,12 @@ public class SmpImporterAction extends AbstractHandler
           fsa.setOutputPath(model.getParent().getLocation().toFile().getAbsolutePath());
 
           monitor.subTask("Converting the Catalogue ...");
-          try
-          {
-            importer.doGenerate(resource, fsa);
-          }
-          finally
-          {
-            try
-            {
-              model.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
-            }
-            catch (final CoreException e)
-            {
-              log.error(e);
-            }
 
-          }
+          importer.doGenerate(resource, fsa);
+
           monitor.worked(30);
 
-          /*
-           * Display.getDefault()
-           * .asyncExec(() -> MessageDialog.openInformation(shell, "Conversion successfull",
-           * "File " + model.getName() + " successfully converted to "
-           * + targetFile.getName()));
-           */
-
+          model.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
         }
         catch (final Exception e)
         {

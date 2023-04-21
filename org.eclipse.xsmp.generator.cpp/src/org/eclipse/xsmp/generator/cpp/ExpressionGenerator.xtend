@@ -15,6 +15,7 @@ import com.google.inject.Singleton
 import java.time.Duration
 import java.time.Instant
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xsmp.util.Solver
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.BinaryOperation
@@ -24,21 +25,20 @@ import org.eclipse.xsmp.xcatalogue.BuiltInExpression
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference
+import org.eclipse.xsmp.xcatalogue.DesignatedInitializer
+import org.eclipse.xsmp.xcatalogue.Enumeration
+import org.eclipse.xsmp.xcatalogue.NamedElementReference
 import org.eclipse.xsmp.xcatalogue.Expression
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral
 import org.eclipse.xsmp.xcatalogue.KeywordExpression
 import org.eclipse.xsmp.xcatalogue.NamedElement
+import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression
 import org.eclipse.xsmp.xcatalogue.StringLiteral
 import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
-import org.eclipse.xsmp.xcatalogue.ValueType
-import org.eclipse.xsmp.xcatalogue.Enumeration
-import org.eclipse.xsmp.util.Solver
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer
+import org.eclipse.xtext.EcoreUtil2
 
 @Singleton
 class ExpressionGenerator {
@@ -46,9 +46,8 @@ class ExpressionGenerator {
     @Inject
     protected extension XsmpUtil
 
-    def dispatch CharSequence doGenerateExpression(EnumerationLiteralReference e, Type expectedType,
-        NamedElement context) {
-
+    def dispatch CharSequence doGenerateExpression(NamedElementReference e) {
+        val context = EcoreUtil2.getContainerOfType(e, NamedElementWithMembers)
         var fqn = e.value.fqn;
 
         var contextfqn = context.fqn
@@ -59,23 +58,23 @@ class ExpressionGenerator {
         return '''::«fqn.toString("::")»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(IntegerLiteral t, Type expectedType, NamedElement context) {
-
+    def dispatch CharSequence doGenerateExpression(IntegerLiteral t) {
+        val expectedType = t.type
         if (expectedType instanceof Enumeration) {
-            '''::«Solver.INSTANCE.getEnum(t,expectedType).fqn.toString("::")»'''
+            '''::«Solver.INSTANCE.getEnumerationLiteral(t,expectedType).fqn.toString("::")»'''
         } else
             '''«t.text.replace("'","")»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(FloatingLiteral t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(FloatingLiteral t) {
         '''«t.text.replace("'","")»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(BuiltInFunction t, Type expectedType, NamedElement context) {
-        '''«t.name»(«FOR p : t.parameter SEPARATOR ", "»«p.doGenerateExpression(null, context)»«ENDFOR»)'''
+    def dispatch CharSequence doGenerateExpression(BuiltInFunction t) {
+        '''«t.name»(«FOR p : t.parameter SEPARATOR ", "»«p.doGenerateExpression()»«ENDFOR»)'''
     }
 
-    def dispatch CharSequence doGenerateExpression(BuiltInConstant t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(BuiltInConstant t) {
         switch (t.name) {
             case "PI":
                 "M_PI"
@@ -84,11 +83,12 @@ class ExpressionGenerator {
         }
     }
 
-    def dispatch CharSequence doGenerateExpression(BooleanLiteral t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(BooleanLiteral t) {
         '''«t.isTrue»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(StringLiteral t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(StringLiteral t) {
+        val expectedType = t.type
         switch (expectedType.primitiveType ) {
             // convert DateTime and Duration to a number of ns
             case DATE_TIME: {
@@ -100,74 +100,74 @@ class ExpressionGenerator {
                 '''«i.seconds * 1_000_000_000 + i.nano»UL'''
             }
             default: {
-                if (expectedType instanceof ValueType)
-                    t.value
-                else
-                    XsmpUtil.getString(t)
+                t.value
             }
         }
 
     }
 
-    def dispatch CharSequence doGenerateExpression(CharacterLiteral t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(CharacterLiteral t) {
         t.value
     }
 
-    def dispatch CharSequence doGenerateExpression(CollectionLiteral t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(CollectionLiteral t) {
+        val expectedType = t.type
         if (expectedType instanceof Array) {
             if (expectedType.itemType instanceof Array)
-                '''{«FOR l : t.elements SEPARATOR ', '»{«l.doGenerateExpression(expectedType.itemType, context)»}«ENDFOR»}'''
+                '''{«FOR l : t.elements SEPARATOR ', '»{«l.doGenerateExpression()»}«ENDFOR»}'''
             else
-                '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType.itemType, context)»«ENDFOR»}'''
+                '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression()»«ENDFOR»}'''
         } else if (expectedType instanceof Structure) {
-            val fields = expectedType.assignableFields
-            if (fields.size >= t.elements.size)
-                '''{«FOR i : 0 ..< t.elements.size SEPARATOR ', '»«t.elements.get(i).generateStructMember(fields.get(i).type, context)»«ENDFOR»}'''
-            else // TODO find constructor
-                '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType, context)»«ENDFOR»}'''
+            '''{«FOR l : t.elements SEPARATOR ', '»«l.generateStructMember()»«ENDFOR»}'''
+
         } else
-            '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression(expectedType, context)»«ENDFOR»}'''
+            '''{«FOR l : t.elements SEPARATOR ', '»«l.doGenerateExpression()»«ENDFOR»}'''
 
     }
 
-    def CharSequence generateStructMember(Expression t, Type expectedType, NamedElement context) {
+    def CharSequence generateStructMember(Expression t) {
+        val expectedType = t.type
         if (expectedType instanceof Array)
-            '''{«t.doGenerateExpression(expectedType, context)»}'''
+            '''{«t.doGenerateExpression()»}'''
         else
-            t.doGenerateExpression(expectedType, context)
+            t.doGenerateExpression()
     }
 
-    def dispatch CharSequence doGenerateExpression(UnaryOperation t, Type expectedType, NamedElement context) {
-        '''«t.feature»«t.operand.doGenerateExpression(expectedType, context)»'''
+    def dispatch CharSequence doGenerateExpression(UnaryOperation t) {
+        '''«t.feature»«t.operand.doGenerateExpression()»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(Expression t, Type expectedType, NamedElement context) {
+    def dispatch CharSequence doGenerateExpression(Expression t) {
         '''/*unsupported expression: «t.toString»*/'''
     }
 
-    def dispatch CharSequence doGenerateExpression(BinaryOperation t, Type expectedType, NamedElement context) {
-        '''«t.leftOperand.doGenerateExpression(expectedType, context)»«t.feature»«t.rightOperand.doGenerateExpression(expectedType, context)»'''
+    def dispatch CharSequence doGenerateExpression(BinaryOperation t) {
+        '''«t.leftOperand.doGenerateExpression()»«t.feature»«t.rightOperand.doGenerateExpression()»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(ParenthesizedExpression t, Type expectedType, NamedElement context) {
-        '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
+    def dispatch CharSequence doGenerateExpression(ParenthesizedExpression t) {
+        '''(«t.expr.doGenerateExpression()»)'''
     }
-    def dispatch CharSequence doGenerateExpression(DesignatedInitializer t, Type expectedType, NamedElement context) {
-        '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
+
+    def dispatch CharSequence doGenerateExpression(DesignatedInitializer t) {
+        '''(«t.expr.doGenerateExpression()»)'''
     }
-    def dispatch CharSequence doGenerateExpression(KeywordExpression t, Type expectedType, NamedElement context) {
+
+    def dispatch CharSequence doGenerateExpression(KeywordExpression t) {
         '''«t.name»'''
     }
 
-    def CharSequence generateExpression(Expression t, Type expectedType, NamedElement context) {
-        if (expectedType instanceof Structure)
-            t.doGenerateExpression(expectedType, context)
-        else if (expectedType instanceof Array)
-            '''{«t.doGenerateExpression(expectedType, context)»}'''
-        else if (t instanceof CollectionLiteral)
-            t.doGenerateExpression(expectedType, context)
+    def CharSequence generateExpression(Expression t) {
+        val expectedType = t.type
+
+        if (expectedType instanceof Structure) // do not add square brackets around struct init
+            t.doGenerateExpression()
+        else if (expectedType instanceof Array) // array requires an additional square bracket level
+            '''{«t.doGenerateExpression()»}'''
+        else if (t instanceof CollectionLiteral) // simple type, e.g: field Smp.Bool b = {true} --> Smp::Bool b {true}
+            t.doGenerateExpression()
         else
-            '''{«t.doGenerateExpression(expectedType, context)»}'''
+            '''{«t.doGenerateExpression()»}'''
     }
 
     /**
@@ -185,7 +185,7 @@ class ExpressionGenerator {
         acceptor.systemHeader("math.h")
     }
 
-    def protected dispatch doInclude(EnumerationLiteralReference expr, IncludeAcceptor acceptor) {
+    def protected dispatch doInclude(NamedElementReference expr, IncludeAcceptor acceptor) {
         val parent = expr.value.eContainer
         if (parent instanceof NamedElement)
             acceptor.include(parent)

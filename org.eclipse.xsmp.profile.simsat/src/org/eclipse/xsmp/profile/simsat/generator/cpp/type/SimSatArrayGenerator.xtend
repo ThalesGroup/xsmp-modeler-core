@@ -17,16 +17,10 @@ import org.eclipse.xsmp.xcatalogue.Array
 class SimSatArrayGenerator extends ArrayGenerator {
 
     override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
-        /*
-         *     struct «t.name(useGenPattern)»: ::Xsmp::Types::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression(t,t)»«IF t.isSimpleArray», true«ENDIF»>
-         *     {
-         *         using Field =ArrayField<«t.name(useGenPattern)»>;
-         *     };
-         *     
-         */
+
         '''
             «t.comment»
-            using «t.name(useGenPattern)»= ::esa::ecss::smp::cdk::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression(t,t)»>;
+            using «t.name(useGenPattern)»= ::esa::ecss::smp::cdk::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()»>;
             
             «t.uuidDeclaration»
             

@@ -138,7 +138,7 @@ public class BuiltInFunctionItemProvider extends BuiltInExpressionItemProvider
 
     newChildDescriptors
             .add(createChildParameter(XcataloguePackage.Literals.BUILT_IN_FUNCTION__PARAMETER,
-                    XcatalogueFactory.eINSTANCE.createEnumerationLiteralReference()));
+                    XcatalogueFactory.eINSTANCE.createNamedElementReference()));
 
     newChildDescriptors
             .add(createChildParameter(XcataloguePackage.Literals.BUILT_IN_FUNCTION__PARAMETER,

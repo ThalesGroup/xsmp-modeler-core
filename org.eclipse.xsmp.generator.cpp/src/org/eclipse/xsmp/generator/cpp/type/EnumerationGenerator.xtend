@@ -30,7 +30,7 @@ class EnumerationGenerator extends AbstractTypeFileGenerator<Enumeration> {
             enum class «t.name(useGenPattern)» : ::Smp::Int32 {
                 «FOR l : t.literal SEPARATOR ", "»
                     «l.comment»
-                    «l.name» = «l.value.doGenerateExpression(t, t)»
+                    «l.name» = «l.value.doGenerateExpression()»
                 «ENDFOR»
             };
             

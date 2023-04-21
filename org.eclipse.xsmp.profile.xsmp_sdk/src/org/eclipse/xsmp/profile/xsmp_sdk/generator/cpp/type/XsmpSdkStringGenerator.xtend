@@ -19,7 +19,7 @@ class XsmpSdkStringGenerator extends StringGenerator {
     override protected generateHeaderGenBody(String t, boolean useGenPattern) {
         '''
             «t.comment»
-            using «t.name(useGenPattern)» = ::Xsmp::String<«t.length.doGenerateExpression(t,t)»>;
+            using «t.name(useGenPattern)» = ::Xsmp::String<«t.length.doGenerateExpression()»>;
             
             «t.uuidDeclaration»
             

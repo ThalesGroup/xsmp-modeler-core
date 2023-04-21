@@ -18,7 +18,7 @@ import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.FIELD_I
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.PARAMETER_ID;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.ATTRIBUTE__TYPE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BUILT_IN_EXPRESSION__NAME;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.ENUMERATION_LITERAL_REFERENCE__VALUE;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.METADATUM__DOCUMENTATION;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT__NAME;
 import static org.eclipse.xtext.ide.editor.syntaxcoloring.HighlightingStyles.DEFAULT_ID;
@@ -78,7 +78,7 @@ public class XsmpcatSemanticHighlightingCalculator extends DefaultSemanticHighli
       case XcataloguePackage.ATTRIBUTE_TYPE:
         highlightFeature(acceptor, object, NAMED_ELEMENT__NAME, FIELD_ID);
         break;
-      case XcataloguePackage.ENUMERATION_LITERAL_REFERENCE:
+      case XcataloguePackage.NAMED_ELEMENT_REFERENCE:
         highlightLiteralReference(object, acceptor);
         break;
       case XcataloguePackage.BUILT_IN_CONSTANT:
@@ -164,7 +164,7 @@ public class XsmpcatSemanticHighlightingCalculator extends DefaultSemanticHighli
           IHighlightedPositionAcceptor acceptor)
   {
     for (final INode node : NodeModelUtils.findNodesForFeature(object,
-            ENUMERATION_LITERAL_REFERENCE__VALUE))
+            NAMED_ELEMENT_REFERENCE__VALUE))
     {
       if (node != null)
       {

@@ -34,14 +34,14 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
         '''
     }
 
-    override define(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
+    override define(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
         '''
-            void «type.name»::_«element.name»(«element.args») {
+            void «parent.name»::_«element.name»(«element.args») {
             }
         '''
     }
 
-    override declareGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
         '''
             «element.comment()»
             ::Smp::IEventSink* «element.name»;
@@ -49,10 +49,10 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
         '''
     }
 
-    override defineGen(NamedElementWithMembers type, EventSink element, boolean useGenPattern) {
+    override defineGen(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
         if (!useGenPattern)
             '''
-                void «type.name(useGenPattern)»::_«element.name»(«element.args») {
+                void «parent.name(useGenPattern)»::_«element.name»(«element.args») {
                 }
             '''
     }

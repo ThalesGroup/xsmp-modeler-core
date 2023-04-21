@@ -132,7 +132,7 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
   @Override
   public int getRelevance(Template template)
   {
-    return 301;
+    return 1000;
   }
 
   /**

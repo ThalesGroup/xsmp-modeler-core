@@ -202,10 +202,10 @@ public class XcatalogueItemProviderAdapterFactory extends XcatalogueAdapterFacto
 
   /**
    * This keeps track of the one adapter used for all
-   * {@link org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference} instances.
+   * {@link org.eclipse.xsmp.xcatalogue.NamedElementReference} instances.
    */
   @Inject
-  protected EnumerationLiteralReferenceItemProvider enumerationLiteralReferenceItemProvider;
+  protected NamedElementReferenceItemProvider enumerationLiteralReferenceItemProvider;
 
   /**
    * This keeps track of the one adapter used for all {@link org.eclipse.xsmp.xcatalogue.Array}
@@ -549,10 +549,10 @@ public class XcatalogueItemProviderAdapterFactory extends XcatalogueAdapterFacto
   }
 
   /**
-   * This creates an adapter for a {@link org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference}.
+   * This creates an adapter for a {@link org.eclipse.xsmp.xcatalogue.NamedElementReference}.
    */
   @Override
-  public Adapter createEnumerationLiteralReferenceAdapter()
+  public Adapter createNamedElementReferenceAdapter()
   {
 
     return enumerationLiteralReferenceItemProvider;

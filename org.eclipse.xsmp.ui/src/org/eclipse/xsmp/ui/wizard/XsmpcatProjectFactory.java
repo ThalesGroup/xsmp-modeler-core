@@ -39,23 +39,33 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
 
   private List<String> tools = null;
 
-  public XsmpcatProjectFactory()
+  protected void addXsmpNatures()
   {
-    setWithPluginXml(false);
-
     getProjectNatures().add(JavaCore.NATURE_ID);
     getProjectNatures().add(IBundleProjectDescription.PLUGIN_NATURE);
     getProjectNatures().add(XtextProjectHelper.NATURE_ID);
+    getBuilderIds().add(JavaCore.BUILDER_ID);
+    getBuilderIds().add(XtextProjectHelper.BUILDER_ID);
+    getBuilderIds().add("org.eclipse.pde.ManifestBuilder");
+  }
+
+  protected void addCdtNatures()
+  {
     getProjectNatures().add(CProjectNature.C_NATURE_ID);
     getProjectNatures().add(CCProjectNature.CC_NATURE_ID);
     getProjectNatures().add(ManagedCProjectNature.MNG_NATURE_ID);
     getProjectNatures().add(ScannerConfigNature.NATURE_ID);
 
-    getBuilderIds().add(JavaCore.BUILDER_ID);
-    getBuilderIds().add(XtextProjectHelper.BUILDER_ID);
-    getBuilderIds().add("org.eclipse.pde.ManifestBuilder");
     getBuilderIds().add(ScannerConfigBuilder.BUILDER_ID);
     getBuilderIds().add(ManagedCProjectNature.BUILDER_ID);
+  }
+
+  public XsmpcatProjectFactory()
+  {
+    setWithPluginXml(false);
+
+    addXsmpNatures();
+    addCdtNatures();
 
     getRequiredBundles().add("org.eclipse.xsmp.lib");
 

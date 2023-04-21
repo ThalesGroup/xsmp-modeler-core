@@ -16,20 +16,20 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
 
-    override declare(NamedElementWithMembers type, EntryPoint element) {
+    override declare(NamedElementWithMembers parent, EntryPoint element) {
         '''
             virtual void _«element.name»() override;
         '''
     }
 
-    override define(NamedElementWithMembers type, EntryPoint element, boolean useGenPattern) {
+    override define(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
         '''
-            void «type.name»::_«element.name»() {
+            void «parent.name»::_«element.name»() {
             }
         '''
     }
 
-    override declareGen(NamedElementWithMembers type, EntryPoint element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
         '''
             «element.comment»
             ::Smp::IEntryPoint* «element.name»; 
@@ -37,10 +37,10 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
         '''
     }
 
-    override defineGen(NamedElementWithMembers type, EntryPoint element, boolean useGenPattern) {
+    override defineGen(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
         if (!useGenPattern)
             '''
-                void «type.name(useGenPattern)»::_«element.name»() {
+                void «parent.name(useGenPattern)»::_«element.name»() {
                 }
             '''
     }

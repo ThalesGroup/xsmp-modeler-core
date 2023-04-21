@@ -42,7 +42,7 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
         if (f.isMdkField)
             '''
                 // «f.name» initialization
-                «f.name»{this, «f.type.uuidQfn», "«f.name»", «f.description()», «f.viewKind»«IF f.^default !== null», «f.^default.generateExpression(f.type, container)»«ENDIF»}
+                «f.name»{this, «f.type.uuidQfn», "«f.name»", «f.description()», «f.viewKind»«IF f.^default !== null», «f.^default.generateExpression()»«ENDIF»}
             '''
         else
             super.initialize(container, f, useGenPattern)
