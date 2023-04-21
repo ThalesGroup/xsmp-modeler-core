@@ -303,8 +303,8 @@ ReturnParameter returns Parameter:
 
 Parameter:
     metadatum=ParameterMetadatum
-    (=>direction=ParameterDirectionKind (type=[Type|QualifiedName] | 'typename') | (type=[Type|QualifiedName] | 'typename')) (name=ValidID | 'default'
-    ) ('='
+    (=>direction=ParameterDirectionKind (type=[Type|QualifiedName] | 'typename') | (type=[Type|QualifiedName] |
+    'typename')) (name=ValidID | 'default') ('='
     default=Expression)?;
 
 enum ParameterDirectionKind:
@@ -407,8 +407,16 @@ Literal returns Expression:
 ParenthesizedExpression returns Expression:
     {ParenthesizedExpression} '(' expr=Expression ')';
 
-CollectionLiteral:
-    {CollectionLiteral} '{' (elements+=Expression (',' elements+=Expression)* (',')?)? '}';
+DesignatedInitializer returns Expression:
+    {DesignatedInitializer} '.' field=[Field|ValidID] '=' expr=Expression;
+
+ExpressionOrDesignatedInitializer returns Expression:
+    Expression | DesignatedInitializer;
+
+CollectionLiteral returns Expression:
+    {CollectionLiteral} '{' (elements+=ExpressionOrDesignatedInitializer (','
+    elements+=ExpressionOrDesignatedInitializer)* (',')?)?
+    '}';
 
 IntegerLiteral returns IntegerLiteral:
     {IntegerLiteral} text=INTEGER_LITERAL;

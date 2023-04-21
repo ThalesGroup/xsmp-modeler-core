@@ -38,6 +38,7 @@ import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xsmp.xcatalogue.ValueType
 import org.eclipse.xsmp.xcatalogue.Enumeration
 import org.eclipse.xsmp.util.Solver
+import org.eclipse.xsmp.xcatalogue.DesignatedInitializer
 
 @Singleton
 class ExpressionGenerator {
@@ -151,7 +152,9 @@ class ExpressionGenerator {
     def dispatch CharSequence doGenerateExpression(ParenthesizedExpression t, Type expectedType, NamedElement context) {
         '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
     }
-
+    def dispatch CharSequence doGenerateExpression(DesignatedInitializer t, Type expectedType, NamedElement context) {
+        '''(«t.expr.doGenerateExpression(expectedType, context)»)'''
+    }
     def dispatch CharSequence doGenerateExpression(KeywordExpression t, Type expectedType, NamedElement context) {
         '''«t.name»'''
     }

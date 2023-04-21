@@ -32,20 +32,21 @@ import com.google.inject.Inject;
 public class XsmpcatScopeProvider extends AbstractXsmpcatScopeProvider
 {
 
+  private final Map<EReference, IScopeProvider> scopes;
+
   @Inject
-  private ItemWithBaseScopeProvider baseScopeProvider;
-
-  private final Map<EReference, IScopeProvider> scopes = ImmutableMap
-          .<EReference, IScopeProvider> builder()
-          .put(XcataloguePackage.Literals.ENUMERATION_LITERAL_REFERENCE__VALUE,
-                  this::getLiteralReferenceScope)
-          .put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, this::getTypeScope)
-          .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT, this::getTypeScope)
-          .put(XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, this::getTypeScope).build();
-
-  private IScope getTypeScope(EObject context, EReference reference)
+  public XsmpcatScopeProvider(ItemWithBaseScopeProvider baseScopeProvider,
+          DesignatedInitializerScopeProvider designatedInitializerScopeProvider)
   {
-    return baseScopeProvider.getScope(context, reference);
+    scopes = ImmutableMap.<EReference, IScopeProvider> builder()
+            .put(XcataloguePackage.Literals.ENUMERATION_LITERAL_REFERENCE__VALUE,
+                    this::getLiteralReferenceScope)
+            .put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, baseScopeProvider::getScope)
+            .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT, baseScopeProvider::getScope)
+            .put(XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, baseScopeProvider::getScope)
+            .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
+                    designatedInitializerScopeProvider::getScope)
+            .build();
   }
 
   private IScope getLiteralReferenceScope(EObject context, EReference reference)

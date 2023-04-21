@@ -11,11 +11,26 @@
 package org.eclipse.xsmp.validation;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.xsmp.util.Solver.FLOAT32_MAX;
+import static org.eclipse.xsmp.util.Solver.FLOAT32_MIN;
+import static org.eclipse.xsmp.util.Solver.FLOAT64_MAX;
+import static org.eclipse.xsmp.util.Solver.FLOAT64_MIN;
+import static org.eclipse.xsmp.util.Solver.INT16_MAX;
+import static org.eclipse.xsmp.util.Solver.INT16_MIN;
+import static org.eclipse.xsmp.util.Solver.INT32_MAX;
+import static org.eclipse.xsmp.util.Solver.INT32_MIN;
+import static org.eclipse.xsmp.util.Solver.INT64_MAX;
+import static org.eclipse.xsmp.util.Solver.INT64_MIN;
+import static org.eclipse.xsmp.util.Solver.INT8_MAX;
+import static org.eclipse.xsmp.util.Solver.INT8_MIN;
+import static org.eclipse.xsmp.util.Solver.UINT16_MAX;
+import static org.eclipse.xsmp.util.Solver.UINT32_MAX;
+import static org.eclipse.xsmp.util.Solver.UINT64_MAX;
+import static org.eclipse.xsmp.util.Solver.UINT8_MAX;
+import static org.eclipse.xsmp.util.Solver.ZERO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -40,11 +55,11 @@ import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Container;
+import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.EntryPoint;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
@@ -62,11 +77,11 @@ import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
-import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
+import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -165,101 +180,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Inject
   protected IQualifiedNameProvider qualifiedNameProvider;
 
-  public static final BigInteger INT16_MAX = BigInteger.valueOf(Short.MAX_VALUE);
-
-  public static final BigInteger INT16_MIN = BigInteger.valueOf(Short.MIN_VALUE);
-
-  public static final BigInteger INT32_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
-
-  public static final BigInteger INT32_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
-
-  public static final BigInteger INT64_MAX = BigInteger.valueOf(Long.MAX_VALUE);
-
-  public static final BigInteger INT64_MIN = BigInteger.valueOf(Long.MIN_VALUE);
-
-  public static final BigInteger INT8_MAX = BigInteger.valueOf(Byte.MAX_VALUE);
-
-  public static final BigInteger INT8_MIN = BigInteger.valueOf(Byte.MIN_VALUE);
-
-  public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
-
-  public static final BigInteger ZERO = BigInteger.ZERO;
-
-  public static final BigInteger UINT32_MAX = BigInteger.valueOf(0xffffffffL);
-
-  public static final BigInteger UINT64_MAX = new BigInteger("ffffffffffffffff", 16);
-
-  public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
-
-  public static final BigDecimal FLOAT32_MAX = BigDecimal.valueOf(Float.MAX_VALUE);
-
-  public static final BigDecimal FLOAT32_MIN = FLOAT32_MAX.negate();
-
-  public static final BigDecimal FLOAT64_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
-
-  public static final BigDecimal FLOAT64_MIN = FLOAT64_MAX.negate();
-
-  private void checkChar(Expression e)
-  {
-    if (e instanceof CharacterLiteral)
-    {
-      final var chr = solver.getString(e);
-      if (chr.length() != 1)
-      {
-        acceptError("Invalid Character: " + chr, e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
-      }
-    }
-    else
-    {
-      // check byte value
-      solver.getInteger(e, INT8_MIN, INT8_MAX);
-    }
-
-  }
-
-  private void checkDateTime(Expression e)
-  {
-    if (e instanceof StringLiteral)
-    {
-      try
-      {
-        Instant.parse(XsmpUtil.getString((StringLiteral) e));
-      }
-      catch (final Exception ex)
-      {
-        acceptError("Invalid DateTime format: " + ex.getMessage(), e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
-      }
-    }
-    else
-    {
-      // check Date Time in ns
-      solver.getInteger(e, INT64_MIN, INT64_MAX);
-    }
-
-  }
-
-  private void checkDuration(Expression e)
-  {
-    if (e instanceof StringLiteral)
-    {
-      try
-      {
-        Duration.parse(XsmpUtil.getString((StringLiteral) e));
-      }
-      catch (final Exception ex)
-      {
-        acceptError("Invalid Duration format: " + ex.getMessage(), e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
-      }
-    }
-    else
-    {
-      solver.getInteger(e, INT64_MIN, INT64_MAX);
-    }
-  }
-
   private void checkEnumeration(Enumeration type, Expression e)
   {
     solver.getEnum(e, type);
@@ -324,6 +244,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (e == null || type == null || type.eIsProxy())
     {
       return;
+    }
+
+    if (e instanceof DesignatedInitializer)
+    {
+      // TODO check field orders ?
+      e = ((DesignatedInitializer) e).getExpr();
     }
 
     if (byPointer)
@@ -444,13 +370,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         solver.getBoolean(e);
         break;
       case CHAR8:
-        checkChar(e);
+        solver.getChar(e);
         break;
       case DATE_TIME:
-        checkDateTime(e);
+        solver.getDateTime(e);
         break;
       case DURATION:
-        checkDuration(e);
+        solver.getDuration(e);
         break;
       case FLOAT32:
         solver.getDecimal(e, FLOAT32_MIN, FLOAT32_MAX, true, true);
@@ -1491,4 +1417,31 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         break;
     }
   }
+
+  @Check
+  protected void checkDesignatedInitializer(DesignatedInitializer p)
+  {
+    final var field = p.getField();
+    if (field != null && !field.eIsProxy())
+    {
+      if (field.getRealVisibility() != VisibilityKind.PUBLIC)
+      {
+        error("This field is not public.", XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
+                XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, field.getName(), "field",
+                VisibilityKind.PUBLIC.getName());
+      }
+      if (typeUtil.isStatic(field))
+      {
+        error("Cannot assign a static field.",
+                XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD);
+      }
+      final var expectedField = typeUtil.getField(p);
+      if (expectedField != field && expectedField != null)
+      {
+        error("Wrong field name, expecting " + expectedField.getName(),
+                XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD);
+      }
+    }
+  }
+
 }

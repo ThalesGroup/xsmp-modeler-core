@@ -3,6 +3,8 @@ package org.eclipse.xsmp.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.DoubleUnaryOperator;
@@ -16,6 +18,7 @@ import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
+import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteralReference;
@@ -34,6 +37,40 @@ import com.google.common.collect.ImmutableMap;
 
 public class Solver
 {
+  public static final BigInteger INT16_MAX = BigInteger.valueOf(Short.MAX_VALUE);
+
+  public static final BigInteger INT16_MIN = BigInteger.valueOf(Short.MIN_VALUE);
+
+  public static final BigInteger INT32_MAX = BigInteger.valueOf(Integer.MAX_VALUE);
+
+  public static final BigInteger INT32_MIN = BigInteger.valueOf(Integer.MIN_VALUE);
+
+  public static final BigInteger INT64_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+
+  public static final BigInteger INT64_MIN = BigInteger.valueOf(Long.MIN_VALUE);
+
+  public static final BigInteger INT8_MAX = BigInteger.valueOf(Byte.MAX_VALUE);
+
+  public static final BigInteger INT8_MIN = BigInteger.valueOf(Byte.MIN_VALUE);
+
+  public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
+
+  public static final BigInteger ZERO = BigInteger.ZERO;
+
+  public static final BigInteger UINT32_MAX = BigInteger.valueOf(0xffffffffL);
+
+  public static final BigInteger UINT64_MAX = new BigInteger("ffffffffffffffff", 16);
+
+  public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
+
+  public static final BigDecimal FLOAT32_MAX = BigDecimal.valueOf(Float.MAX_VALUE);
+
+  public static final BigDecimal FLOAT32_MIN = FLOAT32_MAX.negate();
+
+  public static final BigDecimal FLOAT64_MAX = BigDecimal.valueOf(Double.MAX_VALUE);
+
+  public static final BigDecimal FLOAT64_MIN = FLOAT64_MAX.negate();
+
   public static final Solver INSTANCE = new Solver();
 
   private final ValidationMessageAcceptor acceptor;
@@ -731,6 +768,8 @@ public class Solver
         return ((IntegerLiteral) e).getValue();
       case XcataloguePackage.PARENTHESIZED_EXPRESSION:
         return getValue(((ParenthesizedExpression) e).getExpr());
+      case XcataloguePackage.DESIGNATED_INITIALIZER:
+        return getValue(((DesignatedInitializer) e).getExpr());
       case XcataloguePackage.STRING_LITERAL:
         return getValue((StringLiteral) e);
       case XcataloguePackage.UNARY_OPERATION:
@@ -990,8 +1029,8 @@ public class Solver
   {
     final var value = getInteger(e);
 
-    if (value != null && min != null && max != null
-            && (value.compareTo(min) < 0 || value.compareTo(max) > 0))
+    if (value != null
+            && (min != null && value.compareTo(min) < 0 || max != null && value.compareTo(max) > 0))
     {
       acceptor.acceptError(
               "Integral value " + value + " is not in range " + min + " ... " + max + ".", e, null,
@@ -1066,6 +1105,9 @@ public class Solver
 
       if (literal.isPresent())
       {
+        acceptor.acceptWarning("Should use an EnumerationLiteral instead of an integral constant.",
+                e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+                XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
         return literal.get();
       }
 
@@ -1126,6 +1168,75 @@ public class Solver
       acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to String.",
               e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
               XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+    }
+    return null;
+  }
+
+  public String getChar(Expression e)
+  {
+    final var value = getValue(e);
+    if (value instanceof String)
+    {
+      final var chr = (String) value;
+      if (chr.length() != 1)
+      {
+        acceptor.acceptError("Invalid Character: " + chr, e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+      }
+
+      return chr;
+    }
+
+    if (value instanceof BigInteger)
+    {
+      return Character.toString(((BigInteger) value).byteValue());
+    }
+
+    if (value != null)
+    {
+      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to Char.", e,
+              null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+    }
+    return null;
+  }
+
+  public BigInteger getDuration(Expression e)
+  {
+    if (e instanceof StringLiteral)
+    {
+      try
+      {
+        return BigInteger.valueOf(Duration.parse(XsmpUtil.getString((StringLiteral) e)).getNano());
+      }
+      catch (final Exception ex)
+      {
+        acceptor.acceptError("Invalid Duration format: " + ex.getMessage(), e, null,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+      }
+
+    }
+    return getInteger(e, INT64_MIN, INT64_MAX);
+
+  }
+
+  public BigInteger getDateTime(Expression e)
+  {
+    if (!(e instanceof StringLiteral))
+    {
+      // check Date Time in ns
+      return getInteger(e, INT64_MIN, INT64_MAX);
+    }
+    try
+    {
+      final var i = Instant.parse(XsmpUtil.getString((StringLiteral) e));
+      return BigInteger.valueOf(i.getEpochSecond()).multiply(BigInteger.valueOf(1_000_000_000))
+              .add(BigInteger.valueOf(i.getNano()));
+    }
+    catch (final Exception ex)
+    {
+      acceptor.acceptError("Invalid DateTime format: " + ex.getMessage(), e, null,
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
     return null;
   }

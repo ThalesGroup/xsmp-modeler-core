@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.tool.smp.importer
 
 import com.google.common.collect.ImmutableSet
+import com.google.inject.Inject
 import java.io.ByteArrayInputStream
 import java.util.List
 import java.util.Set
@@ -21,7 +22,6 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xsmp.tool.smp.core.elements.Comment
-import org.eclipse.xsmp.tool.smp.core.elements.Document
 import org.eclipse.xsmp.tool.smp.core.elements.Documentation
 import org.eclipse.xsmp.tool.smp.core.elements.ElementsPackage
 import org.eclipse.xsmp.tool.smp.core.elements.NamedElement
@@ -68,6 +68,7 @@ import org.eclipse.xsmp.tool.smp.core.types.UInt64Value
 import org.eclipse.xsmp.tool.smp.core.types.UInt8Value
 import org.eclipse.xsmp.tool.smp.core.types.ValueReference
 import org.eclipse.xsmp.tool.smp.core.types.VisibilityElement
+import org.eclipse.xsmp.tool.smp.core.types.VisibilityKind
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Catalogue
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.CataloguePackage
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Component
@@ -79,10 +80,11 @@ import org.eclipse.xsmp.tool.smp.smdl.catalogue.EventType
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Interface
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Namespace
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Reference
+import org.eclipse.xsmp.tool.smp.util.SmpUtil
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResourceSet
-import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xsmp.tool.smp.core.types.Value
 
 class SmpImporter {
 
@@ -112,34 +114,23 @@ class SmpImporter {
         }
     }
 
+    @Inject
+    extension SmpUtil
+
     def CharSequence qfn(NamedElement e) {
-        var value = ""
 
-        var parent = EcoreUtil2.getContainerOfType(e.eContainer, NamedElement)
-        if (!(parent instanceof Document))
-            value = qfn(parent) + "." + e.name
-        else
-            value = e.name
-
-        return value
+        return e.fqn.toString
     }
 
     def CharSequence qfn(ElementReference<?> e) {
-        var value = ""
         if (e === null)
             return "typename"
-        var href = e.ref
-        if (href === null || href.eIsProxy)
+        var ref = e.ref
+        if (ref === null || ref.eIsProxy)
             return e.title
-
-        var parent = EcoreUtil2.getContainerOfType(href.eContainer, NamedElement)
-        if (!(parent instanceof Document))
-            value = qfn(parent) + "." + href.name
-        else
-            value = href.name
-
-        return value
+        return e.ref.qfn
     }
+
     def CharSequence name(ElementReference<?> e) {
         if (e === null)
             return "__name__"
@@ -256,7 +247,7 @@ class SmpImporter {
     }
 
     /** print the visibility of an element if the visibility is different from the default visibility of the container */
-    def CharSequence visibility(VisibilityElement o) {
+    def CharSequence generateVisibility(VisibilityElement o) {
 
         val parent = o.eContainer
 
@@ -300,14 +291,14 @@ class SmpImporter {
     def dispatch CharSequence generate(PrimitiveType o) {
         '''
             «o.header»
-            «o.visibility()»primitive «o.name»
+            «o.generateVisibility()»primitive «o.name»
         '''
     }
 
     def dispatch CharSequence generate(AttributeType o) {
         '''
             «o.header»
-            «o.visibility()»attribute «o.type.qfn» «o.name»«IF o.^default !== null» = «o.^default.generate(o.type.ref)»«ENDIF»
+            «o.generateVisibility()»attribute «o.type.qfn» «o.name»«IF o.^default !== null» = «o.^default.generate(o.type.ref)»«ENDIF»
         '''
     }
 
@@ -315,7 +306,7 @@ class SmpImporter {
 
         '''
             «o.header»
-            «o.visibility()»native «o.name»
+            «o.generateVisibility()»native «o.name»
             
         '''
     }
@@ -323,35 +314,35 @@ class SmpImporter {
     def dispatch CharSequence generate(EventType o) {
         '''
             «o.header»
-            «o.visibility()»event «o.name»«IF o.eventArgs !== null» extends «o.eventArgs.qfn»«ENDIF»
+            «o.generateVisibility()»event «o.name»«IF o.eventArgs !== null» extends «o.eventArgs.qfn»«ENDIF»
         '''
     }
 
     def dispatch CharSequence generate(Array o) {
         '''
             «o.header»
-            «o.visibility()»array «o.name» = «o.itemType.qfn»[«o.size»]
+            «o.generateVisibility()»array «o.name» = «o.itemType.qfn»[«o.size»]
         '''
     }
 
     def dispatch CharSequence generate(ValueReference o) {
         '''
             «o.header»
-            «o.visibility()»using «o.name» = «o.type.qfn»*
+            «o.generateVisibility()»using «o.name» = «o.type.qfn»*
         '''
     }
 
     def dispatch CharSequence generate(String o) {
         '''
             «o.header»
-            «o.visibility()»string «o.name»[«o.length»]
+            «o.generateVisibility()»string «o.name»[«o.length»]
         '''
     }
 
     def dispatch CharSequence generate(Integer o) {
         '''
             «o.header»
-            «o.visibility()»integer «o.name»«IF o.primitiveType !==null» extends «o.primitiveType.qfn»«ENDIF»«IF o.setMaximum || o.setMinimum » in «IF o.setMinimum»«o.minimum»«ELSE»*«ENDIF» ... «IF o.setMaximum»«o.maximum»«ELSE»*«ENDIF»«ENDIF»
+            «o.generateVisibility()»integer «o.name»«IF o.primitiveType !==null» extends «o.primitiveType.qfn»«ENDIF»«IF o.setMaximum || o.setMinimum » in «IF o.setMinimum»«o.minimum»«ELSE»*«ENDIF» ... «IF o.setMaximum»«o.maximum»«ELSE»*«ENDIF»«ENDIF»
         '''
     }
 
@@ -361,14 +352,14 @@ class SmpImporter {
 
         '''
             «o.header»
-            «o.visibility()»float «o.name»«IF o.primitiveType !==null» extends «o.primitiveType.qfn»«ENDIF»«IF range» in «IF o.setMinimum»«o.minimum»«ELSE»*«ENDIF» «rangeOp» «IF o.setMaximum»«o.maximum»«ELSE»*«ENDIF»«ENDIF»
+            «o.generateVisibility()»float «o.name»«IF o.primitiveType !==null» extends «o.primitiveType.qfn»«ENDIF»«IF range» in «IF o.setMinimum»«o.minimum»«ELSE»*«ENDIF» «rangeOp» «IF o.setMaximum»«o.maximum»«ELSE»*«ENDIF»«ENDIF»
         '''
     }
 
     def dispatch CharSequence generate(Enumeration o) {
         '''
             «o.header»
-            «o.visibility()»enum «o.name»
+            «o.generateVisibility()»enum «o.name»
             {
                 «FOR l : o.literal SEPARATOR ', \n'»«l.header»  «l.name» = «l.value»«ENDFOR»
             }
@@ -378,7 +369,7 @@ class SmpImporter {
     def dispatch CharSequence generate(Structure o) {
         '''
             «o.header»
-            «o.visibility()»struct «o.name»
+            «o.generateVisibility()»struct «o.name»
             {
                 «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
@@ -388,7 +379,7 @@ class SmpImporter {
     def dispatch CharSequence generate(Class o) {
         '''
             «o.header»
-            «o.visibility()»«IF o.abstract»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»
+            «o.generateVisibility()»«IF o.abstract»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»
             {
                 «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
@@ -398,7 +389,7 @@ class SmpImporter {
     def dispatch CharSequence generate(Interface o) {
         '''
             «o.header»
-            «o.visibility()»interface «o.name»«FOR b : o.base BEFORE ' extends ' SEPARATOR ', '»«b.qfn»«ENDFOR»
+            «o.generateVisibility()»interface «o.name»«FOR b : o.base BEFORE ' extends ' SEPARATOR ', '»«b.qfn»«ENDFOR»
             {
                 «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
@@ -408,7 +399,7 @@ class SmpImporter {
     def dispatch CharSequence generate(Component o) {
         '''
             «o.header»
-            «o.visibility()»«IF o.name.startsWith("Abstract")»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»«FOR b : o.interface BEFORE ' implements ' SEPARATOR ', '»«b.qfn»«ENDFOR»
+            «o.generateVisibility()»«IF o.name.startsWith("Abstract")»abstract «ENDIF»«o.eClass.name.toLowerCase» «o.name»«IF o.base!==null» extends «o.base.qfn»«ENDIF»«FOR b : o.interface BEFORE ' implements ' SEPARATOR ', '»«b.qfn»«ENDFOR»
             {
                 «FOR m : o.eContents SEPARATOR '\n'»«m.generateMember»«ENDFOR»
             }
@@ -424,14 +415,14 @@ class SmpImporter {
     def dispatch CharSequence generateMember(Field o) {
         '''
             «o.header»
-            «o.visibility()»«IF o.input»input «ENDIF»«IF o.output»output «ENDIF»«IF !o.state»transient «ENDIF»field «o.type.qfn» «o.name»«IF o.^default !==null» = «o.^default.generate(o.type.ref)»«ENDIF»
+            «o.generateVisibility()»«IF o.input»input «ENDIF»«IF o.output»output «ENDIF»«IF !o.state»transient «ENDIF»field «o.type.qfn» «o.name»«IF o.^default !==null» = «o.^default.generate(o.type.ref)»«ENDIF»
         '''
     }
 
     def dispatch CharSequence generateMember(Constant o) {
         '''
             «o.header»
-            «o.visibility()»constant «o.type.qfn» «o.name»«IF o.value !==null» = «o.value.generate(o.type.ref)»«ENDIF»
+            «o.generateVisibility()»constant «o.type.qfn» «o.name»«IF o.value !==null» = «o.value.generate(o.type.ref)»«ENDIF»
         '''
     }
 
@@ -481,14 +472,14 @@ class SmpImporter {
     def dispatch CharSequence generateMember(Operation o) {
         '''
             «o.header»
-            «o.visibility()»def «o.returnParameter»«o.name»(«o.parameters»)«o.raises»
+            «o.generateVisibility()»def «o.returnParameter»«o.name»(«o.parameters»)«o.raises»
         '''
     }
 
     def dispatch CharSequence generateMember(Association o) {
         '''
             «o.header»
-            «o.visibility()»association «o.type.qfn» «o.name»
+            «o.generateVisibility()»association «o.type.qfn» «o.name»
         '''
     }
 
@@ -581,53 +572,53 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(String8Value o, Type type) {
-        '''"«o.value.replace("\n","\\n").replace("\t","\\t").replace("\"","\\\"")»"'''
+        '''«o.field()»"«o.value.replace("\n","\\n").replace("\t","\\t").replace("\"","\\\"")»"'''
     }
 
     def dispatch CharSequence generate(BoolValue o, Type type) {
-        '''«o.value»'''
+        '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Char8Value o, Type type) {
-        '''«"'"»«o.value»«"'"»'''
+        '''«o.field()»«"'"»«o.value»«"'"»'''
     }
 
     def dispatch CharSequence generate(DateTimeValue o, Type type) {
-        '''"«o.value»"'''
+        '''«o.field()»"«o.value»"'''
     }
 
     def dispatch CharSequence generate(DurationValue o, Type type) {
-        '''"«o.value»"'''
+        '''«o.field()»"«o.value»"'''
     }
 
     def dispatch CharSequence generate(EnumerationValue o, Type type) {
         if (type instanceof Enumeration)
-            '''«type.literal.findFirst[it.value == o.value].qfn»'''
+            '''«o.field()»«type.literal.findFirst[it.value == o.value].qfn»'''
         else
-            '''«o.value»'''
+            '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Float32Value o, Type type) {
-        '''«o.value»F'''
+        '''«o.field()»«o.value»F'''
     }
 
     def dispatch CharSequence generate(Float64Value o, Type type) {
-        '''«o.value»'''
+        '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Int8Value o, Type type) {
-        '''«o.value»'''
+        '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Int16Value o, Type type) {
-        '''«o.value»'''
+        '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Int32Value o, Type type) {
         if (type instanceof Enumeration)
-            '''«type.literal.findFirst[it.value == o.value].qfn»'''
+            '''«o.field()»«type.literal.findFirst[it.value == o.value].qfn»'''
         else
-            '''«o.value»'''
+            '''«o.field()»«o.value»'''
     }
 
     def dispatch CharSequence generate(Int64Value o, Type type) {
@@ -635,44 +626,62 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(UInt8Value o, Type type) {
-        '''«o.value»U'''
+        '''«o.field()»«o.value»U'''
     }
 
     def dispatch CharSequence generate(UInt16Value o, Type type) {
-        '''«o.value»U'''
+        '''«o.field()»«o.value»U'''
     }
 
     def dispatch CharSequence generate(UInt32Value o, Type type) {
-        '''«o.value»U'''
+        '''«o.field()»«o.value»U'''
     }
 
     def dispatch CharSequence generate(UInt64Value o, Type type) {
-        '''«o.value»UL'''
+        '''«o.field()»«o.value»UL'''
     }
 
     def dispatch CharSequence generate(ArrayValue o, Type type) {
 
         if (type instanceof Array)
-            '''{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(type.itemType.ref)»«ENDFOR»}'''
+            '''«o.field()»{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(type.itemType.ref)»«ENDFOR»}'''
         else
-            '''{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
+            '''«o.field()»{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
     }
 
     def dispatch CharSequence generate(SimpleArrayValue o, Type type) {
         if (type instanceof Array)
-            '''{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(type.itemType.ref)»«ENDFOR»}'''
+            '''«o.field()»{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(type.itemType.ref)»«ENDFOR»}'''
         else
-            '''{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
+            '''«o.field()»{«FOR i : o.itemValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
+    }
+
+    // get all public & non-static fields
+    def List<Field> getAssignableFields(Structure structure) {
+
+        var fields = structure.field.filter[!it.isStatic && it.realVisibility === VisibilityKind.PUBLIC].toList;
+        if (structure instanceof Class) {
+            if (structure.base !== null) {
+                fields.addAll(0, getAssignableFields(structure.base.ref))
+
+            }
+        }
+        return fields;
+
+    }
+    def field(Value value)
+    {
+        '''«IF value.field !== null && !value.field.empty && value.eContainer instanceof StructureValue».«value.field» = «ENDIF»'''
     }
 
     def dispatch CharSequence generate(StructureValue o, Type type) {
-        var index = 0
-        if (type instanceof Class)
-            // TODO handle properly the constructor
-            '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
-        else if (type instanceof Structure)
-            '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(type.field.get(index++).type.ref)»«ENDFOR»}'''
+        if (type instanceof Structure) {
+            var index = 0
+            val fields = type.getAssignableFields
+            '''«o.field()»{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(fields.size > index ? fields.get(index++).type.ref : null)»«ENDFOR»}'''
+        } else if (type instanceof Array)
+            '''«o.field()»{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(type.itemType.ref)»«ENDFOR»}'''
         else
-            '''{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
+            '''«o.field()»{«FOR i : o.fieldValue SEPARATOR ', '»«i.generate(null)»«ENDFOR»}'''
     }
 }

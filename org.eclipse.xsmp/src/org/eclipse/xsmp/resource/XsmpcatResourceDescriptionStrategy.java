@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
+import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Operation;
@@ -115,6 +116,11 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     if (eObject instanceof NamedElement)
     {
       builder.put("deprecated", Boolean.toString(((NamedElement) eObject).isDeprecated()));
+    }
+
+    if (eObject instanceof Field)
+    {
+      builder.put("static", Boolean.toString(elementUtil.isStatic((NamedElement) eObject)));
     }
 
     // save the visibility of the VisibilityElement

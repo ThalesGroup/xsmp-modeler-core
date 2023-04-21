@@ -132,6 +132,11 @@
   <eClassifiers xsi:type="ecore:EDataType" name="VisibilityKindObject" instanceClassName="org.eclipse.emf.common.util.Enumerator"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ValidationMessageAcceptor" instanceClassName="org.eclipse.xtext.validation.ValidationMessageAcceptor"/>
   <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DesignatedInitializer" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CollectionLiteral" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//Expression" containment="true" resolveProxies="false"/>
