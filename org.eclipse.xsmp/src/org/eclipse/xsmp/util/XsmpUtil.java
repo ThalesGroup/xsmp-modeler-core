@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
@@ -33,6 +34,7 @@ import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
+import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Float;
@@ -60,6 +62,8 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -345,9 +349,13 @@ public class XsmpUtil
       {
         return isVisibleFrom((VisibilityElement) obj, from);
       }
+      if (obj instanceof EnumerationLiteral)
+      {
+        return doIsVisibleFrom((Type) obj.eContainer(), from);
+      }
     }
-
-    return "public".equals(p.getUserData("visibility"));
+    return getVisibility(p) == VisibilityKind.PUBLIC;
+    // return "public".equals(p.getUserData("visibility"));
 
   }
 
@@ -375,22 +383,25 @@ public class XsmpUtil
 
   public PrimitiveTypeKind getPrimitiveType(Type type)
   {
-    switch (type.eClass().getClassifierID())
+    if (type != null)
     {
-      case XcataloguePackage.PRIMITIVE_TYPE:
-        return getPrimitiveType((PrimitiveType) type);
-      case XcataloguePackage.FLOAT:
-        return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Float) type);
-      case XcataloguePackage.INTEGER:
-        return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Integer) type);
-      case XcataloguePackage.ENUMERATION:
-        return PrimitiveTypeKind.ENUM;
-      case XcataloguePackage.STRING:
-        return PrimitiveTypeKind.STRING8;
-      default:
-        return PrimitiveTypeKind.NONE;
+      switch (type.eClass().getClassifierID())
+      {
+        case XcataloguePackage.PRIMITIVE_TYPE:
+          return getPrimitiveType((PrimitiveType) type);
+        case XcataloguePackage.FLOAT:
+          return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Float) type);
+        case XcataloguePackage.INTEGER:
+          return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Integer) type);
+        case XcataloguePackage.ENUMERATION:
+          return PrimitiveTypeKind.ENUM;
+        case XcataloguePackage.STRING:
+          return PrimitiveTypeKind.STRING8;
+        default:
+          break;
+      }
     }
-
+    return PrimitiveTypeKind.NONE;
   }
 
   public PrimitiveTypeKind getPrimitiveType(PrimitiveType type)
@@ -1017,7 +1028,17 @@ public class XsmpUtil
     {
       if (type instanceof Array)
       {
-        return ((Array) type).getItemType();
+
+        final var collection = (CollectionLiteral) parent;
+        final var index = collection.getElements().indexOf(e);
+        final var array = (Array) type;
+        final var size = Solver.INSTANCE.getInteger(array.getSize());
+
+        if (size != null && size.compareTo(BigInteger.valueOf(index)) > 0)
+        {
+          return ((Array) type).getItemType();
+        }
+        return null;
       }
       if (type instanceof Structure)
       {
@@ -1028,6 +1049,7 @@ public class XsmpUtil
         {
           return fields.get(index).getType();
         }
+        return null;
       }
     }
     return type;
@@ -1035,12 +1057,20 @@ public class XsmpUtil
 
   public Type getType(EObject e)
   {
-    return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+    if (e != null)
+    {
+      return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+    }
+    return null;
   }
 
   public Type getType(Expression e)
   {
-    return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+    if (e != null)
+    {
+      return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+    }
+    return null;
   }
 
   private Field findField(Expression e)
@@ -1076,4 +1106,56 @@ public class XsmpUtil
   {
     return cache.get(Tuples.pair(e, "Field"), e.eResource(), () -> findField(e));
   }
+
+  public Field getField(INode node)
+  {
+    Expression last = null;
+    final var parent = node.getParent();
+    for (final var n : parent.getAsTreeIterable())
+    {
+      if (n instanceof CompositeNodeWithSemanticElement)
+      {
+        final var elem = ((CompositeNodeWithSemanticElement) n).getSemanticElement();
+        if (elem instanceof Expression)
+        {
+          last = (Expression) elem;
+        }
+      }
+      if (node == n && last != null)
+      {
+        return getField(last);
+      }
+
+    }
+    return null;
+  }
+
+  public Type getType(INode node)
+  {
+    Expression last = null;
+    final var parent = node.getParent();
+    for (final var n : parent.getAsTreeIterable())
+    {
+      if (n instanceof CompositeNodeWithSemanticElement)
+      {
+        final var elem = ((CompositeNodeWithSemanticElement) n).getSemanticElement();
+        if (elem instanceof Expression)
+        {
+          last = (Expression) elem;
+        }
+      }
+
+      if (node == n)
+      {
+        if (last == null)
+        {
+          return getType(node.getSemanticElement());
+        }
+        return getType(last);
+      }
+
+    }
+    return null;
+  }
+
 }

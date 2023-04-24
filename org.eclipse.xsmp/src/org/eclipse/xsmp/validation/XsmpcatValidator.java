@@ -60,6 +60,7 @@ import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Container;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
+import org.eclipse.xsmp.xcatalogue.EmptyExpression;
 import org.eclipse.xsmp.xcatalogue.EntryPoint;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
@@ -246,16 +247,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return;
     }
-
     if (e instanceof DesignatedInitializer)
     {
-      // TODO check field orders ?
       e = ((DesignatedInitializer) e).getExpr();
     }
 
     if (byPointer)
     {
-      if (!(e instanceof KeywordExpression))
+      if (!(e instanceof KeywordExpression) && !(e instanceof EmptyExpression))
       {
         acceptError("Expecting a pointer, got " + e.getClass().getSimpleName() + ".", e, null,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
@@ -265,6 +264,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       acceptError("Expecting a value, got a keyword.", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+    }
+    else if (e instanceof EmptyExpression)
+    {
+      acceptError("Missing expression.", e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+              "invalid_type");
     }
     else
     {
@@ -331,7 +335,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         final var values = (CollectionLiteral) e;
 
         // check correct number of elements
-        if (values.getElements().size() <= s)
+        if (values.getElements().size() == 1
+                && values.getElements().get(0) instanceof EmptyExpression)
+        {
+          // OK
+        }
+        else if (values.getElements().size() <= s)
         {
           // check each array field
           values.getElements().stream().forEach(j -> check(type.getItemType(), j));
@@ -428,12 +437,21 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       final var size = values.getElements().size();
       // check correct number of elements
-      if (size <= fields.size())
+      if (size == 1 && values.getElements().get(0) instanceof EmptyExpression)
+      {
+        // OK
+      }
+      else if (size <= fields.size())
       {
         // check each field
-        for (var i = 0; i < size; ++i)
+        for (var i = 0; i < size - 1; ++i)
         {
           check(fields.get(i).getType(), values.getElements().get(i));
+        }
+        final var last = size - 1;
+        if (last >= 0 && !(values.getElements().get(last) instanceof EmptyExpression))
+        {
+          check(fields.get(last).getType(), values.getElements().get(last));
         }
         if (size != fields.size() && size != 0)
         {
@@ -1449,15 +1467,25 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkNamedElementReference(NamedElementReference literal)
   {
 
-    EObject value = literal.getValue();
+    final EObject value = literal.getValue();
     if (value instanceof EnumerationLiteral)
     {
-      value = value.eContainer();
+      final var type = (Type) value.eContainer();
+      final var minVisibility = XsmpUtil.getMinVisibility(type, literal);
+      if (type.getRealVisibility().getValue() > minVisibility.getValue())
+      {
+        error("The " + type.eClass().getName() + " "
+                + qualifiedNameProvider.getFullyQualifiedName(type) + " is not visible.", literal,
+                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
+                XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, type.getName(),
+                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
+                minVisibility.getName());
+      }
     }
-    if (value instanceof VisibilityElement)
+    else if (value instanceof Constant)
     {
       final var elem = (VisibilityElement) value;
-      // check that the referenced type is visible
+      // check that the constant is visible
       final var minVisibility = XsmpUtil.getMinVisibility(elem, literal);
       if (elem.getRealVisibility().getValue() > minVisibility.getValue())
       {

@@ -18,6 +18,7 @@ import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
+import org.eclipse.xsmp.xcatalogue.EmptyExpression;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Structure;
@@ -172,10 +173,10 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
       for (var i = 0; i < size; ++i)
       {
         final var elem = elems.get(i);
-        if (!(elem instanceof DesignatedInitializer))
+        if (!(elem instanceof DesignatedInitializer) && size >= 2)
         {
           final var node = NodeModelUtils.getNode(elem);
-          if (node != null)
+          if (node != null && ((i != size - 1) || !(elem instanceof EmptyExpression)))
           {
             acceptor.accept(createNewLineContentCodeMining(node.getOffset(),
                     "." + fields.get(i).getName() + " = "));

@@ -797,10 +797,11 @@ public class SmpGenerator extends AbstractModelConverter
   private Value convert(Expression value)
   {
     final var type = utils.getType(value);
-    if (type != null)
-    {
-      final var primitiveType = utils.getPrimitiveType(type);
 
+    final var primitiveType = utils.getPrimitiveType(type);
+
+    try
+    {
       switch (primitiveType)
       {
         case BOOL:
@@ -852,6 +853,11 @@ public class SmpGenerator extends AbstractModelConverter
           break;
       }
     }
+    catch (final Exception e)
+    {
+      // ignore
+    }
+
     return null;
   }
 

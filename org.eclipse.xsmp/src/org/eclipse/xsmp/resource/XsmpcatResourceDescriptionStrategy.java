@@ -24,7 +24,6 @@ import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -128,7 +127,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     if (eObject instanceof VisibilityElement)
     {
       final var visibility = ((VisibilityElement) eObject).getRealVisibility();
-      if (visibility != VisibilityKind.PUBLIC)
+      // if (visibility != VisibilityKind.PUBLIC)
       {
         builder.put("visibility", visibility.getName());
       }

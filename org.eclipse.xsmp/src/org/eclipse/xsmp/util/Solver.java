@@ -21,10 +21,10 @@ import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral;
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral;
+import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
 import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.UnaryOperation;
@@ -716,7 +716,7 @@ public class Solver
   {
     try
     {
-      return XsmpUtil.getUnescapedChar(e);
+      return XsmpUtil.getString(e);
     }
     catch (final Exception ex)
     {
@@ -769,6 +769,11 @@ public class Solver
       case XcataloguePackage.PARENTHESIZED_EXPRESSION:
         return getValue(((ParenthesizedExpression) e).getExpr());
       case XcataloguePackage.DESIGNATED_INITIALIZER:
+        if (((DesignatedInitializer) e).getExpr() == null)
+        {
+          acceptor.acceptError("Missing value.", e, null,
+                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
+        }
         return getValue(((DesignatedInitializer) e).getExpr());
       case XcataloguePackage.STRING_LITERAL:
         return getValue((StringLiteral) e);
@@ -776,6 +781,8 @@ public class Solver
         return getValue((UnaryOperation) e);
       case XcataloguePackage.KEYWORD_EXPRESSION:
         return e;
+      case XcataloguePackage.EMPTY_EXPRESSION:
+        return null;
       default:
         throw new UnsupportedOperationException();
     }
@@ -1090,8 +1097,8 @@ public class Solver
       final var literal = (EnumerationLiteral) value;
       if (literal.eContainer() != expectedType)
       {
-        acceptor.acceptError("Incompatible enumeration Type: expecting " + expectedType.getName(), e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        acceptor.acceptError("Incompatible enumeration Type: expecting " + expectedType.getName(),
+                e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
       }
       return literal;
     }
@@ -1112,8 +1119,8 @@ public class Solver
       }
 
       acceptor.acceptError(
-              "Could not convert " + integer + " to Enumeration " + expectedType.getName() + ".", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+              "Could not convert " + integer + " to Enumeration " + expectedType.getName() + ".", e,
+              null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
               XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
     }
 
@@ -1191,7 +1198,7 @@ public class Solver
     if (value instanceof String)
     {
       final var chr = (String) value;
-      if (chr.length() != 1)
+      if (XsmpUtil.translateEscapes(chr).length() != 1)
       {
         acceptor.acceptError("Invalid Character: " + chr, e, null,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");

@@ -98,4 +98,10 @@ public class XsmpcatHighlightingConfiguration extends DefaultHighlightingConfigu
     textStyle.setColor(new RGB(245, 121, 0));
     return textStyle;
   }
+
+  @Override
+  public TextStyle numberTextStyle()
+  {
+    return defaultTextStyle().copy();
+  }
 }

@@ -39,6 +39,7 @@ import org.eclipse.xsmp.xcatalogue.StringLiteral
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xsmp.xcatalogue.EmptyExpression
 
 @Singleton
 class ExpressionGenerator {
@@ -93,11 +94,11 @@ class ExpressionGenerator {
             // convert DateTime and Duration to a number of ns
             case DATE_TIME: {
                 val i = Instant.parse(XsmpUtil.getString(t))
-                '''«i.epochSecond * 1_000_000_000 + i.nano»UL'''
+                '''«i.epochSecond * 1_000_000_000 + i.nano»L'''
             }
             case DURATION: {
                 val i = Duration.parse(XsmpUtil.getString(t))
-                '''«i.seconds * 1_000_000_000 + i.nano»UL'''
+                '''«i.seconds * 1_000_000_000 + i.nano»L'''
             }
             default: {
                 t.value
@@ -150,11 +151,14 @@ class ExpressionGenerator {
     }
 
     def dispatch CharSequence doGenerateExpression(DesignatedInitializer t) {
-        '''(«t.expr.doGenerateExpression()»)'''
+        '''/* .«t.field.name» = */«t.expr.doGenerateExpression()»'''
     }
 
     def dispatch CharSequence doGenerateExpression(KeywordExpression t) {
         '''«t.name»'''
+    }
+
+    def dispatch CharSequence doGenerateExpression(EmptyExpression t) {
     }
 
     def CharSequence generateExpression(Expression t) {
