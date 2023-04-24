@@ -567,7 +567,7 @@ class SmpImporter {
     def dispatch CharSequence generateMember(Property o) {
         '''
             «o.header»
-            «IF o.setAccess»«o.access.literal» «ENDIF»property «o.type.qfn» «o.name»«o.genGetRaises»«o.genSetRaises»«o.genAttachedField»
+            «o.generateVisibility()»«IF o.setAccess»«o.access.literal» «ENDIF»property «o.type.qfn» «o.name»«o.genGetRaises»«o.genSetRaises»«o.genAttachedField»
         '''
     }
 
