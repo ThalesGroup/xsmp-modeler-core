@@ -51,9 +51,10 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
     }
 
     override define(NamedElementWithMembers type, Property element, boolean useGenPattern) {
+        val gen = element.static && useGenPattern
         if (element.attachedField === null && !(type instanceof Interface)) {
             val getter = '''
-                ::«element.type.fqn.toString("::")» «type.name(element.static)»::get_«element.name»()
+                ::«element.type.fqn.toString("::")» «type.name(gen)»::get_«element.name»()
                 {
                     ::«element.type.fqn.toString("::")» ret {};
                     return ret;
@@ -62,7 +63,7 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
             '''
 
             val setter = '''
-                void «type.name(element.static)»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
+                void «type.name(gen)»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
                 {
                      // TODO
                 }
