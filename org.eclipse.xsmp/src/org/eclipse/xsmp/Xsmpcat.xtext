@@ -320,6 +320,9 @@ ValidID:
 QualifiedName:
     ValidID (=>'.' ValidID)*;
 
+EmptyExpression returns Expression:
+    {EmptyExpression};
+
 Expression:
     OrExpression;
 
@@ -401,21 +404,20 @@ NamedElementReference returns Expression:
 
 Literal returns Expression:
     CollectionLiteral | FloatingLiteral | IntegerLiteral | StringLiteral | CharacterLiteral | BooleanLiteral |
-    ParenthesizedExpression |
-    NamedElementReference | BuiltInConstant | BuiltInFunction | KeywordExpression;
+    ParenthesizedExpression | NamedElementReference | BuiltInConstant | BuiltInFunction | KeywordExpression;
 
 ParenthesizedExpression returns Expression:
     {ParenthesizedExpression} '(' expr=Expression ')';
 
 DesignatedInitializer returns Expression:
-    {DesignatedInitializer} '.' field=[Field|ValidID] '=' expr=Expression;
+    {DesignatedInitializer} '.' field=[Field|ValidID] ('=' expr=Expression)?;
 
-ExpressionOrDesignatedInitializer returns Expression:
-    Expression | DesignatedInitializer;
+CollectionExpression returns Expression:
+    EmptyExpression | Expression | DesignatedInitializer;
 
 CollectionLiteral returns Expression:
-    {CollectionLiteral} '{' (elements+=ExpressionOrDesignatedInitializer (','
-    elements+=ExpressionOrDesignatedInitializer)* (',')?)?
+    {CollectionLiteral} '{' elements+=CollectionExpression (','
+    elements+=CollectionExpression)*
     '}';
 
 IntegerLiteral returns IntegerLiteral:

@@ -295,7 +295,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="setRaises" upperBound="-1"
         eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="access" eType="#//AccessKind"
-        volatile="true" transient="true" defaultValueLiteral="readWrite"/>
+        volatile="true" transient="true" defaultValueLiteral="readWrite" unsettable="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         volatile="true" transient="true" defaultValueLiteral="Properties"/>
   </eClassifiers>
@@ -356,4 +356,5 @@
   <eClassifiers xsi:type="ecore:EClass" name="KeywordExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmptyExpression" eSuperTypes="#//Expression"/>
 </ecore:EPackage>

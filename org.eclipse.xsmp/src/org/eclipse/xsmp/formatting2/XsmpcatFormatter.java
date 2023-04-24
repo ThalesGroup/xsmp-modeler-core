@@ -279,12 +279,12 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     final var open = parentRegion
             .keyword(ga.getCollectionLiteralAccess().getLeftCurlyBracketKeyword_1());
     final var close = parentRegion
-            .keyword(ga.getCollectionLiteralAccess().getRightCurlyBracketKeyword_3());
+            .keyword(ga.getCollectionLiteralAccess().getRightCurlyBracketKeyword_4());
     formatCollection(parent.getElements(), open, close, doc,
-            ga.getCollectionLiteralAccess().getCommaKeyword_2_1_0());
+            ga.getCollectionLiteralAccess().getCommaKeyword_3_0());
 
-    final var kw = parentRegion.keyword(ga.getCollectionLiteralAccess().getCommaKeyword_2_2());
-    doc.prepend(kw, this::noSpace);
+    // final var kw = parentRegion.keyword(ga.getCollectionLiteralAccess().getCommaKeyword_2_2());
+    // doc.prepend(kw, this::noSpace);
   }
 
   protected void format(UnaryOperation parent, IFormattableDocument doc)
@@ -545,9 +545,9 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
 
     doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getGetKeyword_4_0()),
             this::oneSpace);
-    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getSetKeyword_5_0()),
-            this::oneSpace);
     doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getThrowsKeyword_4_1()),
+            this::oneSpace);
+    doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getSetKeyword_5_0()),
             this::oneSpace);
     doc.surround(parentRegion.keyword(ga.getPropertyDeclarationAccess().getThrowsKeyword_5_1()),
             this::oneSpace);
@@ -557,7 +557,10 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     formatList(parent, PROPERTY__SET_RAISES, doc,
             ga.getPropertyDeclarationAccess().getCommaKeyword_5_3_0());
 
-    doc.surround(parentRegion.keyword("->"), this::oneSpace);
+    doc.surround(
+            parentRegion.keyword(
+                    ga.getPropertyDeclarationAccess().getHyphenMinusGreaterThanSignKeyword_6_0()),
+            this::oneSpace);
   }
 
   protected void format(Container parent, IFormattableDocument doc)
@@ -908,7 +911,7 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     final var region = regionFor(parent);
     doc.append(region.keyword(ga.getDesignatedInitializerAccess().getFullStopKeyword_1()),
             this::noSpace);
-    doc.surround(region.keyword(ga.getDesignatedInitializerAccess().getEqualsSignKeyword_3()),
+    doc.surround(region.keyword(ga.getDesignatedInitializerAccess().getEqualsSignKeyword_3_0()),
             this::oneSpace);
     doc.format(parent.getExpr());
   }
@@ -980,7 +983,10 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
         doc.prepend(sep, this::noSpace);
         doc.format(ele.getObject());
       }
-      doc.prepend(close, this::noSpace);
+      doc.prepend(close, it -> {
+        it.noSpace();
+        it.lowPriority();
+      });
     }
   }
 

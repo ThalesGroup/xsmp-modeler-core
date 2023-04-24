@@ -63,18 +63,22 @@ public class DefaultValueProvider
             return "0.0f";
           case FLOAT64:
             return "0.0";
-          case DATE_TIME:
-          case DURATION:
+          case INT8:
           case INT16:
           case INT32:
+            return "0";
           case INT64:
-          case INT8:
+          case DATE_TIME:
+          case DURATION:
+            return "0L";
+          case UINT8:
           case UINT16:
           case UINT32:
+            return "0U";
           case UINT64:
-          case UINT8:
-            return "0";
+            return "0UL";
           case CHAR8:
+            return "'\\0'";
           case STRING8:
             return "\"\"";
           default:

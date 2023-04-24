@@ -44,7 +44,6 @@ public class PropertyImplCustom extends PropertyImpl
   @Override
   public AccessKind getAccess()
   {
-
     final var v = findAccess();
     if (v != null)
     {
@@ -52,6 +51,12 @@ public class PropertyImplCustom extends PropertyImpl
     }
 
     return ACCESS_EDEFAULT;
+  }
+
+  @Override
+  public boolean isSetAccess()
+  {
+    return findAccess() != null;
   }
 
   /**
@@ -89,6 +94,27 @@ public class PropertyImplCustom extends PropertyImpl
       eNotify(new ENotificationImpl(this, Notification.SET,
               XcataloguePackage.VISIBILITY_ELEMENT__VISIBILITY, oldAccess, newAccess,
               !oldAccessESet));
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void unsetAccess()
+  {
+    final var oldAccess = getAccess();
+
+    final var oldAccessESet = oldAccess != null;
+    if (oldAccessESet)
+    {
+      getModifiers().remove(oldAccess.getName());
+      if (eNotificationRequired())
+      {
+        eNotify(new ENotificationImpl(this, Notification.UNSET, XcataloguePackage.PROPERTY__ACCESS,
+                oldAccess, null, oldAccessESet));
+      }
     }
 
   }

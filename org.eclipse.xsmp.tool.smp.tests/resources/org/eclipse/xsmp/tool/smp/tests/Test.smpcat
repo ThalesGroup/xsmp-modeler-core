@@ -370,7 +370,7 @@
       <Field Id="ns.AModel.aCharWithEscape" Name="aCharWithEscape" State="true" Input="false" Output="false">
         <Description></Description>
         <Type xlink:title="Char8" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Char8"/>
-        <Default xsi:type="Types:Char8Value" Value="&#xA;"/>
+        <Default xsi:type="Types:Char8Value" Value="\n"/>
       </Field>
       <Field Id="ns.AModel.aDateTime" Name="aDateTime" State="true" Input="false" Output="false">
         <Description></Description>
@@ -513,7 +513,7 @@
         <Default xsi:type="Types:Char8ArrayValue">
           <ItemValue Value="a"/>
           <ItemValue Value="&#xA;"/>
-          <ItemValue Value="&#x9;"/>
+          <ItemValue Value="\t"/>
         </Default>
       </Field>
       <Field Id="ns.AModel.arrayOf3Int8" Name="arrayOf3Int8" State="true" Input="false" Output="false">

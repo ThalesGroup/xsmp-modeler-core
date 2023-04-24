@@ -76,7 +76,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
   public VisibilityKind getRealVisibility()
   {
 
-    final var v = getVisibility();
+    final var v = findVisibility();
     if (v != null)
     {
       return v;
@@ -90,8 +90,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
    *
    * @return the visibility or null
    */
-  @Override
-  public VisibilityKind getVisibility()
+  private VisibilityKind findVisibility()
   {
 
     for (final String m : getModifiers())
@@ -105,15 +104,26 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     return null;
   }
 
+  @Override
+  public VisibilityKind getVisibility()
+  {
+
+    final var v = findVisibility();
+    if (v != null)
+    {
+      return v;
+    }
+
+    return VISIBILITY_EDEFAULT;
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   public boolean isSetVisibility()
   {
-
-    return getVisibility() != null;
-
+    return findVisibility() != null;
   }
 
   /**
@@ -122,7 +132,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
   @Override
   public void setVisibility(VisibilityKind newVisibility)
   {
-    final var oldVisibility = getVisibility();
+    final var oldVisibility = findVisibility();
 
     final var oldVisibilityESet = oldVisibility != null;
 
@@ -132,8 +142,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
       index = getModifiers().indexOf(oldVisibility.getName());
       getModifiers().remove(index);
     }
-
-    if (newVisibility != null)
+    if (newVisibility != VISIBILITY_EDEFAULT)
     {
       getModifiers().add(index, newVisibility.getName());
     }

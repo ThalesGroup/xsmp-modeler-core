@@ -13,23 +13,31 @@ package org.eclipse.xsmp.ui.contentassist;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
+import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
+import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
+import org.eclipse.xsmp.xcatalogue.Class;
+import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.EventSource;
+import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NativeType;
@@ -49,9 +57,12 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.eclipse.xtext.ui.label.StylerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
@@ -68,7 +79,12 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_ClassModifiers(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    createModifierProposal("abstract", context, acceptor);
+    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
+    if (cur instanceof Class && !((Class) cur).isAbstract()
+            || cur instanceof Component && !((Component) cur).isAbstract())
+    {
+      acceptor.accept(createKeywordCompletionProposal("abstract", context));
+    }
   }
 
   /**
@@ -78,9 +94,23 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_FieldModifiers(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    createModifierProposal("input", context, acceptor);
-    createModifierProposal("output", context, acceptor);
-    createModifierProposal("transient", context, acceptor);
+    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
+    if (cur instanceof Field)
+    {
+      final var field = (Field) cur;
+      if (!field.isInput())
+      {
+        acceptor.accept(createKeywordCompletionProposal("input", context));
+      }
+      if (!field.isOutput())
+      {
+        acceptor.accept(createKeywordCompletionProposal("output", context));
+      }
+      if (!field.isTransient())
+      {
+        acceptor.accept(createKeywordCompletionProposal("transient", context));
+      }
+    }
   }
 
   /**
@@ -90,9 +120,13 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_PropertyModifiers(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    createModifierProposal("readOnly", context, acceptor);
-    createModifierProposal("writeOnly", context, acceptor);
-    createModifierProposal("readWrite", context, acceptor);
+    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
+    if (cur instanceof Property && !((Property) cur).isSetAccess())
+    {
+      acceptor.accept(createKeywordCompletionProposal("readOnly", context));
+      acceptor.accept(createKeywordCompletionProposal("writeOnly", context));
+      acceptor.accept(createKeywordCompletionProposal("readWrite", context));
+    }
   }
 
   /**
@@ -102,10 +136,32 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_VisibilityModifiers(EObject model, org.eclipse.xtext.RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    createModifierProposal("public", context, acceptor);
-    createModifierProposal("protected", context, acceptor);
-    createModifierProposal("private", context, acceptor);
+    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
+    if (cur instanceof VisibilityElement)
+    {
+      final var elem = (VisibilityElement) cur;
+      if (!elem.isSetVisibility() && elem.isUseVisibility())
+      {
+
+        acceptor.accept(createKeywordCompletionProposal(
+                grammarAccess.getVisibilityModifiersAccess().getPrivateKeyword_0().getValue(),
+                context));
+        acceptor.accept(createKeywordCompletionProposal(
+                grammarAccess.getVisibilityModifiersAccess().getProtectedKeyword_1().getValue(),
+                context));
+        acceptor.accept(createKeywordCompletionProposal(
+                grammarAccess.getVisibilityModifiersAccess().getPublicKeyword_2().getValue(),
+                context));
+      }
+    }
   }
+
+  private static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$", "@",
+          "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
+          "class", "exception", "public", "private", "protected", "field", "constant", "def",
+          "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
+          "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
+          "eventsink", "eventsource", "namespace", "association", "property", "{", "}", "nullptr");
 
   /**
    * {@inheritDoc}
@@ -114,6 +170,10 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void completeKeyword(Keyword keyword, ContentAssistContext contentAssistContext,
           ICompletionProposalAcceptor acceptor)
   {
+    if (FILTERED_KEYWORDS.contains(keyword.getValue()))
+    {
+      return;
+    }
 
     final var proposal = createCompletionProposal(keyword.getValue(),
             getKeywordDisplayString(keyword), getImage(keyword), contentAssistContext);
@@ -126,11 +186,16 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     acceptor.accept(proposal);
   }
 
-  private void createModifierProposal(String proposal, ContentAssistContext context,
-          ICompletionProposalAcceptor acceptor)
+  @Override
+  protected StyledString getKeywordDisplayString(Keyword keyword)
   {
-    acceptor.accept(
-            createCompletionProposal(proposal, null, null, 200, context.getPrefix(), context));
+    final var string = keyword.getValue();
+    if (string.matches("[A-Za-z0-9 ]+"))
+    {
+      return stylerFactory.createFromXtextStyle(string,
+              highlightingConfiguration.keywordTextStyle());
+    }
+    return new StyledString(string);
   }
 
   protected void commentProposal(EObject obj, ContentAssistContext context,
@@ -230,6 +295,9 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }
   }
 
+  @Inject
+  XsmpcatGrammarAccess grammarAccess;
+
   /**
    * {@inheritDoc}
    */
@@ -238,11 +306,17 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
 
     final var elem = context.getCurrentNode().getSemanticElement();
-
-    if (elem instanceof Metadatum)
+    final var gr = context.getCurrentNode().getGrammarElement();
+    if (gr instanceof RuleCall)
     {
-      NodeModelUtils.findNodesForFeature(elem, XcataloguePackage.Literals.METADATUM__DOCUMENTATION)
-              .forEach(node -> commentProposal(elem.eContainer(), context, acceptor));
+      final var rule = ((RuleCall) gr).getRule();
+
+      if (elem instanceof Metadatum && rule == grammarAccess.getML_DOCUMENTATIONRule())
+      {
+        NodeModelUtils
+                .findNodesForFeature(elem, XcataloguePackage.Literals.METADATUM__DOCUMENTATION)
+                .forEach(node -> commentProposal(elem.eContainer(), context, acceptor));
+      }
     }
     super.createProposals(context, acceptor);
 
@@ -348,11 +422,44 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           }).collect(Collectors.toList());
 
   @Override
+  public void complete_BuiltInConstant(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    {
+      case FLOAT32:
+      case FLOAT64:
+        builtInConstants.forEach(cst -> acceptor
+                .accept(createCompletionProposal("$" + cst.getName(), context, cst)));
+        break;
+      default:
+        break;
+    }
+  }
+
+  @Override
   public void completeBuiltInConstant_Name(EObject model, Assignment assignment,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
     builtInConstants
             .forEach(cst -> acceptor.accept(createCompletionProposal(cst.getName(), context, cst)));
+  }
+
+  @Override
+  public void complete_BuiltInFunction(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    {
+      case FLOAT32:
+      case FLOAT64:
+        builtInFunctions.forEach(cst -> acceptor
+                .accept(createCompletionProposal("$" + cst.getName(), context, cst)));
+        break;
+      default:
+        break;
+    }
+
   }
 
   @Override
@@ -370,41 +477,131 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void completeNamedElementReference_Value(EObject model, Assignment assignment,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    EObject ctx;
+    final var expectedType = xsmpUtil.getType(context.getCurrentNode());
 
-    final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-    if (cur != null)
+    final Predicate<IEObjectDescription> filter;
+    if (expectedType == null)
     {
-      ctx = cur;
+      filter = Predicates.<IEObjectDescription> alwaysFalse();
     }
     else
     {
-      ctx = model;
+      filter = d -> {
+        final var obj = EcoreUtil.resolve(d.getEObjectOrProxy(), model);
+        final Type type;
+        if (obj instanceof Constant && XsmpUtil.isVisibleFrom(d, model))
+        {
+          type = ((Constant) obj).getType();
+        }
+        else if (obj instanceof EnumerationLiteral)
+        {
+          type = (Type) obj.eContainer();
+        }
+        else
+        {
+          type = null;
+        }
+        return expectedType == type;
+      };
     }
-    final var expectedType = xsmpUtil.getType(ctx);
-
-    final Predicate<IEObjectDescription> filter;
-
-    filter = d -> {
-      final var obj = d.getEObjectOrProxy();
-      final Type type;
-      if (obj instanceof Constant && XsmpUtil.isVisibleFrom(d, ctx))
-      {
-        type = ((Constant) obj).getType();
-      }
-      else if (obj instanceof EnumerationLiteral)
-      {
-        type = (Type) obj.eContainer();
-      }
-      else
-      {
-        type = null;
-      }
-      return expectedType == type;
-
-    };
-
     lookupCrossReference((CrossReference) assignment.getTerminal(), context, acceptor, filter);
+  }
+
+  @Inject
+  protected XsmpcatHighlightingConfiguration highlightingConfiguration;
+
+  @Override
+  public void complete_IntegerLiteral(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+
+    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    {
+      case INT8:
+      case INT16:
+      case INT32:
+        acceptor.accept(createCompletionProposal("0", context));
+        break;
+      case INT64:
+      case DATE_TIME:
+      case DURATION:
+        acceptor.accept(createCompletionProposal("0L", context));
+        break;
+      case UINT8:
+      case UINT16:
+      case UINT32:
+        acceptor.accept(createCompletionProposal("0U", context));
+        break;
+      case UINT64:
+        acceptor.accept(createCompletionProposal("0UL", context));
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  @Override
+  public void complete_FloatingLiteral(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+
+    final var primitiveType = xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode()));
+    if (primitiveType == PrimitiveTypeKind.FLOAT32)
+    {
+      acceptor.accept(createCompletionProposal("0.0f", context));
+    }
+    else if (primitiveType == PrimitiveTypeKind.FLOAT64)
+    {
+      acceptor.accept(createCompletionProposal("0.0", context));
+    }
+
+  }
+
+  @Override
+  public void complete_StringLiteral(EObject model, RuleCall ruleCall, ContentAssistContext context,
+          ICompletionProposalAcceptor acceptor)
+  {
+    if (xsmpUtil.getPrimitiveType(
+            xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.STRING8)
+    {
+      acceptor.accept(createCompletionProposal("\"\"", context));
+    }
+  }
+
+  @Override
+  public void complete_CharacterLiteral(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+    if (xsmpUtil.getPrimitiveType(
+            xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.CHAR8)
+    {
+      acceptor.accept(createCompletionProposal("'\\0'", context));
+    }
+  }
+
+  @Override
+  public void complete_BooleanLiteral(EObject model, RuleCall ruleCall,
+          ContentAssistContext context, ICompletionProposalAcceptor acceptor)
+  {
+    if (xsmpUtil
+            .getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.BOOL)
+    {
+      acceptor.accept(createKeywordCompletionProposal("false", context));
+      acceptor.accept(createKeywordCompletionProposal("true", context));
+    }
+  }
+
+  @Inject
+  protected StylerFactory stylerFactory;
+
+  protected ICompletionProposal createKeywordCompletionProposal(String string,
+          ContentAssistContext context)
+  {
+    final var styledString = stylerFactory.createFromXtextStyle(string,
+            highlightingConfiguration.keywordTextStyle());
+
+    return createCompletionProposal(string, styledString, null, context);
   }
 
   @Override

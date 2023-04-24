@@ -11,14 +11,14 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
@@ -109,7 +109,9 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                           XcataloguePackage.Literals.PROPERTY__TYPE, p))
           .put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, p))
+                          XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, p)) // TODO filter
+                                                                                   // compatible
+                                                                                   // types
           .put(XcataloguePackage.Literals.PROPERTY__GET_RAISES,
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.PROPERTY__GET_RAISES, p))
@@ -128,7 +130,9 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                           && !XsmpUtil.isRecursive((Component) model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
             final var elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
-            if (elem != null)
+
+            if (elem != null
+                    && isValidTypeReference(model, XcataloguePackage.Literals.ATTRIBUTE__TYPE, p))
             {
               final List<String> elemUsages = Stream
                       .concat(Stream.of(elem.eClass().getName()),
@@ -141,18 +145,14 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
               {
                 return false;
               }
-              return XsmpUtil.isVisibleFrom(p, model)
-                      && Arrays.stream(getUsages(p)).anyMatch(elemUsages::contains);
+
+              return Arrays.stream(getUsages(p)).anyMatch(elemUsages::contains);
             }
             return false;
           })
           .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
-                  model -> p -> XsmpUtil.getVisibility(p) == VisibilityKind.PUBLIC)
-
-          .put(XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
-                  model -> p -> XsmpUtil.isVisibleFrom(p, model)
-                          && (p.getEObjectOrProxy() instanceof EnumerationLiteral
-                                  || p.getEObjectOrProxy() instanceof Constant))
+                  model -> p -> xsmpUtil.getField((Expression) model) == EcoreUtil
+                          .resolve(p.getEObjectOrProxy(), model))
 
           // build the map
           .build();

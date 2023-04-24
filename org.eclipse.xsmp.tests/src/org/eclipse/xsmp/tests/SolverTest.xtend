@@ -304,9 +304,9 @@ class SolverTest {
 
     @Test
     def void checkCharacter() {
-        assertEquals("c", Solver.INSTANCE.getString(parse("'c'")))
-        assertEquals("\n", Solver.INSTANCE.getString(parse("'\\n'")))
-        assertEquals(null, Solver.INSTANCE.getString(parse("'\\UNKNOWN'")))
+        assertEquals("c", Solver.INSTANCE.getChar(parse("'c'")))
+        assertEquals("\\n", Solver.INSTANCE.getChar(parse("'\\n'")))
+        assertEquals(null, Solver.INSTANCE.getChar(parse("'\\UNKNOWN'")))
     }
 
     @Test

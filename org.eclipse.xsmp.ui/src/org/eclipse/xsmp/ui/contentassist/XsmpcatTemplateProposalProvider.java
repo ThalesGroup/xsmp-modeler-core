@@ -16,12 +16,10 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Field;
+import org.eclipse.xsmp.util.XsmpUtil;
+import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateAcceptor;
@@ -47,6 +45,9 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
   private IImageHelper imageHelper;
 
   @Inject
+  protected XsmpUtil xsmpUtil;
+
+  @Inject
   public XsmpcatTemplateProposalProvider(TemplateStore templateStore, ContextTypeRegistry registry,
           ContextTypeIdHelper helper)
   {
@@ -64,11 +65,11 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
 
     // add a template proposal for the default value
     final var name = grammar.getExpressionAccess().getRule().getName();
-    if (name.equals(templateContext.getContextType().getName()))
+    if (name.equals(templateContext.getContextType().getName())
+    /* && !(context.getCurrentModel() instanceof Expression) */)
     {
-
-      final var type = findTypeFromContext(context);
-      if (type != null)
+      final var type = xsmpUtil.getType(context.getCurrentNode());
+      if (type instanceof Structure || type instanceof Array)
       {
 
         final var defaultValue = defaultValueProvider.getDefautValue(type);
@@ -81,25 +82,6 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
                   getRelevance(template)));
         }
       }
-    }
-
-  }
-
-  Type findTypeFromContext(ContentAssistContext context)
-  {
-    final var currentModel = context.getCurrentModel();
-
-    switch (currentModel.eClass().getClassifierID())
-    {
-      case XcataloguePackage.FIELD:
-        return ((Field) currentModel).getType();
-      case XcataloguePackage.CONSTANT:
-        return ((Constant) currentModel).getType();
-      case XcataloguePackage.PARAMETER:
-        return ((Parameter) currentModel).getType();
-
-      default:
-        return null;
     }
 
   }
