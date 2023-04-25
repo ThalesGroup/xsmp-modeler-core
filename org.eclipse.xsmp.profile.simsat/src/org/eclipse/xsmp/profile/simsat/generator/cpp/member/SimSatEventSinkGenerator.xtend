@@ -40,4 +40,10 @@ class SimSatEventSinkGenerator extends EventSinkGenerator {
             '''
     }
 
+    override construct(NamedElementWithMembers container, EventSink element, boolean useGenPattern) {
+        '''
+            // Add event sink «element.name»
+            this->AddEventSink(«element.name»);
+        '''
+    }
 }
