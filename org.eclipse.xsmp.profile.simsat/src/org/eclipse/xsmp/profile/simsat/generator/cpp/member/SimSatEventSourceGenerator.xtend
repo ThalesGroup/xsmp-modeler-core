@@ -39,4 +39,12 @@ class SimSatEventSourceGenerator extends EventSourceGenerator {
             «element.name»{new ::esa::ecss::smp::cdk::EventSource«IF arg !== null»Arg<::«arg.fqn.toString("::")»>«ENDIF»( "«element.name»",  «element.description()», this, simulator)}
         '''
     }
+    
+    override construct(NamedElementWithMembers container, EventSource element, boolean useGenPattern) {
+        '''
+            // Add event source «element.name»
+            this->AddEventSource(«element.name»);
+        '''
+    }
+    
 }

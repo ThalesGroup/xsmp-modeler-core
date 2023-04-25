@@ -35,4 +35,11 @@ class SimSatReferenceGenerator extends ReferenceGenerator {
         '''
     }
 
+    override construct(NamedElementWithMembers container, Reference element, boolean useGenPattern) {
+        '''
+            // Add reference «element.name»
+            this->AddReference(«element.name»);
+        '''
+    }
+    
 }

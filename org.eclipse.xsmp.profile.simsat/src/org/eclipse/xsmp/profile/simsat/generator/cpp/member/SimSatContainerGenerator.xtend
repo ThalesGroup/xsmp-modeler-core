@@ -29,11 +29,16 @@ class SimSatContainerGenerator extends ContainerGenerator {
     }
 
     override initialize(NamedElementWithMembers container, Container element, boolean useGenPattern) {
-
         '''
             // Container: «element.name»
             «element.name» { new ::esa::ecss::smp::cdk::Container<::«element.type.fqn.toString("::")»>("«element.name»", «element.description()», this, simulator, «element.generateLower», «element.generateUpper») }
         '''
     }
 
+    override construct(NamedElementWithMembers container, Container element, boolean useGenPattern) {
+        '''
+            // Add container «element.name»
+            this->AddContainer(«element.name»);
+        '''
+    }
 }

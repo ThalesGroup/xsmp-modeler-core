@@ -28,4 +28,18 @@ class SimSatEntryPointGenerator extends EntryPointGenerator {
             «element.name» { new ::esa::ecss::smp::cdk::EntryPoint( "«element.name»",  «element.description()»,  this, simulator, &«container.name(useGenPattern)»::_«element.name») }
         '''
     }
+
+    override construct(NamedElementWithMembers container, EntryPoint element, boolean useGenPattern) {
+        '''
+            if (!this->GetEntryPoint("«element.name»"))
+            {
+                // Use existing implementation to manage Entry Points
+                this->AddEntryPoint(«element.name»);
+            }
+            else
+            {
+                Log(Smp::Services::ILogger::LMK_Error, "EntryPoint «element.name» redeclared");
+            }
+        '''
+    }
 }
