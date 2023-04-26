@@ -647,24 +647,15 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         error("Cannot use brackets for array size.", XcataloguePackage.Literals.ARRAY__SIZE);
       }
     }
-    var type = elem.getItemType();
+    final var type = elem.getItemType();
 
     if (checkTypeReference(type, elem, XcataloguePackage.Literals.ARRAY__ITEM_TYPE))
     {
-      while (true)
+      if (typeUtil.isRecursiveType(elem, type))
       {
-
-        if (type == elem)
-        {
-          error("Recursive Array Type.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
-          break;
-        }
-        if (!(type instanceof Array))
-        {
-          break;
-        }
-        type = ((Array) type).getItemType();
+        error("Recursive Array Type.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
       }
+
       // check that for a SimpleArray the type is valid
       if (typeUtil.isSimpleArray(elem) && !(elem.getItemType() instanceof SimpleType))
       {
@@ -1401,8 +1392,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         }
       }
     }
-    // TODO check no recursive field
 
+    for (final var member : typeUtil.getFields(elem))
+    {
+      if (member instanceof Field && typeUtil.isRecursiveType(elem, member.getType()))
+      {
+        error("Recursive Field Type.", member, XcataloguePackage.Literals.FIELD__TYPE);
+      }
+    }
   }
 
   @Check(CheckType.NORMAL)

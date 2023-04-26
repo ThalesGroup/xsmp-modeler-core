@@ -928,6 +928,41 @@ public class XsmpUtil
 
   }
 
+  /**
+   * Check that a type is not recursive.
+   * A type is recursive if one of its sub element type is the root type.
+   *
+   * @param type
+   *          the root type
+   * @param visited
+   *          the visited type
+   * @return true if the type is recursive
+   */
+  public boolean isRecursiveType(Type type, Type visited)
+  {
+    if (type == visited)
+    {
+      return true;
+    }
+
+    if (visited instanceof Array)
+    {
+      return isRecursiveType(type, ((Array) visited).getItemType());
+    }
+    if (visited instanceof Structure)
+    {
+      for (final var field : getFields((Structure) visited))
+      {
+        if (isRecursiveType(type, field.getType()))
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   public boolean isInvokable(Operation op)
   {
     return cache.get(Tuples.pair(op, "isInvokable"), op.eResource(), () -> {
