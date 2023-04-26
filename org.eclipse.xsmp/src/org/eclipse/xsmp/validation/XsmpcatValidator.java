@@ -79,6 +79,7 @@ import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
+import org.eclipse.xsmp.xcatalogue.SimpleType;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
@@ -648,23 +649,29 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
     var type = elem.getItemType();
 
-    checkTypeReference(type, elem, XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
-    while (true)
+    if (checkTypeReference(type, elem, XcataloguePackage.Literals.ARRAY__ITEM_TYPE))
     {
+      while (true)
+      {
 
-      if (type == elem)
-      {
-        error("Recursive Array Type.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
-        break;
+        if (type == elem)
+        {
+          error("Recursive Array Type.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
+          break;
+        }
+        if (!(type instanceof Array))
+        {
+          break;
+        }
+        type = ((Array) type).getItemType();
       }
-      if (!(type instanceof Array))
+      // check that for a SimpleArray the type is valid
+      if (typeUtil.isSimpleArray(elem) && !(elem.getItemType() instanceof SimpleType))
       {
-        break;
+        error("A SimpleArray requires a SimpleType.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
       }
-      type = ((Array) type).getItemType();
     }
-
-    // using keyword is deprecated
+    // "using" keyword is deprecated
     final var node = NodeModelUtils.findActualNodeFor(elem);
     for (final var n : node.getAsTreeIterable())
     {
@@ -674,6 +681,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
                 n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_MODEL_PART);
       }
     }
+
   }
 
   private static Set<String> validUsages = XcataloguePackage.eINSTANCE.getEClassifiers().stream()
