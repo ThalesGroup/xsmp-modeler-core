@@ -987,12 +987,18 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkField(Field f)
   {
 
-    // TODO check no String8 type
     if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE))
     {
       // check the field value
       check(f.getType(), f.getDefault());
+
+      if (QualifiedNames.Smp_String8.equals(typeUtil.fqn(f.getType())))
+      {
+        error("The type Smp.String8 cannot be used with fields. ",
+                XcataloguePackage.Literals.FIELD__TYPE);
+      }
     }
+
   }
 
   @Check
