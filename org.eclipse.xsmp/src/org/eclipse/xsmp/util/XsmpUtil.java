@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -34,6 +35,7 @@ import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
+import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
@@ -92,6 +94,14 @@ public class XsmpUtil
 
   @Inject
   protected IResourceDescriptionsProvider resourceDescriptionProvider;
+
+  @Inject
+  protected Solver solver;
+
+  public Solver getSolver()
+  {
+    return solver;
+  }
 
   /**
    * Enumeration with SMP primitive type kinds
@@ -662,8 +672,7 @@ public class XsmpUtil
 
   protected Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
   {
-    return cache.get(Tuples.pair(o, id), o.eResource(),
-            () -> Solver.INSTANCE.getBoolean(attributeValue(o, id)));
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> getBoolean(attributeValue(o, id)));
   }
 
   protected boolean attributeBoolValue(NamedElement o, QualifiedName id, boolean defaultValue)
@@ -1067,7 +1076,7 @@ public class XsmpUtil
         final var collection = (CollectionLiteral) parent;
         final var index = collection.getElements().indexOf(e);
         final var array = (Array) type;
-        final var size = Solver.INSTANCE.getInteger(array.getSize());
+        final var size = getInteger(array.getSize());
 
         if (size != null && size.compareTo(BigInteger.valueOf(index)) > 0)
         {
@@ -1193,4 +1202,126 @@ public class XsmpUtil
     return null;
   }
 
+  public BigInteger getInteger(Expression e)
+  {
+    try
+    {
+      return solver.getInteger(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public BigDecimal getDecimal(Expression e)
+  {
+    try
+    {
+      return solver.getDecimal(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public EnumerationLiteral getEnumerationLiteral(Expression e)
+  {
+
+    try
+    {
+      final var type = getType(e);
+      if (type instanceof Enumeration)
+      {
+        return solver.getEnumerationLiteral(e, (Enumeration) type);
+      }
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+    }
+
+    return null;
+  }
+
+  public BigInteger getEnumValue(Expression e)
+  {
+    try
+    {
+      return solver.getEnumValue(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public Optional<Boolean> getBoolean(Expression e)
+  {
+    try
+    {
+      return solver.getBoolean(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return Optional.empty();
+    }
+  }
+
+  public String getString(Expression e)
+  {
+    try
+    {
+      return solver.getString(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public String getChar(Expression e)
+  {
+    try
+    {
+      return solver.getChar(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public BigInteger getDuration(Expression e)
+  {
+    try
+    {
+      return solver.getDuration(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
+
+  public BigInteger getDateTime(Expression e)
+  {
+    try
+    {
+      return solver.getDateTime(e);
+    }
+    catch (final Exception ex)
+    {
+      // ignore
+      return null;
+    }
+  }
 }

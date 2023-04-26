@@ -20,7 +20,6 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.util.QualifiedNames;
-import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
@@ -62,7 +61,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   protected IQualifiedNameProvider qualifiedNameProvider;
 
   @Inject
-  private XsmpUtil elementUtil;
+  private XsmpUtil xsmpUtil;
 
   @Inject
   protected IImageHelper imageHelper;
@@ -229,7 +228,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
       final var size = elem.getSize();
       if (size != null)
       {
-        final var value = Solver.INSTANCE.getInteger(size);
+        final var value = xsmpUtil.getInteger(size);
         if (value != null)
         {
           styledLabel.append(value.toString(), StyledString.DECORATIONS_STYLER);
@@ -243,7 +242,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   private java.lang.String getParameterType(Parameter p)
   {
     final var label = new StringBuilder();
-    if (elementUtil.isConst(p))
+    if (xsmpUtil.isConst(p))
     {
       label.append("const ");
     }
@@ -253,7 +252,7 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
       label.append(qualifiedNameProvider.getFullyQualifiedName(p.getType()).toString("::"));
     }
 
-    switch (elementUtil.kind(p))
+    switch (xsmpUtil.kind(p))
     {
       case BY_PTR:
         label.append("*");

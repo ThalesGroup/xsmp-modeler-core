@@ -13,7 +13,6 @@ package org.eclipse.xsmp.ui.contentassist;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
@@ -32,7 +31,7 @@ public class DefaultValueProvider
   private IQualifiedNameProvider qualifiedNameProvider;
 
   @Inject
-  private XsmpUtil typeUtil;
+  private XsmpUtil xsmpUtil;
 
   public java.lang.String getDefautValue(Type t)
   {
@@ -43,7 +42,7 @@ public class DefaultValueProvider
         return getDefautValue(((ValueReference) t).getType());
       case XcataloguePackage.ARRAY:
         return "{" + java.lang.String.join(", ",
-                Collections.nCopies(Solver.INSTANCE.getInteger(((Array) t).getSize()).intValue(),
+                Collections.nCopies(xsmpUtil.getInteger(((Array) t).getSize()).intValue(),
                         getDefautValue(((Array) t).getItemType())))
                 + "}";
       case XcataloguePackage.ENUMERATION:
@@ -55,7 +54,7 @@ public class DefaultValueProvider
       case XcataloguePackage.INTEGER:
       case XcataloguePackage.STRING:
       case XcataloguePackage.PRIMITIVE_TYPE:
-        switch (typeUtil.getPrimitiveType(t))
+        switch (xsmpUtil.getPrimitiveType(t))
         {
           case BOOL:
             return "false";
@@ -86,7 +85,7 @@ public class DefaultValueProvider
         }
         break;
       case XcataloguePackage.STRUCTURE:
-        final var fields = typeUtil.getAssignableFields((Structure) t);
+        final var fields = xsmpUtil.getAssignableFields((Structure) t);
 
         return "{" + java.lang.String.join(", ",
                 fields.stream().map(f -> "." + f.getName() + " = " + getDefautValue(f.getType()))

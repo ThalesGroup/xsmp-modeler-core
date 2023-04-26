@@ -15,7 +15,6 @@ import com.google.inject.Singleton
 import java.time.Duration
 import java.time.Instant
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xsmp.util.Solver
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.BinaryOperation
@@ -26,26 +25,27 @@ import org.eclipse.xsmp.xcatalogue.BuiltInFunction
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer
+import org.eclipse.xsmp.xcatalogue.EmptyExpression
 import org.eclipse.xsmp.xcatalogue.Enumeration
-import org.eclipse.xsmp.xcatalogue.NamedElementReference
 import org.eclipse.xsmp.xcatalogue.Expression
 import org.eclipse.xsmp.xcatalogue.FloatingLiteral
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral
 import org.eclipse.xsmp.xcatalogue.KeywordExpression
 import org.eclipse.xsmp.xcatalogue.NamedElement
+import org.eclipse.xsmp.xcatalogue.NamedElementReference
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression
 import org.eclipse.xsmp.xcatalogue.StringLiteral
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.UnaryOperation
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xsmp.xcatalogue.EmptyExpression
 
 @Singleton
 class ExpressionGenerator {
 
     @Inject
     protected extension XsmpUtil
+    
 
     def dispatch CharSequence doGenerateExpression(NamedElementReference e) {
         val context = EcoreUtil2.getContainerOfType(e, NamedElementWithMembers)
@@ -62,7 +62,7 @@ class ExpressionGenerator {
     def dispatch CharSequence doGenerateExpression(IntegerLiteral t) {
         val expectedType = t.type
         if (expectedType instanceof Enumeration) {
-            '''::«Solver.INSTANCE.getEnumerationLiteral(t,expectedType).fqn.toString("::")»'''
+            '''::«t.getEnumerationLiteral().fqn.toString("::")»'''
         } else
             '''«t.text.replace("'","")»'''
     }

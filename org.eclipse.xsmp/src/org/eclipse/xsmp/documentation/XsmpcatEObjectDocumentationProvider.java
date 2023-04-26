@@ -11,13 +11,15 @@
 package org.eclipse.xsmp.documentation;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.util.Solver;
+import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -28,6 +30,9 @@ import com.google.inject.Singleton;
 @Singleton
 public class XsmpcatEObjectDocumentationProvider extends MultiLineCommentDocumentationProvider
 {
+
+  @Inject
+  private XsmpUtil xsmpUtil;
 
   /**
    * Return the description in case of a NamedElement or a BuiltIn
@@ -47,7 +52,7 @@ public class XsmpcatEObjectDocumentationProvider extends MultiLineCommentDocumen
     {
       final var cst = (BuiltInConstant) o;
 
-      final var mapping = Solver.constantMappings.get(cst.getName());
+      final var mapping = xsmpUtil.getSolver().constantMappings.get(cst.getName());
 
       if (mapping != null)
       {
@@ -58,12 +63,23 @@ public class XsmpcatEObjectDocumentationProvider extends MultiLineCommentDocumen
     {
       final var cst = (BuiltInFunction) o;
 
-      final var mapping = Solver.functionMappings.get(cst.getName());
+      final var mapping = xsmpUtil.getSolver().functionMappings.get(cst.getName());
 
       if (mapping != null)
       {
         return mapping.getDocumentation();
       }
+    }
+    if (o instanceof Expression)
+    {
+      final var field = xsmpUtil.getField((Expression) o);
+
+      if (field != null)
+      {
+        return "value of Field " + field.getName() + " with type "
+                + xsmpUtil.fqn(field.getType()).toString();
+      }
+
     }
     // return super in case of an other object
     return super.getDocumentation(o);

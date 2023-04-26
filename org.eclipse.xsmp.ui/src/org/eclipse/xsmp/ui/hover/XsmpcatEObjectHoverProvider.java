@@ -12,7 +12,7 @@ package org.eclipse.xsmp.ui.hover;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.ui.cdt.SourceHovers;
-import org.eclipse.xsmp.xcatalogue.BuiltInExpression;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xtext.Keyword;
 
@@ -62,6 +62,6 @@ public class XsmpcatEObjectHoverProvider
   @Override
   protected boolean hasHover(EObject o)
   {
-    return super.hasHover(o) || o instanceof BuiltInExpression;
+    return super.hasHover(o) || o instanceof Expression;
   }
 }

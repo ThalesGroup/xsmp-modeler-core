@@ -12,10 +12,7 @@ package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.util.QualifiedNames
-import org.eclipse.xsmp.util.Solver
 import org.eclipse.xsmp.util.XsmpUtil.ArgKind
-import org.eclipse.xsmp.xcatalogue.AttributeType
-import org.eclipse.xsmp.xcatalogue.Enumeration
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
@@ -27,6 +24,7 @@ import org.eclipse.xtext.EcoreUtil2
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
+
     def String name(Operation o) {
 
         if (o.isConstructor)
@@ -34,7 +32,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
         var operator = o.attribute(QualifiedNames.Attributes_Operator)
         if (operator !== null) {
-            val value = Solver.INSTANCE.getEnumerationLiteral(operator.value, (operator.type as AttributeType).type as Enumeration)
+            val value = operator.value.getEnumerationLiteral()
 
             if (value !== null) {
                 switch (value.name) {
