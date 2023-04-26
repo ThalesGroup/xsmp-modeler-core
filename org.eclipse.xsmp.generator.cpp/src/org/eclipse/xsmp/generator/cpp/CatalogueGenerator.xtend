@@ -1,14 +1,11 @@
 package org.eclipse.xsmp.generator.cpp
 
-import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.List
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Class
 import org.eclipse.xsmp.xcatalogue.Component
-import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.LanguageType
 import org.eclipse.xsmp.xcatalogue.Model
 import org.eclipse.xsmp.xcatalogue.NamedElement
@@ -209,15 +206,10 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
     }
 
     private def dispatch Iterable<Type> computeDeps(Structure t) {
-        t.member.filter(Field).map[it.type]
+        t.getAssignableFields().map[type]
     }
 
-    private def dispatch Iterable<Type> computeDeps(Class t) {
-        if (t.base === null)
-            (t as Structure)._computeDeps
-        else
-            Iterables.concat((t as Structure)._computeDeps, Collections.singleton(t.base))
-    }
+
 
     def CharSequence globalNamespaceName() {
         ''''''
