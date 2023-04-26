@@ -15,6 +15,7 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.Service
 import org.eclipse.xsmp.xcatalogue.Model
+import org.eclipse.xsmp.xcatalogue.Component
 
 class SimSatCatalogueGenerator extends CatalogueGenerator {
 
@@ -52,4 +53,9 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
     override CharSequence globalNamespaceName() {
         ''''''
     }
+    
+    override protected unregisterComponent(Component model) {
+        // Done by the simulator
+    }
+    
 }

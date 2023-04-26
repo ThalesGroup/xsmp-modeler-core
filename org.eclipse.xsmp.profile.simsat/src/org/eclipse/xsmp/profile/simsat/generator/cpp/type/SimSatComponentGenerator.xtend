@@ -17,13 +17,16 @@ import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
-import org.eclipse.xsmp.xcatalogue.SimpleType
 import java.util.List
 import org.eclipse.xsmp.xcatalogue.Container
 import org.eclipse.xsmp.xcatalogue.Reference
 import org.eclipse.xsmp.xcatalogue.EventSource
 import org.eclipse.xsmp.xcatalogue.EventSink
 import org.eclipse.xsmp.xcatalogue.EntryPoint
+import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.util.QualifiedNames
+import org.eclipse.xsmp.xcatalogue.SimpleType
+import org.eclipse.xsmp.xcatalogue.String
 
 class SimSatComponentGenerator extends ComponentGenerator {
 
@@ -40,8 +43,6 @@ class SimSatComponentGenerator extends ComponentGenerator {
             acceptor.mdkHeader("esa/ecss/smp/cdk/Composite.h")
         if (type.member.exists[it instanceof Reference])
             acceptor.mdkHeader("esa/ecss/smp/cdk/Aggregate.h")
-        // if (type.useDynamicInvocation)
-        // acceptor.mdkSource("esa/ecss/smp/cdk/Composite.h")
         if (type.member.exists[it instanceof EventSource])
             acceptor.mdkHeader("esa/ecss/smp/cdk/EventProvider.h")
         if (type.member.exists[it instanceof EventSink])
@@ -144,115 +145,110 @@ class SimSatComponentGenerator extends ComponentGenerator {
     override protected generateSourceGenBody(Component t, boolean useGenPattern) {
         val base = t.base()
         '''
-                    //--------------------------- Constructor -------------------------
-                    «t.name(useGenPattern)»::«t.name(useGenPattern)»(
-                        ::Smp::String8 name,
-                        ::Smp::String8 description,
-                        ::Smp::IComposite* parent,
-                        ::Smp::ISimulator* simulator) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
-                    {
-                    «FOR f : t.member»
-                        «t.construct(f, useGenPattern)»
-                    «ENDFOR»
-                    }
-                    
-                    /// Virtual destructor that is called by inherited classes as well.
-                    «t.name(useGenPattern)»::~«t.name(useGenPattern)»() {
-                        «FOR f : t.member»
-                            «f.finalize»
-                        «ENDFOR»
-                    }
+            // ------ Static fields ------
+            ::esa::ecss::smp::cdk::RequestContainer<«t.name»>::Map «t.name(useGenPattern)»::requestHandlers;
             
-                    void «t.name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
-                        «IF base !== null»
-                            // Call parent class implementation first
-                            «base»::Publish(receiver);
-                        «ENDIF»
+            //--------------------------- Constructor -------------------------
+            «t.name(useGenPattern)»::«t.name(useGenPattern)»(
+                ::Smp::String8 name,
+                ::Smp::String8 description,
+                ::Smp::IComposite* parent,
+                ::Smp::ISimulator* simulator) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+            {
+            «FOR f : t.member»
+                «t.construct(f, useGenPattern)»
+            «ENDFOR»
+            }
             
-                        «FOR m : t.member»«m.Publish»«ENDFOR»
-                        
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
-                    }
-                    
+            /// Virtual destructor that is called by inherited classes as well.
+            «t.name(useGenPattern)»::~«t.name(useGenPattern)»() {
+                «FOR f : t.member»
+                    «f.finalize»
+                «ENDFOR»
+            }
+            
+            void «t.name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
+                «IF base !== null»
+                    // Call parent class implementation first
+                    «base»::Publish(receiver);
+                «ENDIF»
+                
+                if (requestHandlers.empty()) {
+                    PopulateRequestHandlers<«t.name(useGenPattern)»>(this, requestHandlers);
+                }
+                
+                «FOR m : t.member»«m.Publish»«ENDFOR»
+                
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
+            }
             
             
-                    void «t.name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+            void «t.name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+                «IF base !== null»
+                    // Call parent implementation first
+                    «base»::Configure(logger, linkRegistry);
+                    
+                «ENDIF»
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
+            }
+            
+            
+            void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
+                «IF base !== null»
+                    // Call CDK implementation first
+                    «base»::Connect(simulator);
+                    
+                «ENDIF»
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
+            }
+            
+            void «t.name(useGenPattern)»::Disconnect() {
+                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
+                «IF base !== null»
+                    
+                    // Call parent implementation last, to remove references to the Simulator and its services
+                    «base»::Disconnect();
+                «ENDIF»
+            }
+            
+            void «t.name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
+            }
+            
+            void «t.name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
+            }
+            
+            void «t.name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
+            }
+            
+            void «t.name(useGenPattern)»::DoDisconnect(){
+            }
+            
+            «IF t.useDynamicInvocation»
+                void «t.name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
+                    if (request == nullptr) {
+                        return;
+                    }
+                    auto handler = requestHandlers.find(request->GetOperationName());
+                    if (handler != requestHandlers.end()) {
+                        handler->second->Execute(*this, request);
+                    }
+                    else {
                         «IF base !== null»
-                            // Call parent implementation first
-                            «base»::Configure(logger, linkRegistry);
-                            
-                        «ENDIF»
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
-                    }
-                    
-                    
-                    void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
-                        «IF base !== null»
-                            // Call CDK implementation first
-                            «base»::Connect(simulator);
-                            
-                        «ENDIF»
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
-                    }
-                    
-                    void «t.name(useGenPattern)»::Disconnect() {
-                        dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
-                        «IF base !== null»
-                            
-                            // Call parent implementation last, to remove references to the Simulator and its services
-                            «base»::Disconnect();
+                            // pass the request down to the base model
+                            «base»::Invoke(request);
+                        «ELSE»
+                            «InvokeFallback»
                         «ENDIF»
                     }
-                    
-                    void «t.name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
-                    }
-                    
-                    void «t.name(useGenPattern)»::DoDisconnect(){
-                    }
-                    
-                    «IF t.useDynamicInvocation»
-                        «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::requestHandlers = InitRequestHandlers();
-                        
-                        «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::InitRequestHandlers()
-                        {
-                            RequestHandlers handlers;
-                            «FOR op : t.member.filter(Operation).filter[it.isInvokable]»
-                                «t.generateRqHandlerParam(op, useGenPattern)»
-                            «ENDFOR»
-                            return handlers;
-                        }
-                        
-                        void «t.name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
-                            if (request == nullptr) {
-                                return;
-                            }
-                            auto handler = requestHandlers.find(request->GetOperationName());
-                            if (handler != requestHandlers.end()) {
-                                handler->second(this, request);
-                            }
-                            else {
-                                «IF base !== null»
-                                    // pass the request down to the base model
-                                    «base»::Invoke(request);
-                                «ELSE»
-                                    «InvokeFallback»
-                                «ENDIF»
-                            }
-                        }
-                        
-                    «ENDIF»
-                    «t.defineMembersGen(useGenPattern)»
-                                        
-                    const Smp::Uuid& «t.name(useGenPattern)»::GetUuid() const {
-                        return UuidProvider_«t.name»::UUID;
-                    }
-                    «t.uuidDefinition»
+                }
+                
+            «ENDIF»
+            «t.defineMembersGen(useGenPattern)»
+                                
+            const Smp::Uuid& «t.name(useGenPattern)»::GetUuid() const {
+                return UuidProvider_«t.name»::UUID;
+            }
+            «t.uuidDefinition»
         '''
     }
 
@@ -269,12 +265,12 @@ class SimSatComponentGenerator extends ComponentGenerator {
                 «ENDFOR»
                 
                 /// Invoke «o.name»
-                //«IF r !== null»auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
+                «IF r !== null»auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
                 
                 «FOR p : o.parameter»
                 «p.setParameter(container)»
                 «ENDFOR»
-                «IF r !== null»//::esa::ecss::smp::cdk::Request::setReturnValue(req, «r.type.generatePrimitiveKind», p_«r.name»);«ENDIF»
+                «IF r !== null»req->SetReturnValue({«r.type.generatePrimitiveKind», p_«r.name»});«ENDIF»
                 };
             }
         '''
@@ -285,19 +281,14 @@ class SimSatComponentGenerator extends ComponentGenerator {
             case IN,
             case INOUT: {
                 // declare and initialize the parameter
-                if (p.type instanceof SimpleType)
-                    '''
-                        //auto p_«p.name» = ::esa::ecss::smp::cdk::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.generatePrimitiveKind»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
-                    '''
-                else
-                    '''
-                        //auto p_«p.name» = ::esa::ecss::smp::cdk::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.uuidQfn»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
-                    '''
+                '''
+                    auto p_«p.name» = static_cast<::«p.type.fqn.toString("::")»>(req->GetParameterValue(req->GetParameterIndex("«p.name»")));
+                '''
             }
             default: {
                 // only declare the parameter
                 '''
-                    //::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression()»;
+                    ::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression()»;
                 '''
             }
         }
@@ -309,7 +300,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
             case OUT,
             case INOUT: {
                 '''
-                    //::esa::ecss::smp::cdk::Request::set(cmp, req, "«p.name»", «p.type.generatePrimitiveKind», p_«p.name»);
+                    req->SetParameterValue(req->GetParameterIndex("«p.name»"), p_«p.name»);
                 '''
             }
             default: {
@@ -318,4 +309,101 @@ class SimSatComponentGenerator extends ComponentGenerator {
         }
     }
 
+    override protected generateHeaderGenBody(Component t, boolean useGenPattern) {
+        '''
+            «IF useGenPattern»
+                class «t.name(false)»;
+            «ENDIF»
+            «t.uuidDeclaration»
+            
+            «t.comment»
+            class «t.name(useGenPattern)»«FOR base : t.bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
+            
+            «IF useGenPattern»
+                friend class «t.fqn(false).toString("::")»;
+            «ENDIF»
+            
+            public:
+            «t.constructorDeclaration(useGenPattern)»
+            
+            // ----------------------------------------------------------------------------------
+            // -------------------------------- IComponent ---------------------------------
+            // ----------------------------------------------------------------------------------
+            
+            /// Publish fields, operations and properties of the model.
+            /// @param receiver Publication receiver.
+            virtual void Publish(::Smp::IPublication* receiver) override;
+            
+            /// Request for configuration.
+            /// @param logger Logger to use for log messages during Configure().
+            /// @param linkRegistry Link Registry to use for registration of
+            ///         links created during Configure() or later.
+            virtual void Configure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) override;
+            
+            /// Connect model to simulator.
+            /// @param simulator Simulation Environment that hosts the model.
+            ///
+            virtual void Connect( ::Smp::ISimulator* simulator) override;
+            
+            /// Disconnect model to simulator.
+            /// @throws Smp::InvalidComponentState
+            virtual void Disconnect() override;
+            
+            /// Return the Universally Unique Identifier of the Model.
+            /// @return Universally Unique Identifier of the Model.
+            virtual const Smp::Uuid& GetUuid() const override;
+            
+            «IF t.useDynamicInvocation»
+                // ----------------------------------------------------------------------------------
+                // --------------------------- IDynamicInvocation ---------------------------
+                // ----------------------------------------------------------------------------------
+                //using RequestHandlers = std::map<std::string, std::function<void(«t.name(useGenPattern)»*, ::Smp::IRequest*)>>;
+                //static RequestHandlers requestHandlers;
+                //static RequestHandlers InitRequestHandlers();
+                
+                /// Invoke the operation for the given request.
+                /// @param request Request object to invoke.
+                virtual void Invoke(::Smp::IRequest* request) override;
+                
+            «ENDIF»
+            private:
+                void DoPublish(::Smp::IPublication* receiver);
+                void DoConfigure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry);
+                void DoConnect( ::Smp::ISimulator* simulator);
+                void DoDisconnect();
+                
+                «t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
+            
+            protected:
+                template <typename _Type> static void PopulateRequestHandlers(_Type* bluePrint, typename ::esa::ecss::smp::cdk::RequestContainer<_Type>::Map& handlers);
+                
+            private:
+                static ::esa::ecss::smp::cdk::RequestContainer<«t.name»>::Map requestHandlers;
+            };
+            
+            template <typename _Type>
+            void «t.name(useGenPattern)»::PopulateRequestHandlers(_Type* bluePrint, typename ::esa::ecss::smp::cdk::RequestContainer<_Type>::Map& handlers) 
+            {
+                typedef ::esa::ecss::smp::cdk::RequestContainer<_Type> Help;
+                
+                // ---- Operations ----
+                «FOR op : t.member.filter(Operation).filter[it.isInvokable && it.attributeValue(QualifiedNames.Attributes_View) !== null && !it.parameter.exists[!(it instanceof SimpleType) || (it instanceof String)]]»
+                    «t.generatePopulateRqHandler(op, useGenPattern)»
+                «ENDFOR»
+                
+                ::esa::ecss::smp::cdk::«t.eClass.name»::PopulateRequestHandlers<_Type>(bluePrint, handlers);
+            }
+        '''
+    }
+
+    def protected CharSequence generatePopulateRqHandler(NamedElementWithMembers container, Operation o,
+        boolean useGenPattern) {
+        '''
+            Help::template AddIfMissing<«IF o.returnParameter !== null»::«o.returnParameter.type.fqn.toString("::")»«ELSE»void«ENDIF»«FOR param : o.parameter BEFORE ', ' SEPARATOR ', '»::«param.type.fqn.toString("::")»«ENDFOR»>(
+                handlers,
+                "«o.name»",
+                «IF o.returnParameter !== null»«o.returnParameter.type.generatePrimitiveKind»«ELSE»::Smp::PrimitiveTypeKind::PTK_None«ENDIF»,
+                &«container.name(useGenPattern)»::«o.name»);
+        '''
+    }
 }
