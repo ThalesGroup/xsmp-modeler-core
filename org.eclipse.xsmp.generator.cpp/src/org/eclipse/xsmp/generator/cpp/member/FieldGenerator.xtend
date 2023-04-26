@@ -12,7 +12,6 @@ package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Array
-import org.eclipse.xsmp.xcatalogue.Class
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral
 import org.eclipse.xsmp.xcatalogue.Expression
 import org.eclipse.xsmp.xcatalogue.Field
@@ -46,21 +45,13 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
         acceptor.include(element.type)
         element.^default?.include(acceptor)
     }
-
+ 
     protected def dispatch boolean isDirectListInitializationType(Type type) {
-        true
-    }
-
-    protected def dispatch boolean isDirectListInitializationType(Structure type) {
-        type.member.filter(Field).forall[it.static || it.^default === null]
-    }
-
-    protected def dispatch boolean isDirectListInitializationType(Array type) {
-        type.itemType.isDirectListInitializationType
-    }
-
-    protected def dispatch boolean isDirectListInitializationType(Class type) {
         false
+    }
+    
+    protected def dispatch boolean isDirectListInitializationType(SimpleType type) {
+        true
     }
 
     protected def boolean isDirectListInitialization(Field element) {

@@ -646,7 +646,7 @@ public class XsmpUtil
             .findFirst().orElse(null);
   }
 
-  protected Expression attributeValue(NamedElement o, QualifiedName id)
+  public Expression attributeValue(NamedElement o, QualifiedName id)
   {
     final var attribute = attribute(o, id);
     if (attribute == null)
