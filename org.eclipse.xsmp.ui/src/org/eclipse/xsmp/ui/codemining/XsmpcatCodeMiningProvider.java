@@ -18,7 +18,6 @@ import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.EmptyExpression;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Structure;
@@ -41,7 +40,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 {
 
   @Inject
-  private XsmpUtil elementUtil;
+  private XsmpUtil xsmpUtil;
 
   @Inject
   private XsmpcatGrammarAccess ga;
@@ -75,9 +74,9 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
           createCodeMinings((Operation) obj, acceptor);
           it.prune();
           break;
-        case XcataloguePackage.COLLECTION_LITERAL:
-          createCodeMinings((CollectionLiteral) obj, acceptor);
-          break;
+        // case XcataloguePackage.COLLECTION_LITERAL:
+        // createCodeMinings((CollectionLiteral) obj, acceptor);
+        // break;
         default:
           break;
       }
@@ -90,7 +89,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     for (final INode node : NodeModelUtils.findNodesForFeature(p,
             XcataloguePackage.Literals.ASSOCIATION__TYPE))
     {
-      if (elementUtil.isByPointer(p))
+      if (xsmpUtil.isByPointer(p))
       {
         acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), "*"));
       }
@@ -99,7 +98,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 
   protected void createCodeMinings(Operation o, IAcceptor< ? super ICodeMining> acceptor)
   {
-    if (elementUtil.isVirtual(o))
+    if (xsmpUtil.isVirtual(o))
     {
       final var defKeyword = ga.getOperationDeclarationAccess().getDefKeyword_1();
       for (final ILeafNode node : NodeModelUtils.getNode(o).getLeafNodes())
@@ -113,12 +112,12 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     }
 
     var m = "";
-    if (elementUtil.isConst(o))
+    if (xsmpUtil.isConst(o))
     {
       m += " const";
     }
 
-    if (elementUtil.isAbstract(o))
+    if (xsmpUtil.isAbstract(o))
     {
       m += " = 0";
     }
@@ -143,11 +142,11 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     for (final INode node : NodeModelUtils.findNodesForFeature(p,
             XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      if (elementUtil.isConst(p))
+      if (xsmpUtil.isConst(p))
       {
         acceptor.accept(createNewLineContentCodeMining(node.getOffset(), "const "));
       }
-      switch (elementUtil.kind(p))
+      switch (xsmpUtil.kind(p))
       {
         case BY_PTR:
           acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), "*"));
@@ -163,20 +162,20 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 
   protected void createCodeMinings(CollectionLiteral obj, IAcceptor< ? super ICodeMining> acceptor)
   {
-    final var type = elementUtil.getType(obj);
+    final var type = xsmpUtil.getType(obj);
     if (type instanceof Structure)
     {
-      final var fields = elementUtil.getAssignableFields((Structure) type);
+      final var fields = xsmpUtil.getAssignableFields((Structure) type);
 
       final var elems = obj.getElements();
       final var size = Math.min(fields.size(), elems.size());
       for (var i = 0; i < size; ++i)
       {
         final var elem = elems.get(i);
-        if (!(elem instanceof DesignatedInitializer) && size >= 2)
+        if (!(elem instanceof DesignatedInitializer))
         {
           final var node = NodeModelUtils.getNode(elem);
-          if (node != null && ((i != size - 1) || !(elem instanceof EmptyExpression)))
+          if (node != null)
           {
             acceptor.accept(createNewLineContentCodeMining(node.getOffset(),
                     "." + fields.get(i).getName() + " = "));

@@ -12,7 +12,6 @@ package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.AbstractTypeFileGenerator
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.Solver
 import org.eclipse.xsmp.xcatalogue.Enumeration
 
 class EnumerationGenerator extends AbstractTypeFileGenerator<Enumeration> {
@@ -59,7 +58,7 @@ class EnumerationGenerator extends AbstractTypeFileGenerator<Enumeration> {
             
                 // Register the Literals of the Enumeration
                 «FOR l : t.literal»
-                    typeState->AddLiteral("«l.name»", «l.description()», «Solver.INSTANCE.getInteger(l.value)»);
+                    typeState->AddLiteral("«l.name»", «l.description()», «l.value.getInteger()»);
                 «ENDFOR»
                 }
                 «t.uuidDefinition»

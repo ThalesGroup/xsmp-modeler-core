@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.DoubleUnaryOperator;
 
-import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
 import org.eclipse.xsmp.xcatalogue.BinaryOperation;
 import org.eclipse.xsmp.xcatalogue.BooleanLiteral;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
@@ -26,15 +25,19 @@ import org.eclipse.xsmp.xcatalogue.FloatingLiteral;
 import org.eclipse.xsmp.xcatalogue.IntegerLiteral;
 import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
+import org.eclipse.xsmp.xcatalogue.SimpleType;
 import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.UnaryOperation;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.validation.AbstractValidationMessageAcceptor;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
+import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class Solver
 {
   public static final BigInteger INT16_MAX = BigInteger.valueOf(Short.MAX_VALUE);
@@ -53,15 +56,15 @@ public class Solver
 
   public static final BigInteger INT8_MIN = BigInteger.valueOf(Byte.MIN_VALUE);
 
-  public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
-
   public static final BigInteger ZERO = BigInteger.ZERO;
+
+  public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
+
+  public static final BigInteger UINT16_MAX = BigInteger.valueOf(0xffff);
 
   public static final BigInteger UINT32_MAX = BigInteger.valueOf(0xffffffffL);
 
   public static final BigInteger UINT64_MAX = new BigInteger("ffffffffffffffff", 16);
-
-  public static final BigInteger UINT8_MAX = BigInteger.valueOf(0xff);
 
   public static final BigDecimal FLOAT32_MAX = BigDecimal.valueOf(Float.MAX_VALUE);
 
@@ -71,20 +74,29 @@ public class Solver
 
   public static final BigDecimal FLOAT64_MIN = FLOAT64_MAX.negate();
 
-  public static final Solver INSTANCE = new Solver();
+  @Inject
+  protected XsmpUtil xsmpUtil;
 
-  private final ValidationMessageAcceptor acceptor;
+  @Inject
+  protected IResourceScopeCache cache;
 
-  public Solver()
+  public static class SolverException extends RuntimeException
   {
-    acceptor = new AbstractValidationMessageAcceptor() {
+    private static final long serialVersionUID = 9137810865804865010L;
 
-    };
-  }
+    private final Expression expression;
 
-  public Solver(ValidationMessageAcceptor acceptor)
-  {
-    this.acceptor = acceptor;
+    public SolverException(Expression expression, String msg)
+    {
+      super(msg);
+      this.expression = expression;
+    }
+
+    public Expression getExpression()
+    {
+      return expression;
+    }
+
   }
 
   protected int compareTo(Object left, Object right)
@@ -109,7 +121,6 @@ public class Solver
     {
       return ((Boolean) left).compareTo((Boolean) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
@@ -146,8 +157,7 @@ public class Solver
     {
       return BigDecimal.class;
     }
-
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @SuppressWarnings("unchecked")
@@ -177,17 +187,12 @@ public class Solver
       }
       return (T) value;
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object logicalOr(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -208,17 +213,12 @@ public class Solver
       return ((BigDecimal) left).compareTo(BigDecimal.ZERO) != 0
               || ((BigDecimal) right).compareTo(BigDecimal.ZERO) != 0;
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object logicalAnd(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -239,17 +239,13 @@ public class Solver
       return ((BigDecimal) left).compareTo(BigDecimal.ZERO) != 0
               && ((BigDecimal) right).compareTo(BigDecimal.ZERO) != 0;
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object bitwiseOr(Object leftOperand, Object rightOperand)
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -263,17 +259,13 @@ public class Solver
     {
       return ((BigInteger) left).or((BigInteger) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object bitwiseAnd(Object leftOperand, Object rightOperand)
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -287,17 +279,13 @@ public class Solver
     {
       return ((BigInteger) left).and((BigInteger) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object bitwiseXor(Object leftOperand, Object rightOperand)
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -311,17 +299,12 @@ public class Solver
     {
       return ((BigInteger) left).xor((BigInteger) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object addition(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -340,17 +323,12 @@ public class Solver
     {
       return ((BigDecimal) left).add((BigDecimal) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object subtraction(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -369,17 +347,12 @@ public class Solver
     {
       return ((BigDecimal) left).subtract((BigDecimal) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
-  Object divide(Object leftOperand, Object rightOperand) throws ArithmeticException
+  Object divide(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -396,17 +369,13 @@ public class Solver
     {
       return ((BigDecimal) left).divide((BigDecimal) right, MathContext.DECIMAL64);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object multiply(Object leftOperand, Object rightOperand)
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -425,17 +394,14 @@ public class Solver
     {
       return ((BigDecimal) left).multiply((BigDecimal) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
-  Object remainder(Object leftOperand, Object rightOperand) throws ArithmeticException
+  Object remainder(Object leftOperand, Object rightOperand)
+
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -452,17 +418,13 @@ public class Solver
     {
       return ((BigDecimal) left).remainder((BigDecimal) right);
     }
-
     throw new UnsupportedOperationException();
   }
 
   Object shiftLeft(Object leftOperand, Object rightOperand)
   {
+
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -483,10 +445,6 @@ public class Solver
   Object shiftRight(Object leftOperand, Object rightOperand)
   {
     final var clazz = getType(leftOperand, rightOperand);
-    if (clazz == null)
-    {
-      throw new UnsupportedOperationException();
-    }
 
     final var left = convert(leftOperand, clazz);
     final var right = convert(rightOperand, clazz);
@@ -501,24 +459,24 @@ public class Solver
     {
       return ((BigInteger) left).shiftRight(((BigInteger) right).intValue());
     }
-
     throw new UnsupportedOperationException();
   }
 
   protected Object getValue(BinaryOperation e)
   {
 
-    final var leftOperand = getValue(e.getLeftOperand());
+    final var leftOperand = doGetValue(e.getLeftOperand());
     if (leftOperand == null)
     {
       return null;
     }
 
-    final var rightOperand = getValue(e.getRightOperand());
+    final var rightOperand = doGetValue(e.getRightOperand());
     if (rightOperand == null)
     {
       return null;
     }
+
     try
     {
       switch (e.getFeature())
@@ -563,22 +521,21 @@ public class Solver
           break;
       }
     }
-    catch (final ArithmeticException ex)
-    {
-      acceptor.acceptError(ex.getLocalizedMessage(), e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-      return null;
-    }
     catch (final UnsupportedOperationException ex)
     {
-      // ignore
+      throw new UnsupportedOperationException("no match for « operator" + e.getFeature()
+              + " » (operand types are « " + leftOperand.getClass().getSimpleName() + " » and «"
+              + rightOperand.getClass().getSimpleName() + " »).");
     }
-    acceptor.acceptError(
-            "Operator " + e.getFeature() + " does not supports "
-                    + leftOperand.getClass().getSimpleName() + " and "
-                    + rightOperand.getClass().getSimpleName() + " operands.",
-            e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-    return null;
+    catch (final Exception ex)
+    {
+      throw new SolverException(e, ex.getMessage());
+    }
+
+    throw new SolverException(e,
+            "unknown « operator" + e.getFeature() + " » (operand types are « "
+                    + leftOperand.getClass().getSimpleName() + " » and «"
+                    + rightOperand.getClass().getSimpleName() + " »).");
   }
 
   protected Object getValue(BuiltInConstant e)
@@ -586,11 +543,9 @@ public class Solver
     final var solver = constantMappings.get(e.getName());
     if (solver == null)
     {
-      acceptor.acceptError("Unknown builtin constant '" + e.getName() + "'", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-      return null;
+      throw new SolverException(e, "unknown constant: " + e.getName());
     }
-    return solver.solve(e, this);
+    return solver.solve(e);
 
   }
 
@@ -599,19 +554,15 @@ public class Solver
     final var solver = functionMappings.get(e.getName());
     if (solver == null)
     {
-      acceptor.acceptError("Unknown builtin function '" + e.getName() + "'", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation",
-              (String[]) null);
-
-      return null;
+      throw new SolverException(e, "unknown function: " + e.getName());
     }
 
-    return solver.solve(e, this);
+    return solver.solve(e);
   }
 
   protected Object getValue(UnaryOperation e)
   {
-    final var value = getValue(e.getOperand());
+    final var value = doGetValue(e.getOperand());
     if (value == null)
     {
       return null;
@@ -666,12 +617,8 @@ public class Solver
       default:
         break;
     }
-
-    acceptor.acceptError(
-            "Unary Operator " + e.getFeature() + " does not supports " + value.getClass().getName()
-                    + " operand.",
-            e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-    return null;
+    throw new SolverException(e, "no match for « operator" + e.getFeature()
+            + " » (operand type is « " + value.getClass().getSimpleName() + " »).");
   }
 
   protected Object getValue(NamedElementReference e)
@@ -693,23 +640,19 @@ public class Solver
       }
       return value;
     }
-    throw new UnsupportedOperationException();
+    throw new SolverException(e, "invalid reference type « " + value.getClass().getSimpleName()
+            + " »), only Contant and EnumerationLiteral are supported.");
   }
 
   protected Object getValue(CollectionLiteral e)
   {
     final var elements = e.getElements();
-    if (elements.isEmpty())
-    {
-      return null;
-    }
-    if (elements.size() == 1)
+
+    if (elements.size() == 1 && xsmpUtil.getType(e) instanceof SimpleType)
     {
       return getValue(elements.get(0));
     }
-    acceptor.acceptError("Expecting only one element, got " + elements.size(), e, null,
-            ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-    return null;
+    throw new SolverException(e, "SimpleType requires only one element.");
   }
 
   protected Object getValue(CharacterLiteral e)
@@ -720,10 +663,8 @@ public class Solver
     }
     catch (final Exception ex)
     {
-      acceptor.acceptError("Invalid escape sequence: " + ex.getLocalizedMessage(), e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
+      throw new SolverException(e, ex.getMessage());
     }
-    return null;
   }
 
   protected Object getValue(StringLiteral e)
@@ -734,10 +675,66 @@ public class Solver
     }
     catch (final Exception ex)
     {
-      acceptor.acceptError("Invalid escape sequence: " + ex.getLocalizedMessage(), e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
+      throw new SolverException(e, ex.getMessage());
     }
-    return null;
+  }
+
+  private Object doGetValue(Expression e)
+  {
+    if (e == null)
+    {
+      return null;
+    }
+
+    try
+    {
+      switch (e.eClass().getClassifierID())
+      {
+        case XcataloguePackage.BINARY_OPERATION:
+          return getValue((BinaryOperation) e);
+        case XcataloguePackage.BOOLEAN_LITERAL:
+          return ((BooleanLiteral) e).isIsTrue();
+        case XcataloguePackage.BUILT_IN_CONSTANT:
+          return getValue((BuiltInConstant) e);
+        case XcataloguePackage.BUILT_IN_FUNCTION:
+          return getValue((BuiltInFunction) e);
+        case XcataloguePackage.CHARACTER_LITERAL:
+          return getValue((CharacterLiteral) e);
+        case XcataloguePackage.COLLECTION_LITERAL:
+          return getValue((CollectionLiteral) e);
+        case XcataloguePackage.NAMED_ELEMENT_REFERENCE:
+          return getValue((NamedElementReference) e);
+        case XcataloguePackage.FLOATING_LITERAL:
+          return ((FloatingLiteral) e).getValue();
+        case XcataloguePackage.INTEGER_LITERAL:
+          return ((IntegerLiteral) e).getValue();
+        case XcataloguePackage.PARENTHESIZED_EXPRESSION:
+          return doGetValue(((ParenthesizedExpression) e).getExpr());
+        case XcataloguePackage.DESIGNATED_INITIALIZER:
+          return doGetValue(((DesignatedInitializer) e).getExpr());
+        case XcataloguePackage.STRING_LITERAL:
+          return getValue((StringLiteral) e);
+        case XcataloguePackage.UNARY_OPERATION:
+          return getValue((UnaryOperation) e);
+        case XcataloguePackage.KEYWORD_EXPRESSION:
+          return e;
+        case XcataloguePackage.EMPTY_EXPRESSION:
+          return null;
+        default:
+          break;
+      }
+    }
+    catch (final SolverException ex)
+    {
+      // re-throw the exception
+      throw ex;
+    }
+    catch (final Exception ex)
+    {
+      throw new SolverException(e, ex.getMessage());
+    }
+
+    throw new SolverException(e, "Unsupported expression: " + e.getClass().getSimpleName());
   }
 
   public Object getValue(Expression e)
@@ -746,46 +743,8 @@ public class Solver
     {
       return null;
     }
-    switch (e.eClass().getClassifierID())
-    {
-      case XcataloguePackage.BINARY_OPERATION:
-        return getValue((BinaryOperation) e);
-      case XcataloguePackage.BOOLEAN_LITERAL:
-        return ((BooleanLiteral) e).isIsTrue();
-      case XcataloguePackage.BUILT_IN_CONSTANT:
-        return getValue((BuiltInConstant) e);
-      case XcataloguePackage.BUILT_IN_FUNCTION:
-        return getValue((BuiltInFunction) e);
-      case XcataloguePackage.CHARACTER_LITERAL:
-        return getValue((CharacterLiteral) e);
-      case XcataloguePackage.COLLECTION_LITERAL:
-        return getValue((CollectionLiteral) e);
-      case XcataloguePackage.NAMED_ELEMENT_REFERENCE:
-        return getValue((NamedElementReference) e);
-      case XcataloguePackage.FLOATING_LITERAL:
-        return ((FloatingLiteral) e).getValue();
-      case XcataloguePackage.INTEGER_LITERAL:
-        return ((IntegerLiteral) e).getValue();
-      case XcataloguePackage.PARENTHESIZED_EXPRESSION:
-        return getValue(((ParenthesizedExpression) e).getExpr());
-      case XcataloguePackage.DESIGNATED_INITIALIZER:
-        if (((DesignatedInitializer) e).getExpr() == null)
-        {
-          acceptor.acceptError("Missing value.", e, null,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "unsupported_operation");
-        }
-        return getValue(((DesignatedInitializer) e).getExpr());
-      case XcataloguePackage.STRING_LITERAL:
-        return getValue((StringLiteral) e);
-      case XcataloguePackage.UNARY_OPERATION:
-        return getValue((UnaryOperation) e);
-      case XcataloguePackage.KEYWORD_EXPRESSION:
-        return e;
-      case XcataloguePackage.EMPTY_EXPRESSION:
-        return null;
-      default:
-        throw new UnsupportedOperationException();
-    }
+
+    return cache.get(Tuples.pair(e, "Value"), e.eResource(), () -> doGetValue(e));
   }
 
   /**
@@ -799,7 +758,7 @@ public class Solver
      * @param acceptor
      * @return the solved expression
      */
-    Object solve(T builtIn, Solver acceptor);
+    Object solve(T builtIn);
 
     /**
      * @return the builtin documentation
@@ -821,7 +780,7 @@ public class Solver
     }
 
     @Override
-    public Object solve(BuiltInConstant cst, Solver solver)
+    public Object solve(BuiltInConstant cst)
     {
       return value;
     }
@@ -837,7 +796,7 @@ public class Solver
   /**
    * the mapping for builtin constants
    */
-  public static final Map<String, BuiltInSolver<BuiltInConstant>> constantMappings = ImmutableMap
+  public final Map<String, BuiltInSolver<BuiltInConstant>> constantMappings = ImmutableMap
           .<String, BuiltInSolver<BuiltInConstant>> builder()
           .put("PI", new BuiltInConstantSolver(BigDecimal.valueOf(Math.PI),
                   "The double value that is closer than any other to pi, the ratio of the circumference of a circle to its diameter."))
@@ -845,7 +804,7 @@ public class Solver
                   "The double value that is closer than any other to e, the base of the natural logarithms."))
           .build();
 
-  private static class UnaryFunction implements BuiltInSolver<BuiltInFunction>
+  private class UnaryFunction implements BuiltInSolver<BuiltInFunction>
   {
 
     private final String doc;
@@ -859,12 +818,12 @@ public class Solver
     }
 
     @Override
-    public Object solve(BuiltInFunction function, Solver solver)
+    public Object solve(BuiltInFunction function)
     {
-      if (checkParameterCount(function, solver, 1))
+      if (function.getParameter().size() == 1)
       {
 
-        final var value = solver.getDecimal(function.getParameter().get(0));
+        final var value = xsmpUtil.getDecimal(function.getParameter().get(0));
         if (value != null)
         {
           try
@@ -873,28 +832,22 @@ public class Solver
 
             if (val.isNaN())
             {
-              solver.acceptor.acceptError("The return value of " + function.getName() + " is NaN.",
-                      function, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-              return null;
+              throw new SolverException(function, "result is not a number.");
+
             }
             if (val.isInfinite())
             {
-              solver.acceptor.acceptError(
-                      "The return value of " + function.getName() + " is infinite.", function, null,
-                      ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-              return null;
+              throw new SolverException(function, "result is infinite.");
+
             }
             return BigDecimal.valueOf(val);
           }
           catch (final Exception e)
           {
-
-            solver.acceptor.acceptError(e.getLocalizedMessage(), function, null,
-                    ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
           }
         }
       }
-      return null;
+      throw new SolverException(function, "function expect only one parameter.");
     }
 
     @Override
@@ -902,26 +855,12 @@ public class Solver
     {
       return doc;
     }
-
-    private static boolean checkParameterCount(BuiltInFunction function, Solver acceptor, int count)
-    {
-      if (function.getParameter().size() != count)
-      {
-        acceptor.acceptor.acceptError(
-                function.getName() + " takes " + count + " parameter" + (count == 1 ? "" : "s")
-                        + ", got " + function.getParameter().size(),
-                function, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                "unsupported_operation");
-        return false;
-      }
-      return true;
-    }
   }
 
   /**
    * the mapping for builtin functions
    */
-  public static final Map<String, BuiltInSolver<BuiltInFunction>> functionMappings = ImmutableMap
+  public final Map<String, BuiltInSolver<BuiltInFunction>> functionMappings = ImmutableMap
           .<String, BuiltInSolver<BuiltInFunction>> builder()
           .put("cos", new UnaryFunction(Math::cos, "Returns the trigonometric cosine of an angle."))
           .put("sin", new UnaryFunction(Math::sin, "Returns the trigonometric sine of an angle."))
@@ -1007,86 +946,50 @@ public class Solver
   public BigInteger getInteger(Expression e)
   {
     final var value = getValue(e);
-    if (value instanceof Boolean)
-    {
-      return Boolean.TRUE.equals(value) ? BigInteger.ONE : BigInteger.ZERO;
-    }
-    if (value instanceof BigInteger)
-    {
-      return (BigInteger) value;
-    }
-    if (value instanceof BigDecimal)
-    {
-      acceptor.acceptWarning("Narrowing convertion from Decimal to Integral Number.", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
-      return ((BigDecimal) value).toBigInteger();
-    }
     if (value != null)
     {
-      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to Integer.",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+      if (value instanceof Boolean)
+      {
+        return Boolean.TRUE.equals(value) ? BigInteger.ONE : BigInteger.ZERO;
+      }
+      if (value instanceof BigInteger)
+      {
+        return (BigInteger) value;
+      }
+      if (value instanceof BigDecimal)
+      {
+        return ((BigDecimal) value).toBigInteger();
+      }
+
+      throw new SolverException(e,
+              "Could not convert " + value.getClass().getSimpleName() + " to Integer.");
     }
 
     return null;
-  }
-
-  public BigInteger getInteger(Expression e, BigInteger min, BigInteger max)
-  {
-    final var value = getInteger(e);
-
-    if (value != null
-            && (min != null && value.compareTo(min) < 0 || max != null && value.compareTo(max) > 0))
-    {
-      acceptor.acceptError(
-              "Integral value " + value + " is not in range " + min + " ... " + max + ".", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
-    }
-    return value;
   }
 
   public BigDecimal getDecimal(Expression e)
   {
     final var value = getValue(e);
-    if (value instanceof BigDecimal)
-    {
-      return (BigDecimal) value;
-    }
-    if (value instanceof BigInteger)
-    {
-      return new BigDecimal((BigInteger) value);
-    }
-    if (value instanceof Boolean)
-    {
-      return Boolean.TRUE.equals(value) ? BigDecimal.ONE : BigDecimal.ZERO;
-    }
     if (value != null)
     {
-      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to Decimal.",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+      if (value instanceof BigDecimal)
+      {
+        return (BigDecimal) value;
+      }
+      if (value instanceof BigInteger)
+      {
+        return new BigDecimal((BigInteger) value);
+      }
+      if (value instanceof Boolean)
+      {
+        return Boolean.TRUE.equals(value) ? BigDecimal.ONE : BigDecimal.ZERO;
+      }
+
+      throw new SolverException(e,
+              "Could not convert " + value.getClass().getSimpleName() + " to Decimal.");
     }
     return null;
-  }
-
-  public BigDecimal getDecimal(Expression e, BigDecimal min, BigDecimal max, boolean minInclusive,
-          boolean maxInclusive)
-  {
-    final var value = getDecimal(e);
-
-    if (value != null && min != null && max != null
-            && ((minInclusive ? value.compareTo(min) < 0 : value.compareTo(min) <= 0)
-                    || (maxInclusive ? value.compareTo(max) > 0 : value.compareTo(max) >= 0)))
-    {
-      acceptor.acceptError(
-              "Decimal value " + value + " is not in range " + min + (minInclusive ? "." : "<")
-                      + "." + (maxInclusive ? "." : "<") + max + ".",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
-    }
-    return value;
   }
 
   public EnumerationLiteral getEnumerationLiteral(Expression e, Enumeration expectedType)
@@ -1094,13 +997,7 @@ public class Solver
     final var value = getValue(e);
     if (value instanceof EnumerationLiteral)
     {
-      final var literal = (EnumerationLiteral) value;
-      if (literal.eContainer() != expectedType)
-      {
-        acceptor.acceptError("Incompatible enumeration Type: expecting " + expectedType.getName(),
-                e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
-      }
-      return literal;
+      return (EnumerationLiteral) value;
     }
 
     final var integer = getInteger(e);
@@ -1108,20 +1005,15 @@ public class Solver
     if (integer != null)
     {
       final var literal = expectedType.getLiteral().stream()
-              .filter(l -> integer.equals(Solver.INSTANCE.getInteger(l.getValue()))).findFirst();
+              .filter(l -> integer.equals(getInteger(l.getValue()))).findFirst();
 
       if (literal.isPresent())
       {
-        acceptor.acceptWarning("Should use an EnumerationLiteral instead of an integral constant.",
-                e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+
         return literal.get();
       }
-
-      acceptor.acceptError(
-              "Could not convert " + integer + " to Enumeration " + expectedType.getName() + ".", e,
-              null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+      throw new SolverException(e,
+              "Could not convert " + integer + " to Enumeration " + expectedType.getName() + ".");
     }
 
     return null;
@@ -1143,35 +1035,20 @@ public class Solver
   public Optional<Boolean> getBoolean(Expression e)
   {
     final var value = getValue(e);
-    if (value instanceof Boolean)
-    {
-      return Optional.of((Boolean) value);
-    }
-    if (value instanceof BigDecimal)
-    {
-      acceptor.acceptWarning(
-              "Narrowing convertion of \"" + value + "\" from \"double\" to \"bool\".", e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
-      return Optional.of(((BigDecimal) value).doubleValue() != 0.);
-    }
-    if (value instanceof BigInteger)
-    {
-      if (!BigInteger.ZERO.equals(value) && !BigInteger.ONE.equals(value))
-      {
-        acceptor.acceptWarning(
-                "Narrowing convertion of \"" + value + "\" from \"int\" to \"bool\".", e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
-      }
-
-      return Optional.of(((BigInteger) value).compareTo(BigInteger.ZERO) != 0);
-    }
     if (value != null)
     {
-      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to Boolean.",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+      if (value instanceof Boolean)
+      {
+        return Optional.of((Boolean) value);
+      }
+      if (value instanceof BigDecimal)
+      {
+        return Optional.of(((BigDecimal) value).doubleValue() != 0.);
+      }
+      if (value instanceof BigInteger)
+      {
+        return Optional.of(((BigInteger) value).compareTo(BigInteger.ZERO) != 0);
+      }
     }
     return Optional.empty();
   }
@@ -1183,40 +1060,33 @@ public class Solver
     {
       return (String) value;
     }
-    if (value != null)
-    {
-      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to String.",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
-    }
+
     return null;
   }
 
   public String getChar(Expression e)
   {
     final var value = getValue(e);
-    if (value instanceof String)
-    {
-      final var chr = (String) value;
-      if (XsmpUtil.translateEscapes(chr).length() != 1)
-      {
-        acceptor.acceptError("Invalid Character: " + chr, e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
-      }
-
-      return chr;
-    }
-
-    if (value instanceof BigInteger)
-    {
-      return Character.toString(((BigInteger) value).byteValue());
-    }
-
     if (value != null)
     {
-      acceptor.acceptError("Could not convert " + value.getClass().getSimpleName() + " to Char.", e,
-              null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+      if (value instanceof String)
+      {
+        final var chr = (String) value;
+        if (XsmpUtil.translateEscapes(chr).length() != 1)
+        {
+          throw new SolverException(e, "Invalid Character length: " + chr);
+        }
+
+        return chr;
+      }
+
+      if (value instanceof BigInteger)
+      {
+        return Character.toString(((BigInteger) value).byteValue());
+      }
+      throw new SolverException(e,
+              "Could not convert " + value.getClass().getSimpleName() + " to Char.");
+
     }
     return null;
   }
@@ -1231,12 +1101,11 @@ public class Solver
       }
       catch (final Exception ex)
       {
-        acceptor.acceptError("Invalid Duration format: " + ex.getMessage(), e, null,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+        throw new SolverException(e, ex.getMessage());
       }
 
     }
-    return getInteger(e, INT64_MIN, INT64_MAX);
+    return getInteger(e);
 
   }
 
@@ -1245,7 +1114,7 @@ public class Solver
     if (!(e instanceof StringLiteral))
     {
       // check Date Time in ns
-      return getInteger(e, INT64_MIN, INT64_MAX);
+      return getInteger(e);
     }
     try
     {
@@ -1255,9 +1124,7 @@ public class Solver
     }
     catch (final Exception ex)
     {
-      acceptor.acceptError("Invalid DateTime format: " + ex.getMessage(), e, null,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
+      throw new SolverException(e, ex.getMessage());
     }
-    return null;
   }
 }

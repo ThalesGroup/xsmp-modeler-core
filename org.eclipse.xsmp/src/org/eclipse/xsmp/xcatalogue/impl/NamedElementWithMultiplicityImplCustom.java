@@ -12,14 +12,42 @@
  */
 package org.eclipse.xsmp.xcatalogue.impl;
 
-import org.eclipse.xsmp.util.Solver;
+import org.eclipse.xsmp.util.XsmpUtil;
+import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
+import org.eclipse.xtext.resource.XtextResource;
 
 /**
  * @author daveluy
  */
 public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMultiplicityImpl
 {
+
+  /**
+   * Helper function to retrieve the long value of an expression
+   *
+   * @param e
+   *          an Expression
+   * @return the long value of the expression
+   */
+  private long getValue(Expression e)
+  {
+    final var resource = eResource();
+
+    if (resource instanceof XtextResource)
+    {
+      final var xtextResource = (XtextResource) resource;
+
+      final var xsmpUtil = xtextResource.getResourceServiceProvider().get(XsmpUtil.class);
+
+      final var value = xsmpUtil.getInteger(e);
+      if (value != null)
+      {
+        return value.longValue();
+      }
+    }
+    throw new UnsupportedOperationException("Cannot retrieve the Expression value");
+  }
 
   @Override
   public long getLower()
@@ -36,7 +64,8 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     {
       return multiplicity.isAux() ? 1 : 0;
     }
-    return Solver.INSTANCE.getInteger(multiplicity.getLower()).longValue();
+
+    return getValue(multiplicity.getLower());
   }
 
   /**
@@ -55,10 +84,9 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     }
     if (multiplicity.getUpper() == null)
     {
-      return multiplicity.isAux() ? -1
-              : Solver.INSTANCE.getInteger(multiplicity.getLower()).longValue();
+      return multiplicity.isAux() ? -1 : getValue(multiplicity.getLower());
     }
-    return Solver.INSTANCE.getInteger(multiplicity.getUpper()).longValue();
+    return getValue(multiplicity.getUpper());
   }
 
   private void setMultiplicity(long lower, long upper)

@@ -77,7 +77,6 @@ import org.eclipse.xsmp.tool.smp.smdl.catalogue.Interface;
 import org.eclipse.xsmp.tool.smp.smdl.package_.PackageFactory;
 import org.eclipse.xsmp.tool.smp.util.SmpURIConverter;
 import org.eclipse.xsmp.util.QualifiedNames;
-import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
@@ -133,7 +132,7 @@ public class SmpGenerator extends AbstractModelConverter
   private IResourceScopeCache cache;
 
   @Inject
-  private XsmpUtil utils;
+  private XsmpUtil xsmpUtil;
 
   private static final String SMPCAT_EXT = "smpcat";
 
@@ -400,7 +399,7 @@ public class SmpGenerator extends AbstractModelConverter
           org.eclipse.xsmp.tool.smp.core.types.EnumerationLiteral dest)
   {
     copy((NamedElement) src, (org.eclipse.xsmp.tool.smp.core.elements.NamedElement) dest);
-    dest.setValue(Solver.INSTANCE.getInteger(src.getValue()).intValue());
+    dest.setValue(xsmpUtil.getInteger(src.getValue()).intValue());
   }
 
   protected void copy(Document src, org.eclipse.xsmp.tool.smp.core.elements.Document dest)
@@ -468,7 +467,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     copy((Type) src, dest);
 
-    dest.setSize(Solver.INSTANCE.getInteger(src.getSize()).longValue());
+    dest.setSize(xsmpUtil.getInteger(src.getSize()).longValue());
     dest.setItemType(getReference(src.getItemType(), src.eResource()));
   }
 
@@ -478,13 +477,13 @@ public class SmpGenerator extends AbstractModelConverter
 
     if (src.getMaximum() != null)
     {
-      dest.setMaximum(Solver.INSTANCE.getInteger(src.getMaximum()).longValue());
+      dest.setMaximum(xsmpUtil.getInteger(src.getMaximum()).longValue());
     }
     dest.setMaxInclusive(src.isMaxInclusive());
 
     if (src.getMinimum() != null)
     {
-      dest.setMinimum(Solver.INSTANCE.getInteger(src.getMinimum()).longValue());
+      dest.setMinimum(xsmpUtil.getInteger(src.getMinimum()).longValue());
     }
     dest.setMinInclusive(src.isMinInclusive());
     dest.setUnit(src.getUnit());
@@ -501,12 +500,12 @@ public class SmpGenerator extends AbstractModelConverter
 
     if (src.getMaximum() != null)
     {
-      dest.setMaximum(Solver.INSTANCE.getInteger(src.getMaximum()).longValue());
+      dest.setMaximum(xsmpUtil.getInteger(src.getMaximum()).longValue());
     }
 
     if (src.getMinimum() != null)
     {
-      dest.setMinimum(Solver.INSTANCE.getInteger(src.getMinimum()).longValue());
+      dest.setMinimum(xsmpUtil.getInteger(src.getMinimum()).longValue());
     }
 
     dest.setUnit(src.getUnit());
@@ -522,7 +521,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     copy((Type) src, dest);
 
-    dest.setLength(Solver.INSTANCE.getInteger(src.getLength()).longValue());
+    dest.setLength(xsmpUtil.getInteger(src.getLength()).longValue());
   }
 
   protected void copy(Structure src, org.eclipse.xsmp.tool.smp.core.types.Structure dest)
@@ -796,9 +795,9 @@ public class SmpGenerator extends AbstractModelConverter
 
   private Value convert(Expression value)
   {
-    final var type = utils.getType(value);
+    final var type = xsmpUtil.getType(value);
 
-    final var primitiveType = utils.getPrimitiveType(type);
+    final var primitiveType = xsmpUtil.getPrimitiveType(type);
 
     try
     {
@@ -865,7 +864,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     final var itemType = type.getItemType();
 
-    switch (utils.getPrimitiveType(itemType))
+    switch (xsmpUtil.getPrimitiveType(itemType))
     {
       case BOOL:
         return boolArrayValue(value);
@@ -994,7 +993,7 @@ public class SmpGenerator extends AbstractModelConverter
   private BoolValue boolValue(Expression value)
   {
     final var v = TypesFactory.eINSTANCE.createBoolValue();
-    v.setValue(Solver.INSTANCE.getBoolean(value).orElse(false));
+    v.setValue(xsmpUtil.getBoolean(value).orElse(false));
     updateField(v, value);
     return v;
   }
@@ -1082,7 +1081,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     final var v = TypesFactory.eINSTANCE.createDurationValue();
 
-    final var duration = Solver.INSTANCE.getDuration(expression);
+    final var duration = xsmpUtil.getDuration(expression);
 
     if (duration != null)
     {
@@ -1103,7 +1102,7 @@ public class SmpGenerator extends AbstractModelConverter
   {
     final var v = TypesFactory.eINSTANCE.createDateTimeValue();
 
-    final var dateTime = Solver.INSTANCE.getDateTime(expression);
+    final var dateTime = xsmpUtil.getDateTime(expression);
     if (dateTime != null)
     {
 
@@ -1126,7 +1125,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Char8Value char8Value(final Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createChar8Value();
-    v.setValue(Solver.INSTANCE.getChar(expression));
+    v.setValue(xsmpUtil.getChar(expression));
     updateField(v, expression);
     return v;
   }
@@ -1134,7 +1133,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Int8Value int8Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createInt8Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).byteValue());
+    v.setValue(xsmpUtil.getInteger(expression).byteValue());
     updateField(v, expression);
     return v;
   }
@@ -1142,7 +1141,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Int16Value int16Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createInt16Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).shortValue());
+    v.setValue(xsmpUtil.getInteger(expression).shortValue());
     updateField(v, expression);
     return v;
   }
@@ -1150,7 +1149,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Int32Value int32Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createInt32Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).intValue());
+    v.setValue(xsmpUtil.getInteger(expression).intValue());
     updateField(v, expression);
     return v;
   }
@@ -1158,7 +1157,7 @@ public class SmpGenerator extends AbstractModelConverter
   private EnumerationValue enumValue(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createEnumerationValue();
-    v.setValue(Solver.INSTANCE.getEnumValue(expression).intValue());
+    v.setValue(xsmpUtil.getEnumValue(expression).intValue());
     updateField(v, expression);
     return v;
   }
@@ -1166,7 +1165,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Int64Value int64Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createInt64Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).longValue());
+    v.setValue(xsmpUtil.getInteger(expression).longValue());
     updateField(v, expression);
     return v;
   }
@@ -1174,7 +1173,7 @@ public class SmpGenerator extends AbstractModelConverter
   private UInt8Value uint8Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createUInt8Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).shortValue());
+    v.setValue(xsmpUtil.getInteger(expression).shortValue());
     updateField(v, expression);
     return v;
   }
@@ -1182,7 +1181,7 @@ public class SmpGenerator extends AbstractModelConverter
   private UInt16Value uint16Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createUInt16Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).intValue());
+    v.setValue(xsmpUtil.getInteger(expression).intValue());
     updateField(v, expression);
     return v;
   }
@@ -1190,7 +1189,7 @@ public class SmpGenerator extends AbstractModelConverter
   private UInt32Value uint32Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createUInt32Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression).longValue());
+    v.setValue(xsmpUtil.getInteger(expression).longValue());
     updateField(v, expression);
     return v;
   }
@@ -1198,7 +1197,7 @@ public class SmpGenerator extends AbstractModelConverter
   private UInt64Value uint64Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createUInt64Value();
-    v.setValue(Solver.INSTANCE.getInteger(expression));
+    v.setValue(xsmpUtil.getInteger(expression));
     updateField(v, expression);
     return v;
   }
@@ -1206,7 +1205,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Float32Value float32Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createFloat32Value();
-    v.setValue(Solver.INSTANCE.getDecimal(expression).floatValue());
+    v.setValue(xsmpUtil.getDecimal(expression).floatValue());
     updateField(v, expression);
     return v;
   }
@@ -1214,7 +1213,7 @@ public class SmpGenerator extends AbstractModelConverter
   private Float64Value float64Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createFloat64Value();
-    v.setValue(Solver.INSTANCE.getDecimal(expression).doubleValue());
+    v.setValue(xsmpUtil.getDecimal(expression).doubleValue());
     updateField(v, expression);
     return v;
   }
@@ -1222,7 +1221,7 @@ public class SmpGenerator extends AbstractModelConverter
   private String8Value string8Value(Expression expression)
   {
     final var v = TypesFactory.eINSTANCE.createString8Value();
-    v.setValue(Solver.INSTANCE.getString(expression));
+    v.setValue(xsmpUtil.getString(expression));
     updateField(v, expression);
     return v;
   }

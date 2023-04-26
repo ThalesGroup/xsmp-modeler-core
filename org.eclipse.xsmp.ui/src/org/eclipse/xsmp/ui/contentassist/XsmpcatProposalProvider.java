@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
 import org.eclipse.xsmp.util.QualifiedNames;
-import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
@@ -71,6 +70,43 @@ import com.google.inject.Inject;
  */
 public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
 {
+  @Inject
+  public XsmpcatProposalProvider(XsmpUtil xsmpUtil)
+  {
+    this.xsmpUtil = xsmpUtil;
+    builtInConstants = xsmpUtil.getSolver().constantMappings.keySet().stream().map(s -> {
+      final var cst = XcatalogueFactory.eINSTANCE.createBuiltInConstant();
+      cst.setName(s);
+      return cst;
+    }).collect(Collectors.toList());
+    builtInFunctions = xsmpUtil.getSolver().functionMappings.keySet().stream().map(s -> {
+      final var cst = XcatalogueFactory.eINSTANCE.createBuiltInFunction();
+      cst.setName(s);
+      return cst;
+    }).collect(Collectors.toList());
+  }
+
+  protected final List<BuiltInConstant> builtInConstants;
+
+  protected final List<BuiltInFunction> builtInFunctions;
+
+  @Inject
+  protected XsmpcatGrammarAccess grammarAccess;
+
+  @Inject
+  protected StylerFactory stylerFactory;
+
+  @Inject
+  protected XsmpcatHighlightingConfiguration highlightingConfiguration;
+
+  protected XsmpUtil xsmpUtil;
+
+  protected static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$", "@",
+          "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
+          "class", "exception", "public", "private", "protected", "field", "constant", "def",
+          "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
+          "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
+          "eventsink", "eventsource", "namespace", "association", "property", "{", "}", "nullptr");
 
   /**
    * {@inheritDoc}
@@ -155,13 +191,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       }
     }
   }
-
-  private static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$", "@",
-          "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
-          "class", "exception", "public", "private", "protected", "field", "constant", "def",
-          "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
-          "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
-          "eventsink", "eventsource", "namespace", "association", "property", "{", "}", "nullptr");
 
   /**
    * {@inheritDoc}
@@ -295,9 +324,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }
   }
 
-  @Inject
-  XsmpcatGrammarAccess grammarAccess;
-
   /**
    * {@inheritDoc}
    */
@@ -407,20 +433,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     return p;
   }
 
-  private static final List<BuiltInConstant> builtInConstants = Solver.constantMappings.keySet()
-          .stream().map(s -> {
-            final var cst = XcatalogueFactory.eINSTANCE.createBuiltInConstant();
-            cst.setName(s);
-            return cst;
-          }).collect(Collectors.toList());
-
-  private static final List<BuiltInFunction> builtInFunctions = Solver.functionMappings.keySet()
-          .stream().map(s -> {
-            final var cst = XcatalogueFactory.eINSTANCE.createBuiltInFunction();
-            cst.setName(s);
-            return cst;
-          }).collect(Collectors.toList());
-
   @Override
   public void complete_BuiltInConstant(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
@@ -470,9 +482,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
             .forEach(cst -> acceptor.accept(createCompletionProposal(cst.getName(), context, cst)));
   }
 
-  @Inject
-  protected XsmpUtil xsmpUtil;
-
   @Override
   public void completeNamedElementReference_Value(EObject model, Assignment assignment,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
@@ -506,9 +515,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }
     lookupCrossReference((CrossReference) assignment.getTerminal(), context, acceptor, filter);
   }
-
-  @Inject
-  protected XsmpcatHighlightingConfiguration highlightingConfiguration;
 
   @Override
   public void complete_IntegerLiteral(EObject model, RuleCall ruleCall,
@@ -591,9 +597,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       acceptor.accept(createKeywordCompletionProposal("true", context));
     }
   }
-
-  @Inject
-  protected StylerFactory stylerFactory;
 
   protected ICompletionProposal createKeywordCompletionProposal(String string,
           ContentAssistContext context)

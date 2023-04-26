@@ -22,6 +22,8 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import org.eclipse.xtext.resource.IResourceFactory
+import org.eclipse.emf.common.util.URI
 
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpcatInjectorProvider)
@@ -98,9 +100,13 @@ class MultiplicityParsingTest {
         Assertions.assertEquals(1, ref7.getUpper());
     }
 
+  @Inject
+   IResourceFactory resourceFactory;
     @Test
     def void checkSetters() {
         var ref = XcatalogueFactory.eINSTANCE.createReference
+        var r = resourceFactory.createResource(URI.createURI("test.xsmpcat"))
+        r.contents += ref
         Assertions.assertEquals(1, ref.lower);
         Assertions.assertEquals(1, ref.upper);
 

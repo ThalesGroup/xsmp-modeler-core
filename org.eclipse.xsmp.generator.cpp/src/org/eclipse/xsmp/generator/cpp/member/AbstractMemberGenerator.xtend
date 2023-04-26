@@ -23,7 +23,7 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     protected extension GeneratorExtension
     @Inject
     protected extension ExpressionGenerator
- 
+
 
     /**
      * Declare a member it its container (INCLUDE)
