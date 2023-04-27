@@ -55,9 +55,6 @@ public class CppGenerator extends AbstractGenerator
   @Inject
   protected XsmpUtil xsmpUtil;
 
-  @Inject
-  protected IGenerationStrategy generationStrategy;
-
   @Override
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
@@ -138,27 +135,25 @@ public class CppGenerator extends AbstractGenerator
 
     var sourcePath = xsmpUtil.fqn(type).toString("/") + ".cpp";
 
-    // if files already exist in include directories, use the generation gap
-    // pattern
-    final var useGenerationGapPattern = generationStrategy.useGenerationGapPattern(type)
-            || fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE);
-
-    // generate header in include directory if file does not exist
-    if (useGenerationGapPattern && !fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
-    {
-      generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
-              typeGenerator.generateHeader(type, cat));
-    }
-
-    // generate source in src directory if file does not exist
-    if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
-    {
-      generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
-              typeGenerator.generateSource(type, useGenerationGapPattern, cat));
-    }
+    // if the file already exist in include directories or the type requires the generation gap
+    // pattern, use the generation gap pattern
+    final var useGenerationGapPattern = fsa.isFile(includePath,
+            CppOutputConfigurationProvider.INCLUDE) || typeGenerator.requiresGenPattern(type);
 
     if (useGenerationGapPattern)
     {
+      // generate header in include directory if file does not exist
+      if (!fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
+      {
+        generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
+                typeGenerator.generateHeader(type, cat));
+      }
+      // generate source in src directory if file does not exist
+      if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
+      {
+        generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
+                typeGenerator.generateSource(type, useGenerationGapPattern, cat));
+      }
       includePath = ext.fqn(type, true).toString("/") + ".h";
       sourcePath = ext.fqn(type, true).toString("/") + ".cpp";
     }

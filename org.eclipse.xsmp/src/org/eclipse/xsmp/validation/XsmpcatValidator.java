@@ -930,12 +930,18 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         default:
           error(elem.eClass().getName()
                   + " shall only contain Properties, Operations, Associations, Constants and Fields. Got  "
-                  + member.eClass().eClass().getName() + ".",
+                  + member.eClass().getName() + ".",
                   XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
                   XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
+    }
 
+    if (!elem.isAbstract() && elem.getMember().stream()
+            .anyMatch(m -> m instanceof NamedElement && xsmpUtil.isAbstract((NamedElement) m)))
+    {
+      error("The " + elem.eClass().getName() + " shall be abstract.",
+              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
 
   }
@@ -1008,6 +1014,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           break;
       }
 
+    }
+    if (!elem.isAbstract() && elem.getMember().stream()
+            .anyMatch(m -> m instanceof NamedElement && xsmpUtil.isAbstract((NamedElement) m)))
+    {
+      error("The " + elem.eClass().getName() + " shall be abstract.",
+              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
   }
 

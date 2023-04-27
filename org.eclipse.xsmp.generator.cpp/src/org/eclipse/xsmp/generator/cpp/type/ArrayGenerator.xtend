@@ -10,11 +10,10 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
-import org.eclipse.xsmp.generator.cpp.AbstractTypeFileGenerator
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Array
 
-class ArrayGenerator extends AbstractTypeFileGenerator<Array> {
+class ArrayGenerator extends AbstractTypeGenerator<Array> {
 
     override protected generateHeaderBody(Array t) {
         '''

@@ -155,9 +155,10 @@ class SimSatComponentGenerator extends ComponentGenerator {
                 ::Smp::IComposite* parent,
                 ::Smp::ISimulator* simulator) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
-            «FOR f : t.member»
-                «t.construct(f, useGenPattern)»
-            «ENDFOR»
+                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
+                «FOR f : t.member»
+                    «t.construct(f, useGenPattern)»
+                «ENDFOR»
             }
             
             /// Virtual destructor that is called by inherited classes as well.

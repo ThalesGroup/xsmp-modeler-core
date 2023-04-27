@@ -122,6 +122,10 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
         }
     }
 
+    override requiresGenPattern(Property element) {
+       !element.isAbstract && element.attachedField === null // a property requires gen pattern if no attached field is provided
+    }
+
     override defineGen(NamedElementWithMembers type, Property element, boolean useGenPattern) {
         if (element.attachedField !== null /*&& !element.static*/ ) {
             val getter = '''
@@ -158,12 +162,6 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
     override collectIncludes(Property element, IncludeAcceptor acceptor) {
         super.collectIncludes(element, acceptor)
         acceptor.include(element.type);
-    }
-
-    override initialize(NamedElementWithMembers container, Property member, boolean useGenPattern) {
-    }
-
-    override finalize(Property element) {
     }
 
     override Publish(Property element) {

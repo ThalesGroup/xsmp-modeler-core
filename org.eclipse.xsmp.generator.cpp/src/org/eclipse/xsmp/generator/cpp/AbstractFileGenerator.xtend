@@ -29,7 +29,6 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     @Inject
     protected extension ExpressionGenerator
 
-
     @Inject
     protected IProtectionGuardProvider guardProvider;
 
@@ -205,5 +204,12 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
                 «include»
             «ENDFOR»
         '''
+    }
+
+    /**
+     * Return true if this file requires the generation gap Pattern
+     */
+    def boolean requiresGenPattern(T type) {
+          false
     }
 }

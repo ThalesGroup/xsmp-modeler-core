@@ -14,7 +14,7 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Interface
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
-class InterfaceGenerator extends MemberGenerator<Interface> {
+class InterfaceGenerator extends AbstractTypeWithMembersGenerator<Interface> {
 
     override protected generateHeaderBody(Interface t) {
         '''

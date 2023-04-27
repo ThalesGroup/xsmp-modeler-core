@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.DoubleUnaryOperator;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.xcatalogue.BinaryOperation;
 import org.eclipse.xsmp.xcatalogue.BooleanLiteral;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
@@ -627,6 +628,10 @@ public class Solver
     if (value == null || value.eIsProxy())
     {
       return null;
+    }
+    if (EcoreUtil.isAncestor(value, e))
+    {
+      throw new SolverException(e, "the value is recursive.");
     }
     if (value instanceof Constant)
     {
