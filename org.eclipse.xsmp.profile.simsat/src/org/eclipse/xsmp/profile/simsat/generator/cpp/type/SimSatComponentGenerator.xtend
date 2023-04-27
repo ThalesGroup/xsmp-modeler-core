@@ -146,7 +146,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
         val base = t.base()
         '''
             // ------ Static fields ------
-            ::esa::ecss::smp::cdk::RequestContainer<«t.name»>::Map «t.name(useGenPattern)»::requestHandlers;
+            ::esa::ecss::smp::cdk::RequestContainer<«t.name(useGenPattern)»>::Map «t.name(useGenPattern)»::requestHandlers;
             
             //--------------------------- Constructor -------------------------
             «t.name(useGenPattern)»::«t.name(useGenPattern)»(
@@ -378,7 +378,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
                 template <typename _Type> static void PopulateRequestHandlers(_Type* bluePrint, typename ::esa::ecss::smp::cdk::RequestContainer<_Type>::Map& handlers);
                 
             private:
-                static ::esa::ecss::smp::cdk::RequestContainer<«t.name»>::Map requestHandlers;
+                static ::esa::ecss::smp::cdk::RequestContainer<«t.name(useGenPattern)»>::Map requestHandlers;
             };
             
             template <typename _Type>
