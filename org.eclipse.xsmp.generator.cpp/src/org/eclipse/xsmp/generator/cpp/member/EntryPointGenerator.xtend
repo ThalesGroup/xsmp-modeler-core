@@ -61,4 +61,8 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
         // receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
     }
 
+    override requiresGenPattern(EntryPoint element) {
+        true
+    }
+    
 }

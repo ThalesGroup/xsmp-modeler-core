@@ -10,11 +10,10 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
-import org.eclipse.xsmp.generator.cpp.AbstractTypeFileGenerator
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Float
 
-class FloatGenerator extends AbstractTypeFileGenerator<Float> {
+class FloatGenerator extends AbstractTypeGenerator<Float> {
 
     override protected generateHeaderBody(Float t) {
         '''

@@ -75,5 +75,7 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
             «element.name» = nullptr;
         '''
     }
-
+    override requiresGenPattern(EventSink element) {
+        true
+    }
 }

@@ -16,13 +16,14 @@ import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
 import org.eclipse.xsmp.xcatalogue.Operation
 
-class ClassGenerator extends MemberGenerator<Class> {
+class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
 
     override protected generateHeaderBody(Class t) {
         '''
             «t.comment()»
             class «t.name» : public «t.genName» 
             {
+                friend class ::«t.fqn(true).toString("::")»;
                 «t.declareMembers(VisibilityKind.PRIVATE)»
             };
         '''
@@ -37,9 +38,11 @@ class ClassGenerator extends MemberGenerator<Class> {
         val constructor = !t.noConstructor && !t.member.filter(Operation).exists[it.constructor && it.parameter.empty]
         val destructor = !t.noDestructor
         '''
+            «IF useGenPattern»class «t.name»;«ENDIF»
             «t.comment»
             class «t.name(useGenPattern)»«t.base()»
             {
+                «IF useGenPattern»friend class ::«t.fqn.toString("::")»;«ENDIF»
             public:
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
                 
@@ -59,7 +62,8 @@ class ClassGenerator extends MemberGenerator<Class> {
         '''
             void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                 «IF !fields.empty»auto* type = «ENDIF»registry->AddClassType(
+                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
+                «IF !fields.empty»auto* type = «ENDIF»registry->AddClassType(
                     "«t.name»"  /// Name
                     ,«t.description()»   /// description
                     ,«t.uuidQfn» /// UUID

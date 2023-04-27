@@ -19,7 +19,7 @@ import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
-abstract class ComponentGenerator extends MemberGenerator<Component> {
+abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Component> {
 
     override protected generateHeaderBody(Component t) {
         '''
@@ -118,7 +118,8 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
     override protected generateHeaderGenBody(Component t, boolean useGenPattern) {
         '''
             «IF useGenPattern»
-                class «t.name(false)»;
+                // forward declaration of user class
+                class «t.name»;
             «ENDIF»
             «t.uuidDeclaration»
             
@@ -126,7 +127,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
             class «t.name(useGenPattern)»«FOR base : t.bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
             
             «IF useGenPattern»
-                friend class «t.fqn(false).toString("::")»;
+                friend class ::«t.fqn(false).toString("::")»;
             «ENDIF»
             
             public:
@@ -213,6 +214,7 @@ abstract class ComponentGenerator extends MemberGenerator<Component> {
                 ::Smp::String8 description,
                 ::Smp::IObject* parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
+                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
                 «FOR f : t.member»
                     «t.construct(f, useGenPattern)»
                 «ENDFOR»

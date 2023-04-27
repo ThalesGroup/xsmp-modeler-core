@@ -23,9 +23,6 @@ class ContainerGenerator extends AbstractMemberGenerator<Container> {
         '''
     }
 
-    override defineGen(NamedElementWithMembers parent, Container element, boolean useGenPattern) {
-    }
-
     override collectIncludes(Container element, IncludeAcceptor acceptor) {
         super.collectIncludes(element, acceptor)
         acceptor.include(element.type)

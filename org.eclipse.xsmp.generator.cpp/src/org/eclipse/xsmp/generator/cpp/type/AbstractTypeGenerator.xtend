@@ -8,16 +8,15 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
-package org.eclipse.xsmp.generator.cpp
+package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.xcatalogue.Type
 
-abstract class AbstractTypeFileGenerator<T extends Type> extends AbstractFileGenerator<T> {
+abstract class AbstractTypeGenerator<T extends Type> extends org.eclipse.xsmp.generator.cpp.AbstractFileGenerator<T> {
 
-    override protected collectIncludes(IncludeAcceptor acceptor) {
+    override protected collectIncludes(org.eclipse.xsmp.generator.cpp.IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
         // all types must include the ITypeRegistry
         acceptor.mdkHeader("Smp/Publication/ITypeRegistry.h")
     }
-
 }

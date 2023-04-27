@@ -24,6 +24,9 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     @Inject
     protected extension ExpressionGenerator
 
+    def boolean requiresGenPattern(T element) {
+        false
+    }
 
     /**
      * Declare a member it its container (INCLUDE)
@@ -71,4 +74,9 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     def CharSequence finalize(T element) {}
 
     def CharSequence Publish(T element) {}
+
+    /**
+     * used to create a static assertion to check that the element is correctly defined
+     */
+    def CharSequence staticAssert(NamedElementWithMembers container, T element) {}
 }

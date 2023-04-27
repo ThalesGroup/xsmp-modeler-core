@@ -34,9 +34,11 @@ class ExceptionGenerator extends ClassGenerator {
         val constructor = !t.noConstructor && !t.member.filter(Operation).exists[it.constructor && it.parameter.empty]
         val destructor = !t.noDestructor
         '''
+            «IF useGenPattern»class «t.name»;«ENDIF»
             «t.comment»
             class «t.name(useGenPattern)»«t.base()»
             {
+                «IF useGenPattern»friend class ::«t.fqn.toString("::")»;«ENDIF»
             public:
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
                 

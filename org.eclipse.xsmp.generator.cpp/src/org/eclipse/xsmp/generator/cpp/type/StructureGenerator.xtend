@@ -16,7 +16,7 @@ import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
-class StructureGenerator extends MemberGenerator<Structure> {
+class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
 
     override protected generateHeaderBody(Structure t) {
         '''

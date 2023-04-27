@@ -24,7 +24,6 @@ import org.eclipse.xtext.EcoreUtil2
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
-
     def String name(Operation o) {
 
         if (o.isConstructor)
@@ -80,34 +79,37 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         return o.name
     }
 
-    def returnType(Operation op) {
-        if (op.isConstructor)
-            null
-        else if (op.returnParameter === null)
+    def returnType(Operation op, NamedElementWithMembers type, boolean useGenPattern) {
+        if (op.returnParameter === null)
             '''void '''
         else
-            '''«op.returnParameter .type()» '''
+            '''«op.returnParameter.type(type, useGenPattern)» '''
     }
 
     override declare(NamedElementWithMembers type, Operation element) {
         var abstract = element.abstract
-        if (!abstract) {
-            var virtual = element.virtual
+        if (!abstract && !element.isConstructor) {
             '''
                 «element.comment»
-                «IF virtual »virtual «ENDIF»«element.returnType»«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(true)»«ENDFOR» ) override «IF abstract»=0«ENDIF»;
+                «element.returnType(type, false)»«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(true, type, false)»«ENDFOR»)«IF element.isVirtual» override«ENDIF»;
             '''
         }
     }
 
     override define(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
 
-        if (!element.abstract)
+        if (element.isConstructor) {
             '''
-                «element.returnType»«type.name»::«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(false)»«ENDFOR» ) 
+                «type.name(useGenPattern)»::«type.name(useGenPattern)» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(false, type, false)»«ENDFOR» ) 
+                {
+                }
+            '''
+        } else if (!element.abstract)
+            '''
+                «element.returnType(type, false)»«type.name»::«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(false, type, false)»«ENDFOR» ) 
                 {
                     «IF element.returnParameter!==null»
-                        «element.returnParameter.type()» ret {};
+                        «element.returnParameter.type(type, false)» ret {};
                         return ret;
                     «ENDIF» 
                 }
@@ -117,12 +119,20 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
     override declareGen(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
 
-        val abstract = element.abstract || useGenPattern
-        val virtual = element.virtual || abstract
-        '''
-            «element.comment»
-            «IF virtual»virtual «ENDIF»«element.returnType»«element.name()»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»)«IF abstract»=0«ENDIF»;
-        '''
+        if (element.isConstructor) {
+            '''
+                «element.comment»
+                «type.name(useGenPattern)»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true, type, useGenPattern)»«ENDFOR»);
+            '''
+        } else {
+            val abstract = (element.abstract || useGenPattern)
+            val virtual = (element.virtual || abstract)
+            if (element.isVirtual || element.isAbstract)
+                '''
+                    «element.comment»
+                    «IF virtual»virtual «ENDIF»«element.returnType(type, useGenPattern)»«element.name()»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true, type, useGenPattern)»«ENDFOR»)«IF abstract»=0«ENDIF»;
+                '''
+        }
     }
 
     override collectIncludes(Operation element, IncludeAcceptor acceptor) {
@@ -142,12 +152,6 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
             else
                 acceptor.forward(element.returnParameter.type)
         }
-    }
-
-    override initialize(NamedElementWithMembers container, Operation member, boolean useGenPattern) {
-    }
-
-    override finalize(Operation element) {
     }
 
     override Publish(Operation element) {
@@ -179,16 +183,16 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         }
     }
 
-    protected def CharSequence type(Parameter t) {
-        '''«IF t.isConst»const «ENDIF»::«t.type.fqn.toString("::")»«t.kind.build»'''
+    protected def CharSequence type(Parameter t, NamedElementWithMembers type, boolean useGenPattern) {
+        var kind = t.kind
+
+        '''«IF t.isConst»const «ENDIF»::«t.type.fqn().toString("::")»«kind.build»'''
 
     }
 
-    protected def CharSequence generateParameter(Parameter t, boolean withDefault) {
-//«t.comment»
-        '''
-            «t.type()» «t.name»«IF t.^default !==null && withDefault» = «t.^default.doGenerateExpression()»«ENDIF» 
-        '''
+    protected def CharSequence generateParameter(Parameter t, boolean withDefault, NamedElementWithMembers type,
+        boolean useGenPattern) {
+        '''«t.type(type, useGenPattern)» «t.name»«IF t.^default !==null && withDefault» = «t.^default.doGenerateExpression()»«ENDIF»'''
     }
 
     /**
@@ -220,4 +224,17 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
             case ParameterDirectionKind.RETURN: '''Smp::Publication::ParameterDirectionKind::PDK_Return'''
         }
     }
+
+    override requiresGenPattern(Operation element) {
+        !element.isAbstract
+    }
+
+    override staticAssert(NamedElementWithMembers container, Operation o) {
+        if (!o.isVirtual && !o.isAbstract && !o.isConstructor &&
+            o.attribute(QualifiedNames.Attributes_Operator) === null)
+            '''
+                static_assert(std::is_same<«o.returnType(container, false)» («container.name»::*)(«FOR p : o.parameter SEPARATOR ','»«p.generateParameter(false, container, false)»«ENDFOR»), decltype(&«container.name»::«o.name()»)>::value,"Class «container.name» must define: «o.visibility.literal»: «o.returnType(container, false)» «o.name()»(«FOR p : o.parameter SEPARATOR ','»«p.generateParameter(true, container, false).toString.replace("\"","\\\"")»«ENDFOR»);");
+            '''
+    }
+
 }
