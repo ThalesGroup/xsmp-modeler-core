@@ -16,20 +16,20 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkStringGenerator extends StringGenerator {
 
-    override protected generateHeaderGenBody(String t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(String it, boolean useGenPattern) {
         '''
-            «t.comment»
-            using «t.name(useGenPattern)» = ::Xsmp::String<«t.length.doGenerateExpression()»>;
+            «comment»
+            using «name(useGenPattern)» = ::Xsmp::String<«length.doGenerateExpression()»>;
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override collectIncludes(String type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(String it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        acceptor.mdkHeader("Xsmp/String.h")
+        acceptor.userHeader("Xsmp/String.h")
     }
 }

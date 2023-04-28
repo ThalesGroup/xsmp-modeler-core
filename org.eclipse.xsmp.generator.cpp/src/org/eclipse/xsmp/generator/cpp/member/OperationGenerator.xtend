@@ -11,8 +11,6 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.util.QualifiedNames
-import org.eclipse.xsmp.util.XsmpUtil.ArgKind
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
@@ -20,179 +18,203 @@ import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind
 import org.eclipse.xsmp.xcatalogue.ReferenceType
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.Type
-import org.eclipse.xtext.EcoreUtil2
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 
     def String name(Operation o) {
 
-        if (o.isConstructor)
-            return EcoreUtil2.getContainerOfType(o, NamedElementWithMembers).name
-
-        var operator = o.attribute(QualifiedNames.Attributes_Operator)
-        if (operator !== null) {
-            val value = operator.value.getEnumerationLiteral()
-
-            if (value !== null) {
-                switch (value.name) {
-                    case "Positive",
-                    case "Sum":
-                        return "operator+"
-                    case "Add":
-                        return "operator+="
-                    case "Negative",
-                    case "Difference":
-                        return "operator-"
-                    case "Subtract":
-                        return "operator-="
-                    case "Assign":
-                        return "operator="
-                    case "Product":
-                        return "operator*"
-                    case "Multiply":
-                        return "operator*="
-                    case "Quotient":
-                        return "operator/"
-                    case "Divide":
-                        return "operator/="
-                    case "Remainder":
-                        return "operator%="
-                    case "Greater":
-                        return "operator>"
-                    case "Less":
-                        return "operator<"
-                    case "Equal":
-                        return "operator=="
-                    case "NotGreater":
-                        return "operator<="
-                    case "NotLess":
-                        return "operator>="
-                    case "NotEqual":
-                        return "operator!="
-                    case "Indexer":
-                        return "operator[]"
-                    case "Module":
-                        return "operator%"
-                }
+        switch (o.operatorKind) {
+            case NONE: {
+                o.name
+            }
+            case ADD: {
+                "operator+="
+            }
+            case ASSIGN: {
+                "operator="
+            }
+            case DIFFERENCE,
+            case NEGATIVE: {
+                "operator-"
+            }
+            case DIVIDE: {
+                "operator/="
+            }
+            case EQUAL: {
+                "operator=="
+            }
+            case GREATER: {
+                "operator>"
+            }
+            case INDEXER: {
+                "operator[]"
+            }
+            case LESS: {
+                "operator<"
+            }
+            case MODULE: {
+                "operator%"
+            }
+            case MULTIPLY: {
+                "operator*="
+            }
+            case NOT_EQUAL: {
+                "operator!="
+            }
+            case NOT_GREATER: {
+                "operator<="
+            }
+            case NOT_LESS: {
+                "operator>="
+            }
+            case POSITIVE,
+            case SUM: {
+                "operator+"
+            }
+            case PRODUCT: {
+                "operator*"
+            }
+            case QUOTIENT: {
+                "operator/"
+            }
+            case REMAINDER: {
+                "operator%="
+            }
+            case SUBTRACT: {
+                "operator-="
             }
         }
-        return o.name
     }
 
-    def returnType(Operation op, NamedElementWithMembers type, boolean useGenPattern) {
-        if (op.returnParameter === null)
+    def returnType(Operation it) {
+        if (returnParameter === null)
             '''void '''
         else
-            '''«op.returnParameter.type(type, useGenPattern)» '''
+            '''«returnParameter.type()» '''
     }
 
-    override declare(NamedElementWithMembers type, Operation element) {
-        var abstract = element.abstract
-        if (!abstract && !element.isConstructor) {
+    override declare(NamedElementWithMembers parent, Operation it) {
+        if (isVirtual && !isAbstract) // override virtual methods
             '''
-                «element.comment»
-                «element.returnType(type, false)»«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(true, type, false)»«ENDFOR»)«IF element.isVirtual» override«ENDIF»;
+                «comment»
+                «returnType()»«name()» («FOR p : parameter SEPARATOR '\n, '»«p.generateParameter(true)»«ENDFOR»)«IF isConst» const«ENDIF» override;
             '''
-        }
+
     }
 
-    override define(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
+    override define(NamedElementWithMembers parent, Operation it, boolean useGenPattern) {
 
-        if (element.isConstructor) {
+        if (isConstructor) // constructor declared in gen folder
+        // TODO call base class constructor if any ?
             '''
-                «type.name(useGenPattern)»::«type.name(useGenPattern)» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(false, type, false)»«ENDFOR» ) 
+                «parent.name(useGenPattern)»::«parent.name(useGenPattern)» («FOR p : parameter SEPARATOR '\n, '»«p.generateParameter(false)»«ENDFOR»)
                 {
                 }
             '''
-        } else if (!element.abstract)
+        else if (isStatic || !isVirtual) // static or not virtual method declared in gen folder
             '''
-                «element.returnType(type, false)»«type.name»::«element.name()» («FOR p : element.parameter SEPARATOR '\n, '»«p.generateParameter(false, type, false)»«ENDFOR» ) 
+                «returnType()»«parent.name(useGenPattern)»::«name()» («FOR p : parameter SEPARATOR '\n, '»«p.generateParameter(false)»«ENDFOR»)«IF isConst» const«ENDIF»
                 {
-                    «IF element.returnParameter!==null»
-                        «element.returnParameter.type(type, false)» ret {};
-                        return ret;
+                    «IF returnParameter!==null»
+                        «IF returnParameter.type === parent»
+                            return «IF !returnParameter.isByPointer»*«ENDIF»this;
+                        «ELSE»
+                            «returnType()» ret {};
+                            return ret;
+                        «ENDIF» 
+                    «ENDIF» 
+                }
+            '''
+        else if (!isAbstract) // override virtual method
+            '''
+                «returnType()» «parent.name»::«name()» («FOR p : parameter SEPARATOR '\n, '»«p.generateParameter(false)»«ENDFOR»)«IF isConst» const«ENDIF»
+                {
+                    «IF returnParameter!==null»
+                        «IF returnParameter.type === parent»
+                            return «IF !returnParameter.isByPointer»*«ENDIF»this;
+                        «ELSE»
+                            «returnType()» ret {};
+                            return ret;
+                        «ENDIF» 
                     «ENDIF» 
                 }
             '''
 
     }
 
-    override declareGen(NamedElementWithMembers type, Operation element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Operation it, boolean useGenPattern) {
 
-        if (element.isConstructor) {
+        if (isConstructor) // a constructor
             '''
-                «element.comment»
-                «type.name(useGenPattern)»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true, type, useGenPattern)»«ENDFOR»);
+                «comment»
+                «parent.name(useGenPattern)»(«FOR p : parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»);
             '''
-        } else {
-            val abstract = (element.abstract || useGenPattern)
-            val virtual = (element.virtual || abstract)
-            if (element.isVirtual || element.isAbstract)
-                '''
-                    «element.comment»
-                    «IF virtual»virtual «ENDIF»«element.returnType(type, useGenPattern)»«element.name()»(«FOR p : element.parameter SEPARATOR ','»«p.generateParameter(true, type, useGenPattern)»«ENDFOR»)«IF abstract»=0«ENDIF»;
-                '''
-        }
+        else if (isStatic) // a static method
+            '''
+                «comment»
+                static «returnType()» «name()»(«FOR p : parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»);
+            '''
+        else if (isVirtual) // a virtual method
+            '''
+                «comment»
+                virtual «returnType()» «name()»(«FOR p : parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»)«IF isConst» const«ENDIF»«IF isAbstract || useGenPattern»=0«ENDIF»;
+            '''
+        else
+            '''
+                «comment»
+                «returnType()» «name()»(«FOR p : parameter SEPARATOR ','»«p.generateParameter(true)»«ENDFOR»)«IF isConst» const«ENDIF»;
+            '''
+
     }
 
-    override collectIncludes(Operation element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
+    override collectIncludes(Operation it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
         // if a parameter is passed by value, add it to includes
         // In case of pointer or reference, use a forward declaration
-        for (m : element.parameter) {
-            if (m.kind === ArgKind.BY_VALUE || !m.type.isForwardable)
+        for (m : parameter) {
+            if ( /*!m.isByPointer&& !m.isByReference &&*/ !m.type.isForwardable)
                 acceptor.include(m.type)
             else
                 acceptor.forward(m.type)
             m.^default?.include(acceptor)
         }
-        if (element.returnParameter !== null) {
-            if (element.returnParameter.kind === ArgKind.BY_VALUE || !element.returnParameter.type.isForwardable)
-                acceptor.include(element.returnParameter.type)
+        if (returnParameter !== null) {
+            if (!returnParameter.type.isForwardable)
+                acceptor.include(returnParameter.type)
             else
-                acceptor.forward(element.returnParameter.type)
+                acceptor.forward(returnParameter.type)
         }
     }
 
-    override Publish(Operation element) {
-        if (element.isInvokable) {
-            val r = element.returnParameter
+    override Publish(Operation it) {
+        if (isInvokable) {
+            val r = returnParameter
             '''
                 {
-                    // Publish operation «element.name»
-                    «IF !element.parameter.empty || r !== null »
+                    // Publish operation «name»
+                    «IF !parameter.empty || r !== null »
                         ::Smp::Publication::IPublishOperation* operation = 
                     «ENDIF»
-                    receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
-                    «FOR p : element.parameter»
-                        operation->PublishParameter("«p.name»", «p.description()», «p.type.uuidQfn», «p.direction.generatePDK»);
+                    receiver->PublishOperation("«name»", «description()», «viewKind»);
+                    «FOR p : parameter»
+                        operation->PublishParameter("«p.name»", «p.description()», «p.type.uuid()», «p.direction.generatePDK»);
                     «ENDFOR»
                     «IF r !== null »
-                        operation->PublishParameter("«r.name»", «r.description()», «r.type.uuidQfn», «r.direction.generatePDK»);
+                        operation->PublishParameter("«r.name»", «r.description()», «r.type.uuid()», «r.direction.generatePDK»);
                     «ENDIF»
                 }
             '''
         }
     }
 
-    protected def CharSequence build(ArgKind kind) {
-        switch (kind) {
-            case BY_VALUE: ''' '''
-            case BY_PTR: '''*'''
-            case BY_REF: '''&'''
-        }
-    }
+    protected def CharSequence type(Parameter it) {
 
-    protected def CharSequence type(Parameter t, NamedElementWithMembers type, boolean useGenPattern) {
-        var kind = t.kind
-
-        '''«IF t.isConst»const «ENDIF»::«t.type.fqn().toString("::")»«kind.build»'''
+        '''«IF isConst»const «ENDIF»«type.id» «IF isByPointer»*«ENDIF»«IF isByReference»&«ENDIF»'''
 
     }
 
-    protected def CharSequence generateParameter(Parameter t, boolean withDefault, NamedElementWithMembers type,
-        boolean useGenPattern) {
-        '''«t.type(type, useGenPattern)» «t.name»«IF t.^default !==null && withDefault» = «t.^default.doGenerateExpression()»«ENDIF»'''
+    protected def CharSequence generateParameter(Parameter it, boolean withDefault) {
+        '''«type()»«name»«IF ^default !==null && withDefault» = «^default.doGenerateExpression()»«ENDIF»'''
     }
 
     /**
@@ -225,16 +247,6 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
         }
     }
 
-    override requiresGenPattern(Operation element) {
-        !element.isAbstract
-    }
 
-    override staticAssert(NamedElementWithMembers container, Operation o) {
-        if (!o.isVirtual && !o.isAbstract && !o.isConstructor &&
-            o.attribute(QualifiedNames.Attributes_Operator) === null)
-            '''
-                static_assert(std::is_same<«o.returnType(container, false)» («container.name»::*)(«FOR p : o.parameter SEPARATOR ','»«p.generateParameter(false, container, false)»«ENDFOR»), decltype(&«container.name»::«o.name()»)>::value,"Class «container.name» must define: «o.visibility.literal»: «o.returnType(container, false)» «o.name()»(«FOR p : o.parameter SEPARATOR ','»«p.generateParameter(true, container, false).toString.replace("\"","\\\"")»«ENDFOR»);");
-            '''
-    }
 
 }

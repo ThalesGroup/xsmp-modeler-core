@@ -18,64 +18,55 @@ import org.eclipse.xsmp.xcatalogue.SimpleType
 
 class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
 
-    protected def getEventArgType(EventSink element) {
-        val eventType = element.type as EventType
-        return eventType.eventArgs as SimpleType
+    protected def eventType(EventSink it) {
+        return (type as EventType).eventArgs as SimpleType
+    }
+    
+    protected def eventArgs(EventSink it) {
+        val argType = eventType
+        '''::Smp::IObject* sender«IF argType !== null», «argType.id» value«ENDIF»'''
     }
 
-    protected def args(EventSink element) {
-        val argType = element.eventArgType
-        '''::Smp::IObject* sender«IF argType !== null», ::«argType.fqn.toString("::")» value«ENDIF»'''
-    }
-
-    override declare(NamedElementWithMembers type, EventSink element) {
+    override declare(NamedElementWithMembers parent, EventSink it) {
         '''
-            virtual void _«element.name»(«element.args») override;
+            virtual void _«name»(«eventArgs») override;
         '''
     }
 
-    override define(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
+    override define(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
         '''
-            void «parent.name»::_«element.name»(«element.args») {
+            void «parent.name»::_«name»(«eventArgs») {
+                // TODO implement EventSink «name»
+                «comment»
             }
         '''
     }
 
-    override declareGen(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
         '''
-            «element.comment()»
-            ::Smp::IEventSink* «element.name»;
-            virtual void _«element.name»(«element.args»)«IF useGenPattern» = 0«ENDIF»;
+            «comment()»
+            ::Smp::IEventSink* «name»;
+            virtual void _«name»(«eventArgs»)«IF useGenPattern» = 0«ENDIF»;
         '''
     }
 
-    override defineGen(NamedElementWithMembers parent, EventSink element, boolean useGenPattern) {
-        if (!useGenPattern)
-            '''
-                void «parent.name(useGenPattern)»::_«element.name»(«element.args») {
-                }
-            '''
-    }
 
-    override collectIncludes(EventSink element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
-        val eventArg = element.eventArgType
+    override collectIncludes(EventSink it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        val eventArg = eventType
         if (eventArg !== null) {
             acceptor.include(eventArg)
         }
     }
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Smp/IEventSink.h")
+        acceptor.userHeader("Smp/IEventSink.h")
     }
 
-    override finalize(EventSink element) {
+    override finalize(EventSink it) {
         '''  
-            delete «element.name»;
-            «element.name» = nullptr;
+            delete «name»;
+            «name» = nullptr;
         '''
-    }
-    override requiresGenPattern(EventSink element) {
-        true
     }
 }

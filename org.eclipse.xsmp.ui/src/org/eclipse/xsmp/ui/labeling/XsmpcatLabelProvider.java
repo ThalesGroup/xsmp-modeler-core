@@ -252,16 +252,13 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
       label.append(qualifiedNameProvider.getFullyQualifiedName(p.getType()).toString("::"));
     }
 
-    switch (xsmpUtil.kind(p))
+    if (xsmpUtil.isByPointer(p))
     {
-      case BY_PTR:
-        label.append("*");
-        break;
-      case BY_REF:
-        label.append("&");
-        break;
-      default:
-        break;
+      label.append("*");
+    }
+    else if (xsmpUtil.isByReference(p))
+    {
+      label.append("&");
     }
 
     return label.toString();

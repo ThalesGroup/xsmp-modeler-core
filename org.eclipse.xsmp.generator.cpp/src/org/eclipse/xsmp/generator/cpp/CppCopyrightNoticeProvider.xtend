@@ -4,7 +4,6 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.xsmp.XsmpVersion
 import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
-import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.NamedElement
 
@@ -15,13 +14,13 @@ import org.eclipse.xsmp.xcatalogue.NamedElement
 class CppCopyrightNoticeProvider {
 
     @Inject
-    protected extension GeneratorExtension
+    protected extension GeneratorUtil
 
     @Inject
     CopyrightNoticeProvider provider
 
     protected def date(Catalogue cat) {
-        XsmpUtil.year(cat)
+        cat.year()
     }
 
     protected def copyright(Catalogue cat) {

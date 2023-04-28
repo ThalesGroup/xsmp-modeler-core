@@ -15,48 +15,49 @@ import org.eclipse.xsmp.xcatalogue.String
 
 class StringGenerator extends AbstractTypeGenerator<String> {
 
-    override protected generateHeaderBody(String t) {
+    override protected generateHeaderBody(String it) {
         '''
-            «t.comment()»
-            using «t.name» = «t.genName»;
+            «comment()»
+            using «name» = «nameGen»;
         '''
     }
 
-    override protected generateHeaderGenBody(String t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(String it, boolean useGenPattern) {
         '''
-            «t.comment»
-            struct «t.name(useGenPattern)» 
+            «comment»
+            struct «name(useGenPattern)» 
             { 
-                ::Smp::Char8 internalString[«t.length.doGenerateExpression()» + 1];
+                ::Smp::Char8 internalString[«length.doGenerateExpression()» + 1];
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override protected generateSourceGenBody(String t, boolean useGenPattern) {
+    override protected generateSourceGenBody(String it, boolean useGenPattern) {
         '''
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry) {
                     registry->AddStringType(
-                        "«t.name»",  //Name
-                        «t.description()»,   //description
-                        «t.uuidQfn»,  //UUID
-                        «t.length.doGenerateExpression()»);  //length of the String
+                        "«name»", //Name
+                        «description()», // Description
+                        «uuid()», // UUID
+                        «length.doGenerateExpression()» // Length of the String
+                        );
                 }
-                «t.uuidDefinition»
+                «uuidDefinition»
         '''
     }
 
-    override collectIncludes(String type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
-        type.length?.include(acceptor)
+    override collectIncludes(String it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        length?.include(acceptor)
     }
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkHeader("Smp/PrimitiveTypes.h")
+        acceptor.userHeader("Smp/PrimitiveTypes.h")
     }
 
 }

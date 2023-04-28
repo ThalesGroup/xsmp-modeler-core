@@ -18,22 +18,22 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 class XsmpSdkEventSourceGenerator extends EventSourceGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Xsmp/EventSource.h")
+        acceptor.userHeader("Xsmp/EventSource.h")
     }
 
-    override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
-        val arg = element.eventArgType
+    override declareGen(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
+        val arg = eventType
         '''
-            «element.comment»
-            ::Xsmp::EventSource<«IF arg !== null»::«arg.fqn.toString("::")»«ENDIF»> *«element.name»;
+            «comment»
+            ::Xsmp::EventSource<«IF arg !== null»«arg.id»«ENDIF»> *«name»;
         '''
     }
 
-    override initialize(NamedElementWithMembers container, EventSource element, boolean useGenPattern) {
-        val arg = element.eventArgType
+    override initialize(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
+        val arg = eventType
         '''
-            // Event Source: «element.name»
-            «element.name»{new ::Xsmp::EventSource<«IF arg !== null»::«arg.fqn.toString("::")»«ENDIF»>( "«element.name»",  «element.description()», this«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF»)}
+            // Event Source: «name»
+            «name» { new ::Xsmp::EventSource<«IF arg !== null»«arg.id»«ENDIF»>( "«name»", «description()», this«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF») }
         '''
     }
 }

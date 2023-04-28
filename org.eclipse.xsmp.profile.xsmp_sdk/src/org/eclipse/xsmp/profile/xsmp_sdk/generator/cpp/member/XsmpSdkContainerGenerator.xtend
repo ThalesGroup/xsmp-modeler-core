@@ -18,21 +18,21 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 class XsmpSdkContainerGenerator extends ContainerGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Xsmp/Container.h")
+        acceptor.userHeader("Xsmp/Container.h")
     }
 
-    override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::Xsmp::Container<::«element.type.fqn.toString("::")»>* «element.name»;
+            «comment»
+            ::Xsmp::Container<«type.id»> *«name»;
         '''
     }
 
-    override initialize(NamedElementWithMembers container, Container element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
 
         '''
-            // Container: «element.name»
-            «element.name» { new ::Xsmp::Container<::«element.type.fqn.toString("::")»>("«element.name»", «element.description()», this, «element.generateLower», «element.generateUpper») }
+            // Container: «name»
+            «name» { new ::Xsmp::Container<«type.id»>("«name»", «description()», this, «lower()», «upper()») }
         '''
     }
 

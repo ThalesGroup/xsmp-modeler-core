@@ -13,147 +13,157 @@ package org.eclipse.xsmp.generator.cpp.member
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Property
-import org.eclipse.xsmp.xcatalogue.Interface
 
 class PropertyGenerator extends AbstractMemberGenerator<Property> {
 
-    override declare(NamedElementWithMembers type, Property element) {
-        if (!(type instanceof Interface)) {
-            var static = element.static
-            if (element.attachedField === null && !static) {
-
-                var const = element.const
-
-                val getter = '''
-                    «IF const»const «ENDIF»::«element.type.fqn.toString("::")» get_«element.name»() override;
-                '''
-
-                val setter = '''
-                    «IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» «element.name») override;
-                '''
-
-                switch (element.access) {
-                    case READ_ONLY: {
-                        return getter
-                    }
-                    case READ_WRITE: {
-                        '''
-                            «getter»
-                            «setter»
-                        '''
-                    }
-                    case WRITE_ONLY: {
-                        return setter
-                    }
-                }
-            }
-        }
+    protected def type(Property it) {
+        '''«type.id» «IF isByPointer»*«ENDIF»«IF isByReference»&«ENDIF»'''
     }
 
-    override define(NamedElementWithMembers type, Property element, boolean useGenPattern) {
-        val gen = element.static && useGenPattern
-        if (element.attachedField === null && !(type instanceof Interface)) {
-            val getter = '''
-                ::«element.type.fqn.toString("::")» «type.name(gen)»::get_«element.name»()
-                {
-                    ::«element.type.fqn.toString("::")» ret {};
-                    return ret;
-                   
-                }
-            '''
+    protected def declareGetter(NamedElementWithMembers parent, Property it) {
+        '''
+            «type()»get_«name»()«IF isConstGetter» const«ENDIF» override;
+        '''
+    }
 
-            val setter = '''
-                void «type.name(gen)»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
-                {
-                     // TODO
-                }
-            '''
+    protected def declareSetter(NamedElementWithMembers parent, Property it) {
+        '''
+            void set_«name»(«type()»«name»)«IF isConst» const«ENDIF» override;
+        '''
+    }
 
-            switch (element.access) {
+    override declare(NamedElementWithMembers parent, Property it) {
+        if (attachedField === null && isVirtual && !isAbstract) {
+
+            switch (access) {
                 case READ_ONLY: {
-                    return getter
+                    declareGetter(parent, it)
                 }
                 case READ_WRITE: {
                     '''
-                        «getter»
-                        «setter»
+                        «declareGetter(parent, it)»
+                        «declareSetter(parent, it)»
                     '''
                 }
                 case WRITE_ONLY: {
-                    return setter
+                    declareSetter(parent, it)
+                }
+            }
+
+        }
+    }
+
+    protected def defineGetter(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        '''
+            «type()»«parent.name(useGenPattern)»::get_«name»()«IF isConstGetter» const«ENDIF»
+            {
+                «type()»ret {};
+                return ret;
+               
+            }
+        '''
+    }
+
+    protected def defineSetter(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        '''
+            void «parent.name(useGenPattern)»::set_«name»(«type()»«name»)«IF isConst» const«ENDIF»
+            {
+                 // TODO
+            }
+        '''
+    }
+
+    override define(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+
+        if (attachedField === null && !isAbstract) {
+            val gen = useGenPattern && !isVirtual
+
+            switch (access) {
+                case READ_ONLY: {
+                    defineGetter(parent, it, gen)
+                }
+                case READ_WRITE: {
+                    '''
+                        «defineGetter(parent, it, gen)»
+                        «defineSetter(parent, it, gen)»
+                    '''
+                }
+                case WRITE_ONLY: {
+                    defineSetter(parent, it, gen)
                 }
             }
         }
     }
 
-    override declareGen(NamedElementWithMembers type, Property element, boolean useGenPattern) {
-        var static = element.static
-        var const = element.const
-        var abstract = !static && (element.attachedField === null)
-        var virtual = !static && (element.virtual || abstract)
-
-        val getter = '''
-            /// Get «element.name».
-            «element.comment»
-            /// @return Current value of property «element.name».
-            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»::«element.type.fqn.toString("::")» get_«element.name»() «IF abstract»=0«ENDIF»;
+    protected def declareGetterGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
         '''
-
-        val setter = '''
-            /// Set «element.name».
-            «element.comment»
-            /// @param value New value of property «element.name» to set.
-            «IF virtual»virtual «ENDIF»«IF static»static «ENDIF»«IF const»const «ENDIF»void set_«element.name»(::«element.type.fqn.toString("::")» value) «IF abstract»=0«ENDIF»;
+            /// Get «name».
+            «comment»
+            /// @return Current value of property «name».
+            «IF isVirtual»virtual «ENDIF»«IF isStatic»static «ENDIF»«type()»get_«name»()«IF isConstGetter» const«ENDIF»«IF isAbstract || (isVirtual && useGenPattern && attachedField === null)»=0«ENDIF»;
         '''
+    }
 
-        switch (element.access) {
+    protected def declareSetterGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        '''
+            /// Set «name».
+            «comment»
+            /// @param value New value of property «name» to set.
+            «IF isVirtual»virtual «ENDIF»«IF isStatic»static «ENDIF»void set_«name»(«type()»value)«IF isConst» const«ENDIF»«IF isAbstract || (isVirtual && useGenPattern && attachedField === null)»=0«ENDIF»;
+        '''
+    }
+
+    override declareGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+
+        switch (access) {
             case READ_ONLY: {
-                return getter
+                declareGetterGen(parent, it, useGenPattern)
             }
             case READ_WRITE: {
                 '''
-                    «getter»
-                    «setter»
+                    «declareGetterGen(parent, it, useGenPattern)»
+                    «declareSetterGen(parent, it, useGenPattern)»
                 '''
             }
             case WRITE_ONLY: {
-                return setter
+                declareSetterGen(parent, it, useGenPattern)
             }
         }
     }
 
-    override requiresGenPattern(Property element) {
-       !element.isAbstract && element.attachedField === null // a property requires gen pattern if no attached field is provided
+    protected def defineGetterGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        '''
+            «type()»«parent.name(useGenPattern)»::get_«name»()«IF isConstGetter» const«ENDIF»
+            {
+                return «attachedField.name»;
+            }
+        '''
     }
 
-    override defineGen(NamedElementWithMembers type, Property element, boolean useGenPattern) {
-        if (element.attachedField !== null /*&& !element.static*/ ) {
-            val getter = '''
-                ::«element.type.fqn.toString("::")» «type.name(useGenPattern)»::get_«element.name»()
-                {
-                    return «element.attachedField.name»;
-                }
-            '''
+    protected def defineSetterGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        '''
+            void «parent.name(useGenPattern)»::set_«name»(«type()»«name»)«IF isConst» const«ENDIF»
+            {
+                «attachedField.name» = «name»;
+            }
+        '''
+    }
 
-            val setter = '''
-                void «type.name(useGenPattern)»::set_«element.name»(::«element.type.fqn.toString("::")» «element.name»)
-                {
-                    «element.attachedField.name» = «element.name»;
-                }
-            '''
+    override defineGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
+        if (attachedField !== null) {
 
-            switch (element.access) {
+            switch (access) {
                 case READ_ONLY: {
-                    return getter
+                    defineGetterGen(parent, it, useGenPattern)
                 }
                 case READ_WRITE: {
                     '''
-                        «getter»
-                        «setter»
+                        «defineGetterGen(parent, it, useGenPattern)»
+                        «defineSetterGen(parent, it, useGenPattern)»
                     '''
                 }
                 case WRITE_ONLY: {
-                    return setter
+                    defineSetterGen(parent, it, useGenPattern)
                 }
             }
         }
@@ -164,15 +174,15 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
         acceptor.include(element.type);
     }
 
-    override Publish(Property element) {
+    override Publish(Property it) {
         '''
-            // Publish Property «element.name»
-            receiver->PublishProperty("«element.name»", «element.description()», «element.type.uuidQfn», «element.accessKind», «element.viewKind»);
+            // Publish Property «name»
+            receiver->PublishProperty("«name»", «description()», «type.uuid()», «accessKind», «viewKind»);
         '''
     }
 
-    protected def CharSequence accessKind(Property p) {
-        switch (p.access) {
+    protected def CharSequence accessKind(Property it) {
+        switch (access) {
             case READ_ONLY: '''::Smp::AccessKind::AK_ReadOnly'''
             case READ_WRITE: '''::Smp::AccessKind::AK_ReadWrite'''
             case WRITE_ONLY: '''::Smp::AccessKind::AK_WriteOnly'''

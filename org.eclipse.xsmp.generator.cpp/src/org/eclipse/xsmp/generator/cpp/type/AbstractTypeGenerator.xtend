@@ -17,6 +17,6 @@ abstract class AbstractTypeGenerator<T extends Type> extends org.eclipse.xsmp.ge
     override protected collectIncludes(org.eclipse.xsmp.generator.cpp.IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
         // all types must include the ITypeRegistry
-        acceptor.mdkHeader("Smp/Publication/ITypeRegistry.h")
+        acceptor.userHeader("Smp/Publication/ITypeRegistry.h")
     }
 }

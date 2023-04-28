@@ -13,7 +13,7 @@ package org.eclipse.xsmp.profile.simsat;
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
-import org.eclipse.xsmp.generator.cpp.GeneratorExtension;
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil;
 import org.eclipse.xsmp.generator.cpp.member.ConstantGenerator;
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EntryPointGenerator;
@@ -124,7 +124,7 @@ public class SimSatRuntimeModule extends XsmpcatExtensionRuntimeModule
     return SimSatConstantGenerator.class;
   }
 
-  public Class< ? extends GeneratorExtension> bindGeneratorExtension()
+  public Class< ? extends GeneratorUtil> bindGeneratorExtension()
   {
     return SimSatGeneratorExtension.class;
   }

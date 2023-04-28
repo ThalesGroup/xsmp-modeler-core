@@ -17,10 +17,8 @@ import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
@@ -39,24 +37,22 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
 {
 
   @Inject
-  XsmpUtil xsmpUtil;
+  protected XsmpUtil xsmpUtil;
 
   private final Map<EReference, Function<EObject, Predicate<IEObjectDescription>>> builders = ImmutableMap
           .<EReference, Function<EObject, Predicate<IEObjectDescription>>> builder()
           // add the entries
           .put(XcataloguePackage.Literals.CLASS__BASE,
                   model -> p -> isValidTypeReference(model, XcataloguePackage.Literals.CLASS__BASE,
-                          p)
-                          && !XsmpUtil.isRecursive((org.eclipse.xsmp.xcatalogue.Class) model,
-                                  p.getEObjectOrProxy()))
+                          p) && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE,
-                  model -> p -> floatingPointPrimitiveSet.contains(XsmpUtil.getPrimitiveType(p)))
+                  model -> p -> floatingPointPrimitiveSet.contains(xsmpUtil.getPrimitiveType(p)))
           .put(XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE,
-                  model -> p -> integerPrimitiveSet.contains(XsmpUtil.getPrimitiveType(p)))
+                  model -> p -> integerPrimitiveSet.contains(xsmpUtil.getPrimitiveType(p)))
           .put(XcataloguePackage.Literals.INTERFACE__BASE,
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.INTERFACE__BASE, p)
-                          && !XsmpUtil.isRecursive((Interface) model, p.getEObjectOrProxy()))
+                          && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS,
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS, p))
@@ -73,7 +69,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.VALUE_REFERENCE__TYPE, p))
           .put(XcataloguePackage.Literals.FIELD__TYPE,
-                  model -> p -> PrimitiveTypeKind.STRING8 != XsmpUtil.getPrimitiveType(p)
+                  model -> p -> PrimitiveTypeKind.STRING8 != xsmpUtil.getPrimitiveType(p)
                           && isValidTypeReference(model, XcataloguePackage.Literals.FIELD__TYPE, p))
           .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT,
                   model -> p -> isValidTypeReference(model,
@@ -127,7 +123,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
           .put(XcataloguePackage.Literals.COMPONENT__BASE,
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.COMPONENT__BASE, p)
-                          && !XsmpUtil.isRecursive((Component) model, p.getEObjectOrProxy()))
+                          && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
             final var elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
 
@@ -146,7 +142,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                 return false;
               }
 
-              return Arrays.stream(getUsages(p)).anyMatch(elemUsages::contains);
+              return getUsages(p).anyMatch(elemUsages::contains);
             }
             return false;
           })
@@ -171,7 +167,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   @Inject
   private TypeReferenceConverter typeReferenceConverter;
 
-  String[] getUsages(IEObjectDescription d)
+  protected Stream<String> getUsages(IEObjectDescription d)
   {
     final var obj = d.getEObjectOrProxy();
 
@@ -179,21 +175,20 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
     {
       if (obj.eIsProxy())
       {
-        return d.getUserData("usage").split(" ");
+        return Arrays.stream(d.getUserData("usage").split(" "));
       }
-      return ((AttributeType) obj).getUsage()
-              .toArray(new String[((AttributeType) obj).getUsage().size()]);
+      return ((AttributeType) obj).getUsage().stream();
     }
-    return new String[0];
+    return Stream.of();
 
   }
 
-  boolean isValidDesignatedField(IEObjectDescription d)
+  protected boolean isValidDesignatedField(IEObjectDescription d)
   {
-    return XsmpUtil.getVisibility(d) == VisibilityKind.PUBLIC && !xsmpUtil.isStatic(d);
+    return xsmpUtil.getVisibility(d) == VisibilityKind.PUBLIC && !xsmpUtil.isStatic(d);
   }
 
-  boolean allowMuliple(IEObjectDescription d)
+  protected boolean allowMuliple(IEObjectDescription d)
   {
     final var obj = d.getEObjectOrProxy();
 
@@ -208,10 +203,11 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
     return false;
   }
 
-  private boolean isValidTypeReference(EObject eObject, EReference reference, IEObjectDescription p)
+  protected boolean isValidTypeReference(EObject eObject, EReference reference,
+          IEObjectDescription p)
   {
     if (!typeReferenceConverter.convert(reference).isInstance(p.getEObjectOrProxy())
-            || !XsmpUtil.isVisibleFrom(p, eObject))
+            || !xsmpUtil.isVisibleFrom(p, eObject))
     {
       return false;
     }

@@ -15,36 +15,33 @@ import org.eclipse.xsmp.xcatalogue.NativeType
 
 class NativeTypeGenerator extends AbstractTypeGenerator<NativeType> {
 
-    override protected generateHeaderBody(NativeType t) {
+    override protected generateHeaderBody(NativeType it) {
         '''
-            «t.comment()»
-            using «t.name» = «t.genName»;
-        '''
-    }
-
-    override protected generateHeaderGenBody(NativeType type, boolean useGenPattern) {
-
-       // val platform = type.platform.findFirst["cpp" == it.name]
-       // if (platform !== null && platform.type !== null) {
-            '''
-                «type.comment»
-                 using «type.name(useGenPattern)» = ::«IF type.namespace !== null && !type.namespace.empty»«type.namespace»::«ENDIF»«type.type»;
-                 «type.uuidDeclaration»
-            '''
-       // }
-
-    }
-
-    override protected generateSourceGenBody(NativeType type, boolean useGenPattern) {
-        '''
-            «type.uuidDefinition»
+            «comment()»
+            using «name» = «nameGen»;
         '''
     }
 
-    override collectIncludes(NativeType type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
-        if (type.location !== null) {
-            acceptor.systemHeader(type.location)
+    override protected generateHeaderGenBody(NativeType it, boolean useGenPattern) {
+
+        '''
+            «comment»
+             using «name(useGenPattern)» = ::«IF namespace !== null && !namespace.empty»«namespace»::«ENDIF»«type»;
+             «uuidDeclaration»
+        '''
+
+    }
+
+    override protected generateSourceGenBody(NativeType it, boolean useGenPattern) {
+        '''
+            «uuidDefinition»
+        '''
+    }
+
+    override collectIncludes(NativeType it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        if (location !== null) {
+            acceptor.systemHeader(location)
         }
     }
 

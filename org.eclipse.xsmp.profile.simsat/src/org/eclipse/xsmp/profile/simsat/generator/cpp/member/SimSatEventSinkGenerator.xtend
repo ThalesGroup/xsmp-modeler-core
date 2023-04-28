@@ -17,33 +17,33 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class SimSatEventSinkGenerator extends EventSinkGenerator {
 
-    override collectIncludes(EventSink element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
+    override collectIncludes(EventSink it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        if (element.eventArgType !== null)
-            acceptor.mdkSource("esa/ecss/smp/cdk/EventSinkArg.h")
+        if (eventType !== null)
+            acceptor.userSource("esa/ecss/smp/cdk/EventSinkArg.h")
         else
-            acceptor.mdkSource("esa/ecss/smp/cdk/EventSinkVoid.h")
+            acceptor.userSource("esa/ecss/smp/cdk/EventSinkVoid.h")
     }
 
-    override initialize(NamedElementWithMembers container, EventSink element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
 
-        if (element.eventArgType !== null)
+        if (eventType !== null)
             '''
-                // Event Sink: «element.name»
-                «element.name»{new ::esa::ecss::smp::cdk::EventSinkArg<::«element.eventArgType.fqn.toString("::")»>("«element.name»", «element.description()», this, simulator, &«container.name(useGenPattern)»::_«element.name»)}
+                // Event Sink: «name»
+                «name»{new ::esa::ecss::smp::cdk::EventSinkArg<«eventType.id»>("«name»", «description()», this, simulator, &«parent.name(useGenPattern)»::_«name»)}
             '''
         else
             '''
-                // Event Sink: «element.name»
-                «element.name»{new ::esa::ecss::smp::cdk::EventSinkVoid("«element.name»", «element.description()», this, simulator, &«container.name(useGenPattern)»::_«element.name»)}
+                // Event Sink: «name»
+                «name»{new ::esa::ecss::smp::cdk::EventSinkVoid("«name»", «description()», this, simulator, &«parent.name(useGenPattern)»::_«name»)}
             '''
     }
 
-    override construct(NamedElementWithMembers container, EventSink element, boolean useGenPattern) {
+    override construct(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
         '''
-            // Add event sink «element.name»
-            this->AddEventSink(«element.name»);
+            // Add event sink «name»
+            this->AddEventSink(«name»);
         '''
     }
 }

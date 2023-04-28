@@ -24,13 +24,10 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     protected CppCopyrightNoticeProvider copyright
 
     @Inject
-    protected extension GeneratorExtension
+    protected extension GeneratorUtil
 
     @Inject
-    protected extension ExpressionGenerator
-
-    @Inject
-    protected IProtectionGuardProvider guardProvider;
+    IProtectionGuardProvider guardProvider;
 
     def protected CharSequence namespace(EObject object, CharSequence body) {
         val namespace = EcoreUtil2.getContainerOfType(object, Namespace)
@@ -89,7 +86,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     /** generate a user header in include directory */
     def CharSequence generateHeader(T type, Catalogue cat) {
-        val fqn = type.fqn(false);
+        val fqn = type.fqn;
         val body = type.generateHeaderBody()
         if (body !== null && body.length > 0)
             '''
@@ -121,7 +118,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
             acceptor.forwardedTypes.remove(type)
 
         acceptor.includedTypes.forEach[includeList.add(it.include())]
-        acceptor.mdkTypesHeader.forEach[it|includeList.add("#include \"" + it + "\"")]
+        acceptor.userTypesHeader.forEach[it|includeList.add("#include \"" + it + "\"")]
         acceptor.systemTypesHeader.forEach[it|includeList.add("#include <" + it + ">")]
 
         '''
@@ -143,7 +140,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     def protected CharSequence generateHeaderIncludes(T type) {
         '''
             // Include the generated header file
-            #include "«type.fqn(true).toString("/")».h"
+            #include "«type.fqnGen.toString("/")».h"
         '''
     }
 
@@ -153,7 +150,7 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
             '''
                 «copyright.getSourceText(type, useGenPattern, cat)»
                 
-                «type.generateSourceGenIncludes(useGenPattern,acceptor, cat)»
+                «type.generateSourceIncludes(acceptor)»
                 
                 «namespace(type, body)»
             '''
@@ -161,13 +158,13 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
             null
     }
 
-    def CharSequence generateSource(T type, boolean useGenPattern, Catalogue cat) {
+    def CharSequence generateSource(T type, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
         val body = type.generateSourceBody(useGenPattern)
         if (body !== null && body.length > 0)
             '''
                 «copyright.getSourceText(type, cat)»
                 
-                «type.generateSourceIncludes»
+                «type.generateSourceIncludes(acceptor)»
                 
                 «namespace(type, body)»
             '''
@@ -175,24 +172,21 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     def protected CharSequence generateSourceIncludes(T type) {
         '''
-            #include "«type.fqn(false).toString("/")».h"
+            #include "«type.fqn.toString("/")».h"
         '''
     }
 
-    def protected CharSequence generateSourceGenIncludes(T type, boolean useGenPattern, IncludeAcceptor acceptor,
-        Catalogue cat) {
+    def protected CharSequence generateSourceIncludes(T type, IncludeAcceptor acceptor) {
         val Set<String> includeList = newHashSet
 
-        acceptor.mdkTypesSource.forEach[it|includeList.add("#include \"" + it + "\"")]
+        acceptor.userTypesSource.forEach[it|includeList.add("#include \"" + it + "\"")]
         acceptor.systemTypesSource.forEach[it|includeList.add("#include <" + it + ">")]
 
         acceptor.forwardedTypes.forEach[includeList.add(it.include())]
 
         acceptor.sourceTypes.remove(type)
         acceptor.sourceTypes.forEach[includeList.add(it.include())]
-        // if (useGenPattern)
-        // includeList.add("#include <" + type.fqn(true).toString("/") + ".h>")
-        // include the final file (possible to customize the generated class)
+
         includeList.add(type.include())
 
         '''
@@ -206,10 +200,4 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
         '''
     }
 
-    /**
-     * Return true if this file requires the generation gap Pattern
-     */
-    def boolean requiresGenPattern(T type) {
-          false
-    }
 }

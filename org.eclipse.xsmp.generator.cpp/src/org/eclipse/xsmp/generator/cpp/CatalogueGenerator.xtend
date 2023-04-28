@@ -2,7 +2,6 @@ package org.eclipse.xsmp.generator.cpp
 
 import java.util.Collections
 import java.util.List
-import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.xcatalogue.Array
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.Component
@@ -20,46 +19,45 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
 
     override void collectIncludes(Catalogue type, IncludeAcceptor acceptor) {
 
-        acceptor.mdkHeader("Smp/ISimulator.h")
+        acceptor.userHeader("Smp/ISimulator.h")
 
         type.eAllContents.filter(LanguageType).filter[!(it instanceof ValueReference)].forEach[acceptor.source(it)]
-        XsmpUtil.dependentPackages(type).forEach[acceptor.mdkSource(it.name() + ".h")]
+        type.dependentPackages().forEach[acceptor.userSource(it.name() + ".h")]
     }
 
     protected def boolean requireFactory(Catalogue t) {
         t.eAllContents.filter(Component).exists[!it.isAbstract]
     }
 
-    protected def dispatch CharSequence registerComponent(Model model) {
+    protected def dispatch CharSequence registerComponent(Model it) {
     }
 
-    protected def dispatch CharSequence registerComponent(Service service) {
+    protected def dispatch CharSequence registerComponent(Service it) {
         '''
-            // Register Service «service.name»
-            simulator->AddService( new ::«service.fqn.toString("::")»(
-                                "«service.name»", // name
-                                «service.description()», // description
+            // Register Service «name»
+            simulator->AddService( new «id»(
+                                "«name»", // name
+                                «description()», // description
                                 «globalNamespaceName»::simulator // parent
                                 ));
         '''
     }
 
     protected def dispatch CharSequence unregisterComponent(Model model) {
-        '''
+        // delete of Model Factories is the responsibility of the simulator
+        /*'''
             // Delete Factory for the Model «model.name»
             delete «globalNamespaceName»::simulator->GetFactory(«model.uuidQfn»);
-        '''
-
+        '''*/
     }
 
     protected def dispatch CharSequence unregisterComponent(Service service) {
-        ''''''
     }
 
     protected def dispatch CharSequence register(ValueType t) {
         '''
             // register «t.eClass.name» «t.name»
-            ::«(t.eContainer as NamedElement).fqn.toString("::")»::_Register_«t.name»(typeRegistry);
+            «(t.eContainer as NamedElement).id»::_Register_«t.name»(typeRegistry);
         '''
     }
 
@@ -69,19 +67,19 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
     protected def dispatch CharSequence register(Structure t) {
         '''
             // register «t.eClass.name» «t.name»
-            ::«t.fqn.toString("::")»::_Register(typeRegistry);
+            «t.id»::_Register(typeRegistry);
         '''
     }
 
-    def CharSequence generatePkgFile(Catalogue t, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
+    def CharSequence generatePkgFile(Catalogue it, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
 
         '''
-            «copyright.getSourceText(t, useGenPattern,cat)»
+            «copyright.getSourceText(it, useGenPattern,cat)»
             
             // -------------------------------------------------------------------------------
             // --------------------------------- Includes ----------------------------------
             // -------------------------------------------------------------------------------
-            #include "«t.name()».h"
+            #include "«name()».h"
             #include "Smp/Publication/ITypeRegistry.h"
                             
             #ifdef  WIN32
@@ -96,16 +94,14 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             
             extern "C" {
             
-                        /// Global Initialise function of Package «t.name».
+                        /// Global Initialise function of Package «name».
                         /// @param simulator Simulator for registration of factories.
                         /// @param typeRegistry Type Registry for registration of types.
                         /// @return True if initialisation was successful, false otherwise.
                         DLL_EXPORT bool Initialise(
                                 ::Smp::ISimulator* simulator,
                                 ::Smp::Publication::ITypeRegistry* typeRegistry) {
-                            bool initialisationSucceeded = true;
-                            initialisationSucceeded &= Initialise_«t.name»(simulator, typeRegistry);
-                            return initialisationSucceeded;
+                            return Initialise_«name»(simulator, typeRegistry);
                         }
             }
             
@@ -114,51 +110,49 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             // -----------------------------------------------------------------------------
             
             extern "C" {                        
-                        /// Global Finalise function of Package «t.name».
+                        /// Global Finalise function of Package «name».
                         /// @return True if finalisation was successful, false otherwise.
                         DLL_EXPORT bool Finalise() {
-                            bool finalisationSucceeded = true;
-                            finalisationSucceeded &= Finalise_«t.name»();
-                            return finalisationSucceeded;
+                            return Finalise_«name»();
                         }
             }
         '''
     }
 
-    override protected generateHeaderGenBody(Catalogue t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Catalogue it, boolean useGenPattern) {
         '''
             // Entry points for static library
             extern "C" {
-                /// Initialise Package «t.name».
+                /// Initialise Package «name».
                 /// @param simulator Simulator for registration of factories.
                 /// @param typeRegistry Type Registry for registration of types.
                 /// @return True if initialisation was successful, false otherwise.
-                bool Initialise_«t.name»(
+                bool Initialise_«name»(
                     ::Smp::ISimulator* simulator,
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
-                /// Finalise Package «t.name».
+                /// Finalise Package «name».
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«t.name»();
+                bool Finalise_«name»();
             }
         '''
     }
 
-    override protected generateHeaderBody(Catalogue t) {
+    override protected generateHeaderBody(Catalogue it) {
         '''
             // Entry points for static library
             extern "C" {
-                /// Initialise Package «t.name».
+                /// Initialise Package «name».
                 /// @param simulator Simulator for registration of factories.
                 /// @param typeRegistry Type Registry for registration of types.
                 /// @return True if initialisation was successful, false otherwise.
-                bool Initialise_«t.name»(
+                bool Initialise_«name»(
                     ::Smp::ISimulator* simulator,
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
-                /// Finalise Package «t.name».
+                /// Finalise Package «name».
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«t.name»();
+                bool Finalise_«name»();
             }
         '''
     }
@@ -215,13 +209,13 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         ''''''
     }
 
-    override protected generateSourceGenBody(Catalogue t, boolean useGenPattern) {
+    override protected generateSourceGenBody(Catalogue it, boolean useGenPattern) {
 
         // list of dependent packages
-        val deps = XsmpUtil.dependentPackages(t)
+        val deps = it.dependentPackages()
 
         // list of Component to un/register
-        val cmps = t.eAllContents.filter(Component).filter[!it.abstract].toList
+        val cmps = eAllContents.filter(Component).filter[!isAbstract].toList
 
         '''
             // ----------------------------------------------------------------------------------
@@ -239,11 +233,11 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             
             extern "C"
             {
-                /// Initialise Package «t.name(useGenPattern)».
+                /// Initialise Package «name(useGenPattern)».
                 /// @param simulator Simulator for registration of factories.
                 /// @param typeRegistry Type Registry for registration of types.
                 /// @return True if initialisation was successful, false otherwise.
-                bool Initialise_«t.name(useGenPattern)»(
+                bool Initialise_«name(useGenPattern)»(
                         ::Smp::ISimulator* simulator,
                         ::Smp::Publication::ITypeRegistry* typeRegistry) {
                     // Avoid double initialisation
@@ -258,15 +252,15 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     }
                     
                     «FOR c : deps BEFORE '''    // Initialisation of dependent Packages
-                        bool initialised_«t.name» = true;''' AFTER '''if (!initialised_«t.name») {
+                        bool initialised_«name» = true;''' AFTER '''if (!initialised_«name») {
                                 return false;
                             }
                         '''»
-                        initialised_«t.name» &= Initialise_«c.name»(simulator, typeRegistry);
+                        initialised_«name» &= Initialise_«c.name»(simulator, typeRegistry);
                     «ENDFOR»
             
             
-                    «FOR v : t.sortedTypes»
+                    «FOR v : sortedTypes»
                         «v.register»
                     «ENDFOR»
                     
@@ -285,9 +279,9 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 
                 extern "C"
                 {
-                    /// Finalise Package «t.name(useGenPattern)».
+                    /// Finalise Package «name(useGenPattern)».
                     /// @return True if finalisation was successful, false otherwise.
-                    bool Finalise_«t.name(useGenPattern)»() {
+                    bool Finalise_«name(useGenPattern)»() {
                         
                         if («globalNamespaceName»::simulator) {
                             «FOR cmp : cmps AFTER '''
@@ -316,7 +310,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         '''
     }
 
-    override protected generateSourceBody(Catalogue t, boolean useGenPattern) {
+    override protected generateSourceBody(Catalogue it, boolean useGenPattern) {
         '''
             
             // --------------------------------------------------------------------------------
@@ -325,15 +319,15 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             
             extern "C"
             {
-                /// Initialise Package «t.name».
+                /// Initialise Package «name».
                 /// @param simulator Simulator for registration of factories.
                 /// @param typeRegistry Type Registry for registration of types.
                 /// @return True if initialisation was successful, false otherwise.
-                bool Initialise_«t.name»(
+                bool Initialise_«name»(
                         ::Smp::ISimulator* simulator,
                         ::Smp::Publication::ITypeRegistry* typeRegistry) {
             
-                    return Initialise_«t.name(true)»(simulator, typeRegistry) ;
+                    return Initialise_«nameGen»(simulator, typeRegistry) ;
                 }
                 
             }
@@ -344,11 +338,11 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 
             extern "C"
             {
-                /// Finalise Package «t.name».
+                /// Finalise Package «name».
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«t.name»() {
+                bool Finalise_«name»() {
                     
-                    return Finalise_«t.name(true)»() ;
+                    return Finalise_«nameGen»() ;
                 }
             }
         '''

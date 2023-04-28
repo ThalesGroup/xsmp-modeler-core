@@ -16,53 +16,42 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
 
-    override declare(NamedElementWithMembers parent, EntryPoint element) {
+    override declare(NamedElementWithMembers parent, EntryPoint it) {
         '''
-            virtual void _«element.name»() override;
+            virtual void _«name»() override;
         '''
     }
 
-    override define(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
+    override define(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
-            void «parent.name»::_«element.name»() {
+            void «parent.name»::_«name»() {
+                // TODO implement EntryPoint «name»
+                «comment»
             }
         '''
     }
 
-    override declareGen(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::Smp::IEntryPoint* «element.name»; 
-            virtual void _«element.name»()«IF useGenPattern» = 0«ENDIF»;
+            «comment»
+            ::Smp::IEntryPoint* «name»; 
+            virtual void _«name»()«IF useGenPattern» = 0«ENDIF»;
         '''
-    }
-
-    override defineGen(NamedElementWithMembers parent, EntryPoint element, boolean useGenPattern) {
-        if (!useGenPattern)
-            '''
-                void «parent.name(useGenPattern)»::_«element.name»() {
-                }
-            '''
     }
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Smp/IEntryPoint.h")
+        acceptor.userHeader("Smp/IEntryPoint.h")
     }
 
-    override finalize(EntryPoint element) {
+    override finalize(EntryPoint it) {
         '''  
-            delete «element.name»;
-            «element.name» = nullptr;
+            delete «name»;
+            «name» = nullptr;
         '''
     }
 
-    override Publish(EntryPoint element) {
+    override Publish(EntryPoint it) {
         // Publish EntryPoint «element.name»
         // receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
     }
-
-    override requiresGenPattern(EntryPoint element) {
-        true
-    }
-    
 }

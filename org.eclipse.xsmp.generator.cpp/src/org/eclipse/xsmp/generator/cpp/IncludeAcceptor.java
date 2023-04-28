@@ -28,18 +28,18 @@ public class IncludeAcceptor
 
   Set<String> systemTypesSource = new HashSet<>();
 
-  Set<String> mdkTypesHeader = new HashSet<>();
+  Set<String> userTypesHeader = new HashSet<>();
 
-  Set<String> mdkTypesSource = new HashSet<>();
+  Set<String> userTypesSource = new HashSet<>();
 
   public void systemHeader(String include)
   {
     systemTypesHeader.add(include);
   }
 
-  public void mdkHeader(String include)
+  public void userHeader(String include)
   {
-    mdkTypesHeader.add(include);
+    userTypesHeader.add(include);
   }
 
   public void systemSource(String include)
@@ -47,9 +47,9 @@ public class IncludeAcceptor
     systemTypesSource.add(include);
   }
 
-  public void mdkSource(String include)
+  public void userSource(String include)
   {
-    mdkTypesSource.add(include);
+    userTypesSource.add(include);
   }
 
   public void include(NamedElement type)

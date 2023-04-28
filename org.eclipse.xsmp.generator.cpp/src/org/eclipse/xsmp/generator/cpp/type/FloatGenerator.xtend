@@ -15,53 +15,54 @@ import org.eclipse.xsmp.xcatalogue.Float
 
 class FloatGenerator extends AbstractTypeGenerator<Float> {
 
-    override protected generateHeaderBody(Float t) {
+    override protected generateHeaderBody(Float it) {
         '''
-            «t.comment()»
-            using «t.name» = «t.genName»;
-        '''
-    }
-
-    override protected generateHeaderGenBody(Float t, boolean useGenPattern) {
-        '''
-            «t.uuidDeclaration»
-            «t.comment»
-            using «t.name(useGenPattern)» = «IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Float64«ENDIF»;
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            «comment()»
+            using «name» = «nameGen»;
         '''
     }
 
-    override protected generateSourceGenBody(Float t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Float it, boolean useGenPattern) {
         '''
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
+            «uuidDeclaration»
+            «comment»
+            using «name(useGenPattern)» = «IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»;
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
+        '''
+    }
+
+    override protected generateSourceGenBody(Float it, boolean useGenPattern) {
+        '''
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry) {
                 registry->AddFloatType(
-                    "«t.name»", //Name
-                    «t.description()», //description
-                    «t.uuidQfn», //UUID
-                «IF t.minimum !== null»«t.minimum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Float64«ENDIF»>::min()«ENDIF», //minimum
-                «IF t.maximum !== null»«t.maximum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF t.primitiveType !== null»::«t.primitiveType.fqn.toString("::")»«ELSE»::Smp::Float64«ENDIF»>::max()«ENDIF», //maximum
-                «t.minInclusive»,// Minimm inclusive
-                «t.maxInclusive»,// Maximim inclusive
-                "«t.unit»", //unit
-                «t.generatePrimitiveKind»);  
+                    "«name»", //Name
+                    «description()», //description
+                    «uuid()», //UUID
+                «IF minimum !== null»«minimum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»>::min()«ENDIF», // Minimum
+                «IF maximum !== null»«maximum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»>::max()«ENDIF», // Maximum
+                «minInclusive», // Minimm inclusive
+                «maxInclusive», // Maximim inclusive
+                "«unit»", // Unit
+                «generatePrimitiveKind» // Primitive Type Kind
+                );  
             }
-            «t.uuidDefinition»
+            «uuidDefinition»
         '''
     }
 
-    override collectIncludes(Float type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Float it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        if (type.minimum === null || type.maximum === null)
+        if (minimum === null || maximum === null)
             acceptor.systemHeader("limits")
 
-        type.minimum?.include(acceptor)
-        type.maximum?.include(acceptor)
+        minimum?.include(acceptor)
+        maximum?.include(acceptor)
     }
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkHeader("Smp/PrimitiveTypes.h")
+        acceptor.userHeader("Smp/PrimitiveTypes.h")
     }
 
 }

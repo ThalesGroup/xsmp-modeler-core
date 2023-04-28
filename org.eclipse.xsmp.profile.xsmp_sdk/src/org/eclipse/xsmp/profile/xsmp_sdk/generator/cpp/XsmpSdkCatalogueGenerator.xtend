@@ -17,24 +17,24 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkCatalogueGenerator extends CatalogueGenerator {
 
-    override dispatch CharSequence registerComponent(Model model) {
+    override dispatch CharSequence registerComponent(Model it) {
         '''
-            // Register factory for Model «model.name»
-            simulator->RegisterFactory(::Xsmp::Factory::Create<::«model.fqn.toString("::")»>(
-                                "«model.name»", // name
-                                «model.description()», // description
+            // Register factory for Model «name»
+            simulator->RegisterFactory(::Xsmp::Factory::Create<«id»>(
+                                "«name»", // name
+                                «description()», // description
                                 «globalNamespaceName»::simulator, // simulator
-                                «model.uuidQfn», // UUID
-                                "::«model.fqn.toString("::")»"// type name
+                                «uuid()», // UUID
+                                "«id»"// type name
                                 ));
         '''
     }
 
-    override collectIncludes(Catalogue type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Catalogue it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        if (type.requireFactory)
-            acceptor.mdkSource("Xsmp/Factory.h")
+        if (requireFactory)
+            acceptor.userSource("Xsmp/Factory.h")
     }
 
     override CharSequence globalNamespaceName() {

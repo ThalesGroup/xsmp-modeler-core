@@ -18,21 +18,21 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkStructureGenerator extends StructureGenerator {
 
-    override protected generateHeaderGenBody(Structure t, boolean useGenPattern) {
-        val hasConstructor = t.member.filter(Field).exists[it.^default !== null]
+    override protected generateHeaderGenBody(Structure it, boolean useGenPattern) {
+        val hasConstructor = member.filter(Field).exists[^default !== null]
         '''
-            «t.comment»
-            struct «t.name(useGenPattern)» 
+            «comment»
+            struct «name(useGenPattern)» 
             {
-                «t.declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
+                «declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                    «t.name(useGenPattern)»(«FOR f : t.member.filter(Field) SEPARATOR ", "»::«f.type.fqn.toString("::")» «f.name» = «IF f.^default !== null»«f.^default.generateExpression()»«ELSE»{}«ENDIF»«ENDFOR»):
-                            «FOR f : t.member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
-                    ~«t.name(useGenPattern)»() = default;
-                    «t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;
-                    «t.name(useGenPattern)»(«t.name(useGenPattern)» &&) = default;
-                    «t.name(useGenPattern)»& operator=(const «t.name(useGenPattern)» &) = default;
+                    «name(useGenPattern)»(«FOR f : member.filter(Field) SEPARATOR ", "»«f.type.id» «f.name» = «IF f.^default !== null»«f.^default.generateExpression()»«ELSE»{}«ENDIF»«ENDFOR»):
+                            «FOR f : member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
+                    ~«name(useGenPattern)»() = default;
+                    «name(useGenPattern)»(const «name(useGenPattern)» &) = default;
+                    «name(useGenPattern)»(«name(useGenPattern)» &&) = default;
+                    «name(useGenPattern)»& operator=(const «name(useGenPattern)» &) = default;
                     
                 «ENDIF»
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
@@ -41,14 +41,14 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                 struct _Field : public _BASE
                 {
                  // the _raw_type
-                 using _raw_type = ::«t.fqn(useGenPattern).toString("::")»;
+                 using _raw_type = «idGen»;
                 
                     // constructor
                     template<typename ..._Args>
                     _Field (_Args ...args, const _raw_type &default_value = {}) : _BASE(args...)
-                    «FOR f : t.member.filter(Field) BEFORE ', ' SEPARATOR ', '»
+                    «FOR f : member.filter(Field) BEFORE ', ' SEPARATOR ', '»
                         /// «f.name» initialization
-                        «f.name» { this, «f.type.uuidQfn», "«f.name»", «f.description()», «f.viewKind»,  default_value.«f.name» }
+                        «f.name» { this, «f.type.uuid()», "«f.name»", «f.description()», «f.viewKind»,  default_value.«f.name» }
                     «ENDFOR»
                     {
                     }
@@ -56,7 +56,7 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                     // copy operator
                     _Field & operator=(const _Field  &other)
                     {
-                        «FOR f : t.member.filter(Field)»
+                        «FOR f : member.filter(Field)»
                             this->«f.name» = other.«f.name»;
                         «ENDFOR»
                         return *this;
@@ -65,7 +65,7 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                     // copy operator from _raw_type
                     _Field & operator=(const _raw_type &other)
                     {
-                       «FOR f : t.member.filter(Field)»
+                       «FOR f : member.filter(Field)»
                            this->«f.name» = other.«f.name»;
                        «ENDFOR»
                        return *this;
@@ -74,20 +74,20 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                     // convert to _raw_type
                     operator _raw_type() const noexcept
                     {
-                        return {«FOR f : t.member.filter(Field) SEPARATOR ', '»«f.name»«ENDFOR»};
+                        return {«FOR f : member.filter(Field) SEPARATOR ', '»«f.name»«ENDFOR»};
                     }
-                     «FOR f : t.member.filter(Field)»
+                     «FOR f : member.filter(Field)»
                          «f.comment»
-                         «IF f.isMutable»mutable «ENDIF»typename _BASE::template Field<::«f.type.fqn.toString("::")»>«IF f.transient»::transient«ENDIF»«IF f.input»::input«ENDIF»«IF f.output»::output«ENDIF»«IF f.failure»::failure«ENDIF»«IF f.forcible»::forcible«ENDIF» «f.name»;
+                         «IF f.isMutable»mutable «ENDIF»typename _BASE::template Field<«f.type.id»>«IF f.transient»::transient«ENDIF»«IF f.input»::input«ENDIF»«IF f.output»::output«ENDIF»«IF f.failure»::failure«ENDIF»«IF f.forcible»::forcible«ENDIF» «f.name»;
                     «ENDFOR»
                    };
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
         '''
     }
 
-    override collectIncludes(Structure type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Structure it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
     }
 }

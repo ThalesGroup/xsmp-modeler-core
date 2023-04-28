@@ -34,27 +34,27 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
 
     override collectIncludes(Component type, IncludeAcceptor acceptor) {
         super.collectIncludes(type, acceptor)
-        acceptor.mdkHeader("Xsmp/" + type.eClass.name + ".h")
+        acceptor.userHeader("Xsmp/" + type.eClass.name + ".h")
         if (type.useDynamicInvocation) {
             acceptor.systemHeader("map")
-            acceptor.mdkSource("Smp/IPublication.h")
-            acceptor.mdkSource("Xsmp/Request.h")
+            acceptor.userSource("Smp/IPublication.h")
+            acceptor.userSource("Xsmp/Request.h")
         }
     }
 
-    override protected declareGen(Component type, Field f, boolean useGenPattern) {
+    override protected declareGen(Component type, Field it, boolean useGenPattern) {
 
-        if (f.isMdkField)
+        if (isCdkField)
             '''
-                «f.comment»
-                «IF f.isMutable»mutable «ENDIF»::Xsmp::Field<::«f.type.fqn.toString("::")»>«IF f.transient»::transient«ENDIF»«IF f.input»::input«ENDIF»«IF f.output»::output«ENDIF»«IF f.failure»::failure«ENDIF»«IF f.forcible»::forcible«ENDIF» «f.name»;
+                «comment»
+                «IF isMutable»mutable «ENDIF»::Xsmp::Field<«type.id»>«IF transient»::transient«ENDIF»«IF input»::input«ENDIF»«IF output»::output«ENDIF»«IF failure»::failure«ENDIF»«IF forcible»::forcible«ENDIF» «name»;
             '''
         else
-            super.declareGen(type, f, useGenPattern)
+            super.declareGen(type, it, useGenPattern)
     }
 
     override protected base(Component e) {
-        var base = '''::Xsmp::«e.eClass.name»<«IF e.base !==null»::«e.base.fqn.toString("::")»«ENDIF»>'''
+        var base = '''::Xsmp::«e.eClass.name»<«IF e.base !==null»«e.base.id»«ENDIF»>'''
 
         if (e.member.exists[it instanceof Container])
             base += '''::WithContainers'''
@@ -105,17 +105,17 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
                 // declare and initialize the parameter
                 if (p.type instanceof SimpleType)
                     '''
-                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.generatePrimitiveKind»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
+                        auto p_«p.name» = ::Xsmp::Request::get<«p.type.id»>(cmp, req, "«p.name»", «p.type.generatePrimitiveKind»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
                     '''
                 else
                     '''
-                        auto p_«p.name» = ::Xsmp::Request::get<::«p.type.fqn.toString("::")»>(cmp, req, "«p.name»", «p.type.uuidQfn»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
+                        auto p_«p.name» = ::Xsmp::Request::get<«p.type.id»>(cmp, req, "«p.name»", «p.type.uuid()»«IF p.^default !== null», «p.^default.generateExpression()»«ENDIF»);
                     '''
             }
             default: {
                 // only declare the parameter
                 '''
-                    ::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression()»;
+                    «p.type.id» p_«p.name» «p.^default?.generateExpression()»;
                 '''
             }
         }

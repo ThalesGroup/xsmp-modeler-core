@@ -20,9 +20,10 @@ import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
+import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
-import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
@@ -74,6 +75,10 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
           createCodeMinings((Operation) obj, acceptor);
           it.prune();
           break;
+        case XcataloguePackage.PROPERTY:
+          createCodeMinings((Property) obj, acceptor);
+          it.prune();
+          break;
         // case XcataloguePackage.COLLECTION_LITERAL:
         // createCodeMinings((CollectionLiteral) obj, acceptor);
         // break;
@@ -98,14 +103,17 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 
   protected void createCodeMinings(Operation o, IAcceptor< ? super ICodeMining> acceptor)
   {
+    final INode node = NodeModelUtils.findActualNodeFor(o);
+
     if (xsmpUtil.isVirtual(o))
     {
-      final var defKeyword = ga.getOperationDeclarationAccess().getDefKeyword_1();
-      for (final ILeafNode node : NodeModelUtils.getNode(o).getLeafNodes())
+      final var kw = ga.getOperationDeclarationAccess().getDefKeyword_1().getValue();
+      for (final INode n : node.getAsTreeIterable())
       {
-        if (defKeyword == node.getGrammarElement())
+        final var ge = n.getGrammarElement();
+        if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
         {
-          acceptor.accept(createNewLineContentCodeMining(node.getEndOffset() + 1, "virtual "));
+          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
           break;
         }
       }
@@ -123,7 +131,6 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     }
     if (!m.isEmpty())
     {
-      final INode node = NodeModelUtils.getNode(o);
 
       acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), m));
     }
@@ -137,25 +144,77 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     o.getParameter().forEach(p -> createCodeMinings(p, acceptor));
   }
 
+  protected void createCodeMinings(Property o, IAcceptor< ? super ICodeMining> acceptor)
+  {
+    final INode node = NodeModelUtils.findActualNodeFor(o);
+
+    if (xsmpUtil.isVirtual(o))
+    {
+
+      final var kw = ga.getPropertyDeclarationAccess().getPropertyKeyword_1().getValue();
+      for (final INode n : node.getAsTreeIterable())
+      {
+        final var ge = n.getGrammarElement();
+        if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
+        {
+          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
+          break;
+        }
+      }
+    }
+    if (xsmpUtil.isByPointer(o) || xsmpUtil.isByReference(o))
+    {
+      for (final INode n : NodeModelUtils.findNodesForFeature(o,
+              XcataloguePackage.Literals.PROPERTY__TYPE))
+      {
+
+        if (xsmpUtil.isByPointer(o))
+        {
+          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset(), "*"));
+        }
+        else if (xsmpUtil.isByReference(o))
+        {
+          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset(), "&"));
+        }
+      }
+    }
+
+    var m = "";
+    if (xsmpUtil.isConst(o) || xsmpUtil.isConstGetter(o))
+    {
+      m += " const";
+    }
+
+    if (xsmpUtil.isAbstract(o))
+    {
+      m += " = 0";
+    }
+    if (!m.isEmpty())
+    {
+      acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), m));
+    }
+
+  }
+
   protected void createCodeMinings(Parameter p, IAcceptor< ? super ICodeMining> acceptor)
   {
-    for (final INode node : NodeModelUtils.findNodesForFeature(p,
-            XcataloguePackage.Literals.PARAMETER__TYPE))
+    if (xsmpUtil.isConst(p) || xsmpUtil.isByPointer(p) || xsmpUtil.isByReference(p))
     {
-      if (xsmpUtil.isConst(p))
+      for (final INode node : NodeModelUtils.findNodesForFeature(p,
+              XcataloguePackage.Literals.PARAMETER__TYPE))
       {
-        acceptor.accept(createNewLineContentCodeMining(node.getOffset(), "const "));
-      }
-      switch (xsmpUtil.kind(p))
-      {
-        case BY_PTR:
+        if (xsmpUtil.isConst(p))
+        {
+          acceptor.accept(createNewLineContentCodeMining(node.getOffset(), "const "));
+        }
+        if (xsmpUtil.isByPointer(p))
+        {
           acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), "*"));
-          break;
-        case BY_REF:
+        }
+        else if (xsmpUtil.isByReference(p))
+        {
           acceptor.accept(createNewLineContentCodeMining(node.getEndOffset(), "&"));
-          break;
-        default:
-          break;
+        }
       }
     }
   }

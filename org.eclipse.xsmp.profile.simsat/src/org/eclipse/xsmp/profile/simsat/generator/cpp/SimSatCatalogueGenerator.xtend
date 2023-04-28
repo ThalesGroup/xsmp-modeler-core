@@ -19,24 +19,24 @@ import org.eclipse.xsmp.xcatalogue.Component
 
 class SimSatCatalogueGenerator extends CatalogueGenerator {
 
-    override dispatch CharSequence registerComponent(Model model) {
+    override dispatch CharSequence registerComponent(Model it) {
         '''
-            // Register factory for Model «model.name»
-            simulator->RegisterFactory( new ::esa::ecss::smp::cdk::Factory<::«model.fqn.toString("::")»>(
-                                "«model.name»", // name
-                                «model.description()», // description
+            // Register factory for Model «name»
+            simulator->RegisterFactory( new ::esa::ecss::smp::cdk::Factory<«id»>(
+                                "«name»", // name
+                                «description()», // description
                                 «globalNamespaceName»::simulator, // simulator
-                                «model.uuidQfn» // UUID
+                                «uuid()» // UUID
                                 ));
         '''
     }
 
-    override dispatch CharSequence registerComponent(Service service) {
+    override dispatch CharSequence registerComponent(Service it) {
         '''
-            // Register Service «service.name»
-            simulator->AddService( new ::«service.fqn.toString("::")»(
-                                "«service.name»", // name
-                                «service.description()», // description
+            // Register Service «name»
+            simulator->AddService( new «id»(
+                                "«name»", // name
+                                «description()», // description
                                 «globalNamespaceName»::simulator, // parent
                                 «globalNamespaceName»::simulator // parent
                                 ));
@@ -47,7 +47,7 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
         super.collectIncludes(type, acceptor)
 
         if (type.requireFactory)
-            acceptor.mdkSource("esa/ecss/smp/cdk/Factory.h")
+            acceptor.userSource("esa/ecss/smp/cdk/Factory.h")
     }
 
     override CharSequence globalNamespaceName() {

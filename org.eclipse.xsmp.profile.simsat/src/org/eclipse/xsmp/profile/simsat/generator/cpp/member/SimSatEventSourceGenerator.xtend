@@ -17,34 +17,47 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class SimSatEventSourceGenerator extends EventSourceGenerator {
 
-    override collectIncludes(EventSource element, IncludeAcceptor acceptor) {
-        if (element.eventArgType !== null)
-            acceptor.mdkHeader("esa/ecss/smp/cdk/EventSourceArg.h")
+    override collectIncludes(EventSource it, IncludeAcceptor acceptor) {
+        if (eventType !== null)
+            acceptor.userHeader("esa/ecss/smp/cdk/EventSourceArg.h")
         else
-            acceptor.mdkHeader("esa/ecss/smp/cdk/EventSource.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/EventSource.h")
     }
 
-    override declareGen(NamedElementWithMembers type, EventSource element, boolean useGenPattern) {
-        val arg = element.eventArgType
+    override declareGen(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
+        val arg = eventType
+        if (arg !== null)
+            '''
+                «comment»
+                ::esa::ecss::smp::cdk::EventSourceArg<«arg.id»> *«name»;
+            '''
+        else
+            '''
+                «comment»
+                ::esa::ecss::smp::cdk::EventSource *«name»;
+            '''
+    }
+
+    override initialize(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
+        val arg = eventType
+        if (arg !== null)
+            '''
+                // Event Source: «name»
+                «name»{new ::esa::ecss::smp::cdk::EventSourceArg<«arg.id»>( "«name»", «description()», this, simulator)}
+            '''
+        else
+            '''
+                // Event Source: «name»
+                «name»{new ::esa::ecss::smp::cdk::EventSource( "«name»", «description()», this, simulator)}
+            '''
+
+    }
+
+    override construct(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::esa::ecss::smp::cdk::EventSource«IF arg !== null»Arg<::«arg.fqn.toString("::")»>«ENDIF» *«element.name»;
+            // Add event source «name»
+            this->AddEventSource(«name»);
         '''
     }
 
-    override initialize(NamedElementWithMembers container, EventSource element, boolean useGenPattern) {
-        val arg = element.eventArgType
-        '''
-            // Event Source: «element.name»
-            «element.name»{new ::esa::ecss::smp::cdk::EventSource«IF arg !== null»Arg<::«arg.fqn.toString("::")»>«ENDIF»( "«element.name»",  «element.description()», this, simulator)}
-        '''
-    }
-    
-    override construct(NamedElementWithMembers container, EventSource element, boolean useGenPattern) {
-        '''
-            // Add event source «element.name»
-            this->AddEventSource(«element.name»);
-        '''
-    }
-    
 }

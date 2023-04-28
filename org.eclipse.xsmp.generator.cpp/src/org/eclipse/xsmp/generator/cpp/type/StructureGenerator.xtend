@@ -18,57 +18,57 @@ import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
 class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
 
-    override protected generateHeaderBody(Structure t) {
+    override protected generateHeaderBody(Structure it) {
         '''
-            «t.comment()»
-            struct «t.name» : public «t.genName» 
+            «comment()»
+            struct «name» : public «nameGen» 
             {
-                «t.declareMembers(VisibilityKind.PUBLIC)»
+                «declareMembers(VisibilityKind.PUBLIC)»
             };
         '''
     }
 
-    override protected generateHeaderGenBody(Structure t, boolean useGenPattern) {
-        val fields = t.member.filter(Field).filter[!it.static]
-        val hasConstructor = fields.exists[it.^default !== null]
+    override protected generateHeaderGenBody(Structure it, boolean useGenPattern) {
+        val fields = member.filter(Field).filter[!isStatic]
+        val hasConstructor = fields.exists[^default !== null]
         '''
-            «t.comment»
-            struct «t.name(useGenPattern)» 
+            «comment»
+            struct «name(useGenPattern)» 
             {
-                «t.declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
+                «declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                «t.name(useGenPattern)»();
-                ~«t.name(useGenPattern)»() noexcept;
-                «t.name(useGenPattern)»(const «t.name(useGenPattern)» &);
-                «t.name(useGenPattern)»(«t.name(useGenPattern)» &&);
-                «t.name(useGenPattern)»& operator=(const «t.name(useGenPattern)» &);
+                «name(useGenPattern)»();
+                ~«name(useGenPattern)»() noexcept;
+                «name(useGenPattern)»(const «name(useGenPattern)» &);
+                «name(useGenPattern)»(«name(useGenPattern)» &&);
+                «name(useGenPattern)»& operator=(const «name(useGenPattern)» &);
                 
                 «ENDIF»
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
         '''
     }
 
-    protected def Iterable<CharSequence> initializerList(Structure t, List<Field> fields, boolean useGenPattern) {
+    protected def Iterable<CharSequence> initializerList(Structure it, List<Field> fields, boolean useGenPattern) {
         var List<CharSequence> list = newArrayList
         for (c : fields)
-            list += t.initialize(c, useGenPattern)
+            list += initialize(c, useGenPattern)
         return list.filterNull
     }
 
-    override protected generateSourceGenBody(Structure t, boolean useGenPattern) {
-        val fields = t.assignableFields
-        val hasConstructor = fields.exists[it.^default !== null]
+    override protected generateSourceGenBody(Structure it, boolean useGenPattern) {
+        val fields = assignableFields
+        val hasConstructor = fields.exists[^default !== null]
         '''
-            void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
+            void «name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
                  «IF !fields.empty»auto* pStructure = «ENDIF»registry->AddStructureType(
-                    "«t.name»"  /// Name
-                    ,«t.description()»   /// description
-                    ,«t.uuidQfn» /// UUID
+                    "«name»"  /// Name
+                    ,«description()»   /// description
+                    ,«uuid()» /// UUID
                     ); 
                     
                 
@@ -76,8 +76,8 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
                     pStructure->AddField(
                         "«l.name»"
                         ,«l.description()»
-                        ,«l.type.uuidQfn»  ///UUID of the Field Type
-                        ,offsetof(«t.name», «l.name»)  ///Compute the offset of the current item
+                        ,«l.type.uuid()»  ///UUID of the Field Type
+                        ,offsetof(«name», «l.name»)  ///Compute the offset of the current item
                         ,«l.viewKind»  ///viewkind
                         ,«!l.isTransient»  ///state
                         ,«l.isInput»  ///is an input field
@@ -86,27 +86,26 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
                 «ENDFOR»
             }
             «IF hasConstructor»
-                «t.name(useGenPattern)»::«t.name(useGenPattern)»()
-                                        «FOR f : t.initializerList(fields, useGenPattern) BEFORE ':' SEPARATOR ", "»«f»«ENDFOR» 
+                «name(useGenPattern)»::«name(useGenPattern)»()«FOR f : initializerList(fields, useGenPattern) BEFORE ':' SEPARATOR ", "»«f»«ENDFOR» 
                 {
-                 «FOR f : t.member»
-                     «t.construct(f, useGenPattern)»
+                 «FOR f : member»
+                     «construct(f, useGenPattern)»
                  «ENDFOR»
                 }
-                «t.name(useGenPattern)»::~«t.name(useGenPattern)»() noexcept = default;
-                «t.name(useGenPattern)»::«t.name(useGenPattern)»(const «t.name(useGenPattern)» &) = default;
-                «t.name(useGenPattern)»::«t.name(useGenPattern)»(«t.name(useGenPattern)» &&) = default;
-                «t.name(useGenPattern)»& «t.name(useGenPattern)»::operator=(const «t.name(useGenPattern)» &) = default;
+                «name(useGenPattern)»::~«name(useGenPattern)»() noexcept = default;
+                «name(useGenPattern)»::«name(useGenPattern)»(const «name(useGenPattern)» &) = default;
+                «name(useGenPattern)»::«name(useGenPattern)»(«name(useGenPattern)» &&) = default;
+                «name(useGenPattern)»& «name(useGenPattern)»::operator=(const «name(useGenPattern)» &) = default;
             «ENDIF»
-            «t.defineMembersGen(useGenPattern)»
+            «defineMembersGen(useGenPattern)»
             
-            «t.uuidDefinition»
+            «uuidDefinition»
         '''
     }
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
         acceptor.systemSource("cstddef")
-        acceptor.mdkSource("Smp/Publication/IStructureType.h")
+        acceptor.userSource("Smp/Publication/IStructureType.h")
     }
 }
