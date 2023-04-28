@@ -18,80 +18,82 @@ import org.eclipse.xsmp.xcatalogue.Operation
 
 class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
 
-    override protected generateHeaderBody(Class t) {
+    override protected generateHeaderBody(Class it) {
         '''
-            «t.comment()»
-            class «t.name» : public «t.genName» 
+            «comment()»
+            class «name» : public «nameGen» 
             {
-                friend class ::«t.fqn(true).toString("::")»;
-                «t.declareMembers(VisibilityKind.PRIVATE)»
+                friend class «idGen»;
+            public:
+                «name»()=default;
+                «name»(const «name»&)=default;
+                «declareMembers(VisibilityKind.PUBLIC)»
             };
         '''
     }
 
-    protected def CharSequence base(Class t) {
-        '''«IF t.base!==null»: public ::«t.base.fqn.toString("::")»«ENDIF»'''
+    protected def CharSequence base(Class it) {
+        '''«IF base!==null»: public «base.id»«ENDIF»'''
     }
 
-    override protected generateHeaderGenBody(Class t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Class it, boolean useGenPattern) {
 
-        val constructor = !t.noConstructor && !t.member.filter(Operation).exists[it.constructor && it.parameter.empty]
-        val destructor = !t.noDestructor
+        val constructor = !noConstructor && !member.filter(Operation).exists[f|f.isConstructor && f.parameter.empty]
+        val destructor = !noDestructor
         '''
-            «IF useGenPattern»class «t.name»;«ENDIF»
-            «t.comment»
-            class «t.name(useGenPattern)»«t.base()»
+            «IF useGenPattern»class «name»;«ENDIF»
+            «comment»
+            class «name(useGenPattern)»«base()»
             {
-                «IF useGenPattern»friend class ::«t.fqn.toString("::")»;«ENDIF»
+                «IF useGenPattern»friend class «id»;«ENDIF»
             public:
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
                 
-                «IF constructor»«t.name(useGenPattern)»() = default;«ENDIF»
-                «IF destructor»~«t.name(useGenPattern)»() noexcept = default;«ENDIF»
-                «t.name(useGenPattern)»(const «t.name(useGenPattern)»&) = default;
+                «IF constructor»«name(useGenPattern)»() = default;«ENDIF»
+                «IF destructor»~«name(useGenPattern)»() noexcept = default;«ENDIF»
+                «name(useGenPattern)»(const «name(useGenPattern)»&) = default;
                 
-                «t.declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
+                «declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
         '''
     }
 
-    override protected generateSourceGenBody(Class t, boolean useGenPattern) {
-        val fields = t.member.filter(Field).filter[!it.static]
+    override protected generateSourceGenBody(Class it, boolean useGenPattern) {
+        val fields = member.filter(Field).filter[f|!f.static]
         '''
-            void «t.name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
+            void «name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
                 «IF !fields.empty»auto* type = «ENDIF»registry->AddClassType(
-                    "«t.name»"  /// Name
-                    ,«t.description()»   /// description
-                    ,«t.uuidQfn» /// UUID
-                    ,«IF t.base !== null»«t.base.uuidQfn»«ELSE»::Smp::Uuids::Uuid_Void«ENDIF» /// Base Class UUID
+                    "«name»"  /// Name
+                    ,«description()»   /// description
+                    ,«uuid()» /// UUID
+                    ,«IF base !== null»«base.uuid()»«ELSE»::Smp::Uuids::Uuid_Void«ENDIF» /// Base Class UUID
                     ); 
                     
                 «FOR l : fields BEFORE "/// Register the Fields of the Class\n"»
                     type->AddField(
                         "«l.name»"
                         ,«l.description()»
-                        ,«l.type.uuidQfn»  ///UUID of the Field Type
-                        ,offsetof(«t.name», «l.name»)  ///Compute the offset of the current item
-                        ,«l.viewKind»  ///viewkind
-                        ,«!l.isTransient»  ///state
-                        ,«l.isInput»  ///is an input field
-                        ,«l.isOutput»///is an output field
+                        ,«l.type.uuid()»  /// UUID of the Field Type
+                        ,offsetof(«name», «l.name»)  ///Compute the offset of the current item
+                        ,«l.viewKind»  /// viewkind
+                        ,«!l.isTransient»  /// state
+                        ,«l.isInput»  /// input
+                        ,«l.isOutput»/// output
                         );  
                 «ENDFOR»
             }
-            «t.defineMembersGen(useGenPattern)»
+            «defineMembersGen(useGenPattern)»
             
-            «t.uuidDefinition»
+            «uuidDefinition»
         '''
     }
 
-    override protected CharSequence generateSourceBody(Class t, boolean useGenPattern) {
+    override protected CharSequence generateSourceBody(Class it, boolean useGenPattern) {
         '''
-            «t.defineMembers(useGenPattern)»
+            «defineMembers(useGenPattern)»
         '''
     }
 

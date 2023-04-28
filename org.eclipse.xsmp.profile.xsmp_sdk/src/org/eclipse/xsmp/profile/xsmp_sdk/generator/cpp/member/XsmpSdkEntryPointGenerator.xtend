@@ -19,13 +19,13 @@ class XsmpSdkEntryPointGenerator extends EntryPointGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkSource("Xsmp/EntryPoint.h")
+        acceptor.userSource("Xsmp/EntryPoint.h")
     }
 
-    override initialize(NamedElementWithMembers container, EntryPoint element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
-            // EntryPoint: «element.name»
-            «element.name» { new ::Xsmp::EntryPoint( "«element.name»",  «element.description()»,  this, std::bind(&«container.name(useGenPattern)»::_«element.name», this)) }
+            // EntryPoint: «name»
+            «name» { new ::Xsmp::EntryPoint( "«name»",  «description()»,  this, std::bind(&«parent.name(useGenPattern)»::_«name», this)) }
         '''
     }
 }

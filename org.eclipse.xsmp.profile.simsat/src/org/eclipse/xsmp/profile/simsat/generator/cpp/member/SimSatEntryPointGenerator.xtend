@@ -19,26 +19,26 @@ class SimSatEntryPointGenerator extends EntryPointGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkSource("esa/ecss/smp/cdk/EntryPoint.h")
+        acceptor.userSource("esa/ecss/smp/cdk/EntryPoint.h")
     }
 
-    override initialize(NamedElementWithMembers container, EntryPoint element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
-            // EntryPoint: «element.name»
-            «element.name» { new ::esa::ecss::smp::cdk::EntryPoint( "«element.name»",  «element.description()»,  this, simulator, &«container.name(useGenPattern)»::_«element.name») }
+            // EntryPoint: «name»
+            «name» { new ::esa::ecss::smp::cdk::EntryPoint( "«name»", «description()», this, simulator, &«parent.name(useGenPattern)»::_«name») }
         '''
     }
 
-    override construct(NamedElementWithMembers container, EntryPoint element, boolean useGenPattern) {
+    override construct(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
-            if (!this->GetEntryPoint("«element.name»"))
+            if (!this->GetEntryPoint("«name»"))
             {
                 // Use existing implementation to manage Entry Points
-                this->AddEntryPoint(«element.name»);
+                this->AddEntryPoint(«name»);
             }
             else
             {
-                Log(Smp::Services::ILogger::LMK_Error, "EntryPoint «element.name» redeclared");
+                Log(Smp::Services::ILogger::LMK_Error, "EntryPoint «name» redeclared");
             }
         '''
     }

@@ -50,6 +50,7 @@ import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver.SolverException;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
+import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.Attribute;
@@ -185,7 +186,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
     try
     {
-      xsmpUtil.getEnumerationLiteral(e);
+      final var l = xsmpUtil.getSolver().getEnumerationLiteral(e, type);
+
+      final var v = xsmpUtil.getSolver().getValue(e);
+      if (l != null && l != v)
+      {
+        warning("Should use the EnumerationLiteral " + xsmpUtil.fqn(l).toString(), e, null);
+      }
     }
     catch (final SolverException ex)
     {
@@ -740,7 +747,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (type != null && !type.eIsProxy())
     {
       // check that the referenced type is visible
-      final var minVisibility = XsmpUtil.getMinVisibility(type, source);
+      final var minVisibility = xsmpUtil.getMinVisibility(type, source);
       if (type.getRealVisibility().getValue() > minVisibility.getValue())
       {
         error("The " + type.eClass().getName() + " "
@@ -781,7 +788,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           EStructuralFeature feature, int index)
   {
 
-    final var minVisibility = XsmpUtil.getMinVisibility(field, source);
+    final var minVisibility = xsmpUtil.getMinVisibility(field, source);
     if (field.getRealVisibility().getValue() > minVisibility.getValue())
     {
       error("The Field " + field.getName() + " is not visible.", source, feature, index,
@@ -894,7 +901,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var base = elem.getBase();
 
     // check recursive base
-    if (XsmpUtil.isRecursive(elem, elem.getBase()))
+    if (xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends from a derived Type.",
               XcataloguePackage.Literals.CLASS__BASE,
@@ -952,7 +959,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var base = elem.getBase();
 
     // check recursive base
-    if (XsmpUtil.isRecursive(elem, elem.getBase()))
+    if (xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends a derived Type.",
               XcataloguePackage.Literals.COMPONENT__BASE);
@@ -1054,7 +1061,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
 
     if (f.getDefaultComponent() != null && f.getType() instanceof Component
-            && !XsmpUtil.isRecursive((Component) f.getType(), f.getDefaultComponent()))
+            && !xsmpUtil.isBaseOf(f.getType(), f.getDefaultComponent()))
     {
       error(f.getType().getName() + " is not a base of " + f.getDefaultComponent().getName(),
               XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT);
@@ -1291,7 +1298,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final Set<Type> visited = new HashSet<>();
     for (var i = 0; i < nbBases; ++i)
     {
-      if (XsmpUtil.isRecursive(elem, bases.get(i)))
+      if (xsmpUtil.isBaseOf(elem, bases.get(i)))
       {
         error("An Interface cannot extends a derived Type.",
                 XcataloguePackage.Literals.INTERFACE__BASE, i,
@@ -1400,13 +1407,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       }
     }
 
-    // an element cannot be both byPointer and ByReference
-    if (xsmpUtil.isByPointer(elem) && xsmpUtil.isByReference(elem))
-    {
-      error("An element cannot have both ByPointer and ByReference attributes.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__METADATUM);
-    }
-
   }
 
   @Check
@@ -1421,6 +1421,43 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
               XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
 
+    if (xsmpUtil.isConstructor(op))
+    {
+      if (xsmpUtil.getOperatorKind(op) != OperatorKind.NONE)
+      {
+        error("Operator and Constructor attributes cannot be both set at the same time for a given Operation element as they are mutually exclusive.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (op.getReturnParameter() != null)
+      {
+        error("A Constructor cannot have a return parameter.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+    }
+
+    if (xsmpUtil.isStatic(op))
+    {
+      if (op.eContainer() instanceof Interface)
+      {
+        warning("An Operation of an Interface shall not be static.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isVirtual(op))
+      {
+        error("An Operation cannot be both Static and Virtual.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isAbstract(op))
+      {
+        error("An Operation cannot be both Static and Abstract.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isConst(op))
+      {
+        error("An Operation cannot be both Static and Const.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+    }
     // check that default value of parameters are provided
     var requireDefaultValue = false;
     for (final Parameter p : op.getParameter())
@@ -1455,7 +1492,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       check(p.getType(), p.getDefault(), xsmpUtil.isByPointer(p));
 
     }
-
+    // an element cannot be both byPointer and ByReference
+    if (xsmpUtil.isByPointer(p) && xsmpUtil.isByReference(p))
+    {
+      error("A Parameter cannot be both ByPointer and ByReference.",
+              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+    }
   }
 
   @Check
@@ -1483,6 +1525,41 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       {
         error(p.getType().getName() + " is not a base of " + field.getType().getName(),
                 XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD);
+      }
+
+      if (xsmpUtil.isStatic(p) && !xsmpUtil.isStatic(field))
+      {
+        error("The field is not static.", XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD);
+      }
+    }
+    // an element cannot be both byPointer and ByReference
+    if (xsmpUtil.isByPointer(p) && xsmpUtil.isByReference(p))
+    {
+      error("A Property cannot be both ByPointer and ByReference.",
+              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+    }
+
+    if (xsmpUtil.isStatic(p))
+    {
+      if (p.eContainer() instanceof Interface)
+      {
+        error("A Property of an Interface shall not be static.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isVirtual(p))
+      {
+        error("A Property cannot be both Static and Virtual.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isAbstract(p))
+      {
+        error("A Property cannot be both Static and Abstract.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      if (xsmpUtil.isConst(p))
+      {
+        error("A Property cannot be both Static and Const.",
+                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
 
@@ -1663,7 +1740,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (value instanceof EnumerationLiteral)
     {
       final var type = (Type) value.eContainer();
-      final var minVisibility = XsmpUtil.getMinVisibility(type, literal);
+      final var minVisibility = xsmpUtil.getMinVisibility(type, literal);
       if (type.getRealVisibility().getValue() > minVisibility.getValue())
       {
         error("The " + type.eClass().getName() + " "
@@ -1678,7 +1755,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       final var elem = (VisibilityElement) value;
       // check that the constant is visible
-      final var minVisibility = XsmpUtil.getMinVisibility(elem, literal);
+      final var minVisibility = xsmpUtil.getMinVisibility(elem, literal);
       if (elem.getRealVisibility().getValue() > minVisibility.getValue())
       {
         error("The " + elem.eClass().getName() + " "

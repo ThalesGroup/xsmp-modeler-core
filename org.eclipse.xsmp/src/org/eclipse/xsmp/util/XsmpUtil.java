@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -32,7 +31,9 @@ import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
+import org.eclipse.xsmp.xcatalogue.Class;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
+import org.eclipse.xsmp.xcatalogue.Component;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
@@ -55,13 +56,11 @@ import org.eclipse.xsmp.xcatalogue.SimpleType;
 import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.ValueReference;
 import org.eclipse.xsmp.xcatalogue.ValueType;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
@@ -87,9 +86,6 @@ public class XsmpUtil
   private IQualifiedNameProvider qualifiedNameProvider;
 
   @Inject
-  private IQualifiedNameConverter qualifiedNameConverter;
-
-  @Inject
   protected IResourceScopeCache cache;
 
   @Inject
@@ -101,6 +97,52 @@ public class XsmpUtil
   public Solver getSolver()
   {
     return solver;
+  }
+
+  public enum OperatorKind
+  {
+    /** No operator */
+    NONE,
+    /** Positive value */
+    POSITIVE,
+    /** Negative value */
+    NEGATIVE,
+    /** Assign new value */
+    ASSIGN,
+    /** Add value */
+    ADD,
+    /** Subtract value */
+    SUBTRACT,
+    /** Multiply with value */
+    MULTIPLY,
+    /** Divide by value */
+    DIVIDE,
+    /** Remainder of division */
+    REMAINDER,
+    /** Is greater than */
+    GREATER,
+    /** Is less than */
+    LESS,
+    /** Is equal */
+    EQUAL,
+    /** Is not greater than */
+    NOT_GREATER,
+    /** Is not less than */
+    NOT_LESS,
+    /** Is not equal */
+    NOT_EQUAL,
+    /** Index into array */
+    INDEXER,
+    /** Sum of instance and another value */
+    SUM,
+    /** Difference between instance and another value */
+    DIFFERENCE,
+    /** Product of instance and another value */
+    PRODUCT,
+    /** Quotient of instance and another value */
+    QUOTIENT,
+    /** Remainder of instance divided by another value */
+    MODULE
   }
 
   /**
@@ -139,135 +181,134 @@ public class XsmpUtil
           .put(QualifiedNames.Smp_DateTime, PrimitiveTypeKind.DATE_TIME)
           .put(QualifiedNames.Smp_Duration, PrimitiveTypeKind.DURATION).build();
 
-  public static PrimitiveTypeKind getPrimitiveType(IEObjectDescription d)
+  private static final Map<QualifiedName, OperatorKind> operatorKinds = ImmutableMap
+          .<QualifiedName, OperatorKind> builder()
+          .put(QualifiedNames.Attributes_OperatorKind_Add, OperatorKind.ADD)
+          .put(QualifiedNames.Attributes_OperatorKind_Assign, OperatorKind.ASSIGN)
+          .put(QualifiedNames.Attributes_OperatorKind_Difference, OperatorKind.DIFFERENCE)
+          .put(QualifiedNames.Attributes_OperatorKind_Divide, OperatorKind.DIVIDE)
+          .put(QualifiedNames.Attributes_OperatorKind_Equal, OperatorKind.EQUAL)
+          .put(QualifiedNames.Attributes_OperatorKind_Greater, OperatorKind.GREATER)
+          .put(QualifiedNames.Attributes_OperatorKind_Indexer, OperatorKind.INDEXER)
+          .put(QualifiedNames.Attributes_OperatorKind_Less, OperatorKind.LESS)
+          .put(QualifiedNames.Attributes_OperatorKind_Module, OperatorKind.MODULE)
+          .put(QualifiedNames.Attributes_OperatorKind_Multiply, OperatorKind.MULTIPLY)
+          .put(QualifiedNames.Attributes_OperatorKind_Negative, OperatorKind.NEGATIVE)
+          .put(QualifiedNames.Attributes_OperatorKind_None, OperatorKind.NONE)
+          .put(QualifiedNames.Attributes_OperatorKind_NotEqual, OperatorKind.NOT_EQUAL)
+          .put(QualifiedNames.Attributes_OperatorKind_NotGreater, OperatorKind.NOT_GREATER)
+          .put(QualifiedNames.Attributes_OperatorKind_NotLess, OperatorKind.NOT_LESS)
+          .put(QualifiedNames.Attributes_OperatorKind_Positive, OperatorKind.POSITIVE)
+          .put(QualifiedNames.Attributes_OperatorKind_Product, OperatorKind.PRODUCT)
+          .put(QualifiedNames.Attributes_OperatorKind_Quotient, OperatorKind.QUOTIENT)
+          .put(QualifiedNames.Attributes_OperatorKind_Remainder, OperatorKind.REMAINDER)
+          .put(QualifiedNames.Attributes_OperatorKind_Subtract, OperatorKind.SUBTRACT)
+          .put(QualifiedNames.Attributes_OperatorKind_Sum, OperatorKind.SUM).build();
+
+  public PrimitiveTypeKind getPrimitiveType(IEObjectDescription d)
   {
     return getPrimitiveType(d.getQualifiedName());
   }
 
-  public static PrimitiveTypeKind getPrimitiveType(QualifiedName qfn)
+  public PrimitiveTypeKind getPrimitiveType(QualifiedName qfn)
   {
-    return primitiveTypeKinds.getOrDefault(qfn, null);
+    return primitiveTypeKinds.getOrDefault(qfn, PrimitiveTypeKind.NONE);
   }
 
-  public static EObject getRootBase(ItemWithBase elem)
-  {
-
-    final Set<ItemWithBase> visited = new HashSet<>();
-
-    while (visited.add(elem))
-    {
-      final var base = elem.getBase();
-
-      if (!(base instanceof ItemWithBase))
-      {
-        return base == null ? elem : base;
-      }
-      elem = (ItemWithBase) base;
-    }
-
-    return elem;
-  }
-
-  public QualifiedName getRootBase(IEObjectDescription o)
+  public VisibilityKind getVisibility(IEObjectDescription o)
   {
 
     final var obj = o.getEObjectOrProxy();
     if (obj.eIsProxy())
     {
+      final var visibility = o.getUserData("visibility");
 
-      final var base = o.getUserData("rootBase");
-      if (base != null)
-      {
-        return qualifiedNameConverter.toQualifiedName(base);
-      }
+      // if the user data is not set, it means that the object is public
+      return visibility != null ? VisibilityKind.valueOf(visibility) : VisibilityKind.PUBLIC;
     }
-    else if (obj instanceof ItemWithBase)
-    {
-      final var base = getRootBase((ItemWithBase) obj);
 
-      return qualifiedNameProvider.getFullyQualifiedName(base);
-    }
-    return o.getQualifiedName();
+    return getVisibility(obj);
   }
 
-  public static VisibilityKind getVisibility(IEObjectDescription o)
+  public VisibilityKind getVisibility(EObject t)
   {
-
-    final var obj = o.getEObjectOrProxy();
-    if (obj.eIsProxy())
+    if (t instanceof VisibilityElement)
     {
-      try
-      {
-        return VisibilityKind.valueOf(o.getUserData("visibility"));
-      }
-      catch (final Exception e)
-      {
-        // ignore
-      }
+      return ((VisibilityElement) t).getRealVisibility();
     }
-    else if (obj instanceof VisibilityElement)
-    {
-      return ((VisibilityElement) obj).getRealVisibility();
-    }
+    // by default other objects are public
     return VisibilityKind.PUBLIC;
   }
 
-  public static boolean isDeprecated(IEObjectDescription o)
+  public boolean isDeprecated(IEObjectDescription o)
   {
 
     final var obj = o.getEObjectOrProxy();
     if (obj.eIsProxy())
     {
-      try
-      {
-        return Boolean.parseBoolean(o.getUserData("deprecated"));
-      }
-      catch (final Exception e)
-      {
-        // ignore
-      }
+      return Boolean.parseBoolean(o.getUserData("deprecated"));
     }
-    else if (obj instanceof NamedElement)
+    if (obj instanceof NamedElement)
     {
       return ((NamedElement) obj).isDeprecated();
     }
     return false;
   }
 
-  public static boolean isRecursive(Interface elem, EObject base)
+  public boolean isBaseOf(QualifiedName base, EObject derived)
   {
-    if (base instanceof Interface)
+    final var resource = derived.eResource();
+    if (resource != null)
     {
-      final Set<EObject> visited = new HashSet<>();
-      visited.add(base);
-
-      visitAllBases((Interface) base, visited);
-      return visited.contains(elem);
-
-    }
-    return false;
-  }
-
-  public static boolean isRecursive(ItemWithBase elem, EObject base)
-  {
-    if (base instanceof ItemWithBase)
-    {
-      final Set<EObject> visited = new HashSet<>();
-      visited.add(elem);
-
-      while (base instanceof ItemWithBase)
+      final var rs = resource.getResourceSet();
+      if (rs != null)
       {
-        if (!visited.add(base))
+        final var it = resourceDescriptionProvider.getResourceDescriptions(rs)
+                .getExportedObjects(XcataloguePackage.Literals.TYPE, base, false).iterator();
+        if (it.hasNext())
         {
-          return true;
+          return isBaseOf(it.next().getEObjectOrProxy(), derived);
         }
-        base = ((ItemWithBase) base).getBase();
       }
     }
     return false;
   }
 
-  public static VisibilityKind getMinVisibility(Type type, EObject from)
+  public boolean isBaseOf(EObject base, EObject derived)
+  {
+    if (derived instanceof Interface)
+    {
+      return isBaseOf(base, (Interface) derived);
+    }
+    if (derived instanceof Component)
+    {
+      return isBaseOf(base, (Component) derived);
+    }
+    if (derived instanceof Class)
+    {
+      return isBaseOf(base, (Class) derived);
+    }
+
+    return false;
+  }
+
+  protected boolean isBaseOf(EObject base, Interface derived)
+  {
+    return base == derived || derived.getBase().stream().anyMatch(b -> isBaseOf(base, b));
+  }
+
+  protected boolean isBaseOf(EObject base, Component derived)
+  {
+    return base == derived || isBaseOf(base, derived.getBase())
+            || derived.getInterface().stream().anyMatch(b -> isBaseOf(base, b));
+  }
+
+  protected boolean isBaseOf(EObject base, Class derived)
+  {
+    return base == derived || isBaseOf(base, derived.getBase());
+  }
+
+  public VisibilityKind getMinVisibility(Type type, EObject from)
   {
     if (type != null && !type.eIsProxy())
     {
@@ -288,18 +329,7 @@ public class XsmpUtil
     return VisibilityKind.PRIVATE;
   }
 
-  public static boolean isVisibleFrom(Type type, EObject from)
-  {
-    if (type != null && !type.eIsProxy())
-    {
-
-      return doIsVisibleFrom(type, from);
-
-    }
-    return true;
-  }
-
-  private static boolean doIsVisibleFrom(Type type, EObject from)
+  protected boolean isVisibleFrom(Type type, EObject from)
   {
 
     return (type.getRealVisibility() != VisibilityKind.PRIVATE
@@ -308,7 +338,7 @@ public class XsmpUtil
                     || from.eResource() == type.eResource());
   }
 
-  public static boolean isVisibleFrom(VisibilityElement field, EObject from)
+  protected boolean isVisibleFrom(VisibilityElement field, EObject from)
   {
     return getMinVisibility(field, from).getValue() >= field.getRealVisibility().getValue();
   }
@@ -336,7 +366,7 @@ public class XsmpUtil
     return VisibilityKind.PUBLIC;
   }
 
-  public static VisibilityKind getMinVisibility(VisibilityElement fieldOrConstant, EObject from)
+  public VisibilityKind getMinVisibility(VisibilityElement fieldOrConstant, EObject from)
   {
     if (fieldOrConstant != null && !fieldOrConstant.eIsProxy())
     {
@@ -346,14 +376,14 @@ public class XsmpUtil
     return VisibilityKind.PRIVATE;
   }
 
-  public static boolean isVisibleFrom(IEObjectDescription p, EObject from)
+  public boolean isVisibleFrom(IEObjectDescription p, EObject from)
   {
     final var obj = p.getEObjectOrProxy();
     if (!obj.eIsProxy())
     {
       if (obj instanceof Type)
       {
-        return doIsVisibleFrom((Type) obj, from);
+        return isVisibleFrom((Type) obj, from);
       }
       if (obj instanceof VisibilityElement)
       {
@@ -361,33 +391,10 @@ public class XsmpUtil
       }
       if (obj instanceof EnumerationLiteral)
       {
-        return doIsVisibleFrom((Type) obj.eContainer(), from);
+        return isVisibleFrom((Type) obj.eContainer(), from);
       }
     }
     return getVisibility(p) == VisibilityKind.PUBLIC;
-    // return "public".equals(p.getUserData("visibility"));
-
-  }
-
-  public static Type resolve(Type type)
-  {
-    if (type instanceof ValueReference)
-    {
-      return resolve(((ValueReference) type).getType());
-    }
-    return type;
-  }
-
-  private static void visitAllBases(Interface i, Set<EObject> visited)
-  {
-
-    for (final Type b : i.getBase())
-    {
-      if (visited.add(b) && b instanceof Interface)
-      {
-        visitAllBases((Interface) b, visited);
-      }
-    }
 
   }
 
@@ -451,22 +458,7 @@ public class XsmpUtil
     return QualifiedName.EMPTY;
   }
 
-  public static boolean isSimpleType(Type t)
-  {
-    return t instanceof SimpleType;
-  }
-
-  public static boolean isSimpleArrayType(Type t)
-  {
-    return t instanceof Array && isSimpleType(((Array) t).getItemType());
-  }
-
-  public static boolean isArrayType(Type t)
-  {
-    return t instanceof Array && !isSimpleType(((Array) t).getItemType());
-  }
-
-  public static String getString(StringLiteral t)
+  public String getString(StringLiteral t)
   {
     var value = t.getValue();
     // remove ENCODINGPREFIX: 'u8' | 'u' | 'U' | 'L'
@@ -489,7 +481,7 @@ public class XsmpUtil
     return value.substring(1, value.length() - 1);
   }
 
-  public static String getString(CharacterLiteral t)
+  public String getString(CharacterLiteral t)
   {
     var value = t.getValue();
     // remove ENCODINGPREFIX: 'u' | 'U' | 'L'
@@ -507,17 +499,17 @@ public class XsmpUtil
     return value.substring(1, value.length() - 1);
   }
 
-  public static String getUnescapedChar(CharacterLiteral t)
+  public String getUnescapedChar(CharacterLiteral t)
   {
     return translateEscapes(getString(t));
   }
 
-  public static String getUnescapedString(StringLiteral t)
+  public String getUnescapedString(StringLiteral t)
   {
     return translateEscapes(getString(t));
   }
 
-  public static String translateEscapes(String s) throws IllegalArgumentException
+  public String translateEscapes(String s) throws IllegalArgumentException
   {
     if (s.isEmpty())
     {
@@ -606,7 +598,7 @@ public class XsmpUtil
   /**
    * Return the list of all direct dependent packages
    */
-  public static Collection<Catalogue> dependentPackages(Catalogue t)
+  public Collection<Catalogue> dependentPackages(Catalogue t)
   {
     final var dependencies = new HashSet<Catalogue>();
     // collect all referenced Catalogue of interest
@@ -639,7 +631,7 @@ public class XsmpUtil
             .sorted((a, b) -> c.compare(a.getName(), b.getName())).collect(Collectors.toList());
   }
 
-  public static int year(Document doc)
+  public int year(Document doc)
   {
     if (doc.getDate() != null)
     {
@@ -648,7 +640,7 @@ public class XsmpUtil
     return LocalDate.now().getYear();
   }
 
-  public Attribute attribute(NamedElement o, QualifiedName id)
+  protected Attribute attribute(NamedElement o, QualifiedName id)
   {
     return o.getMetadatum().getMetadata().stream()
             .filter(it -> it.getType() != null
@@ -672,7 +664,7 @@ public class XsmpUtil
 
   protected Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
   {
-    return cache.get(Tuples.pair(o, id), o.eResource(), () -> getBoolean(attributeValue(o, id)));
+    return getBoolean(attributeValue(o, id));
   }
 
   protected boolean attributeBoolValue(NamedElement o, QualifiedName id, boolean defaultValue)
@@ -691,110 +683,139 @@ public class XsmpUtil
     final var obj = o.getEObjectOrProxy();
     if (obj.eIsProxy())
     {
-      try
-      {
-        return Boolean.parseBoolean(o.getUserData("static"));
-      }
-      catch (final Exception e)
-      {
-        // ignore
-      }
+      return Boolean.parseBoolean(o.getUserData("static"));
     }
-    else if (obj instanceof NamedElement)
+    if (obj instanceof NamedElement)
     {
       return isStatic((NamedElement) obj);
     }
     return false;
   }
 
+  public OperatorKind getOperatorKind(NamedElement o)
+  {
+    final var id = QualifiedNames.Attributes_Operator;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> operatorKinds
+            .getOrDefault(fqn(getEnumerationLiteral(attributeValue(o, id))), OperatorKind.NONE));
+  }
+
   public boolean isStatic(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Static, false);
+    final var id = QualifiedNames.Attributes_Static;
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> !isConstructor(o) && attributeBoolValue(o, id, false));
   }
 
   public boolean isConst(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Const, false);
+    final var id = QualifiedNames.Attributes_Const;
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> !isConstructor(o) && attributeBoolValue(o, id, false));
   }
 
   public boolean isMutable(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Mutable, false);
-  }
-
-  public boolean isByPointer(NamedElement o)
-  {
-    return attributeBoolValue(o, QualifiedNames.Attributes_ByPointer, false);
-  }
-
-  public boolean isByReference(NamedElement o)
-  {
-    return attributeBoolValue(o, QualifiedNames.Attributes_ByReference, false);
+    final var id = QualifiedNames.Attributes_Mutable;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isAbstract(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Abstract,
-            () -> o.eContainer() instanceof Interface);
+    final var id = QualifiedNames.Attributes_Abstract;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> !isConstructor(o) && !isStatic(o)
+            && (o.eContainer() instanceof Interface || attributeBoolValue(o, id, false)));
   }
 
   public boolean isVirtual(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Virtual,
-            () -> o.eContainer() instanceof ReferenceType);
-
+    // if the element is abstract then it is virtual too
+    final var id = QualifiedNames.Attributes_Virtual;
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> !isConstructor(o) && (isAbstract(o) || attributeBoolValue(o, id,
+                    () -> o.eContainer() instanceof ReferenceType && !isStatic(o))));
   }
 
-  public boolean isConstructor(Operation o)
+  public boolean isConstructor(NamedElement o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Constructor, false);
+    final var id = QualifiedNames.Attributes_Constructor;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
+  }
+
+  public boolean isByPointer(Property o)
+  {
+    final var id = QualifiedNames.Attributes_ByPointer;
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> attributeBoolValue(o, id, () -> o.getType() instanceof ReferenceType));
+  }
+
+  public boolean isByPointer(Association o)
+  {
+    final var id = QualifiedNames.Attributes_ByPointer;
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> attributeBoolValue(o, id, () -> o.getType() instanceof ReferenceType));
   }
 
   public boolean isByPointer(Parameter o)
   {
+    final var id = QualifiedNames.Attributes_ByPointer;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id,
+            () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_PTR));
+  }
 
-    return kind(o) == ArgKind.BY_PTR;
+  public boolean isByReference(Property o)
+  {
+    final var id = QualifiedNames.Attributes_ByReference;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isByReference(Parameter o)
   {
+    final var id = QualifiedNames.Attributes_ByReference;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id,
+            () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_REF));
 
-    return kind(o) == ArgKind.BY_REF;
   }
 
   public boolean isForcible(Field o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Forcible, false);
+    final var id = QualifiedNames.Attributes_Forcible;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isFailure(Field o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Failure, false);
+    final var id = QualifiedNames.Attributes_Failure;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isConstGetter(Property o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_ConstGetter, false);
+    final var id = QualifiedNames.Attributes_ConstGetter;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isNoConstructor(Type o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_NoConstructor, false);
+    final var id = QualifiedNames.Attributes_NoConstructor;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isNoDestructor(Type o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_NoDestructor, false);
+    final var id = QualifiedNames.Attributes_NoDestructor;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isSimpleArray(Array o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_SimpleArray, false);
+    final var id = QualifiedNames.Attributes_SimpleArray;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, false));
   }
 
   public boolean isConst(Parameter o)
   {
-    return attributeBoolValue(o, QualifiedNames.Attributes_Const, () -> {
+    final var id = QualifiedNames.Attributes_Const;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, () -> {
       switch (o.getDirection())
       {
         case IN:
@@ -805,13 +826,8 @@ public class XsmpUtil
         default:
           return false;
       }
-    });
-  }
+    }));
 
-  public boolean isByPointer(Association o)
-  {
-    return attributeBoolValue(o, QualifiedNames.Attributes_ByPointer,
-            () -> o.getType() instanceof ReferenceType);
   }
 
   protected ArgKind kind(ParameterDirectionKind direction, Type type)
@@ -848,52 +864,9 @@ public class XsmpUtil
     return ArgKind.BY_VALUE;
   }
 
-  public ArgKind kind(Parameter o)
-  {
-    var kind = kind(o.getDirection(), o.getType());
-
-    final var byPtr = attributeBoolValue(o, QualifiedNames.Attributes_ByPointer);
-
-    if (byPtr.isPresent())
-    {
-      if (byPtr.get() == Boolean.TRUE)
-      {
-        kind = ArgKind.BY_PTR;
-      }
-      else if (kind == ArgKind.BY_PTR)
-      {
-        kind = ArgKind.BY_VALUE;
-      }
-
-    }
-    final var byReference = attributeBoolValue(o, QualifiedNames.Attributes_ByReference);
-
-    if (byReference.isPresent())
-    {
-      if (byReference.get() == Boolean.TRUE)
-      {
-        kind = ArgKind.BY_REF;
-      }
-      else if (kind == ArgKind.BY_REF)
-      {
-        kind = ArgKind.BY_VALUE;
-      }
-    }
-    return kind;
-  }
-
   public enum ArgKind
   {
     BY_VALUE, BY_PTR, BY_REF
-  }
-
-  public VisibilityKind getVisibility(EObject t)
-  {
-    if (t instanceof VisibilityElement)
-    {
-      return ((VisibilityElement) t).getRealVisibility();
-    }
-    return VisibilityKind.PUBLIC;
   }
 
   // get all public & non-static fields
@@ -908,9 +881,10 @@ public class XsmpUtil
       if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
       {
         final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
-        if (clazz.getBase() instanceof Structure)
+        final var base = clazz.getBase();
+        if (base instanceof Structure && !isBaseOf(base, clazz))
         {
-          fields.addAll(0, getAssignableFields((Structure) clazz.getBase()));
+          fields.addAll(0, getAssignableFields((Structure) base));
         }
       }
       return fields;
@@ -928,9 +902,10 @@ public class XsmpUtil
     if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
     {
       final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
-      if (clazz.getBase() instanceof Structure)
+      final var base = clazz.getBase();
+      if (base instanceof Structure && !isBaseOf(base, clazz))
       {
-        return Iterables.concat(getFields((Structure) clazz.getBase()), fields);
+        return Iterables.concat(getFields((Structure) base), fields);
       }
     }
     return fields;
@@ -972,24 +947,26 @@ public class XsmpUtil
     return false;
   }
 
-  public boolean isInvokable(Operation op)
+  protected boolean computeIsInvokable(Operation op)
   {
-    return cache.get(Tuples.pair(op, "isInvokable"), op.eResource(), () -> {
-      if (op.getReturnParameter() != null
-              && !(op.getReturnParameter().getType() instanceof SimpleType))
+    if (op.getReturnParameter() != null
+            && !(op.getReturnParameter().getType() instanceof SimpleType))
+    {
+      return false;
+    }
+    for (final var param : op.getParameter())
+    {
+      if (!(param.getType() instanceof ValueType))
       {
         return false;
       }
-      for (final var param : op.getParameter())
-      {
-        if (!(param.getType() instanceof ValueType))
-        {
-          return false;
-        }
-      }
-      return true;
-    });
+    }
+    return true;
+  }
 
+  public boolean isInvokable(Operation op)
+  {
+    return cache.get(Tuples.pair(op, "isInvokable"), op.eResource(), () -> computeIsInvokable(op));
   }
 
   private Type findType(EObject e, QualifiedName name)
@@ -1230,20 +1207,18 @@ public class XsmpUtil
 
   public EnumerationLiteral getEnumerationLiteral(Expression e)
   {
-
-    try
+    final var type = getType(e);
+    if (type instanceof Enumeration)
     {
-      final var type = getType(e);
-      if (type instanceof Enumeration)
+      try
       {
         return solver.getEnumerationLiteral(e, (Enumeration) type);
       }
+      catch (final Exception ex)
+      {
+        // ignore
+      }
     }
-    catch (final Exception ex)
-    {
-      // ignore
-    }
-
     return null;
   }
 

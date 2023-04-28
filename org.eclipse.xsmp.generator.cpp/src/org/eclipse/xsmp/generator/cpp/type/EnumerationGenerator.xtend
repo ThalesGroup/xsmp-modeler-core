@@ -15,52 +15,53 @@ import org.eclipse.xsmp.xcatalogue.Enumeration
 
 class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
 
-    override protected generateHeaderBody(Enumeration t) {
+    override protected generateHeaderBody(Enumeration it) {
         '''
-            «t.comment()»
-            using «t.name» = «t.genName»;
+            «comment()»
+            using «name» = «nameGen»;
         '''
     }
 
-    override protected generateHeaderGenBody(Enumeration t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Enumeration it, boolean useGenPattern) {
         '''
-            «t.comment»
-            enum class «t.name(useGenPattern)» : ::Smp::Int32 {
-                «FOR l : t.literal SEPARATOR ", "»
+            «comment»
+            enum class «name(useGenPattern)» : ::Smp::Int32 {
+                «FOR l : literal SEPARATOR ", "»
                     «l.comment»
                     «l.name» = «l.value.doGenerateExpression()»
                 «ENDFOR»
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
             
-            const std::map<«t.name», std::string> «t.name»_name_map = {
-                «FOR l : t.literal SEPARATOR ", "»{ «t.name(useGenPattern)»::«l.name», "«l.name»" }«ENDFOR»
+            const std::map<«name(useGenPattern)», std::string> «name»_name_map = {
+                «FOR l : literal SEPARATOR ", "»{ «name(useGenPattern)»::«l.name», "«l.name»" }«ENDFOR»
             };
             
-            const std::map<«t.name», std::string> «t.name»_descr_map = {
-                «FOR l : t.literal SEPARATOR ", "»{ «t.name(useGenPattern)»::«l.name», «l.description()» }«ENDFOR»
+            const std::map<«name(useGenPattern)», std::string> «name»_descr_map = {
+                «FOR l : literal SEPARATOR ", "»{ «name(useGenPattern)»::«l.name», «l.description()» }«ENDFOR»
             };
         '''
     }
 
-    override protected generateSourceGenBody(Enumeration t, boolean useGenPattern) {
+    override protected generateSourceGenBody(Enumeration it, boolean useGenPattern) {
         '''
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry) {
                 ::Smp::Publication::IEnumerationType* typeState = registry->AddEnumerationType(
-                    "«t.name»",  // name
-                    «t.description()»,   // description
-                    «t.uuidQfn»,  // UUID
-                    sizeof(«t.name»));
+                    "«name»", // name
+                    «description()», // description
+                    «uuid()», // UUID
+                    sizeof(«name») // Size
+                    );
             
                 // Register the Literals of the Enumeration
-                «FOR l : t.literal»
+                «FOR l : literal»
                     typeState->AddLiteral("«l.name»", «l.description()», «l.value.getInteger()»);
                 «ENDFOR»
                 }
-                «t.uuidDefinition»
+                «uuidDefinition»
         '''
     }
 
@@ -71,7 +72,7 @@ class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkHeader("Smp/PrimitiveTypes.h")
+        acceptor.userHeader("Smp/PrimitiveTypes.h")
         acceptor.systemHeader("map")
     }
 

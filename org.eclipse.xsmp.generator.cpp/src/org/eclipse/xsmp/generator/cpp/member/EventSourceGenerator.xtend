@@ -18,26 +18,25 @@ import org.eclipse.xsmp.xcatalogue.SimpleType
 
 class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
 
-    protected def getEventArgType(EventSource element) {
-        val eventType = element.type as EventType
-        return eventType.eventArgs as SimpleType
+    protected def eventType(EventSource it) {
+        return (type as EventType).eventArgs as SimpleType
     }
 
-    override declareGen(NamedElementWithMembers parent, EventSource element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, EventSource it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::Smp::IEventSource* «element.name»;
+            «comment»
+            ::Smp::IEventSource* «name»;
         '''
     }
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Smp/IEventSource.h")
+        acceptor.userHeader("Smp/IEventSource.h")
     }
 
-    override finalize(EventSource element) {
+    override finalize(EventSource it) {
         '''  
-            delete «element.name»;
-            «element.name» = nullptr;
+            delete «name»;
+            «name» = nullptr;
         '''
     }
 

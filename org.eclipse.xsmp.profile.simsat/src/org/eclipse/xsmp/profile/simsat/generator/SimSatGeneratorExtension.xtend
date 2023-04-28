@@ -11,42 +11,41 @@
 package org.eclipse.xsmp.profile.simsat.generator
 
 import com.google.inject.Singleton
-import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xsmp.xcatalogue.Document
 import org.eclipse.xsmp.util.QualifiedNames
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 
 @Singleton
-class SimSatGeneratorExtension extends GeneratorExtension {
+class SimSatGeneratorExtension extends GeneratorUtil {
 
-    override CharSequence uuidDeclaration(Type t) {
-
+    override CharSequence uuidDeclaration(Type it) {
         ''' 
-            /// Universally unique identifier of type «t.name».
-            class UuidProvider_«t.name»
+            /// Universally unique identifier of type «name».
+            class UuidProvider_«name»
             {
             public:
-                static constexpr ::Smp::Uuid UUID{«t.uuid()»};
+                static constexpr ::Smp::Uuid UUID «generateUUID()»;
             };
         '''
     }
 
-    override CharSequence uuidDefinition(Type t) {
+    override CharSequence uuidDefinition(Type it) {
         '''
-            /// Definition of the UuidProvider constexpr for «t.name»
-            constexpr Smp::Uuid UuidProvider_«t.name»::UUID;
+            /// Definition of the UuidProvider constexpr for «name»
+            constexpr Smp::Uuid UuidProvider_«name»::UUID;
         '''
     }
 
-    override CharSequence uuidQfn(Type t) {
-        val fqn = qualifiedNameProvider.getFullyQualifiedName(t)
+    override CharSequence uuid(Type it) {
+        val fqn = fqn
 
         // In Smp, Uuids are in a separate namespace ::Smp::Uuids::
         if (fqn.startsWith(QualifiedNames.Smp))
-            '''::Smp::Uuids::Uuid_«t.name»'''
+            '''::Smp::Uuids::Uuid_«name»'''
         else
-            '''::«(t.eContainer as NamedElement).fqn.toString("::")»::UuidProvider_«t.name»::UUID'''
+            '''«(eContainer as NamedElement).id»::UuidProvider_«name»::UUID'''
     }
 
     override String name(Document elem) {

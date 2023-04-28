@@ -18,38 +18,38 @@ import org.eclipse.xsmp.xcatalogue.VisibilityKind
 class ExceptionGenerator extends ClassGenerator {
 
 
-    protected override CharSequence base(Class t) {
-        ''': public «IF t.base!==null»::«t.base.fqn.toString("::")»«ELSE»::Smp::Exception«ENDIF»'''
+    protected override CharSequence base(Class it) {
+        ''': public «IF base!==null»«base.id»«ELSE»::Smp::Exception«ENDIF»'''
     }
 
 
     override collectIncludes(Class type, IncludeAcceptor acceptor) {
         super.collectIncludes(type, acceptor)
         if (type.base === null)
-            acceptor.mdkHeader("Smp/Exception.h")
+            acceptor.userHeader("Smp/Exception.h")
     }
 
-    override protected generateHeaderGenBody(Class t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Class it, boolean useGenPattern) {
 
-        val constructor = !t.noConstructor && !t.member.filter(Operation).exists[it.constructor && it.parameter.empty]
-        val destructor = !t.noDestructor
+        val constructor = !noConstructor && !member.filter(Operation).exists[o|o.constructor && o.parameter.empty]
+        val destructor = !noDestructor
         '''
-            «IF useGenPattern»class «t.name»;«ENDIF»
-            «t.comment»
-            class «t.name(useGenPattern)»«t.base()»
+            «IF useGenPattern»class «name»;«ENDIF»
+            «comment»
+            class «name(useGenPattern)»«base()»
             {
-                «IF useGenPattern»friend class ::«t.fqn.toString("::")»;«ENDIF»
+                «IF useGenPattern»friend class «id»;«ENDIF»
             public:
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
                 
-                «IF constructor»«t.name(useGenPattern)»() = delete;«ENDIF»
-                «IF destructor»~«t.name(useGenPattern)»() noexcept override = default;«ENDIF»
-                «t.name(useGenPattern)»(const «t.name(useGenPattern)»&) = default;
+                «IF constructor»«name(useGenPattern)»() = delete;«ENDIF»
+                «IF destructor»~«name(useGenPattern)»() noexcept override = default;«ENDIF»
+                «name(useGenPattern)»(const «name(useGenPattern)»&) = default;
                 
-                «t.declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
+                «declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
         '''
     }
 }

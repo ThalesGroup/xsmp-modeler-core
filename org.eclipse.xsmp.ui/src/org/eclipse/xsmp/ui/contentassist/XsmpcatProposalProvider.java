@@ -405,7 +405,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
         {
           cproposal.setPriority(cproposal.getPriority() - 10);
         }
-        if (XsmpUtil.isDeprecated(candidate))
+        if (xsmpUtil.isDeprecated(candidate))
         {
           cproposal.setPriority(cproposal.getPriority() - 15);
         }
@@ -498,7 +498,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       filter = d -> {
         final var obj = EcoreUtil.resolve(d.getEObjectOrProxy(), model);
         final Type type;
-        if (obj instanceof Constant && XsmpUtil.isVisibleFrom(d, model))
+        if (obj instanceof Constant && xsmpUtil.isVisibleFrom(d, model))
         {
           type = ((Constant) obj).getType();
         }
@@ -614,10 +614,10 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     final var object = description.getEObjectOrProxy();
     if (object.eIsProxy() && object instanceof NamedElement)
     {
-      ((NamedElement) object).setDeprecated(XsmpUtil.isDeprecated(description));
+      ((NamedElement) object).setDeprecated(xsmpUtil.isDeprecated(description));
       if (object instanceof VisibilityElement)
       {
-        ((VisibilityElement) object).setVisibility(XsmpUtil.getVisibility(description));
+        ((VisibilityElement) object).setVisibility(xsmpUtil.getVisibility(description));
       }
     }
     return getImage(object);

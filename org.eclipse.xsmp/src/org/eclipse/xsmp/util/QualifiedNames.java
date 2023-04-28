@@ -43,6 +43,69 @@ public final class QualifiedNames
 
   public static final QualifiedName Attributes_OperatorKind = Attributes.append("OperatorKind");
 
+  public static final QualifiedName Attributes_OperatorKind_None = Attributes_OperatorKind
+          .append("None");
+
+  public static final QualifiedName Attributes_OperatorKind_Positive = Attributes_OperatorKind
+          .append("Positive");
+
+  public static final QualifiedName Attributes_OperatorKind_Negative = Attributes_OperatorKind
+          .append("Negative");
+
+  public static final QualifiedName Attributes_OperatorKind_Assign = Attributes_OperatorKind
+          .append("Assign");
+
+  public static final QualifiedName Attributes_OperatorKind_Add = Attributes_OperatorKind
+          .append("Add");
+
+  public static final QualifiedName Attributes_OperatorKind_Subtract = Attributes_OperatorKind
+          .append("Subtract");
+
+  public static final QualifiedName Attributes_OperatorKind_Multiply = Attributes_OperatorKind
+          .append("Multiply");
+
+  public static final QualifiedName Attributes_OperatorKind_Divide = Attributes_OperatorKind
+          .append("Divide");
+
+  public static final QualifiedName Attributes_OperatorKind_Remainder = Attributes_OperatorKind
+          .append("Remainder");
+
+  public static final QualifiedName Attributes_OperatorKind_Greater = Attributes_OperatorKind
+          .append("Greater");
+
+  public static final QualifiedName Attributes_OperatorKind_Less = Attributes_OperatorKind
+          .append("Less");
+
+  public static final QualifiedName Attributes_OperatorKind_Equal = Attributes_OperatorKind
+          .append("Equal");
+
+  public static final QualifiedName Attributes_OperatorKind_NotGreater = Attributes_OperatorKind
+          .append("NotGreater");
+
+  public static final QualifiedName Attributes_OperatorKind_NotLess = Attributes_OperatorKind
+          .append("NotLess");
+
+  public static final QualifiedName Attributes_OperatorKind_NotEqual = Attributes_OperatorKind
+          .append("NotEqual");
+
+  public static final QualifiedName Attributes_OperatorKind_Indexer = Attributes_OperatorKind
+          .append("Indexer");
+
+  public static final QualifiedName Attributes_OperatorKind_Sum = Attributes_OperatorKind
+          .append("Sum");
+
+  public static final QualifiedName Attributes_OperatorKind_Difference = Attributes_OperatorKind
+          .append("Difference");
+
+  public static final QualifiedName Attributes_OperatorKind_Product = Attributes_OperatorKind
+          .append("Product");
+
+  public static final QualifiedName Attributes_OperatorKind_Quotient = Attributes_OperatorKind
+          .append("Quotient");
+
+  public static final QualifiedName Attributes_OperatorKind_Module = Attributes_OperatorKind
+          .append("Module");
+
   public static final QualifiedName Attributes_FieldUpdateKind = Attributes
           .append("FieldUpdateKind");
 
@@ -113,5 +176,15 @@ public final class QualifiedNames
   public static final QualifiedName Smp_ContainerCollection = Smp.append("ContainerCollection");
 
   public static final QualifiedName Smp_EventSinkCollection = Smp.append("EventSinkCollection");
+
+  public static final QualifiedName Smp_ViewKind = Smp.append("ViewKind");
+
+  public static final QualifiedName Smp_ViewKind_VK_None = Smp_ViewKind.append("VK_None");
+
+  public static final QualifiedName Smp_ViewKind_VK_Debug = Smp_ViewKind.append("VK_Debug");
+
+  public static final QualifiedName Smp_ViewKind_VK_Expert = Smp_ViewKind.append("VK_Expert");
+
+  public static final QualifiedName Smp_ViewKind_VK_All = Smp_ViewKind.append("VK_All");
 
 }

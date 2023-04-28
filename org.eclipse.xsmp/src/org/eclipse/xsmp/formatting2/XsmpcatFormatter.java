@@ -283,8 +283,6 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     formatCollection(parent.getElements(), open, close, doc,
             ga.getCollectionLiteralAccess().getCommaKeyword_3_0());
 
-    // final var kw = parentRegion.keyword(ga.getCollectionLiteralAccess().getCommaKeyword_2_2());
-    // doc.prepend(kw, this::noSpace);
   }
 
   protected void format(UnaryOperation parent, IFormattableDocument doc)

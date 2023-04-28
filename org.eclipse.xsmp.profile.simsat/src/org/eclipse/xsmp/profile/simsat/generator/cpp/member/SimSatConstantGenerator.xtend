@@ -11,31 +11,11 @@
 package org.eclipse.xsmp.profile.simsat.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.member.ConstantGenerator
-import org.eclipse.xsmp.xcatalogue.Constant
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.String
 
 class SimSatConstantGenerator extends ConstantGenerator {
 
-    override declareGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
-
-        if (element.type instanceof String)
-            '''
-                «element.comment»
-                static const ::«element.type.fqn.toString("::")» «element.name»;
-            '''
-        else
-            super.declareGen(parent, element, useGenPattern)
-
-    }
-
-    override defineGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
-        if (element.type instanceof String)
-            '''
-                const ::«element.type.fqn.toString("::")» «parent.name(useGenPattern)»::«element.name»«element.value.generateExpression()»;
-            '''
-        else
-            super.defineGen(parent, element, useGenPattern)
+    protected override boolean stringTypeIsConstexpr() {
+        false
     }
 
 }

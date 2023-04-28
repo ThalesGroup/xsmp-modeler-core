@@ -25,20 +25,20 @@ class FieldHelper {
     /**
      * Mdk field are output or failure or forcible
      */
-    def boolean isMdkField(Field f) {
-        return f.output || f.isFailure || f.isForcible || f.type.isMdkFieldType
+    def boolean isCdkField(Field f) {
+        return f.output || f.isFailure || f.isForcible || f.type.isCdkFieldType
     }
 
-    private def dispatch boolean isMdkFieldType(Type t) {
+    private def dispatch boolean isCdkFieldType(Type t) {
         return false
     }
 
-    private def dispatch boolean isMdkFieldType(Structure t) {
-        return t.member.filter(Field).exists[it.isMdkField]
+    private def dispatch boolean isCdkFieldType(Structure t) {
+        return t.member.filter(Field).exists[it.isCdkField]
     }
 
-    private def dispatch boolean isMdkFieldType(Array t) {
-        return t.itemType.isMdkFieldType
+    private def dispatch boolean isCdkFieldType(Array t) {
+        return t.itemType.isCdkFieldType
     }
 
     def boolean isFailureField(Field f) {

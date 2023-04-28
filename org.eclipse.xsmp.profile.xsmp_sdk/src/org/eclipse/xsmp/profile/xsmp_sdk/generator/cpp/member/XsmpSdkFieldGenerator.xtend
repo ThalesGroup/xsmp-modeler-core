@@ -21,31 +21,31 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
 
     @Inject extension FieldHelper
 
-    override collectIncludes(Field element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
+    override collectIncludes(Field it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        if (element.isMdkField)
-            acceptor.mdkHeader("Xsmp/Field.h")
+        if (isCdkField)
+            acceptor.userHeader("Xsmp/Field.h")
     }
 
-    override Publish(Field element) {
-        if (element.isMdkField)
+    override Publish(Field it) {
+        if (isCdkField)
             '''
-                // Publish field «element.name»
-                receiver->PublishField(&«element.name»);
+                // Publish field «name»
+                receiver->PublishField(&«name»);
             '''
         else
-            super.Publish(element)
+            super.Publish(it)
     }
 
-    override initialize(NamedElementWithMembers container, Field f, boolean useGenPattern) {
-        if (f.isMdkField)
+    override initialize(NamedElementWithMembers container, Field it, boolean useGenPattern) {
+        if (isCdkField)
             '''
-                // «f.name» initialization
-                «f.name»{this, «f.type.uuidQfn», "«f.name»", «f.description()», «f.viewKind»«IF f.^default !== null», «f.^default.generateExpression()»«ENDIF»}
+                // «name» initialization
+                «name»{this, «type.uuid()», "«name»", «description()», «viewKind»«IF ^default !== null», «^default.generateExpression()»«ENDIF»}
             '''
         else
-            super.initialize(container, f, useGenPattern)
+            super.initialize(container, it, useGenPattern)
     }
 
 }

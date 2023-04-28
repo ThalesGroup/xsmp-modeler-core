@@ -14,25 +14,47 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Constant
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
+import org.eclipse.xsmp.xcatalogue.String
+
 class ConstantGenerator extends AbstractMemberGenerator<Constant> {
 
-    override declareGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
-        '''
-            «element.comment»
-            static constexpr ::«element.type.fqn.toString("::")» «element.name» «element.value.generateExpression()»;
-        '''
+    /** return true if the CDK String type has a constexpr constructor (true for aggregate types too) */
+    protected def boolean stringTypeIsConstexpr() {
+        true
     }
 
-    override defineGen(NamedElementWithMembers parent, Constant element, boolean useGenPattern) {
-        '''
-            constexpr ::«element.type.fqn.toString("::")» «parent.name(useGenPattern)»::«element.name»;
-        '''
+    /** declare a constant in the generated header*/
+    override declareGen(NamedElementWithMembers parent, Constant it, boolean useGenPattern) {
+
+        if (!stringTypeIsConstexpr && type instanceof String)
+            '''
+                «comment»
+                static const «type.id» «name»;
+            '''
+        else
+            '''
+                «comment»
+                static constexpr «type.id» «name»«IF value !==null»«value.generateExpression()»«ELSE»{}«ENDIF»;
+            '''
     }
 
-    override collectIncludes(Constant element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
-        acceptor.include(element.type)
-        element.value.include(acceptor)
+    /** define the symbol of the constant in the generated source */
+    override defineGen(NamedElementWithMembers parent, Constant it, boolean useGenPattern) {
+
+        if (!stringTypeIsConstexpr && type instanceof String)
+            '''
+                const «type.id» «parent.name(useGenPattern)»::«name»«IF value !==null»«value.generateExpression()»«ELSE»{}«ENDIF»;
+            '''
+        else
+            '''
+                constexpr «type.id» «parent.name(useGenPattern)»::«name»;
+            '''
+    }
+
+    override collectIncludes(Constant it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        acceptor.include(type)
+        value?.include(acceptor)
     }
 
 }

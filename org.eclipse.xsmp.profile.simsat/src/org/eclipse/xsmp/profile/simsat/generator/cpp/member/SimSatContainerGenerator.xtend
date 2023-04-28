@@ -18,27 +18,27 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 class SimSatContainerGenerator extends ContainerGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("esa/ecss/smp/cdk/Container.h")
+        acceptor.userHeader("esa/ecss/smp/cdk/Container.h")
     }
 
-    override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::esa::ecss::smp::cdk::Container<::«element.type.fqn.toString("::")»>* «element.name»;
-        '''
-    }
-
-    override initialize(NamedElementWithMembers container, Container element, boolean useGenPattern) {
-        '''
-            // Container: «element.name»
-            «element.name» { new ::esa::ecss::smp::cdk::Container<::«element.type.fqn.toString("::")»>("«element.name»", «element.description()», this, simulator, «element.generateLower», «element.generateUpper») }
+            «comment»
+            ::esa::ecss::smp::cdk::Container<«type.id»>* «name»;
         '''
     }
 
-    override construct(NamedElementWithMembers container, Container element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
         '''
-            // Add container «element.name»
-            this->AddContainer(«element.name»);
+            // Container: «name»
+            «name» { new ::esa::ecss::smp::cdk::Container<«type.id»>("«name»", «description()», this, simulator, «lower()», «upper()») }
+        '''
+    }
+
+    override construct(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
+        '''
+            // Add container «name»
+            this->AddContainer(«name»);
         '''
     }
 }

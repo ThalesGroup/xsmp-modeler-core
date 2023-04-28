@@ -18,13 +18,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.ItemWithBase;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionStrategy;
@@ -46,10 +45,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   private static final Logger LOG = Logger.getLogger(XsmpcatResourceDescriptionStrategy.class);
 
   @Inject
-  private XsmpUtil elementUtil;
-
-  @Inject
-  private IQualifiedNameConverter qualifiedNameConverter;
+  private XsmpUtil xsmpUtil;
 
   /**
    * {@inheritDoc}
@@ -118,7 +114,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
       builder.put("deprecated", Boolean.toString(true));
     }
 
-    if (eObject instanceof Field && elementUtil.isStatic((NamedElement) eObject))
+    if (eObject instanceof Field && xsmpUtil.isStatic((NamedElement) eObject))
     {
       builder.put("static", Boolean.toString(true));
     }
@@ -127,7 +123,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     if (eObject instanceof VisibilityElement)
     {
       final var visibility = ((VisibilityElement) eObject).getRealVisibility();
-      // if (visibility != VisibilityKind.PUBLIC)
+      if (visibility != VisibilityKind.PUBLIC)
       {
         builder.put("visibility", visibility.getName());
       }
@@ -153,18 +149,6 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     {
       // save the signature of the Operation
       builder.put("sig", getSignature((Operation) eObject));
-    }
-
-    if (eObject instanceof ItemWithBase)
-    {
-
-      final var base = XsmpUtil.getRootBase((ItemWithBase) eObject);
-      if (!base.eIsProxy())
-      {
-        builder.put("rootBase", qualifiedNameConverter
-                .toString(getQualifiedNameProvider().getFullyQualifiedName(base)));
-
-      }
     }
   }
 
@@ -195,24 +179,22 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     final var type = p.getType();
     if (type != null && !type.eIsProxy())
     {
-      if (elementUtil.isConst(p))
+      if (xsmpUtil.isConst(p))
       {
         s.append("const ");
       }
 
       s.append(getQualifiedNameProvider().getFullyQualifiedName(type).toString());
 
-      switch (elementUtil.kind(p))
+      if (xsmpUtil.isByPointer(p))
       {
-        case BY_PTR:
-          s.append("*");
-          break;
-        case BY_REF:
-          s.append("&");
-          break;
-        default:
-          break;
+        s.append("*");
       }
+      if (xsmpUtil.isByReference(p))
+      {
+        s.append("&");
+      }
+
     }
 
     return s.toString();

@@ -32,28 +32,28 @@ class SimSatComponentGenerator extends ComponentGenerator {
 
     override collectIncludes(Component type, IncludeAcceptor acceptor) {
         super.collectIncludes(type, acceptor)
-        acceptor.mdkHeader("esa/ecss/smp/cdk/" + type.eClass.name + ".h")
+        acceptor.userHeader("esa/ecss/smp/cdk/" + type.eClass.name + ".h")
         if (type.useDynamicInvocation) {
             acceptor.systemHeader("map")
-            acceptor.mdkSource("Smp/IPublication.h")
-            acceptor.mdkSource("esa/ecss/smp/cdk/Request.h")
+            acceptor.userSource("Smp/IPublication.h")
+            acceptor.userSource("esa/ecss/smp/cdk/Request.h")
         }
 
         if (type.member.exists[it instanceof Container])
-            acceptor.mdkHeader("esa/ecss/smp/cdk/Composite.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/Composite.h")
         if (type.member.exists[it instanceof Reference])
-            acceptor.mdkHeader("esa/ecss/smp/cdk/Aggregate.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/Aggregate.h")
         if (type.member.exists[it instanceof EventSource])
-            acceptor.mdkHeader("esa/ecss/smp/cdk/EventProvider.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/EventProvider.h")
         if (type.member.exists[it instanceof EventSink])
-            acceptor.mdkHeader("esa/ecss/smp/cdk/EventConsumer.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/EventConsumer.h")
         if (type.member.exists[it instanceof EntryPoint])
-            acceptor.mdkHeader("esa/ecss/smp/cdk/EntryPointPublisher.h")
+            acceptor.userHeader("esa/ecss/smp/cdk/EntryPointPublisher.h")
     }
 
     override protected base(Component e) {
         if (e.base !== null)
-            '''::«e.base.fqn.toString("::")»'''
+            '''«e.base.id»'''
         else
             '''::esa::ecss::smp::cdk::«e.eClass.name»'''
 
@@ -113,33 +113,36 @@ class SimSatComponentGenerator extends ComponentGenerator {
     }
 
     override protected generateSourceBody(Component type, boolean useGenPattern) {
-        '''
-            «type.name»::«type.name»(
-                    ::Smp::String8 name,
-                    ::Smp::String8 description,
-                    ::Smp::IComposite* parent,
-                    ::Smp::ISimulator* simulator)
-                    : «type.genName»::«type.genName»(name, description, parent, simulator) {
-            }
-            
-            «type.name»::~«type.name»() {
-            }
-            
-            void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
-            }
-            
-            void «type.name»::DoConfigure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
-            }
-            
-            
-            void «type.name»::DoConnect(::Smp::ISimulator* simulator) {
-            }
-            
-            void «type.name»::DoDisconnect() {
-            }
-            
-            «type.defineMembers(useGenPattern)»
-        '''
+        if (useGenPattern)
+            '''
+                «type.name»::«type.name»(
+                        ::Smp::String8 name,
+                        ::Smp::String8 description,
+                        ::Smp::IComposite* parent,
+                        ::Smp::ISimulator* simulator)
+                        : «type.nameGen»::«type.nameGen»(name, description, parent, simulator) {
+                }
+                
+                «type.name»::~«type.name»() {
+                }
+                
+                void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
+                }
+                
+                void «type.name»::DoConfigure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+                }
+                
+                
+                void «type.name»::DoConnect(::Smp::ISimulator* simulator) {
+                }
+                
+                void «type.name»::DoDisconnect() {
+                }
+                
+                «type.defineMembers(useGenPattern)»
+            '''
+        else
+            type.defineMembers(useGenPattern)
     }
 
     override protected generateSourceGenBody(Component t, boolean useGenPattern) {
@@ -155,7 +158,6 @@ class SimSatComponentGenerator extends ComponentGenerator {
                 ::Smp::IComposite* parent,
                 ::Smp::ISimulator* simulator) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
-                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
                 «FOR f : t.member»
                     «t.construct(f, useGenPattern)»
                 «ENDFOR»
@@ -180,7 +182,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
                 
                 «FOR m : t.member»«m.Publish»«ENDFOR»
                 
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
+                dynamic_cast<«t.id»*>(this)->DoPublish(receiver);
             }
             
             
@@ -190,7 +192,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
                     «base»::Configure(logger, linkRegistry);
                     
                 «ENDIF»
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
+                dynamic_cast<«t.id»*>(this)->DoConfigure(logger, linkRegistry);
             }
             
             
@@ -200,11 +202,11 @@ class SimSatComponentGenerator extends ComponentGenerator {
                     «base»::Connect(simulator);
                     
                 «ENDIF»
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
+                dynamic_cast<«t.id»*>(this)->DoConnect(simulator);
             }
             
             void «t.name(useGenPattern)»::Disconnect() {
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
+                dynamic_cast<«t.id»*>(this)->DoDisconnect();
                 «IF base !== null»
                     
                     // Call parent implementation last, to remove references to the Simulator and its services
@@ -283,13 +285,13 @@ class SimSatComponentGenerator extends ComponentGenerator {
             case INOUT: {
                 // declare and initialize the parameter
                 '''
-                    auto p_«p.name» = static_cast<::«p.type.fqn.toString("::")»>(req->GetParameterValue(req->GetParameterIndex("«p.name»")));
+                    auto p_«p.name» = static_cast<«p.type.id»>(req->GetParameterValue(req->GetParameterIndex("«p.name»")));
                 '''
             }
             default: {
                 // only declare the parameter
                 '''
-                    ::«p.type.fqn.toString("::")» p_«p.name» «p.^default?.generateExpression()»;
+                    «p.type.id» p_«p.name» «p.^default?.generateExpression()»;
                 '''
             }
         }
@@ -313,7 +315,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
     override protected generateHeaderGenBody(Component t, boolean useGenPattern) {
         '''
             «IF useGenPattern»
-                class «t.name(false)»;
+                class «t.name»;
             «ENDIF»
             «t.uuidDeclaration»
             
@@ -321,7 +323,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
             class «t.name(useGenPattern)»«FOR base : t.bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
             
             «IF useGenPattern»
-                friend class «t.fqn(false).toString("::")»;
+                friend class «t.id»;
             «ENDIF»
             
             public:
@@ -400,7 +402,7 @@ class SimSatComponentGenerator extends ComponentGenerator {
     def protected CharSequence generatePopulateRqHandler(NamedElementWithMembers container, Operation o,
         boolean useGenPattern) {
         '''
-            Help::template AddIfMissing<«IF o.returnParameter !== null»::«o.returnParameter.type.fqn.toString("::")»«ELSE»void«ENDIF»«FOR param : o.parameter BEFORE ', ' SEPARATOR ', '»::«param.type.fqn.toString("::")»«ENDFOR»>(
+            Help::template AddIfMissing<«IF o.returnParameter !== null»«o.returnParameter.type.id»«ELSE»void«ENDIF»«FOR param : o.parameter BEFORE ', ' SEPARATOR ', '»«param.type.id»«ENDFOR»>(
                 handlers,
                 "«o.name»",
                 «IF o.returnParameter !== null»«o.returnParameter.type.generatePrimitiveKind»«ELSE»::Smp::PrimitiveTypeKind::PTK_None«ENDIF»,

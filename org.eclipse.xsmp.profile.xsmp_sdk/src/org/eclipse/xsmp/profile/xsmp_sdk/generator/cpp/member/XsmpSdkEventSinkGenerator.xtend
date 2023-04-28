@@ -19,14 +19,14 @@ class XsmpSdkEventSinkGenerator extends EventSinkGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkSource("Xsmp/EventSink.h")
+        acceptor.userSource("Xsmp/EventSink.h")
     }
 
-    override initialize(NamedElementWithMembers container, EventSink element, boolean useGenPattern) {
-        val arg = element.eventArgType
+    override initialize(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
+        val arg = eventType
         '''
-            // Event Sink: «element.name»
-            «element.name»{new ::Xsmp::EventSink<«IF arg !== null»::«arg.fqn.toString("::")»«ENDIF»>("«element.name»", «element.description()»,  this, std::bind(&«container.name(useGenPattern)»::_«element.name», this, std::placeholders::_1«IF arg !==null», std::placeholders::_2«ENDIF»)«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF»)}
+            // Event Sink: «name»
+            «name»{new ::Xsmp::EventSink<«IF arg !== null»«arg.id»«ENDIF»>("«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1«IF arg !==null», std::placeholders::_2«ENDIF»)«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF»)}
         '''
     }
 

@@ -15,41 +15,42 @@ import org.eclipse.xsmp.xcatalogue.Array
 
 class ArrayGenerator extends AbstractTypeGenerator<Array> {
 
-    override protected generateHeaderBody(Array t) {
+    override protected generateHeaderBody(Array it) {
         '''
-            «t.comment()»
-            using «t.name» = «t.genName»;
+            «comment()»
+            using «name» = «nameGen»;
         '''
     }
 
 
-    override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Array it, boolean useGenPattern) {
         '''
-            «t.comment»
-            struct «t.name(useGenPattern)» 
+            «comment»
+            struct «name(useGenPattern)» 
             { 
-                ::«t.itemType.fqn.toString("::")» internalArray[«t.size.doGenerateExpression()»];
+                «itemType.id» internalArray[«size.doGenerateExpression()»];
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override protected generateSourceGenBody(Array t, boolean useGenPattern) {
+    override protected generateSourceGenBody(Array it, boolean useGenPattern) {
         '''
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry) {
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry) {
                     registry->AddArrayType(
-                        "«t.name»",  //Name
-                        «t.description()»,   //description
-                        «t.uuidQfn»,  //UUID
-                        «t.itemType.uuidQfn»,
-                        sizeof(::«t.itemType.fqn.toString("::")»),
-                        «t.size.doGenerateExpression()», // size of the array
-                        «t.isSimpleArray»);   // is simple array
+                        "«name»", // Name
+                        «description()», // Description
+                        «uuid()», // UUID
+                        «itemType.uuid()», // Item Type UUID
+                        sizeof(«itemType.id»), // Item Type size
+                        «size.doGenerateExpression()», // size of the array
+                        «isSimpleArray» // is simple array
+                    );
                 }
-                «t.uuidDefinition»
+                «uuidDefinition»
         '''
     }
 
@@ -61,7 +62,7 @@ class ArrayGenerator extends AbstractTypeGenerator<Array> {
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkHeader("Smp/PrimitiveTypes.h")
+        acceptor.userHeader("Smp/PrimitiveTypes.h")
     }
 
 }

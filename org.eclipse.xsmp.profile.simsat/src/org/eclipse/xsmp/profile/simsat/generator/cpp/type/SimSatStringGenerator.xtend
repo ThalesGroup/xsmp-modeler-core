@@ -16,20 +16,20 @@ import org.eclipse.xsmp.xcatalogue.String
 
 class SimSatStringGenerator extends StringGenerator {
 
-    override protected generateHeaderGenBody(String t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(String it, boolean useGenPattern) {
         '''
-            «t.comment»
-            using «t.name(useGenPattern)» = ::esa::ecss::smp::cdk::String<«t.length.doGenerateExpression()»>;
+            «comment»
+            using «name(useGenPattern)» = ::esa::ecss::smp::cdk::String<«length.doGenerateExpression()»>;
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override collectIncludes(String type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(String it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        acceptor.mdkHeader("esa/ecss/smp/cdk/String.h")
+        acceptor.userHeader("esa/ecss/smp/cdk/String.h")
     }
 }

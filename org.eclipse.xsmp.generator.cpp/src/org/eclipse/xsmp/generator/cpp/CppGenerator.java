@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.cdt.core.ToolFactory;
 import org.eclipse.cdt.core.formatter.CodeFormatter;
 import org.eclipse.cdt.core.formatter.DefaultCodeFormatterOptions;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -31,7 +32,6 @@ import org.eclipse.xsmp.generator.cpp.type.InterfaceGenerator;
 import org.eclipse.xsmp.generator.cpp.type.NativeTypeGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
-import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.Type;
@@ -47,13 +47,11 @@ import com.google.inject.Inject;
  */
 public class CppGenerator extends AbstractGenerator
 {
+  // the C++ code formatter
   private CodeFormatter formatter;
 
   @Inject
-  protected GeneratorExtension ext;
-
-  @Inject
-  protected XsmpUtil xsmpUtil;
+  protected GeneratorUtil ext;
 
   @Override
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
@@ -113,6 +111,11 @@ public class CppGenerator extends AbstractGenerator
             .forEach(nns -> generateNamespace((Namespace) nns, fsa, cat));
   }
 
+  protected boolean useGenerationGapPattern(EObject obj)
+  {
+    return true;
+  }
+
   /**
    * Generate all types
    *
@@ -131,39 +134,37 @@ public class CppGenerator extends AbstractGenerator
     final var acceptor = new IncludeAcceptor();
     typeGenerator.collectIncludes(type, acceptor);
 
-    var includePath = xsmpUtil.fqn(type).toString("/") + ".h";
-
-    var sourcePath = xsmpUtil.fqn(type).toString("/") + ".cpp";
+    // include path of user code
+    final var includePath = ext.fqn(type).toString("/") + ".h";
 
     // if the file already exist in include directories or the type requires the generation gap
     // pattern, use the generation gap pattern
     final var useGenerationGapPattern = fsa.isFile(includePath,
-            CppOutputConfigurationProvider.INCLUDE) || typeGenerator.requiresGenPattern(type);
+            CppOutputConfigurationProvider.INCLUDE) || useGenerationGapPattern(type);
 
-    if (useGenerationGapPattern)
+    // generate header in include directory if file does not exist
+    if (useGenerationGapPattern && !fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
     {
-      // generate header in include directory if file does not exist
-      if (!fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
-      {
-        generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
-                typeGenerator.generateHeader(type, cat));
-      }
-      // generate source in src directory if file does not exist
-      if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
-      {
-        generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
-                typeGenerator.generateSource(type, useGenerationGapPattern, cat));
-      }
-      includePath = ext.fqn(type, true).toString("/") + ".h";
-      sourcePath = ext.fqn(type, true).toString("/") + ".cpp";
+      generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
+              typeGenerator.generateHeader(type, cat));
+    }
+
+    // generate source in src directory if file does not exist
+    final var sourcePath = ext.fqn(type).toString("/") + ".cpp";
+    if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
+    {
+      generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
+              typeGenerator.generateSource(type, useGenerationGapPattern, acceptor, cat));
     }
 
     // generate header in include-gen directory
-    generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE_GEN,
+    generateFile(fsa, useGenerationGapPattern ? ext.fqnGen(type).toString("/") + ".h" : includePath,
+            CppOutputConfigurationProvider.INCLUDE_GEN,
             typeGenerator.generateHeaderGen(type, useGenerationGapPattern, acceptor, cat));
 
     // generate source in src-gen directory
-    generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC_GEN,
+    generateFile(fsa, ext.fqnGen(type).toString("/") + ".cpp",
+            CppOutputConfigurationProvider.SRC_GEN,
             typeGenerator.generateSourceGen(type, useGenerationGapPattern, acceptor, cat));
   }
 

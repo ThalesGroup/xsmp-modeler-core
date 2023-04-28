@@ -18,20 +18,20 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 class XsmpSdkReferenceGenerator extends ReferenceGenerator {
 
     override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Xsmp/Reference.h")
+        acceptor.userHeader("Xsmp/Reference.h")
     }
 
-    override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::Xsmp::Reference<::«element.interface.fqn.toString("::")»>* «element.name»;
+            «comment»
+            ::Xsmp::Reference<«interface.id»> *«name»;
         '''
     }
 
-    override initialize(NamedElementWithMembers container, Reference element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
-            // Reference: «element.name»
-            «element.name»{new ::Xsmp::Reference<::«element.interface.fqn.toString("::")»>("«element.name»", «element.description()», this, «element.generateLower», «element.generateUpper»)}
+            // Reference: «name»
+            «name» { new ::Xsmp::Reference<«interface.id»>("«name»", «description()», this, «lower()», «upper()») }
         '''
     }
 

@@ -18,27 +18,27 @@ import org.eclipse.xsmp.xcatalogue.Reference
 class SimSatReferenceGenerator extends ReferenceGenerator {
 
     override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("esa/ecss/smp/cdk/Reference.h")
+        acceptor.userHeader("esa/ecss/smp/cdk/Reference.h")
     }
 
-    override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::esa::ecss::smp::cdk::Reference<::«element.interface.fqn.toString("::")»>* «element.name»;
-        '''
-    }
-
-    override initialize(NamedElementWithMembers container, Reference element, boolean useGenPattern) {
-        '''
-            // Reference: «element.name»
-            «element.name»{new ::esa::ecss::smp::cdk::Reference<::«element.interface.fqn.toString("::")»>("«element.name»", «element.description()», this, simulator, «element.generateLower», «element.generateUpper»)}
+            «comment»
+            ::esa::ecss::smp::cdk::Reference<«interface.id»>* «name»;
         '''
     }
 
-    override construct(NamedElementWithMembers container, Reference element, boolean useGenPattern) {
+    override initialize(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
-            // Add reference «element.name»
-            this->AddReference(«element.name»);
+            // Reference: «name»
+            «name» { new ::esa::ecss::smp::cdk::Reference<«interface.id»>("«name»", «description()», this, simulator, «lower()», «upper()») }
+        '''
+    }
+
+    override construct(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
+        '''
+            // Add reference «name»
+            this->AddReference(«name»);
         '''
     }
     

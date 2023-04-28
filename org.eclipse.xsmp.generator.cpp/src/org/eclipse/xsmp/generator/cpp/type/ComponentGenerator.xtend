@@ -21,16 +21,16 @@ import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
 abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Component> {
 
-    override protected generateHeaderBody(Component t) {
+    override protected generateHeaderBody(Component it) {
         '''
-            «t.comment»
-            class «t.name»: public «t.genName» {
+            «comment»
+            class «name»: public «nameGen» {
             public:
-                «t.constructorDeclaration(false)»
+                «constructorDeclaration(false)»
                 
             private:
-                // «t.genName» call DoPublish/DoConfigure/DoConnect/DoDisconnect
-                friend class «t.fqn(true).toString("::")»;
+                // «nameGen» call DoPublish/DoConfigure/DoConnect/DoDisconnect
+                friend class «idGen»;
                 
                 /// Publish fields, operations and properties of the model.
                 /// @param receiver Publication receiver.
@@ -51,13 +51,13 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 /// @throws Smp::InvalidComponentState
                 void DoDisconnect();
             
-                «t.declareMembers(VisibilityKind.PRIVATE)»
+                «declareMembers(VisibilityKind.PRIVATE)»
             };
         '''
     }
 
-    def CharSequence constructorDeclaration(Component t, boolean useGenPattern) {
-        val name = t.name(useGenPattern)
+    def CharSequence constructorDeclaration(Component it, boolean useGenPattern) {
+        val name = name(useGenPattern)
         '''
             // ------------------------------------------------------------------------------------
             // -------------------------- Constructors/Destructor --------------------------
@@ -87,51 +87,54 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
     }
 
     override protected generateSourceBody(Component type, boolean useGenPattern) {
-        '''
-            «type.name»::«type.name»(
-                    ::Smp::String8 name,
-                    ::Smp::String8 description,
-                    ::Smp::IObject* parent)
-                    : «type.genName»::«type.genName»(name, description, parent) {
-            }
-            
-            «type.name»::~«type.name»() {
-            }
-            
-            void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
-            }
-            
-            void «type.name»::DoConfigure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
-            }
-            
-            
-            void «type.name»::DoConnect(::Smp::ISimulator* simulator) {
-            }
-            
-            void «type.name»::DoDisconnect() {
-            }
-            
-            «type.defineMembers(useGenPattern)»
-        '''
+        if (useGenPattern)
+            '''
+                «type.name»::«type.name»(
+                        ::Smp::String8 name,
+                        ::Smp::String8 description,
+                        ::Smp::IObject* parent)
+                        : «type.nameGen»::«type.nameGen»(name, description, parent) {
+                }
+                
+                «type.name»::~«type.name»() {
+                }
+                
+                void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
+                }
+                
+                void «type.name»::DoConfigure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+                }
+                
+                
+                void «type.name»::DoConnect(::Smp::ISimulator* simulator) {
+                }
+                
+                void «type.name»::DoDisconnect() {
+                }
+                
+                «type.defineMembers(useGenPattern)»
+            '''
+        else
+            type.defineMembers(useGenPattern)
     }
 
-    override protected generateHeaderGenBody(Component t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Component it, boolean useGenPattern) {
         '''
             «IF useGenPattern»
                 // forward declaration of user class
-                class «t.name»;
+                class «name»;
             «ENDIF»
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            «t.comment»
-            class «t.name(useGenPattern)»«FOR base : t.bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
+            «comment»
+            class «name(useGenPattern)»«FOR base : bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
             
             «IF useGenPattern»
-                friend class ::«t.fqn(false).toString("::")»;
+                friend class «id»;
             «ENDIF»
             
             public:
-            «t.constructorDeclaration(useGenPattern)»
+            «constructorDeclaration(useGenPattern)»
             
             // ----------------------------------------------------------------------------------
             // -------------------------------- IComponent ---------------------------------
@@ -160,11 +163,11 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             /// @return Universally Unique Identifier of the Model.
             virtual const Smp::Uuid& GetUuid() const override;
             
-            «IF t.useDynamicInvocation»
+            «IF useDynamicInvocation»
                 // ----------------------------------------------------------------------------------
                 // --------------------------- IDynamicInvocation ---------------------------
                 // ----------------------------------------------------------------------------------
-                using RequestHandlers = std::map<std::string, std::function<void(«t.name(useGenPattern)»*, ::Smp::IRequest*)>>;
+                using RequestHandlers = std::map<std::string, std::function<void(«name(useGenPattern)»*, ::Smp::IRequest*)>>;
                 static RequestHandlers requestHandlers;
                 static RequestHandlers InitRequestHandlers();
                 
@@ -179,7 +182,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 void DoConnect( ::Smp::ISimulator* simulator);
                 void DoDisconnect();
                 
-                «t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
+                «declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
             };
         '''
     }
@@ -205,62 +208,61 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
         return list
     }
 
-    override protected generateSourceGenBody(Component t, boolean useGenPattern) {
-        val base = t.base()
+    override protected generateSourceGenBody(Component it, boolean useGenPattern) {
+        val base = base()
         '''
             //--------------------------- Constructor -------------------------
-            «t.name(useGenPattern)»::«t.name(useGenPattern)»(
+            «name(useGenPattern)»::«name(useGenPattern)»(
                 ::Smp::String8 name,
                 ::Smp::String8 description,
-                ::Smp::IObject* parent) «FOR i : t.initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+                ::Smp::IObject* parent) «FOR i : initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
-                «IF useGenPattern»«t.generateStaticAsserts()»«ENDIF»
-                «FOR f : t.member»
-                    «t.construct(f, useGenPattern)»
+                «FOR f : member»
+                    «construct(f, useGenPattern)»
                 «ENDFOR»
             }
             
             /// Virtual destructor that is called by inherited classes as well.
-            «t.name(useGenPattern)»::~«t.name(useGenPattern)»() {
-                «FOR f : t.member»
+            «name(useGenPattern)»::~«name(useGenPattern)»() {
+                «FOR f : member»
                     «f.finalize»
                 «ENDFOR»
             }
             
-            void «t.name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
+            void «name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
                 «IF base !== null»
                     // Call parent class implementation first
                     «base»::Publish(receiver);
                 «ENDIF»
                 
-                «FOR m : t.member»«m.Publish»«ENDFOR»
+                «FOR m : member»«m.Publish»«ENDFOR»
                 
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoPublish(receiver);
+                dynamic_cast<«id»*>(this)->DoPublish(receiver);
             }
             
             
             
-            void «t.name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+            void «name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
                 «IF base !== null»
                     // Call parent implementation first
                     «base»::Configure(logger, linkRegistry);
                     
                 «ENDIF»
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConfigure(logger, linkRegistry);
+                dynamic_cast<«id»*>(this)->DoConfigure(logger, linkRegistry);
             }
             
             
-            void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
+            void «name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
                 «IF base !== null»
                     // Call CDK implementation first
                     «base»::Connect(simulator);
                     
                 «ENDIF»
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoConnect(simulator);
+                dynamic_cast<«id»*>(this)->DoConnect(simulator);
             }
             
-            void «t.name(useGenPattern)»::Disconnect() {
-                dynamic_cast<«t.fqn(false).toString("::")»*>(this)->DoDisconnect();
+            void «name(useGenPattern)»::Disconnect() {
+                dynamic_cast<«id»*>(this)->DoDisconnect();
                 «IF base !== null»
                     
                     // Call parent implementation last, to remove references to the Simulator and its services
@@ -268,31 +270,31 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 «ENDIF»
             }
             
-            void «t.name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
+            void «name(useGenPattern)»::DoPublish(::Smp::IPublication*) {
             }
             
-            void «t.name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
+            void «name(useGenPattern)»::DoConfigure( ::Smp::Services::ILogger*, ::Smp::Services::ILinkRegistry*){
             }
             
-            void «t.name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
+            void «name(useGenPattern)»::DoConnect( ::Smp::ISimulator*){
             }
             
-            void «t.name(useGenPattern)»::DoDisconnect(){
+            void «name(useGenPattern)»::DoDisconnect(){
             }
             
-            «IF t.useDynamicInvocation»
-                «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::requestHandlers = InitRequestHandlers();
+            «IF useDynamicInvocation»
+                «name(useGenPattern)»::RequestHandlers «name(useGenPattern)»::requestHandlers = InitRequestHandlers();
                 
-                «t.name(useGenPattern)»::RequestHandlers «t.name(useGenPattern)»::InitRequestHandlers()
+                «name(useGenPattern)»::RequestHandlers «name(useGenPattern)»::InitRequestHandlers()
                 {
                     RequestHandlers handlers;
-                    «FOR op : t.member.filter(Operation).filter[it.isInvokable]»
-                        «t.generateRqHandlerParam(op, useGenPattern)»
+                    «FOR op : member.filter(Operation).filter[isInvokable]»
+                        «generateRqHandlerParam(op, useGenPattern)»
                     «ENDFOR»
                     return handlers;
                 }
                 
-                void «t.name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
+                void «name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
                     if (request == nullptr) {
                         return;
                     }
@@ -311,11 +313,11 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 }
                 
             «ENDIF»
-            const Smp::Uuid& «t.name(useGenPattern)»::GetUuid() const {
-                return Uuid_«t.name(false)»;
+            const Smp::Uuid& «name(useGenPattern)»::GetUuid() const {
+                return Uuid_«name»;
             }
-            «t.uuidDefinition»
-            «t.defineMembersGen(useGenPattern)»
+            «uuidDefinition»
+            «defineMembersGen(useGenPattern)»
         '''
     }
 
@@ -341,37 +343,37 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
 
         if (type.useDynamicInvocation) {
             acceptor.systemHeader("functional")
-            acceptor.mdkHeader("Smp/Publication/IPublishOperation.h")
-            acceptor.mdkHeader("Smp/IRequest.h")
+            acceptor.userHeader("Smp/Publication/IPublishOperation.h")
+            acceptor.userHeader("Smp/IRequest.h")
         }
     }
 
     override protected collectIncludes(IncludeAcceptor acceptor) {
         super.collectIncludes(acceptor)
-        acceptor.mdkHeader("Smp/ISimulator.h")
-        acceptor.mdkSource("Smp/IPublication.h")
+        acceptor.userHeader("Smp/ISimulator.h")
+        acceptor.userSource("Smp/IPublication.h")
     }
 
-    protected def CharSequence base(Component e) {
-        if (e.base !== null)
-            return '''::«e.base.fqn.toString("::")»'''
+    protected def CharSequence base(Component it) {
+        if (base !== null)
+            return '''«base.id»'''
 
     }
 
-    protected def List<CharSequence> bases(Component e) {
+    protected def List<CharSequence> bases(Component it) {
         val List<CharSequence> bases = newArrayList
-        val base = e.base()
+        val base = base()
 
         if (base !== null)
             bases += '''public «base»'''
-        bases.addAll(e.interface.map['''public virtual ::«it.fqn.toString("::")»'''])
+        bases.addAll(interface.map['''public virtual «id»'''])
 
         return bases;
     }
 
     def CharSequence initParameter(Parameter p, NamedElementWithMembers parent) {
         '''
-            ::«p.type.fqn.toString("::")» p_«p.name»«p.^default?.generateExpression()»;
+            «p.type.id» p_«p.name»«p.^default?.generateExpression()»;
         '''
     }
 
@@ -391,7 +393,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 «ENDFOR»
                 
                 /// Invoke «o.name»
-                «IF r !== null»::«r.type.fqn.toString("::")» p_«r.name» = «ENDIF»    component->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
+                «IF r !== null»«r.type.id» p_«r.name» = «ENDIF»component->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
                 
                 «FOR p : o.parameter»
                 «p.setParameter(container)»

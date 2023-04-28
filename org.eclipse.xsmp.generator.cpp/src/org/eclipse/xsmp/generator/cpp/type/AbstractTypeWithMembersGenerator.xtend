@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.generator.cpp.AbstractFileGenerator
-import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.AssociationGenerator
 import org.eclipse.xsmp.generator.cpp.member.ConstantGenerator
@@ -38,11 +37,12 @@ import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Property
 import org.eclipse.xsmp.xcatalogue.Reference
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 
 abstract class AbstractTypeWithMembersGenerator<T extends NamedElementWithMembers> extends AbstractFileGenerator<T> {
 
     @Inject
-    protected extension GeneratorExtension
+    protected extension GeneratorUtil
 
     @Inject
     AssociationGenerator associationGenerator
@@ -78,7 +78,7 @@ abstract class AbstractTypeWithMembersGenerator<T extends NamedElementWithMember
 
         super.collectIncludes(type, acceptor)
         // all types must include the ITypeRegistry
-        acceptor.mdkHeader("Smp/Publication/ITypeRegistry.h")
+        acceptor.userHeader("Smp/Publication/ITypeRegistry.h")
 
         type.member.forEach[it.collectMemberIncludes(acceptor)]
     }
@@ -304,55 +304,6 @@ abstract class AbstractTypeWithMembersGenerator<T extends NamedElementWithMember
             ''');
         }
         return visibility
-    }
-
-    /* requires gen patterm */
-    protected def dispatch boolean memberRequiresGenPattern(EObject c) {
-        false
-    }
-
-    protected def dispatch memberRequiresGenPattern(Constant c) {
-        constantGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Property c) {
-        propertyGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Operation c) {
-        operationGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(EntryPoint c) {
-        entryPointGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(EventSink c) {
-        eventSinkGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(EventSource c) {
-        eventSourceGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Field c) {
-        fieldGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Association c) {
-        associationGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Container c) {
-        containerGenerator.requiresGenPattern(c)
-    }
-
-    protected def dispatch memberRequiresGenPattern(Reference c) {
-        referenceGenerator.requiresGenPattern(c)
-    }
-
-    override boolean requiresGenPattern(T container) {
-        container.member.exists[memberRequiresGenPattern]
     }
 
     def CharSequence declareMembers(T container, VisibilityKind initialVisibility) {
@@ -627,56 +578,4 @@ abstract class AbstractTypeWithMembersGenerator<T extends NamedElementWithMember
     protected def dispatch Publish(Reference c) {
         referenceGenerator.Publish(c)
     }
-
-    def CharSequence generateStaticAsserts(T container) {
-        '''
-            «FOR m : container.member»
-                «staticAssert(container,m)»
-            «ENDFOR»
-        '''
-    }
-
-    protected def dispatch staticAssert(T type, EObject c) {
-    }
-
-    protected def dispatch staticAssert(T type, Constant c) {
-        constantGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Property c) {
-        propertyGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Operation c) {
-        operationGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, EntryPoint c) {
-        entryPointGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, EventSink c) {
-        eventSinkGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, EventSource c) {
-        eventSourceGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Field c) {
-        fieldGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Association c) {
-        associationGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Container c) {
-        containerGenerator.staticAssert(type, c)
-    }
-
-    protected def dispatch staticAssert(T type, Reference c) {
-        referenceGenerator.staticAssert(type, c)
-    }
-
 }

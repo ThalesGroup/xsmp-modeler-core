@@ -19,101 +19,86 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.PrimitiveType
 import org.eclipse.xsmp.xcatalogue.SimpleType
 import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.Type
 import org.eclipse.xtext.naming.QualifiedName
 
 class FieldGenerator extends AbstractMemberGenerator<Field> {
 
-    override declareGen(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Field it, boolean useGenPattern) {
         '''
-            «element.comment»
-            «IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")» «element.name»;
+            «comment»
+            «IF isStatic»static «ENDIF»«IF isMutable»mutable «ENDIF»«type.id» «name»;
         '''
-
     }
 
-    override defineGen(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
-        if (element.isStatic)
+    override defineGen(NamedElementWithMembers parent, Field it, boolean useGenPattern) {
+        if (isStatic)
             '''
-                // «element.name» initialization
-                «element.type.fqn.toString("::")» «parent.name(useGenPattern)»::«element.name»«IF element.^default !==null» «element.^default.generateExpression()»«ELSE»{}«ENDIF»;
-            '''
-    }
-
-    override collectIncludes(Field element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
-        acceptor.include(element.type)
-        element.^default?.include(acceptor)
-    }
- 
-    protected def dispatch boolean isDirectListInitializationType(Type type) {
-        false
-    }
-    
-    protected def dispatch boolean isDirectListInitializationType(SimpleType type) {
-        true
-    }
-
-    protected def boolean isDirectListInitialization(Field element) {
-        element.^default === null || element.type.isDirectListInitializationType
-    }
-
-    override initialize(NamedElementWithMembers parent, Field element, boolean useGenPattern) {
-        if (!element.static && element.isDirectListInitialization)
-            '''
-                // «element.name» initialization
-                «element.name» «IF element.^default !== null» «element.^default.generateExpression()»«ELSE»{}«ENDIF»
+                // «name» initialization
+                «type.id» «parent.name(useGenPattern)»::«name»«IF ^default !==null» «^default.generateExpression()»«ELSE»{}«ENDIF»;
             '''
     }
 
-    protected def dispatch CharSequence construct(QualifiedName name, Type type, Expression expression,
-        NamedElementWithMembers context) {
+    override collectIncludes(Field it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        acceptor.include(type)
+        ^default?.include(acceptor)
     }
 
-    protected def dispatch CharSequence construct(QualifiedName name, SimpleType type, Expression expression,
-        NamedElementWithMembers parent) {
-        '''
-            «name.toString» = «expression.generateExpression()»;
-        '''
+    /** we can use direct initialization if the field is not static and does not have a default value or if the type is a Simple Type */
+    protected def boolean isDirectListInitialization(Field it) {
+        !isStatic && (^default === null || type instanceof SimpleType)
     }
 
-    protected def dispatch CharSequence construct(QualifiedName name, Array type, CollectionLiteral expression,
-        NamedElementWithMembers context) {
-
-        val last = name.lastSegment
-        val base = name.skipLast(1)
-        '''
-            «FOR i : 0 ..< expression.elements.size»
-                «construct(base.append(last+"["+i+"]"), type.itemType, expression.elements.get(i),context)»
-            «ENDFOR»
-        '''
-
-    }
-
-    protected def dispatch CharSequence construct(QualifiedName name, Structure type, CollectionLiteral expression,
-        NamedElementWithMembers context) {
-
-        val fields = type.assignableFields
-
-        '''
-            «FOR i : 0 ..< expression.elements.size»
-                «construct(name.append(fields.get(i).name), fields.get(i).type, expression.elements.get(i),context)»
-            «ENDFOR»
-        '''
-
-    }
-
-    override construct(NamedElementWithMembers container, Field element, boolean useGenPattern) {
-        if (!element.static && !element.isDirectListInitialization)
+    override initialize(NamedElementWithMembers parent, Field it, boolean useGenPattern) {
+        if (isDirectListInitialization)
             '''
-                // «element.name» initialization
-                «construct(QualifiedName.create(element.name), element.type, element.^default, container)»
+                // «name» initialization
+                «name» «IF ^default !== null» «^default.generateExpression()»«ELSE»{}«ENDIF»
             '''
     }
 
-    override Publish(Field element) {
-        if (element.type instanceof PrimitiveType)
-            switch (element.type.primitiveType) {
+    protected def CharSequence construct(QualifiedName name, Expression expression) {
+
+        val type = expression.type
+
+        val field = expression.field
+        val fqn = field !== null ? name.append(field.name) : name
+
+        if (type instanceof SimpleType)
+            '''
+                «fqn.toString» = «expression.generateExpression()»;
+            '''
+        else if (expression instanceof CollectionLiteral) {
+            if (type instanceof Structure)
+                '''
+                    «FOR e : expression.elements»
+                        «construct(fqn, e)»
+                    «ENDFOR»
+                '''
+            else if (type instanceof Array) {
+                val last = fqn.lastSegment
+                val base = fqn.skipLast(1)
+                '''
+                    «FOR i : 0 ..< expression.elements.size»
+                        «construct(base.append(last+"[" + i + "]"), expression.elements.get(i))»
+                    «ENDFOR»
+                '''
+
+            }
+        }
+    }
+
+    override construct(NamedElementWithMembers parent, Field it, boolean useGenPattern) {
+        if (^default !== null && !isStatic && !(type instanceof SimpleType))
+            '''
+                // «name» initialization
+                «construct(QualifiedName.EMPTY, ^default)»
+            '''
+    }
+
+    override Publish(Field it) {
+        if (type instanceof PrimitiveType)
+            switch (type.primitiveType) {
                 case BOOL,
                 case CHAR8,
                 case FLOAT32,
@@ -126,28 +111,24 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
                 case UINT32,
                 case UINT64,
                 case UINT8: {
-                    '''
-                        // Publish field «element.name»
-                        receiver->PublishField("«element.name»", «element.description()», &«element.name»,  «element.viewKind», «!element.transient», «element.input», «element.output»);
+                    // Publish directly with address of the field (not valid for DateTime and Duration that are identical to Int64)
+                    return '''
+                        // Publish field «name»
+                        receiver->PublishField("«name»", «description()», &«name»,  «viewKind», «!transient», «input», «output»);
                     '''
                 }
                 case STRING8: {
-                    '''
-                        // Publish field «element.name»
-                        /* There is no publishing call for String8 as it relies on dynamically allocated memory areas, hence cannot be published like the other primitive types. */
+                    return '''
+                        // Do not Publish field «name» of type Smp::String8
                     '''
                 }
                 default: {
-                    '''
-                        // Publish field «element.name»
-                        receiver->PublishField("«element.name»", «element.description()», &«element.name», «element.type.uuidQfn», «element.viewKind», «!element.transient», «element.input», «element.output»);
-                    '''
                 }
             }
-        else
-            '''
-                // Publish field «element.name»
-                receiver->PublishField("«element.name»", «element.description()», &«element.name», «element.type.uuidQfn», «element.viewKind», «!element.transient», «element.input», «element.output»);
-            '''
+        // Generic Publish with type UUID
+        '''
+            // Publish field «name»
+            receiver->PublishField("«name»", «description()», &«name», «type.uuid()», «viewKind», «!transient», «input», «output»);
+        '''
     }
 }

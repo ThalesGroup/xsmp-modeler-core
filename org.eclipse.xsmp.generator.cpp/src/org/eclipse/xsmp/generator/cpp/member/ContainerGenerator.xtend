@@ -16,32 +16,32 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class ContainerGenerator extends AbstractMemberGenerator<Container> {
 
-    override declareGen(NamedElementWithMembers parent, Container element, boolean useGenPattern) {
+    override declareGen(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
         '''
-            «element.comment»
-            ::Smp::IContainer* «element.name»;
+            «comment»
+            ::Smp::IContainer* «name»;
         '''
     }
 
-    override collectIncludes(Container element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
-        acceptor.include(element.type)
+    override collectIncludes(Container it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        acceptor.include(type)
 
-        if (element.defaultComponent !== null)
-            acceptor.include(element.defaultComponent)
+        if (defaultComponent !== null)
+            acceptor.include(defaultComponent)
 
-        element.multiplicity?.lower?.include(acceptor)
-        element.multiplicity?.upper?.include(acceptor)
+        multiplicity?.lower?.include(acceptor)
+        multiplicity?.upper?.include(acceptor)
     }
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        acceptor.mdkHeader("Smp/IContainer.h")
+        acceptor.userHeader("Smp/IContainer.h")
     }
 
-    override finalize(Container element) {
+    override finalize(Container it) {
         '''  
-            delete «element.name»;
-            «element.name» = nullptr;
+            delete «name»;
+            «name» = nullptr;
         '''
     }
 

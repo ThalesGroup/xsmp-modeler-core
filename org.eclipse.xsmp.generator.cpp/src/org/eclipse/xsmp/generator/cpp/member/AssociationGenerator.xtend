@@ -16,23 +16,26 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 
 class AssociationGenerator extends AbstractMemberGenerator<Association> {
 
-    override declareGen(NamedElementWithMembers type, Association element, boolean useGenPattern) {
+    /** declare an association in the generated header */
+    override declareGen(NamedElementWithMembers parent, Association it, boolean useGenPattern) {
+
         '''    
-            «element.comment»
-            «IF element.isConst»const «ENDIF»«IF element.isStatic»static «ENDIF»«IF element.isMutable»mutable «ENDIF»::«element.type.fqn.toString("::")»«IF element.isByPointer»*«ENDIF» «element.name»;
+            «comment»
+            «IF isConst»const «ENDIF»«IF isStatic»static «ENDIF»«IF isMutable»mutable «ENDIF»«type.id»«IF isByPointer»*«ENDIF» «name»;
         '''
     }
 
-    override collectIncludes(Association element, IncludeAcceptor acceptor) {
-        super.collectIncludes(element, acceptor)
-        acceptor.include(element.type)
+    override collectIncludes(Association it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        acceptor.include(type)
     }
 
-    override initialize(NamedElementWithMembers container, Association element, boolean useGenPattern) {
-        if (!element.isStatic)
+    /** initialize an association */
+    override initialize(NamedElementWithMembers parent, Association it, boolean useGenPattern) {
+        if (!isStatic)
             '''
-                // «element.name» initialization
-                «element.name» «IF element.^default !== null»«element.^default.generateExpression()»«ELSE»{ }«ENDIF»
+                // «name» initialization
+                «name» «IF ^default !== null»«^default.generateExpression()»«ELSE»{ }«ENDIF»
             '''
     }
 

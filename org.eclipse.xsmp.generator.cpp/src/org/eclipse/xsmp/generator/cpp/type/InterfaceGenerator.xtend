@@ -16,41 +16,41 @@ import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
 class InterfaceGenerator extends AbstractTypeWithMembersGenerator<Interface> {
 
-    override protected generateHeaderBody(Interface t) {
+    override protected generateHeaderBody(Interface it) {
         '''
-            «t.comment()»
-            class «t.name»: public «t.genName» {
+            «comment()»
+            class «name»: public «nameGen» {
                 public:
-                    ~«t.name»() override = default;
-                    «t.declareMembers(VisibilityKind.PUBLIC)»
+                    ~«name»() override = default;
+                    «declareMembers(VisibilityKind.PUBLIC)»
             };
         '''
     }
 
-    override protected generateHeaderGenBody(Interface t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Interface it, boolean useGenPattern) {
         '''
-            «t.comment»
-            class «t.name(useGenPattern)»«FOR b : t.base BEFORE ' : ' SEPARATOR ', '»public virtual ::«b.fqn.toString("::")»«ENDFOR» {
+            «comment»
+            class «name(useGenPattern)»«FOR b : base BEFORE ' : ' SEPARATOR ', '»public virtual «b.id»«ENDFOR» {
                 public:
-                virtual ~«t.name(useGenPattern)»() = default;
-                «t.declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
+                virtual ~«name(useGenPattern)»() = default;
+                «declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
             };
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
         '''
     }
 
-    override protected generateSourceGenBody(Interface t, boolean useGenPattern) {
+    override protected generateSourceGenBody(Interface it, boolean useGenPattern) {
         '''
-            «t.uuidDefinition»
-            «t.defineMembersGen(useGenPattern)»
+            «uuidDefinition»
+            «defineMembersGen(useGenPattern)»
         '''
     }
 
-    override collectIncludes(Interface type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Interface it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        for (base : type.base)
-            acceptor.include(base)
+        for (b : base)
+            acceptor.include(b)
     }
 }

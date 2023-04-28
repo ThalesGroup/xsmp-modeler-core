@@ -16,20 +16,20 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkArrayGenerator extends ArrayGenerator {
 
-    override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Array it, boolean useGenPattern) {
         '''
-            «t.comment»
-            using «t.name(useGenPattern)»= ::Xsmp::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()»«IF t.isSimpleArray», true«ENDIF»>;
+            «comment»
+            using «name(useGenPattern)»= ::Xsmp::Array<«itemType.id», «size.doGenerateExpression()»«IF isSimpleArray», true«ENDIF»>;
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override collectIncludes(Array type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Array it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        acceptor.mdkHeader("Xsmp/Array.h")
+        acceptor.userHeader("Xsmp/Array.h")
     }
 }

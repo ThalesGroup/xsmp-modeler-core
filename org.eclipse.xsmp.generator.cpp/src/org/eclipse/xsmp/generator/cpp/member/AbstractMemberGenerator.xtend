@@ -12,41 +12,34 @@ package org.eclipse.xsmp.generator.cpp.member
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xsmp.generator.cpp.ExpressionGenerator
-import org.eclipse.xsmp.generator.cpp.GeneratorExtension
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 
 abstract class AbstractMemberGenerator<T extends EObject> {
 
     @Inject
-    protected extension GeneratorExtension
-    @Inject
-    protected extension ExpressionGenerator
-
-    def boolean requiresGenPattern(T element) {
-        false
-    }
+    protected extension GeneratorUtil
 
     /**
-     * Declare a member it its container (INCLUDE)
+     * Declare a member it its parent (INCLUDE)
      */
-    def CharSequence declare(NamedElementWithMembers container, T member) {}
+    def CharSequence declare(NamedElementWithMembers parent, T member) {}
 
     /**
-     * Define a member it its container (SOURCE)
+     * Define a member it its parent (SOURCE)
      */
-    def CharSequence define(NamedElementWithMembers container, T member, boolean useGenPattern) {}
+    def CharSequence define(NamedElementWithMembers parent, T member, boolean useGenPattern) {}
 
     /**
-     * Declare a member it its container (INCLUDE-GEN)
+     * Declare a member it its parent (INCLUDE-GEN)
      */
-    def CharSequence declareGen(NamedElementWithMembers container, T member, boolean useGenPattern) {}
+    def CharSequence declareGen(NamedElementWithMembers parent, T member, boolean useGenPattern) {}
 
     /**
-     * Define a member it its container (SOURCE-GEN)
+     * Define a member it its parent (SOURCE-GEN)
      */
-    def CharSequence defineGen(NamedElementWithMembers container, T member, boolean useGenPattern) {}
+    def CharSequence defineGen(NamedElementWithMembers parent, T member, boolean useGenPattern) {}
 
     /**
      * Collect all includes required by this member
@@ -61,12 +54,12 @@ abstract class AbstractMemberGenerator<T extends EObject> {
     /**
      * The direct list initialization of the member in the parent constructor initializer-list
      */
-    def CharSequence initialize(NamedElementWithMembers container, T member, boolean useGenPattern) {}
+    def CharSequence initialize(NamedElementWithMembers parent, T member, boolean useGenPattern) {}
 
     /**
      * Construction of the member in the parent constructor body
      */
-    def CharSequence construct(NamedElementWithMembers container, T member, boolean useGenPattern) {}
+    def CharSequence construct(NamedElementWithMembers parent, T member, boolean useGenPattern) {}
 
     /**
      * The finalization of the member in the parent destructor
@@ -75,8 +68,4 @@ abstract class AbstractMemberGenerator<T extends EObject> {
 
     def CharSequence Publish(T element) {}
 
-    /**
-     * used to create a static assertion to check that the element is correctly defined
-     */
-    def CharSequence staticAssert(NamedElementWithMembers container, T element) {}
 }

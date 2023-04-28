@@ -16,21 +16,21 @@ import org.eclipse.xsmp.xcatalogue.Array
 
 class SimSatArrayGenerator extends ArrayGenerator {
 
-    override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
+    override protected generateHeaderGenBody(Array it, boolean useGenPattern) {
 
         '''
-            «t.comment»
-            using «t.name(useGenPattern)»= ::esa::ecss::smp::cdk::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()»>;
+            «comment»
+            using «name(useGenPattern)»= ::esa::ecss::smp::cdk::Array<«itemType.id», «size.doGenerateExpression()»>;
             
-            «t.uuidDeclaration»
+            «uuidDeclaration»
             
-            void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
+            void _Register_«name»(::Smp::Publication::ITypeRegistry* registry);
         '''
     }
 
-    override collectIncludes(Array type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
+    override collectIncludes(Array it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-        acceptor.mdkHeader("esa/ecss/smp/cdk/Array.h")
+        acceptor.userHeader("esa/ecss/smp/cdk/Array.h")
     }
 }

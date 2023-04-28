@@ -193,7 +193,7 @@ public class SmpGenerator extends AbstractModelConverter
     });
 
     // Add all the dependencies of the package
-    for (final Catalogue catalogue : XsmpUtil.dependentPackages(cat))
+    for (final Catalogue catalogue : xsmpUtil.dependentPackages(cat))
     {
       final var dep = PackageFactory.eINSTANCE.createDependencyOfPackage();
       dep.setPackage(PackageFactory.eINSTANCE.createPackage());

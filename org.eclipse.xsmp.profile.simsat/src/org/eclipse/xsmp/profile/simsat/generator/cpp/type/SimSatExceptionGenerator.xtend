@@ -16,16 +16,14 @@ import org.eclipse.xsmp.xcatalogue.Class
 
 class SimSatExceptionGenerator extends ExceptionGenerator {
 
-
-    protected override CharSequence base(Class t) {
-        ''': public «IF t.base!==null»::«t.base.fqn.toString("::")»«ELSE»::esa::ecss::smp::cdk::Exception«ENDIF»'''
+    protected override CharSequence base(Class it) {
+        ''': public «IF base!==null»«base.id»«ELSE»::esa::ecss::smp::cdk::Exception«ENDIF»'''
     }
 
-
-    override collectIncludes(Class type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
-        if (type.base === null)
-            acceptor.mdkHeader("esa/ecss/smp/cdk/Exception.h")
+    override collectIncludes(Class it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+        if (base === null)
+            acceptor.userHeader("esa/ecss/smp/cdk/Exception.h")
     }
 
 }

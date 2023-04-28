@@ -524,9 +524,9 @@ public class Solver
     }
     catch (final UnsupportedOperationException ex)
     {
-      throw new UnsupportedOperationException("no match for « operator" + e.getFeature()
-              + " » (operand types are « " + leftOperand.getClass().getSimpleName() + " » and «"
-              + rightOperand.getClass().getSimpleName() + " »).");
+      throw new UnsupportedOperationException("no match for \" operator" + e.getFeature()
+              + " \" (operand types are \" " + leftOperand.getClass().getSimpleName() + " \" and \""
+              + rightOperand.getClass().getSimpleName() + " \").");
     }
     catch (final Exception ex)
     {
@@ -534,9 +534,9 @@ public class Solver
     }
 
     throw new SolverException(e,
-            "unknown « operator" + e.getFeature() + " » (operand types are « "
-                    + leftOperand.getClass().getSimpleName() + " » and «"
-                    + rightOperand.getClass().getSimpleName() + " »).");
+            "unknown \" operator" + e.getFeature() + " \" (operand types are \" "
+                    + leftOperand.getClass().getSimpleName() + " \" and \""
+                    + rightOperand.getClass().getSimpleName() + " \").");
   }
 
   protected Object getValue(BuiltInConstant e)
@@ -618,8 +618,8 @@ public class Solver
       default:
         break;
     }
-    throw new SolverException(e, "no match for « operator" + e.getFeature()
-            + " » (operand type is « " + value.getClass().getSimpleName() + " »).");
+    throw new SolverException(e, "no match for \" operator" + e.getFeature()
+            + " \" (operand type is \" " + value.getClass().getSimpleName() + " \").");
   }
 
   protected Object getValue(NamedElementReference e)
@@ -645,8 +645,8 @@ public class Solver
       }
       return value;
     }
-    throw new SolverException(e, "invalid reference type « " + value.getClass().getSimpleName()
-            + " »), only Contant and EnumerationLiteral are supported.");
+    throw new SolverException(e, "invalid reference type \" " + value.getClass().getSimpleName()
+            + " \"), only Contant and EnumerationLiteral are supported.");
   }
 
   protected Object getValue(CollectionLiteral e)
@@ -664,7 +664,7 @@ public class Solver
   {
     try
     {
-      return XsmpUtil.getString(e);
+      return xsmpUtil.getString(e);
     }
     catch (final Exception ex)
     {
@@ -676,7 +676,7 @@ public class Solver
   {
     try
     {
-      return XsmpUtil.getUnescapedString(e);
+      return xsmpUtil.getUnescapedString(e);
     }
     catch (final Exception ex)
     {
@@ -831,24 +831,14 @@ public class Solver
         final var value = xsmpUtil.getDecimal(function.getParameter().get(0));
         if (value != null)
         {
+
           try
           {
-            final Double val = op.applyAsDouble(value.doubleValue());
-
-            if (val.isNaN())
-            {
-              throw new SolverException(function, "result is not a number.");
-
-            }
-            if (val.isInfinite())
-            {
-              throw new SolverException(function, "result is infinite.");
-
-            }
-            return BigDecimal.valueOf(val);
+            return BigDecimal.valueOf(op.applyAsDouble(value.doubleValue()));
           }
           catch (final Exception e)
           {
+            throw new SolverException(function, e.getMessage());
           }
         }
       }
@@ -1077,7 +1067,7 @@ public class Solver
       if (value instanceof String)
       {
         final var chr = (String) value;
-        if (XsmpUtil.translateEscapes(chr).length() != 1)
+        if (xsmpUtil.translateEscapes(chr).length() != 1)
         {
           throw new SolverException(e, "Invalid Character length: " + chr);
         }
@@ -1102,7 +1092,7 @@ public class Solver
     {
       try
       {
-        return BigInteger.valueOf(Duration.parse(XsmpUtil.getString((StringLiteral) e)).getNano());
+        return BigInteger.valueOf(Duration.parse(xsmpUtil.getString((StringLiteral) e)).getNano());
       }
       catch (final Exception ex)
       {
@@ -1123,7 +1113,7 @@ public class Solver
     }
     try
     {
-      final var i = Instant.parse(XsmpUtil.getString((StringLiteral) e));
+      final var i = Instant.parse(xsmpUtil.getString((StringLiteral) e));
       return BigInteger.valueOf(i.getEpochSecond()).multiply(BigInteger.valueOf(1_000_000_000))
               .add(BigInteger.valueOf(i.getNano()));
     }
