@@ -2,38 +2,52 @@ package org.eclipse.xsmp.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 
+import org.eclipse.xsmp.util.Float32;
+import org.eclipse.xsmp.util.Float64;
+import org.eclipse.xsmp.util.Int32;
+import org.eclipse.xsmp.util.Int64;
+import org.eclipse.xsmp.util.AbstractPrimitiveType;
+import org.eclipse.xsmp.util.Solver;
+import org.eclipse.xsmp.util.UInt32;
+import org.eclipse.xsmp.util.UInt64;
 import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.google.inject.Inject;
+
+@ExtendWith(InjectionExtension.class)
+@InjectWith(XsmpcatInjectorProvider.class)
 class LiteralTest
 {
+  @Inject
+  Solver solver;
+
   /* --------- Integer --------- */
 
   void checkIntegers(String val, BigInteger expected)
   {
-    checkInteger(val, expected);
-    checkInteger(val + "ll", expected);
-    checkInteger(val + "LL", expected);
-    checkInteger(val + "l", expected);
-    checkInteger(val + "L", expected);
-    checkInteger(val + "u", expected);
-    checkInteger(val + "U", expected);
-    checkInteger(val + "ull", expected);
-    checkInteger(val + "uLL", expected);
-    checkInteger(val + "ul", expected);
-    checkInteger(val + "uL", expected);
+    checkInteger(val, Int32.valueOf(expected.intValue()));
+    checkInteger(val + "lu", UInt64.valueOf(expected.longValue()));
+    checkInteger(val + "Lu", UInt64.valueOf(expected.longValue()));
+    checkInteger(val + "l", Int64.valueOf(expected.longValue()));
+    checkInteger(val + "L", Int64.valueOf(expected.longValue()));
+    checkInteger(val + "u", UInt32.valueOf(expected.intValue()));
+    checkInteger(val + "U", UInt32.valueOf(expected.intValue()));
+    checkInteger(val + "ul", UInt64.valueOf(expected.longValue()));
+    checkInteger(val + "uL", UInt64.valueOf(expected.longValue()));
   }
 
-  void checkInteger(String val, BigInteger expected)
+  void checkInteger(String val, AbstractPrimitiveType< ? > expected)
   {
     final var i = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
 
     i.setText(val);
-    assertEquals(expected, i.getValue());
+    assertEquals(expected, solver.getValue(i));
   }
 
   void testDecimal()
@@ -129,19 +143,18 @@ class LiteralTest
   {
     // The expected must be the number without the separations
 
-    checkFloat(val, new BigDecimal(expected, MathContext.DECIMAL64));
-    checkFloat(val + "f", new BigDecimal(expected, MathContext.DECIMAL32));
-    checkFloat(val + "F", new BigDecimal(expected, MathContext.DECIMAL32));
-    checkFloat(val + "l", new BigDecimal(expected, MathContext.DECIMAL128));
-    checkFloat(val + "L", new BigDecimal(expected, MathContext.DECIMAL128));
+    checkFloat(val, Float64.valueOf(Double.parseDouble(expected)));
+    checkFloat(val + "f", Float32.valueOf(Float.parseFloat(expected)));
+    checkFloat(val + "F", Float32.valueOf(Float.parseFloat(expected)));
   }
 
-  void checkFloat(String val, BigDecimal expected)
+  void checkFloat(String val, Object expected)
   {
     final var i = XcatalogueFactory.eINSTANCE.createFloatingLiteral();
 
     i.setText(val);
-    assertEquals(expected, i.getValue());
+
+    assertEquals(expected, solver.getValue(i));
   }
 
   @Test

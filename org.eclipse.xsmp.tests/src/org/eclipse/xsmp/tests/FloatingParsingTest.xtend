@@ -35,8 +35,7 @@ class FloatingParsingTest {
                 interface t
                 {
                     constant Float64 c = «value» +
-                                        «value»f + «value»F +
-                                        «value»l+ «value»L 
+                                        «value»f + «value»F
                 }
             }
             

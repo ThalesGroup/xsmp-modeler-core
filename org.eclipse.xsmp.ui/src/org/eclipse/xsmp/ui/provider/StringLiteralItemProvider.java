@@ -85,7 +85,7 @@ public class StringLiteralItemProvider extends ExpressionItemProvider
   {
     final var label = ((StringLiteral) object).getValue();
     final var styledLabel = new StyledString();
-    if (label == null || label.length() == 0)
+    if (label.isEmpty())
     {
       styledLabel.append(getString("_UI_StringLiteral_type"), StyledString.Style.QUALIFIER_STYLER);
     }

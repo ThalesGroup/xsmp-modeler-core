@@ -50,25 +50,7 @@ Namespace returns ecore::EObject:
 enum RangeKind:
     Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
 
-fragment StructBody *:
-    '{'
-    member+=StructMember*
-    '}';
 
-fragment ClassBody *:
-    '{'
-    member+=ClassMember*
-    '}';
-
-fragment InterfaceBody *:
-    '{'
-    member+=InterfaceMember*
-    '}';
-
-fragment ComponentBody *:
-    '{'
-    member+=ComponentMember*
-    '}';
 
 NamespaceMember returns ecore::EObject:
     {Metadatum}
@@ -427,7 +409,7 @@ FloatingLiteral returns FloatingLiteral:
     {FloatingLiteral} text=FLOATING_LITERAL;
 
 StringLiteral returns Expression:
-    {StringLiteral} value=STRING_LITERAL;
+    {StringLiteral} (value+=STRING_LITERAL)+;
 
 CharacterLiteral returns Expression:
     {CharacterLiteral} value=CHARACTER_LITERAL;
@@ -451,7 +433,7 @@ terminal INTEGER_LITERAL:
     | BINARY_LITERAL INTEGER_SUFFIX?;
 
 terminal CHARACTER_LITERAL:
-    ('u' | 'U' | 'L')? '\'' CCHAR+ '\'';
+    /*('u' | 'U' | 'L')?*/ '\'' CCHAR+ '\'';
 
 terminal FLOATING_LITERAL:
     FRACTIONALCONSTANT EXPONENTPART? FLOATINGSUFFIX?
@@ -459,7 +441,8 @@ terminal FLOATING_LITERAL:
 
 terminal STRING_LITERAL:
     ENCODINGPREFIX?
-    ('"' SCHAR* '"');
+    ('"' SCHAR* '"') //(WS* ENCODINGPREFIX? ('"' SCHAR* '"'))*
+    ;
 
 terminal fragment HEX_QUAD:
     HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT;
@@ -518,7 +501,7 @@ terminal fragment UNSIGNEDSUFFIX:
     'u' | 'U';
 
 terminal fragment LONGSUFFIX:
-    'l' | 'L' | 'll' | 'LL';
+    'l' | 'L' /* | 'll' | 'LL'*/ ;
 
 terminal fragment CCHAR:
     // ~ ['\\\r\n]
@@ -567,10 +550,10 @@ terminal fragment DIGITSEQUENCE:
     DIGIT ('\''? DIGIT)*;
 
 terminal fragment FLOATINGSUFFIX:
-    'f' | 'F' | 'l' | 'L';
+    'f' | 'F' /*| 'l' | 'L'*/ ;
 
 terminal fragment ENCODINGPREFIX:
-    'u8' | 'u' | 'U' | 'L';
+    'u8' /*| 'u' | 'U' | 'L'*/ ;
 
 terminal fragment SCHAR:
     // ~ ["\\\r\n]

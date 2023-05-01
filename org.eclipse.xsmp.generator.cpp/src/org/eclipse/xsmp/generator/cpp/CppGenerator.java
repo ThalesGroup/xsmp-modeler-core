@@ -34,6 +34,7 @@ import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Namespace;
+import org.eclipse.xsmp.xcatalogue.ReferenceType;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.generator.AbstractGenerator;
@@ -113,7 +114,7 @@ public class CppGenerator extends AbstractGenerator
 
   protected boolean useGenerationGapPattern(EObject obj)
   {
-    return true;
+    return obj instanceof ReferenceType;
   }
 
   /**

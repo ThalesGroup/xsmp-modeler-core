@@ -42,7 +42,7 @@ public class DefaultValueProvider
         return getDefautValue(((ValueReference) t).getType());
       case XcataloguePackage.ARRAY:
         return "{" + java.lang.String.join(", ",
-                Collections.nCopies(xsmpUtil.getInteger(((Array) t).getSize()).intValue(),
+                Collections.nCopies(xsmpUtil.getInt32(((Array) t).getSize()),
                         getDefautValue(((Array) t).getItemType())))
                 + "}";
       case XcataloguePackage.ENUMERATION:
@@ -54,7 +54,7 @@ public class DefaultValueProvider
       case XcataloguePackage.INTEGER:
       case XcataloguePackage.STRING:
       case XcataloguePackage.PRIMITIVE_TYPE:
-        switch (xsmpUtil.getPrimitiveType(t))
+        switch (xsmpUtil.getPrimitiveTypeKind(t))
         {
           case BOOL:
             return "false";

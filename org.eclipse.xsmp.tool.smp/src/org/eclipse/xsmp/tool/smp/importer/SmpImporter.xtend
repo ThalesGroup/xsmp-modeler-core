@@ -85,6 +85,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xsmp.tool.smp.core.types.Value
+import org.eclipse.xsmp.util.XsmpUtil
 
 class SmpImporter {
 
@@ -116,6 +117,8 @@ class SmpImporter {
 
     @Inject
     extension SmpUtil
+        @Inject
+     XsmpUtil xsmpUtil
 
     def CharSequence qfn(NamedElement e) {
 
@@ -572,7 +575,8 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(String8Value o, Type type) {
-        '''«o.field()»"«o.value.replace("\n","\\n").replace("\t","\\t").replace("\"","\\\"")»"'''
+        
+        '''«o.field()»"«xsmpUtil.escape(o.value)»"'''
     }
 
     def dispatch CharSequence generate(BoolValue o, Type type) {
@@ -580,7 +584,8 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(Char8Value o, Type type) {
-        '''«o.field()»«"'"»«o.value»«"'"»'''
+        
+        '''«o.field()»«"'"»«xsmpUtil.escape(o.value)»«"'"»'''
     }
 
     def dispatch CharSequence generate(DateTimeValue o, Type type) {

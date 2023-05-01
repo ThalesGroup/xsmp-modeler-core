@@ -12,10 +12,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.Field;
@@ -46,9 +46,10 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model, XcataloguePackage.Literals.CLASS__BASE,
                           p) && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE,
-                  model -> p -> floatingPointPrimitiveSet.contains(xsmpUtil.getPrimitiveType(p)))
+                  model -> p -> floatingPointPrimitiveSet
+                          .contains(xsmpUtil.getPrimitiveTypeKind(p)))
           .put(XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE,
-                  model -> p -> integerPrimitiveSet.contains(xsmpUtil.getPrimitiveType(p)))
+                  model -> p -> integerPrimitiveSet.contains(xsmpUtil.getPrimitiveTypeKind(p)))
           .put(XcataloguePackage.Literals.INTERFACE__BASE,
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.INTERFACE__BASE, p)
@@ -69,7 +70,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model,
                           XcataloguePackage.Literals.VALUE_REFERENCE__TYPE, p))
           .put(XcataloguePackage.Literals.FIELD__TYPE,
-                  model -> p -> PrimitiveTypeKind.STRING8 != xsmpUtil.getPrimitiveType(p)
+                  model -> p -> PrimitiveTypeKind.STRING8 != xsmpUtil.getPrimitiveTypeKind(p)
                           && isValidTypeReference(model, XcataloguePackage.Literals.FIELD__TYPE, p))
           .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT,
                   model -> p -> isValidTypeReference(model,
@@ -136,8 +137,10 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                       .collect(Collectors.toList());
 
               // filter allow multiple
-              if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream()
-                      .anyMatch(a -> xsmpUtil.fqn(a.getType()).equals(p.getQualifiedName())))
+              if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream().anyMatch(a -> {
+                final var type = a.getType();
+                return type != null && xsmpUtil.fqn(type).equals(p.getQualifiedName());
+              }))
               {
                 return false;
               }
@@ -149,7 +152,9 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
           .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
                   model -> p -> xsmpUtil.getField((Expression) model) == EcoreUtil
                           .resolve(p.getEObjectOrProxy(), model))
-
+          .put(XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
+                  model -> p -> EcoreUtil2.getContainerOfType(model, NamedElement.class) != p
+                          .getEObjectOrProxy())
           // build the map
           .build();
 

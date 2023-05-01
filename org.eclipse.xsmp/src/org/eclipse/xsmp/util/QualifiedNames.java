@@ -187,4 +187,9 @@ public final class QualifiedNames
 
   public static final QualifiedName Smp_ViewKind_VK_All = Smp_ViewKind.append("VK_All");
 
+  public static final QualifiedName Smp_IComponent = Smp.append("IComponent");
+
+  public static final QualifiedName Smp_IModel = Smp.append("IModel");
+
+  public static final QualifiedName Smp_IService = Smp.append("IService");
 }

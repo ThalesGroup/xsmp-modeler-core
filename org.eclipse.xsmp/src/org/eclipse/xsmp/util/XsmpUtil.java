@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -30,7 +29,6 @@ import org.eclipse.xsmp.xcatalogue.Association;
 import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
 import org.eclipse.xsmp.xcatalogue.Class;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Component;
@@ -43,6 +41,7 @@ import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.Float;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.ItemWithBase;
+import org.eclipse.xsmp.xcatalogue.Model;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.NativeType;
@@ -52,8 +51,8 @@ import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.ReferenceType;
+import org.eclipse.xsmp.xcatalogue.Service;
 import org.eclipse.xsmp.xcatalogue.SimpleType;
-import org.eclipse.xsmp.xcatalogue.StringLiteral;
 import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.ValueType;
@@ -145,24 +144,6 @@ public class XsmpUtil
     MODULE
   }
 
-  /**
-   * Enumeration with SMP primitive type kinds
-   */
-  public enum PrimitiveTypeKind
-  {
-    BOOL("Bool"), CHAR8("Char8"), DATE_TIME("DateTime"), DURATION("Duration"), FLOAT32(
-            "Float32"), FLOAT64("Float64"), INT8("Int8"), INT16("Int16"), INT32("Int32"), INT64(
-                    "Int64"), STRING8("String8"), UINT8("UInt8"), UINT16("UInt16"), UINT32(
-                            "UInt32"), UINT64("UInt64"), ENUM("Int32"), NONE("None");
-
-    public final String label;
-
-    PrimitiveTypeKind(String label)
-    {
-      this.label = label;
-    }
-  }
-
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
           .<QualifiedName, PrimitiveTypeKind> builder()
           .put(QualifiedNames.Smp_Char8, PrimitiveTypeKind.CHAR8)
@@ -205,14 +186,58 @@ public class XsmpUtil
           .put(QualifiedNames.Attributes_OperatorKind_Subtract, OperatorKind.SUBTRACT)
           .put(QualifiedNames.Attributes_OperatorKind_Sum, OperatorKind.SUM).build();
 
-  public PrimitiveTypeKind getPrimitiveType(IEObjectDescription d)
+  public PrimitiveTypeKind getPrimitiveTypeKind(IEObjectDescription d)
   {
-    return getPrimitiveType(d.getQualifiedName());
+    return getPrimitiveTypeKind(d.getQualifiedName());
   }
 
-  public PrimitiveTypeKind getPrimitiveType(QualifiedName qfn)
+  public PrimitiveTypeKind getPrimitiveTypeKind(QualifiedName qfn)
   {
     return primitiveTypeKinds.getOrDefault(qfn, PrimitiveTypeKind.NONE);
+  }
+
+  public PrimitiveTypeKind getPrimitiveTypeKind(Type type)
+  {
+    if (type != null)
+    {
+      switch (type.eClass().getClassifierID())
+      {
+        case XcataloguePackage.PRIMITIVE_TYPE:
+          return getPrimitiveTypeKind((PrimitiveType) type);
+        case XcataloguePackage.FLOAT:
+          return getPrimitiveTypeKind((org.eclipse.xsmp.xcatalogue.Float) type);
+        case XcataloguePackage.INTEGER:
+          return getPrimitiveTypeKind((org.eclipse.xsmp.xcatalogue.Integer) type);
+        case XcataloguePackage.ENUMERATION:
+          return PrimitiveTypeKind.ENUM;
+        case XcataloguePackage.STRING:
+          return PrimitiveTypeKind.STRING8;
+        default:
+          break;
+      }
+    }
+    return PrimitiveTypeKind.NONE;
+  }
+
+  public PrimitiveTypeKind getPrimitiveTypeKind(PrimitiveType type)
+  {
+    return getPrimitiveTypeKind(fqn(type));
+  }
+
+  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.xcatalogue.Float type)
+  {
+
+    final var primitiveType = type.getPrimitiveType();
+    return primitiveType != null ? getPrimitiveTypeKind(primitiveType) : PrimitiveTypeKind.FLOAT64;
+
+  }
+
+  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.xcatalogue.Integer type)
+  {
+
+    final var primitiveType = type.getPrimitiveType();
+    return primitiveType != null ? getPrimitiveTypeKind(primitiveType) : PrimitiveTypeKind.INT32;
+
   }
 
   public VisibilityKind getVisibility(IEObjectDescription o)
@@ -224,7 +249,7 @@ public class XsmpUtil
       final var visibility = o.getUserData("visibility");
 
       // if the user data is not set, it means that the object is public
-      return visibility != null ? VisibilityKind.valueOf(visibility) : VisibilityKind.PUBLIC;
+      return visibility != null ? VisibilityKind.getByName(visibility) : VisibilityKind.PUBLIC;
     }
 
     return getVisibility(obj);
@@ -276,20 +301,20 @@ public class XsmpUtil
 
   public boolean isBaseOf(EObject base, EObject derived)
   {
-    if (derived instanceof Interface)
+    switch (derived.eClass().getClassifierID())
     {
-      return isBaseOf(base, (Interface) derived);
+      case XcataloguePackage.INTERFACE:
+        return isBaseOf(base, (Interface) derived);
+      case XcataloguePackage.MODEL:
+        return isBaseOf(base, (Model) derived);
+      case XcataloguePackage.SERVICE:
+        return isBaseOf(base, (Service) derived);
+      case XcataloguePackage.CLASS:
+      case XcataloguePackage.EXCEPTION:
+        return isBaseOf(base, (Class) derived);
+      default:
+        return false;
     }
-    if (derived instanceof Component)
-    {
-      return isBaseOf(base, (Component) derived);
-    }
-    if (derived instanceof Class)
-    {
-      return isBaseOf(base, (Class) derived);
-    }
-
-    return false;
   }
 
   protected boolean isBaseOf(EObject base, Interface derived)
@@ -297,9 +322,26 @@ public class XsmpUtil
     return base == derived || derived.getBase().stream().anyMatch(b -> isBaseOf(base, b));
   }
 
+  protected boolean isBaseOf(EObject base, Model derived)
+  {
+    final var baseFqn = fqn(base);
+
+    return QualifiedNames.Smp_IModel.equals(baseFqn) || isBaseOf(base, (Component) derived);
+  }
+
+  protected boolean isBaseOf(EObject base, Service derived)
+  {
+    final var baseFqn = fqn(base);
+
+    return QualifiedNames.Smp_IService.equals(baseFqn) || isBaseOf(base, (Component) derived);
+  }
+
   protected boolean isBaseOf(EObject base, Component derived)
   {
-    return base == derived || isBaseOf(base, derived.getBase())
+    final var baseFqn = fqn(base);
+
+    return base == derived || QualifiedNames.Smp_IComponent.equals(baseFqn)
+            || isBaseOf(base, derived.getBase())
             || derived.getInterface().stream().anyMatch(b -> isBaseOf(base, b));
   }
 
@@ -398,50 +440,6 @@ public class XsmpUtil
 
   }
 
-  public PrimitiveTypeKind getPrimitiveType(Type type)
-  {
-    if (type != null)
-    {
-      switch (type.eClass().getClassifierID())
-      {
-        case XcataloguePackage.PRIMITIVE_TYPE:
-          return getPrimitiveType((PrimitiveType) type);
-        case XcataloguePackage.FLOAT:
-          return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Float) type);
-        case XcataloguePackage.INTEGER:
-          return getPrimitiveType((org.eclipse.xsmp.xcatalogue.Integer) type);
-        case XcataloguePackage.ENUMERATION:
-          return PrimitiveTypeKind.ENUM;
-        case XcataloguePackage.STRING:
-          return PrimitiveTypeKind.STRING8;
-        default:
-          break;
-      }
-    }
-    return PrimitiveTypeKind.NONE;
-  }
-
-  public PrimitiveTypeKind getPrimitiveType(PrimitiveType type)
-  {
-    return getPrimitiveType(fqn(type));
-  }
-
-  public PrimitiveTypeKind getPrimitiveType(org.eclipse.xsmp.xcatalogue.Float type)
-  {
-
-    final var primitiveType = type.getPrimitiveType();
-    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.FLOAT64;
-
-  }
-
-  public PrimitiveTypeKind getPrimitiveType(org.eclipse.xsmp.xcatalogue.Integer type)
-  {
-
-    final var primitiveType = type.getPrimitiveType();
-    return primitiveType != null ? getPrimitiveType(primitiveType) : PrimitiveTypeKind.INT32;
-
-  }
-
   /**
    * return the full qualified name of the element
    *
@@ -449,64 +447,15 @@ public class XsmpUtil
    *          the element
    * @return the QualifiedName
    */
-  public QualifiedName fqn(NamedElement t)
+  public QualifiedName fqn(EObject t)
   {
-    if (t != null)
-    {
-      return qualifiedNameProvider.getFullyQualifiedName(t);
-    }
-    return QualifiedName.EMPTY;
+    return qualifiedNameProvider.getFullyQualifiedName(t);
   }
 
-  public String getString(StringLiteral t)
+  public String escape(String s)
   {
-    var value = t.getValue();
-    // remove ENCODINGPREFIX: 'u8' | 'u' | 'U' | 'L'
-    switch (value.charAt(0))
-    {
-      case 'u':
-        if (value.charAt(1) == '8')
-        {
-          value = value.substring(1);
-        }
-        break;
-      case 'U':
-      case 'L':
-        value = value.substring(1);
-        break;
-      default:
-        break;
-    }
-    // remove quotes
-    return value.substring(1, value.length() - 1);
-  }
-
-  public String getString(CharacterLiteral t)
-  {
-    var value = t.getValue();
-    // remove ENCODINGPREFIX: 'u' | 'U' | 'L'
-    switch (value.charAt(0))
-    {
-      case 'u':
-      case 'U':
-      case 'L':
-        value = value.substring(1);
-        break;
-      default:
-        break;
-    }
-    // remove quotes
-    return value.substring(1, value.length() - 1);
-  }
-
-  public String getUnescapedChar(CharacterLiteral t)
-  {
-    return translateEscapes(getString(t));
-  }
-
-  public String getUnescapedString(StringLiteral t)
-  {
-    return translateEscapes(getString(t));
+    return s.replace("\t", "\\t").replace("\b", "\\b").replace("\n", "\\n").replace("\r", "\\r")
+            .replace("\f", "\\f").replace("\'", "\\'").replace("\"", "\\\"");
   }
 
   public String translateEscapes(String s) throws IllegalArgumentException
@@ -664,7 +613,12 @@ public class XsmpUtil
 
   protected Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
   {
-    return getBoolean(attributeValue(o, id));
+    final var v = attributeValue(o, id);
+    if (v != null)
+    {
+      return Optional.of(getBoolean(v));
+    }
+    return Optional.empty();
   }
 
   protected boolean attributeBoolValue(NamedElement o, QualifiedName id, boolean defaultValue)
@@ -695,8 +649,18 @@ public class XsmpUtil
   public OperatorKind getOperatorKind(NamedElement o)
   {
     final var id = QualifiedNames.Attributes_Operator;
-    return cache.get(Tuples.pair(o, id), o.eResource(), () -> operatorKinds
-            .getOrDefault(fqn(getEnumerationLiteral(attributeValue(o, id))), OperatorKind.NONE));
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> {
+      final var attr = attributeValue(o, id);
+      if (attr != null)
+      {
+        final var literal = getEnumerationLiteral(attr);
+        if (literal != null)
+        {
+          return operatorKinds.getOrDefault(fqn(literal), OperatorKind.NONE);
+        }
+      }
+      return OperatorKind.NONE;
+    });
   }
 
   public boolean isStatic(NamedElement o)
@@ -969,7 +933,7 @@ public class XsmpUtil
     return cache.get(Tuples.pair(op, "isInvokable"), op.eResource(), () -> computeIsInvokable(op));
   }
 
-  private Type findType(EObject e, QualifiedName name)
+  private Type findPrimitiveType(EObject e, QualifiedName name)
   {
 
     final var resource = e.eResource();
@@ -1007,19 +971,19 @@ public class XsmpUtil
       case XcataloguePackage.STRING:
       case XcataloguePackage.ARRAY:
       case XcataloguePackage.MULTIPLICITY:
-        return findType(parent, QualifiedNames.Smp_Int64);
+        return findPrimitiveType(parent, QualifiedNames.Smp_Int64);
       case XcataloguePackage.FLOAT:
       {
         final var type = ((Float) parent).getPrimitiveType();
-        return type != null ? type : findType(parent, QualifiedNames.Smp_Float64);
+        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
       case XcataloguePackage.INTEGER:
       {
         final var type = ((org.eclipse.xsmp.xcatalogue.Integer) parent).getPrimitiveType();
-        return type != null ? type : findType(parent, QualifiedNames.Smp_Int32);
+        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
       case XcataloguePackage.ENUMERATION_LITERAL:
-        return findType(parent, QualifiedNames.Smp_Int32);
+        return findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       case XcataloguePackage.ENUMERATION:
         return (Type) parent;
       case XcataloguePackage.ATTRIBUTE:
@@ -1053,9 +1017,9 @@ public class XsmpUtil
         final var collection = (CollectionLiteral) parent;
         final var index = collection.getElements().indexOf(e);
         final var array = (Array) type;
-        final var size = getInteger(array.getSize());
+        final var size = getInt64(array.getSize());
 
-        if (size != null && size.compareTo(BigInteger.valueOf(index)) > 0)
+        if (size > index)
         {
           return ((Array) type).getItemType();
         }
@@ -1080,7 +1044,14 @@ public class XsmpUtil
   {
     if (e != null)
     {
-      return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+      try
+      {
+        return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+      }
+      catch (final Exception ex)
+      {
+        // ignore
+      }
     }
     return null;
   }
@@ -1089,7 +1060,14 @@ public class XsmpUtil
   {
     if (e != null)
     {
-      return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+      try
+      {
+        return cache.get(Tuples.pair(e, "Type"), e.eResource(), () -> findType(e));
+      }
+      catch (final Exception ex)
+      {
+        // ignore
+      }
     }
     return null;
   }
@@ -1151,7 +1129,7 @@ public class XsmpUtil
     return null;
   }
 
-  public Type getType(INode node)
+  public Type getType(INode node, EObject context)
   {
     Expression last = null;
     final var parent = node.getParent();
@@ -1170,7 +1148,7 @@ public class XsmpUtil
       {
         if (last == null)
         {
-          return getType(node.getSemanticElement());
+          return getType(context);
         }
         return getType(last);
       }
@@ -1179,124 +1157,88 @@ public class XsmpUtil
     return null;
   }
 
-  public BigInteger getInteger(Expression e)
-  {
-    try
-    {
-      return solver.getInteger(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
-  }
-
-  public BigDecimal getDecimal(Expression e)
-  {
-    try
-    {
-      return solver.getDecimal(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
-  }
-
   public EnumerationLiteral getEnumerationLiteral(Expression e)
   {
     final var type = getType(e);
     if (type instanceof Enumeration)
     {
-      try
-      {
-        return solver.getEnumerationLiteral(e, (Enumeration) type);
-      }
-      catch (final Exception ex)
-      {
-        // ignore
-      }
+      return solver.getValue(e, (Enumeration) type).getValue();
     }
     return null;
   }
 
-  public BigInteger getEnumValue(Expression e)
+  public boolean getBoolean(Expression e)
   {
-    try
-    {
-      return solver.getEnumValue(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
+    return solver.getValue(e).boolValue().getValue();
   }
 
-  public Optional<Boolean> getBoolean(Expression e)
+  public String getString8(Expression e)
   {
-    try
-    {
-      return solver.getBoolean(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return Optional.empty();
-    }
+    return solver.getValue(e).string8Value().getValue();
   }
 
-  public String getString(Expression e)
+  public long getDuration(Expression e)
   {
-    try
-    {
-      return solver.getString(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
+    return solver.getValue(e).durationValue().getValue();
   }
 
-  public String getChar(Expression e)
+  public long getDateTime(Expression e)
   {
-    try
-    {
-      return solver.getChar(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
+    return solver.getValue(e).dateTimeValue().getValue();
   }
 
-  public BigInteger getDuration(Expression e)
+  public double getFloat64(Expression e)
   {
-    try
-    {
-      return solver.getDuration(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
+    return solver.getValue(e).float64Value().getValue();
   }
 
-  public BigInteger getDateTime(Expression e)
+  public float getFloat32(Expression e)
   {
-    try
-    {
-      return solver.getDateTime(e);
-    }
-    catch (final Exception ex)
-    {
-      // ignore
-      return null;
-    }
+    return solver.getValue(e).float32Value().getValue();
+  }
+
+  public BigInteger getUInt64(Expression e)
+  {
+    return solver.getValue(e).uint64Value().getValue();
+  }
+
+  public long getInt64(Expression e)
+  {
+    return solver.getValue(e).int64Value().getValue();
+  }
+
+  public long getUInt32(Expression e)
+  {
+    return solver.getValue(e).uint32Value().getValue();
+  }
+
+  public int getInt32(Expression e)
+  {
+    return solver.getValue(e).int32Value().getValue();
+  }
+
+  public int getUInt16(Expression e)
+  {
+    return solver.getValue(e).uint16Value().getValue();
+  }
+
+  public short getInt16(Expression e)
+  {
+    return solver.getValue(e).int16Value().getValue();
+  }
+
+  public short getUInt8(Expression e)
+  {
+    return solver.getValue(e).uint8Value().getValue();
+  }
+
+  public byte getInt8(Expression e)
+  {
+    return solver.getValue(e).int8Value().getValue();
+  }
+
+  public char getChar8(Expression e)
+  {
+    return solver.getValue(e).char8Value().getValue();
   }
 }

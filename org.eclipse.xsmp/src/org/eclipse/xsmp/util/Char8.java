@@ -1,0 +1,174 @@
+/*******************************************************************************
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
+package org.eclipse.xsmp.util;
+
+public final class Char8 extends AbstractPrimitiveType<Char8>
+{
+  private final char value;
+
+  public static final Char8 ZERO = new Char8((char) 0);
+
+  public static final Char8 MIN_VALUE = new Char8(Character.MIN_VALUE);
+
+  public static final Char8 MAX_VALUE = new Char8(Character.MAX_VALUE);
+
+  @Override
+  public PrimitiveTypeKind getPrimitiveTypeKind()
+  {
+    return PrimitiveTypeKind.CHAR8;
+  }
+
+  private Char8(char value)
+  {
+    this.value = value;
+  }
+
+  public static Char8 valueOf(char value)
+  {
+    return new Char8(value);
+  }
+
+  @Override
+  public Character getValue()
+  {
+    return value;
+  }
+
+  /**
+   * Returns a hash code for this {@code Char8}.
+   *
+   * @return a hash code value for this object, equal to the
+   *         primitive {@code int} value represented by this
+   *         {@code Char8} object.
+   */
+  @Override
+  public int hashCode()
+  {
+    return value;
+  }
+
+  /**
+   * Compares this object to the specified object. The result is
+   * {@code true} if and only if the argument is not
+   * {@code null} and is a {@code Char8} object that
+   * contains the same {@code char} value as this object.
+   *
+   * @param obj
+   *          the object to compare with.
+   * @return {@code true} if the objects are the same;
+   *         {@code false} otherwise.
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj instanceof Char8)
+    {
+      return value == ((Char8) obj).value;
+    }
+    return false;
+  }
+
+  @Override
+  public Bool not()
+  {
+    return Bool.valueOf(value != (char) 0);
+  }
+
+  @Override
+  public Int32 unaryComplement()
+  {
+    return Int32.valueOf(~value);
+  }
+
+  @Override
+  public Int32 plus()
+  {
+    return Int32.valueOf(value);
+  }
+
+  @Override
+  public Int32 negate()
+  {
+    return Int32.valueOf(-value);
+  }
+
+  @Override
+  public Bool boolValue()
+  {
+    return Bool.valueOf(value != (char) 0);
+  }
+
+  @Override
+  public Char8 char8Value()
+  {
+    return this;
+  }
+
+  @Override
+  public Float32 float32Value()
+  {
+    return Float32.valueOf(value);
+  }
+
+  @Override
+  public Float64 float64Value()
+  {
+    return Float64.valueOf(value);
+  }
+
+  @Override
+  public Int8 int8Value()
+  {
+    return Int8.valueOf((byte) value);
+  }
+
+  @Override
+  public Int16 int16Value()
+  {
+    return Int16.valueOf((short) value);
+  }
+
+  @Override
+  public Int32 int32Value()
+  {
+    return Int32.valueOf(value);
+  }
+
+  @Override
+  public Int64 int64Value()
+  {
+    return Int64.valueOf(value);
+  }
+
+  @Override
+  public UInt8 uint8Value()
+  {
+    return convert(() -> UInt8.valueOf((byte) value));
+  }
+
+  @Override
+  public UInt16 uint16Value()
+  {
+    return convert(() -> UInt16.valueOf((short) value));
+  }
+
+  @Override
+  public UInt32 uint32Value()
+  {
+    return convert(() -> UInt32.valueOf(value));
+  }
+
+  @Override
+  public UInt64 uint64Value()
+  {
+    return convert(() -> UInt64.valueOf(value));
+  }
+}

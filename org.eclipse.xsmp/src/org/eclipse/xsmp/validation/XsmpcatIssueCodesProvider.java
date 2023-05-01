@@ -46,10 +46,20 @@ public class XsmpcatIssueCodesProvider extends ConfigurableIssueCodesProvider
 
   public static final String DEPRECATED_MODEL_PART = ISSUE_CODE_PREFIX + "deprecatedModelPart";
 
+  public static final String DEPRECATED_KEYWORD = ISSUE_CODE_PREFIX + "deprecatedKeyword";
+
+  public static final String DEPRECATED_ATTRIBUTE_DECLARATION = ISSUE_CODE_PREFIX
+          + "deprecatedAttributeDeclaration";
+
+  public static final String ENUMERATION_LITERAL_RECOMMANDED = ISSUE_CODE_PREFIX
+          + "enumerationLiteralRecommanded";
+
   @Override
   protected void initialize(IAcceptor<PreferenceKey> acceptor)
   {
     super.initialize(acceptor);
     acceptor.accept(create(DEPRECATED_MODEL_PART, SeverityConverter.SEVERITY_WARNING));
+    acceptor.accept(create(DEPRECATED_KEYWORD, SeverityConverter.SEVERITY_WARNING));
+    acceptor.accept(create(DEPRECATED_ATTRIBUTE_DECLARATION, SeverityConverter.SEVERITY_WARNING));
   }
 }

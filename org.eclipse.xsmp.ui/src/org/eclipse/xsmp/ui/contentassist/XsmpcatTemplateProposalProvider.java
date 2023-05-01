@@ -68,7 +68,7 @@ public class XsmpcatTemplateProposalProvider extends DefaultTemplateProposalProv
     if (name.equals(templateContext.getContextType().getName())
     /* && !(context.getCurrentModel() instanceof Expression) */)
     {
-      final var type = xsmpUtil.getType(context.getCurrentNode());
+      final var type = xsmpUtil.getType(context.getCurrentNode(), context.getCurrentModel());
       if (type instanceof Structure || type instanceof Array)
       {
 
