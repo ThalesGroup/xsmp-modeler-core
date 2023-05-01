@@ -36,9 +36,11 @@ class IntegerParsingTest {
                 {
                     constant UInt64 c = «value» +
                                         «value»u + «value»U +
-                                        «value»l+ «value»L + «value»ll + «value»LL +
-                                        «value»ul + «value»uL + «value»ull + «value»uLL +
-                                        «value»Ul +«value»UL+«value»Ull+«value»ULL
+                                        «value»l+ «value»L + 
+                                        «value»ul + «value»uL + 
+                                        «value»Ul +«value»UL +
+                                        «value»lu + «value»Lu + 
+                                        «value»lU +«value»LU
                 }
             }
             

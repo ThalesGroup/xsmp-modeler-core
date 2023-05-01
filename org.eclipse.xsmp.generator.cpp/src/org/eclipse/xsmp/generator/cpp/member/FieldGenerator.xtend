@@ -98,7 +98,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
 
     override Publish(Field it) {
         if (type instanceof PrimitiveType)
-            switch (type.primitiveType) {
+            switch (type.primitiveTypeKind) {
                 case BOOL,
                 case CHAR8,
                 case FLOAT32,

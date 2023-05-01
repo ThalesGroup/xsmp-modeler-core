@@ -228,10 +228,15 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
       final var size = elem.getSize();
       if (size != null)
       {
-        final var value = xsmpUtil.getInteger(size);
-        if (value != null)
+        try
         {
-          styledLabel.append(value.toString(), StyledString.DECORATIONS_STYLER);
+          styledLabel.append(Long.toString(xsmpUtil.getInt64(size)),
+                  StyledString.DECORATIONS_STYLER);
+        }
+        catch (final Exception ex)
+        {
+          // ignore
+
         }
       }
       styledLabel.append("]", StyledString.DECORATIONS_STYLER);

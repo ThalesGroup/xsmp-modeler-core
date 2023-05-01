@@ -92,7 +92,7 @@ class XsmpcatValidatorTest {
         model.parse => [
             assertNumberOfIssues(1)
             assertError(UNARY_OPERATION, INVALID_VALUE_RANGE, model.indexOf("-10"), 3,
-                "Integral value -10 is not in range 0 ... 9223372036854775807.")
+                "Integral value Int32(-10) is not in range Int64(0) ... Int64(9223372036854775807).")
         ]
 
     }

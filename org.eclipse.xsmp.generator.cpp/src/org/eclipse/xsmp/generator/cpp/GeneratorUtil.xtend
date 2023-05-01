@@ -100,7 +100,6 @@ class GeneratorUtil extends XsmpUtil {
     }
 
     def dispatch CharSequence doGenerateExpression(IntegerLiteral it) {
-
         if (type instanceof Enumeration)
             '''«getEnumerationLiteral().id»'''
         else
@@ -130,18 +129,18 @@ class GeneratorUtil extends XsmpUtil {
 
     def dispatch CharSequence doGenerateExpression(StringLiteral it) {
         val expectedType = type
-        switch (expectedType.primitiveType ) {
+        switch (expectedType.primitiveTypeKind ) {
             // convert DateTime and Duration to a number of ns
             case DATE_TIME: {
-                val i = Instant.parse(it.getString())
+                val i = Instant.parse(it.getString8())
                 '''«i.epochSecond * 1_000_000_000 + i.nano»L'''
             }
             case DURATION: {
-                val i = Duration.parse(it.getString())
+                val i = Duration.parse(it.getString8())
                 '''«i.seconds * 1_000_000_000 + i.nano»L'''
             }
             default: {
-                value
+                '''«FOR v : value»«v»«ENDFOR»'''
             }
         }
 
@@ -334,7 +333,7 @@ class GeneratorUtil extends XsmpUtil {
     }
 
     def CharSequence generatePrimitiveKind(Type it) {
-        '''::Smp::PrimitiveTypeKind::PTK_«primitiveType.label»'''
+        '''::Smp::PrimitiveTypeKind::PTK_«primitiveTypeKind.label»'''
     }
 
     def CharSequence uuid(Type it) {

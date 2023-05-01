@@ -24,9 +24,9 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
+import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.util.XsmpUtil.PrimitiveTypeKind;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
 import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
 import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
@@ -437,7 +437,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_BuiltInConstant(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
       case FLOAT32:
       case FLOAT64:
@@ -461,7 +461,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_BuiltInFunction(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
       case FLOAT32:
       case FLOAT64:
@@ -486,7 +486,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void completeNamedElementReference_Value(EObject model, Assignment assignment,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    final var expectedType = xsmpUtil.getType(context.getCurrentNode());
+    final var expectedType = xsmpUtil.getType(context.getCurrentNode(), model);
 
     final Predicate<IEObjectDescription> filter;
     if (expectedType == null)
@@ -521,7 +521,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
 
-    switch (xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())))
+    switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
       case INT8:
       case INT16:
@@ -552,7 +552,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
 
-    final var primitiveType = xsmpUtil.getPrimitiveType(xsmpUtil.getType(context.getCurrentNode()));
+    final var primitiveType = xsmpUtil
+            .getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model));
     if (primitiveType == PrimitiveTypeKind.FLOAT32)
     {
       acceptor.accept(createCompletionProposal("0.0f", context));
@@ -568,8 +569,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_StringLiteral(EObject model, RuleCall ruleCall, ContentAssistContext context,
           ICompletionProposalAcceptor acceptor)
   {
-    if (xsmpUtil.getPrimitiveType(
-            xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.STRING8)
+    if (xsmpUtil.getPrimitiveTypeKind(
+            xsmpUtil.getType(context.getCurrentNode(), model)) == PrimitiveTypeKind.STRING8)
     {
       acceptor.accept(createCompletionProposal("\"\"", context));
     }
@@ -579,8 +580,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_CharacterLiteral(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    if (xsmpUtil.getPrimitiveType(
-            xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.CHAR8)
+    if (xsmpUtil.getPrimitiveTypeKind(
+            xsmpUtil.getType(context.getCurrentNode(), model)) == PrimitiveTypeKind.CHAR8)
     {
       acceptor.accept(createCompletionProposal("'\\0'", context));
     }
@@ -590,8 +591,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void complete_BooleanLiteral(EObject model, RuleCall ruleCall,
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
-    if (xsmpUtil
-            .getPrimitiveType(xsmpUtil.getType(context.getCurrentNode())) == PrimitiveTypeKind.BOOL)
+    if (xsmpUtil.getPrimitiveTypeKind(
+            xsmpUtil.getType(context.getCurrentNode(), model)) == PrimitiveTypeKind.BOOL)
     {
       acceptor.accept(createKeywordCompletionProposal("false", context));
       acceptor.accept(createKeywordCompletionProposal("true", context));

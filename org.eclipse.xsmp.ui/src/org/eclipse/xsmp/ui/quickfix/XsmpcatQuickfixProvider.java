@@ -57,4 +57,30 @@ public class XsmpcatQuickfixProvider
             });
   }
 
+  @Fix(XsmpcatIssueCodesProvider.ENUMERATION_LITERAL_RECOMMANDED)
+  public void replaceByEnumerationLiteral(final Issue issue, IssueResolutionAcceptor acceptor)
+  {
+    acceptor.accept(issue, "Replace by the Enumeration Literal", // quick fix label
+            "Replace with '" + issue.getData()[0] + "'", // description
+            "upcase.png", // quick fix icon
+            (var context) -> {
+              final var xtextDocument = context.getXtextDocument();
+              xtextDocument.replace(issue.getOffset(), issue.getLength(), issue.getData()[0]);
+            });
+
+  }
+
+  @Fix(XsmpcatIssueCodesProvider.DEPRECATED_KEYWORD)
+  public void replaceDeprecatdKeyword(final Issue issue, IssueResolutionAcceptor acceptor)
+  {
+    acceptor.accept(issue, "Replace the deprecated Keyword '" + issue.getData()[0] + "'.",
+            "Replace '" + issue.getData()[0] + "' by '" + issue.getData()[1] + "'", // description
+            "upcase.png", // quick fix icon
+            (var context) -> {
+              final var xtextDocument = context.getXtextDocument();
+              xtextDocument.replace(issue.getOffset(), issue.getLength(), issue.getData()[1]);
+            });
+
+  }
+
 }

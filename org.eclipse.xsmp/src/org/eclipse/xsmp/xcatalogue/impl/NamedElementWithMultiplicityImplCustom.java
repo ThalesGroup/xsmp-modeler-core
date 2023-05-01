@@ -40,11 +40,7 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
 
       final var xsmpUtil = xtextResource.getResourceServiceProvider().get(XsmpUtil.class);
 
-      final var value = xsmpUtil.getInteger(e);
-      if (value != null)
-      {
-        return value.longValue();
-      }
+      return xsmpUtil.getInt64(e);
     }
     throw new UnsupportedOperationException("Cannot retrieve the Expression value");
   }

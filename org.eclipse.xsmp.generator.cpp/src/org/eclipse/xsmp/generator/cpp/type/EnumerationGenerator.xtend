@@ -58,7 +58,7 @@ class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
             
                 // Register the Literals of the Enumeration
                 «FOR l : literal»
-                    typeState->AddLiteral("«l.name»", «l.description()», «l.value.getInteger()»);
+                    typeState->AddLiteral("«l.name»", «l.description()», «l.value.getInt32()»);
                 «ENDFOR»
                 }
                 «uuidDefinition»

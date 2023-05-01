@@ -11,30 +11,12 @@
 package org.eclipse.xsmp.validation;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.xsmp.util.Solver.FLOAT32_MAX;
-import static org.eclipse.xsmp.util.Solver.FLOAT32_MIN;
-import static org.eclipse.xsmp.util.Solver.FLOAT64_MAX;
-import static org.eclipse.xsmp.util.Solver.FLOAT64_MIN;
-import static org.eclipse.xsmp.util.Solver.INT16_MAX;
-import static org.eclipse.xsmp.util.Solver.INT16_MIN;
-import static org.eclipse.xsmp.util.Solver.INT32_MAX;
-import static org.eclipse.xsmp.util.Solver.INT32_MIN;
-import static org.eclipse.xsmp.util.Solver.INT64_MAX;
-import static org.eclipse.xsmp.util.Solver.INT64_MIN;
-import static org.eclipse.xsmp.util.Solver.INT8_MAX;
-import static org.eclipse.xsmp.util.Solver.INT8_MIN;
-import static org.eclipse.xsmp.util.Solver.UINT16_MAX;
-import static org.eclipse.xsmp.util.Solver.UINT32_MAX;
-import static org.eclipse.xsmp.util.Solver.UINT64_MAX;
-import static org.eclipse.xsmp.util.Solver.UINT8_MAX;
-import static org.eclipse.xsmp.util.Solver.ZERO;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,9 +28,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
+import org.eclipse.xsmp.util.EnumerationLiteral;
+import org.eclipse.xsmp.util.Int16;
+import org.eclipse.xsmp.util.Int32;
+import org.eclipse.xsmp.util.Int64;
+import org.eclipse.xsmp.util.Int8;
+import org.eclipse.xsmp.util.PrimitiveType;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.Solver.SolverException;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
+import org.eclipse.xsmp.util.UInt16;
+import org.eclipse.xsmp.util.UInt32;
+import org.eclipse.xsmp.util.UInt64;
+import org.eclipse.xsmp.util.UInt8;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
 import org.eclipse.xsmp.xcatalogue.Array;
@@ -64,7 +56,6 @@ import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.EmptyExpression;
 import org.eclipse.xsmp.xcatalogue.EntryPoint;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
 import org.eclipse.xsmp.xcatalogue.EventSink;
 import org.eclipse.xsmp.xcatalogue.EventSource;
 import org.eclipse.xsmp.xcatalogue.EventType;
@@ -77,7 +68,6 @@ import org.eclipse.xsmp.xcatalogue.NamedElementReference;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xsmp.xcatalogue.SimpleType;
@@ -182,235 +172,216 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Inject
   protected IQualifiedNameProvider qualifiedNameProvider;
 
-  private void checkEnumeration(Enumeration type, Expression e)
+  private void checkExpression(Enumeration type, Expression e)
   {
     try
     {
-      final var l = xsmpUtil.getSolver().getEnumerationLiteral(e, type);
+      final var literal = xsmpUtil.getEnumerationLiteral(e);
+      final var value = safeExpression(e, v -> v);
 
-      final var v = xsmpUtil.getSolver().getValue(e);
-      if (l != null && l != v)
+      if (value != null && !(value instanceof EnumerationLiteral))
       {
-        warning("Should use the EnumerationLiteral " + xsmpUtil.fqn(l).toString(), e, null);
+        final var fqn = xsmpUtil.fqn(literal).toString();
+        warning("Should use the EnumerationLiteral " + fqn, e, null,
+                XsmpcatIssueCodesProvider.ENUMERATION_LITERAL_RECOMMANDED, fqn);
+      }
+
+    }
+    catch (final SolverException ex)
+    {
+      error(ex.getMessage(), ex.getExpression(), null);
+    }
+  }
+
+  private Integer compareTo(Expression left, Expression right, Type type)
+  {
+    if (left != null && right != null)
+    {
+      try
+      {
+        return xsmpUtil.getSolver().getValue(left, type)
+                .compareTo(xsmpUtil.getSolver().getValue(right, type));
+      }
+      catch (final SolverException ex)
+      {
+        error(ex.getMessage(), ex.getExpression(), null);
+      }
+      catch (final Exception ex)
+      {
+        // ignore
       }
     }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
-  }
-
-  BigDecimal getDecimal(Expression e)
-  {
-    try
-    {
-      return xsmpUtil.getSolver().getDecimal(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
     return null;
   }
 
-  BigInteger getDuration(Expression e)
+  private void checkExpression(org.eclipse.xsmp.xcatalogue.Float type, Expression e)
   {
-    try
-    {
-      return xsmpUtil.getSolver().getDuration(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
-    return null;
-  }
 
-  BigInteger getDateTime(Expression e)
-  {
-    try
-    {
-      return xsmpUtil.getSolver().getDateTime(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
-    return null;
-  }
+    final var value = safeExpression(e, type);
 
-  String getChar(Expression e)
-  {
-    try
+    if (value != null)
     {
-      return xsmpUtil.getSolver().getChar(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
-    return null;
-  }
-
-  private BigDecimal getDecimal(Expression e, BigDecimal min, BigDecimal max, boolean minInclusive,
-          boolean maxInclusive)
-  {
-    final var value = getDecimal(e);
-
-    if (value != null && min != null && max != null
-            && ((minInclusive ? value.compareTo(min) < 0 : value.compareTo(min) <= 0)
-                    || (maxInclusive ? value.compareTo(max) > 0 : value.compareTo(max) >= 0)))
-    {
-      acceptError(
-              "Decimal value " + value + " is not in range " + min + (minInclusive ? "." : "<")
-                      + "." + (maxInclusive ? "." : "<") + max + ".",
-              e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
-    }
-    return value;
-  }
-
-  public void checkBoolean(Expression e)
-  {
-    try
-    {
-      final var value = xsmpUtil.getSolver().getValue(e);
-      if (value != null)
+      final var minInclusive = type.isMinInclusive();
+      final var maxInclusive = type.isMaxInclusive();
+      final var minCmp = compareTo(e, type.getMinimum(), type);
+      final var maxCmp = compareTo(e, type.getMaximum(), type);
+      if (minCmp != null && (minInclusive ? minCmp < 0 : minCmp <= 0)
+              || maxCmp != null && (maxInclusive ? maxCmp > 0 : maxCmp >= 0))
       {
-        if (value instanceof Boolean)
-        {
-          return;
-        }
-        if (value instanceof BigDecimal)
-        {
-          acceptWarning(
-                  "Narrowing convertion of \"" + value + "\" from \"Decimal\" to \"Boolean\".", e,
-                  null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                  XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
-          return;
-        }
-        if (value instanceof BigInteger)
-        {
-          if (!BigInteger.ZERO.equals(value) && !BigInteger.ONE.equals(value))
-          {
-            acceptWarning(
-                    "Narrowing convertion of \"" + value + "\" from \"Integer\" to \"Boolean\".", e,
-                    null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                    XsmpcatIssueCodesProvider.NARROWING_CONVERSION);
-          }
+        final var min = uncheckedExpression(type.getMinimum());
+        final var max = uncheckedExpression(type.getMaximum());
 
-          return;
-        }
+        acceptError(
+                "Value " + value.getValue() + " is not in range "
+                        + (min != null ? min.getValue() : "*") + (minInclusive ? " ." : " <") + "."
+                        + (maxInclusive ? ". " : "< ") + (max != null ? max.getValue() : "*") + ".",
+                e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+                XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
+      }
+    }
+  }
 
-        acceptError("Could not convert " + value.getClass().getSimpleName() + " to Boolean.", e,
+  <R extends PrimitiveType> R uncheckedExpression(Expression e, Function<PrimitiveType, R> supplier)
+  {
+    try
+    {
+      return supplier.apply(xsmpUtil.getSolver().getValue(e));
+    }
+    // catch (final SolverException ex)
+    // {
+    // error(ex.getMessage(), ex.getExpression(), null);
+    // }
+    catch (final Exception ex)
+    {
+      error(ex.getMessage(), e, null);
+    }
+    return null;
+  }
+
+  PrimitiveType uncheckedExpression(Expression e)
+  {
+    try
+    {
+      return xsmpUtil.getSolver().getValue(e);
+    }
+
+    catch (final Exception ex)
+    {
+      // error(ex.getMessage(), e, null);
+    }
+    return null;
+  }
+
+  PrimitiveType safeExpression(Expression e)
+  {
+    try
+    {
+      return xsmpUtil.getSolver().getValue(e);
+    }
+    catch (final SolverException ex)
+    {
+      error(ex.getMessage(), ex.getExpression(), null);
+    }
+    catch (final Exception ex)
+    {
+      error(ex.getMessage(), e, null);
+    }
+    return null;
+  }
+
+  PrimitiveType safeExpression(Expression e, Type type)
+  {
+    try
+    {
+      return xsmpUtil.getSolver().getValue(e, type);
+    }
+    catch (final SolverException ex)
+    {
+      error(ex.getMessage(), ex.getExpression(), null);
+    }
+    catch (final Exception ex)
+    {
+      error(ex.getMessage(), e, null);
+    }
+    return null;
+  }
+
+  <R extends PrimitiveType> R safeExpression(Expression e, Function<PrimitiveType, R> supplier)
+  {
+    try
+    {
+      return supplier.apply(xsmpUtil.getSolver().getValue(e));
+    }
+    catch (final SolverException ex)
+    {
+      error(ex.getMessage(), ex.getExpression(), null);
+    }
+    catch (final Exception ex)
+    {
+      error(ex.getMessage(), e, null);
+    }
+    return null;
+  }
+
+  <R extends PrimitiveType> R safeExpression(Expression e, Function<PrimitiveType, R> supplier,
+          PrimitiveType min, PrimitiveType max)
+  {
+    try
+    {
+      final var value = supplier.apply(xsmpUtil.getSolver().getValue(e));
+
+      if (value != null && (min != null && value.compareTo(min) < 0
+              || max != null && value.compareTo(max) > 0))
+      {
+        acceptError("Integral value " + value + " is not in range " + min + " ... " + max + ".", e,
                 null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-                XsmpcatIssueCodesProvider.INVALID_VALUE_CONVERSION);
+                XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
       }
+      return value;
     }
     catch (final SolverException ex)
     {
       error(ex.getMessage(), ex.getExpression(), null);
     }
-  }
-
-  private void checkFloat(org.eclipse.xsmp.xcatalogue.Float type, Expression e)
-  {
-    getDecimal(e, getMin(type), getMax(type), type.isMinInclusive(), type.isMaxInclusive());
-  }
-
-  String getString(Expression e)
-  {
-    try
+    catch (final Exception ex)
     {
-
-      return xsmpUtil.getSolver().getString(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
+      error(ex.getMessage(), e, null);
     }
     return null;
   }
 
-  BigInteger getInteger(Expression e)
+  private void checkExpression(org.eclipse.xsmp.xcatalogue.String type, Expression e)
   {
-    try
-    {
-
-      return xsmpUtil.getSolver().getInteger(e);
-    }
-    catch (final SolverException ex)
-    {
-      error(ex.getMessage(), ex.getExpression(), null);
-    }
-    return null;
-  }
-
-  public BigInteger getInteger(Expression e, BigInteger min, BigInteger max)
-  {
-    final var value = getInteger(e);
-
-    if (value != null
-            && (min != null && value.compareTo(min) < 0 || max != null && value.compareTo(max) > 0))
-    {
-      acceptError("Integral value " + value + " is not in range " + min + " ... " + max + ".", e,
-              null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
-    }
-    return value;
-  }
-
-  private void checkString(org.eclipse.xsmp.xcatalogue.String type, Expression e)
-  {
-
-    final var value = xsmpUtil.getSolver().getString(e);
 
     if (type.getLength() == null)
     {
       return;
     }
 
-    final var length = getInteger(type.getLength(), BigInteger.ZERO, INT64_MAX);
+    final var length = safeExpression(type.getLength(), PrimitiveType::int64Value);
 
     if (length == null)
     {
       return;
     }
+    final var value = safeExpression(e, PrimitiveType::string8Value);
 
-    if (value.length() > length.intValue())
+    if (value != null && value.getValue().length() > length.getValue())
     {
       acceptError(
-              "The String length cannot exceed " + length + " characters, got " + value.length()
-                      + ".",
+              "The String length cannot exceed " + length + " characters, got "
+                      + value.getValue().length() + ".",
               e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
 
   }
 
-  private BigDecimal getMax(org.eclipse.xsmp.xcatalogue.Float type)
+  protected void checkExpression(Type type, Expression e)
   {
-    if (type.getMaximum() != null)
-    {
-      return getDecimal(type.getMaximum());
-    }
-    return FLOAT64_MAX;
+    checkExpression(type, e, false);
   }
 
-  private BigDecimal getMin(org.eclipse.xsmp.xcatalogue.Float type)
-  {
-    if (type.getMinimum() != null)
-    {
-      return getDecimal(type.getMinimum());
-    }
-    return FLOAT64_MAX.negate();
-  }
-
-  protected void check(Type type, Expression e)
-  {
-    check(type, e, false);
-  }
-
-  protected void check(Type type, Expression e, boolean byPointer)
+  protected void checkExpression(Type type, Expression e, boolean byPointer)
   {
     if (e == null || type == null || type.eIsProxy())
     {
@@ -444,27 +415,27 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       switch (type.eClass().getClassifierID())
       {
         case XcataloguePackage.ARRAY:
-          checkArray((Array) type, e);
+          checkExpression((Array) type, e);
           break;
         case XcataloguePackage.ENUMERATION:
-          checkEnumeration((Enumeration) type, e);
+          checkExpression((Enumeration) type, e);
           break;
         case XcataloguePackage.FLOAT:
-          checkFloat((org.eclipse.xsmp.xcatalogue.Float) type, e);
+          checkExpression((org.eclipse.xsmp.xcatalogue.Float) type, e);
           break;
         case XcataloguePackage.INTEGER:
-          checkInteger((org.eclipse.xsmp.xcatalogue.Integer) type, e);
+          checkExpression((org.eclipse.xsmp.xcatalogue.Integer) type, e);
           break;
         case XcataloguePackage.PRIMITIVE_TYPE:
-          checkPrimitiveType((PrimitiveType) type, e);
+          checkExpression((org.eclipse.xsmp.xcatalogue.PrimitiveType) type, e);
           break;
         case XcataloguePackage.STRING:
-          checkString((org.eclipse.xsmp.xcatalogue.String) type, e);
+          checkExpression((org.eclipse.xsmp.xcatalogue.String) type, e);
           break;
         case XcataloguePackage.STRUCTURE:
         case XcataloguePackage.CLASS:
         case XcataloguePackage.EXCEPTION:
-          checkStructure((Structure) type, e);
+          checkExpression((Structure) type, e);
           break;
         default:
           // ignore other types
@@ -486,20 +457,21 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
-  private void checkArray(Array type, Expression e)
+  private void checkExpression(Array type, Expression e)
   {
     if (type.getSize() != null)
     {
       if (e instanceof CollectionLiteral)
       {
-        final var size = getInteger(type.getSize(), BigInteger.ZERO, INT64_MAX);
+        final var size = safeExpression(type.getSize(), PrimitiveType::int64Value, Int64.ZERO,
+                Int64.MAX_VALUE);
 
         if (size == null)
         {
           return;
         }
 
-        final var s = size.longValue();
+        final var s = size.getValue();
 
         final var values = (CollectionLiteral) e;
 
@@ -512,7 +484,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         else if (values.getElements().size() <= s)
         {
           // check each array field
-          values.getElements().stream().forEach(j -> check(type.getItemType(), j));
+          values.getElements().stream().forEach(j -> checkExpression(type.getItemType(), j));
 
           if (s != values.getElements().size() && !values.getElements().isEmpty())
           {
@@ -536,66 +508,29 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   }
 
-  private void checkInteger(org.eclipse.xsmp.xcatalogue.Integer type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.xcatalogue.Integer type, Expression e)
   {
-    getInteger(e, getMin(type), getMax(type));
+    safeExpression(e, v -> v, getMin(type), getMax(type));
   }
 
-  private void checkPrimitiveType(PrimitiveType type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.xcatalogue.PrimitiveType type, Expression e)
   {
-    switch (xsmpUtil.getPrimitiveType(type))
+    try
     {
-      case BOOL:
-        checkBoolean(e);
-        break;
-      case CHAR8:
-        getChar(e);
-        break;
-      case DATE_TIME:
-        getDateTime(e);
-        break;
-      case DURATION:
-        getDuration(e);
-        break;
-      case FLOAT32:
-        getDecimal(e, FLOAT32_MIN, FLOAT32_MAX, true, true);
-        break;
-      case FLOAT64:
-        getDecimal(e, FLOAT64_MIN, FLOAT64_MAX, true, true);
-        break;
-      case INT16:
-        getInteger(e, INT16_MIN, INT16_MAX);
-        break;
-      case INT32:
-        getInteger(e, INT32_MIN, INT32_MAX);
-        break;
-      case INT64:
-        getInteger(e, INT64_MIN, INT64_MAX);
-        break;
-      case INT8:
-        getInteger(e, INT8_MIN, INT8_MAX);
-        break;
-      case STRING8:
-        getString(e);
-        break;
-      case UINT16:
-        getInteger(e, ZERO, UINT16_MAX);
-        break;
-      case UINT32:
-        getInteger(e, ZERO, UINT32_MAX);
-        break;
-      case UINT64:
-        getInteger(e, ZERO, UINT64_MAX);
-        break;
-      case UINT8:
-        getInteger(e, ZERO, UINT8_MAX);
-        break;
-      default:
-        break;
+      xsmpUtil.getSolver().getValue(e, type);
     }
+    catch (final SolverException ex)
+    {
+      error(ex.getMessage(), ex.getExpression(), null);
+    }
+    catch (final Exception ex)
+    {
+      error(ex.getMessage(), e, null);
+    }
+
   }
 
-  private void checkStructure(Structure type, Expression e)
+  private void checkExpression(Structure type, Expression e)
   {
     if (e instanceof CollectionLiteral)
     {
@@ -615,12 +550,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         // check each field
         for (var i = 0; i < size - 1; ++i)
         {
-          check(fields.get(i).getType(), values.getElements().get(i));
+          checkExpression(fields.get(i).getType(), values.getElements().get(i));
         }
         final var last = size - 1;
         if (last >= 0 && !(values.getElements().get(last) instanceof EmptyExpression))
         {
-          check(fields.get(last).getType(), values.getElements().get(last));
+          checkExpression(fields.get(last).getType(), values.getElements().get(last));
         }
         if (size != fields.size() && size != 0)
         {
@@ -641,58 +576,63 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
-  private BigInteger getMax(org.eclipse.xsmp.xcatalogue.Integer type)
+  private PrimitiveType getMax(org.eclipse.xsmp.xcatalogue.Integer type)
   {
     if (type.getMaximum() != null)
     {
-      return getInteger(type.getMaximum());
+      return uncheckedExpression(type.getMaximum());
     }
 
-    switch (xsmpUtil.getPrimitiveType(type))
+    final var kind = xsmpUtil.getPrimitiveTypeKind(type);
+    switch (kind)
     {
       case INT16:
-        return INT16_MAX;
+        return Int16.MAX_VALUE;
       case INT32:
-        return INT32_MAX;
-      case INT64:
-        return INT64_MAX;
-      case INT8:
-        return INT8_MAX;
-      case UINT16:
-        return UINT16_MAX;
-      case UINT32:
-        return UINT32_MAX;
+        return Int32.MAX_VALUE;
       case UINT64:
-        return UINT64_MAX;
+        return UInt64.MAX_VALUE;
+      case INT64:
+        return Int64.MAX_VALUE;
+      case INT8:
+        return Int8.MAX_VALUE;
+      case UINT16:
+        return UInt16.MAX_VALUE;
+      case UINT32:
+        return UInt32.MAX_VALUE;
       case UINT8:
-        return UINT8_MAX;
+        return UInt8.MAX_VALUE;
       default:
         return null;
     }
   }
 
-  private BigInteger getMin(org.eclipse.xsmp.xcatalogue.Integer type)
+  private PrimitiveType getMin(org.eclipse.xsmp.xcatalogue.Integer type)
   {
     if (type.getMinimum() != null)
     {
-      return getInteger(type.getMinimum());
+      return uncheckedExpression(type.getMinimum());
     }
 
-    switch (xsmpUtil.getPrimitiveType(type))
+    final var kind = xsmpUtil.getPrimitiveTypeKind(type);
+    switch (kind)
     {
       case INT16:
-        return INT16_MIN;
+        return Int16.MIN_VALUE;
       case INT32:
-        return INT32_MIN;
+        return Int32.MIN_VALUE;
       case INT64:
-        return INT64_MIN;
+        return Int64.MIN_VALUE;
       case INT8:
-        return INT8_MIN;
+        return Int8.MIN_VALUE;
       case UINT16:
+        return UInt16.MIN_VALUE;
       case UINT32:
+        return UInt32.MIN_VALUE;
       case UINT64:
+        return UInt64.MIN_VALUE;
       case UINT8:
-        return ZERO;
+        return UInt8.MIN_VALUE;
       default:
         return null;
     }
@@ -804,11 +744,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Check
   protected void checkArray(Array elem)
   {
-
     // check size is positive
     if (elem.getSize() != null)
     {
-      getInteger(elem.getSize(), BigInteger.ZERO, INT64_MAX);
+      safeExpression(elem.getSize(), v -> v, Int64.ZERO, Int64.MAX_VALUE);
 
       if (elem.getSize() instanceof CollectionLiteral)
       {
@@ -837,10 +776,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (n.getGrammarElement() == ga.getNamespaceMemberAccess().getUsingKeyword_3_7_2_0_1())
       {
         addIssue("'using' keyword is deprecated. Replace with 'array'.", elem, n.getOffset(),
-                n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_MODEL_PART);
+                n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_KEYWORD, "using", "array");
       }
     }
-
   }
 
   private static Set<String> validUsages = XcataloguePackage.eINSTANCE.getEClassifiers().stream()
@@ -859,7 +797,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
     else
     {
-      check(elem.getType(), elem.getDefault());
+      checkExpression(elem.getType(), elem.getDefault());
     }
     final Set<String> visitedUsages = new HashSet<>();
     for (var i = 0; i < elem.getUsage().size(); ++i)
@@ -873,6 +811,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         warning("Duplicated usage.", XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
       }
     }
+    // "attribute name {}" is deprecated
+    final var node = NodeModelUtils.findActualNodeFor(elem);
+    if (node.getGrammarElement() == ga.getNamespaceMemberAccess()
+            .getAttributeTypeMetadatumAction_3_17_0())
+    {
+      addIssue("Use 'attribute <type> name = value' instead of this old deprecated declaration.",
+              elem, node.getOffset(), node.getLength(),
+              XsmpcatIssueCodesProvider.DEPRECATED_ATTRIBUTE_DECLARATION);
+    }
+
   }
 
   @Check
@@ -890,7 +838,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       else
       {
         // check the attribute value
-        check(type.getType(), elem.getValue());
+        checkExpression(type.getType(), elem.getValue());
       }
     }
   }
@@ -901,14 +849,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var base = elem.getBase();
 
     // check recursive base
-    if (xsmpUtil.isBaseOf(elem, elem.getBase()))
+    if (checkTypeReference(base, elem, XcataloguePackage.Literals.CLASS__BASE)
+            && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends from a derived Type.",
               XcataloguePackage.Literals.CLASS__BASE,
               XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
-
-    checkTypeReference(base, elem, XcataloguePackage.Literals.CLASS__BASE);
 
     // check members type
     final var members = elem.getMember();
@@ -947,7 +894,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (!elem.isAbstract() && elem.getMember().stream()
             .anyMatch(m -> m instanceof NamedElement && xsmpUtil.isAbstract((NamedElement) m)))
     {
-      error("The " + elem.eClass().getName() + " shall be abstract.",
+      warning("The " + elem.eClass().getName() + " shall be abstract.",
               XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
 
@@ -959,29 +906,15 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var base = elem.getBase();
 
     // check recursive base
-    if (xsmpUtil.isBaseOf(elem, elem.getBase()))
+    if (checkTypeReference(base, elem, XcataloguePackage.Literals.COMPONENT__BASE)
+            && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends a derived Type.",
               XcataloguePackage.Literals.COMPONENT__BASE);
     }
 
-    checkTypeReference(base, elem, XcataloguePackage.Literals.COMPONENT__BASE);
-
     // check interfaces
-    final var interfaces = elem.getInterface();
-    final var nbInterfaces = interfaces.size();
-    final Set<Type> visited = new HashSet<>();
-    for (var i = 0; i < nbInterfaces; ++i)
-    {
-      final var interf = interfaces.get(i);
-      if (!visited.add(interf))
-      {
-        error("Duplicate Interface.", XcataloguePackage.Literals.COMPONENT__INTERFACE, i);
-      }
-
-      checkTypeReference(interfaces.get(i), elem, XcataloguePackage.Literals.COMPONENT__INTERFACE,
-              i);
-    }
+    checkNoDuplicate(elem, XcataloguePackage.Literals.COMPONENT__INTERFACE, "Interface");
 
     final var members = elem.getMember();
     final var nbMembers = members.size();
@@ -1033,45 +966,41 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Check
   protected void checkConstant(Constant f)
   {
-
-    if (f.getValue() == null)
-    {
-      error("A Constant must have an initialization value.",
-              XcataloguePackage.Literals.CONSTANT__VALUE);
-    }
-
     if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONSTANT__TYPE))
     {
-      // check the constant value
-      check(f.getType(), f.getValue());
+      if (f.getValue() == null)
+      {
+        error("A Constant must have an initialization value.",
+                XcataloguePackage.Literals.CONSTANT__VALUE);
+      }
+      else
+      {
+        // check the constant value
+        checkExpression(f.getType(), f.getValue());
+      }
     }
-
   }
 
   @Check
   protected void checkAssociation(Association elem)
   {
-    checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ASSOCIATION__TYPE);
-
-    check(elem.getType(), elem.getDefault(), xsmpUtil.isByPointer(elem));
+    if (checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ASSOCIATION__TYPE))
+    {
+      checkExpression(elem.getType(), elem.getDefault(), xsmpUtil.isByPointer(elem));
+    }
   }
 
   @Check
   protected void checkContainer(Container f)
   {
-
-    if (f.getDefaultComponent() != null && f.getType() instanceof Component
+    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONTAINER__TYPE)
+            && checkTypeReference(f.getDefaultComponent(), f,
+                    XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT)
             && !xsmpUtil.isBaseOf(f.getType(), f.getDefaultComponent()))
     {
       error(f.getType().getName() + " is not a base of " + f.getDefaultComponent().getName(),
               XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT);
     }
-
-    checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONTAINER__TYPE);
-
-    checkTypeReference(f.getDefaultComponent(), f,
-            XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT);
-
   }
 
   @Check
@@ -1135,7 +1064,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkEnumeration(Enumeration elem)
   {
 
-    final Set<BigInteger> values = new HashSet<>();
+    final Set<Integer> values = new HashSet<>();
 
     if (elem.getLiteral().isEmpty())
     {
@@ -1143,7 +1072,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
               XcataloguePackage.Literals.ENUMERATION__LITERAL);
     }
 
-    for (final EnumerationLiteral l : elem.getLiteral())
+    for (final var l : elem.getLiteral())
     {
 
       if (l.getValue() instanceof CollectionLiteral)
@@ -1151,9 +1080,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         error("Cannot use brackets for enumeration literal value.", l,
                 XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE);
       }
-      final var value = getInteger(l.getValue(), INT32_MIN, INT32_MAX);
+      final var value = safeExpression(l.getValue(), PrimitiveType::int32Value);
 
-      if (value != null && !values.add(value))
+      if (value != null && !values.add(value.int32Value().getValue()))
       {
         error("Enumeration Literal Values shall be unique within an Enumeration.", l,
                 XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE,
@@ -1170,11 +1099,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE))
     {
       // check the field value
-      check(f.getType(), f.getDefault());
+      checkExpression(f.getType(), f.getDefault());
 
       if (QualifiedNames.Smp_String8.equals(xsmpUtil.fqn(f.getType())))
       {
-        error("The type Smp.String8 cannot be used with fields. ",
+        error("The type Smp.String8 cannot be used with fields.",
                 XcataloguePackage.Literals.FIELD__TYPE);
       }
     }
@@ -1188,38 +1117,85 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (checkTypeReference(elem.getPrimitiveType(), elem,
             XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE))
     {
-      final var kind = xsmpUtil.getPrimitiveType(elem);
-      if (kind != null)
+      final var kind = xsmpUtil.getPrimitiveTypeKind(elem);
+
+      switch (kind)
       {
-        switch (kind)
-        {
-          case FLOAT64:
-          case FLOAT32:
-            break;
-          default:
-            error("Expecting a Floating Point Type, got " + kind.name() + ".",
-                    XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE);
-            break;
-        }
+        case FLOAT64:
+        case FLOAT32:
+          final var min = safeExpression(elem.getMinimum(), elem);
+          final var max = safeExpression(elem.getMaximum(), elem);
+          if (min != null && max != null)
+          {
+            final var cmp = min.compareTo(max);
+            if (cmp >= 0 && (cmp > 0 || !elem.isMinInclusive() || !elem.isMaxInclusive()))
+            {
+              error("Minimum shall be less than Maximum.",
+                      XcataloguePackage.Literals.FLOAT__MINIMUM);
+            }
+
+          }
+          break;
+        default:
+          error("Expecting a Floating Point Type, got " + kind.name() + ".",
+                  XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE);
+          break;
       }
-    }
 
-    final var min = getDecimal(elem.getMinimum());
-    final var max = getDecimal(elem.getMaximum());
-
-    if (min != null && max != null)
-    {
-      final Boolean minInclusive = elem.isMinInclusive();
-      final Boolean maxInclusive = elem.isMaxInclusive();
-
-      if (min.compareTo(max) >= 0 && (min.compareTo(max) > 0 || !minInclusive || !maxInclusive))
-      {
-        error("Minimum shall be less than Maximum.", XcataloguePackage.Literals.FLOAT__MINIMUM);
-      }
     }
 
   }
 
+  /*
+   * private PrimitiveType getValue(Expression e)
+   * {
+   * try
+   * {
+   * return xsmpUtil.getSolver().getValue(e);
+   * }
+   * catch (final SolverException ex)
+   * {
+   * error(ex.getMessage(), ex.getExpression(), null);
+   * }
+   * catch (final Exception ex)
+   * {
+   * error(ex.getMessage(), e, null);
+   * }
+   * return null;
+   * }
+   * private PrimitiveType getValue(Expression e, Type type)
+   * {
+   * try
+   * {
+   * return xsmpUtil.getSolver().getValue(e, type);
+   * }
+   * catch (final SolverException ex)
+   * {
+   * error(ex.getMessage(), ex.getExpression(), null);
+   * }
+   * catch (final Exception ex)
+   * {
+   * error(ex.getMessage(), e, null);
+   * }
+   * return null;
+   * }
+   * private PrimitiveType getValue(Expression e, PrimitiveTypeKind kind)
+   * {
+   * try
+   * {
+   * return xsmpUtil.getSolver().getValue(e, kind);
+   * }
+   * catch (final SolverException ex)
+   * {
+   * error(ex.getMessage(), ex.getExpression(), null);
+   * }
+   * catch (final Exception ex)
+   * {
+   * error(ex.getMessage(), e, null);
+   * }
+   * return null;
+   * }
+   */
   @Check
   protected void checkInteger(org.eclipse.xsmp.xcatalogue.Integer elem)
   {
@@ -1228,63 +1204,31 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (checkTypeReference(elem.getPrimitiveType(), elem,
             XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE))
     {
-      final var kind = xsmpUtil.getPrimitiveType(elem);
+      final var kind = xsmpUtil.getPrimitiveTypeKind(elem);
 
-      BigInteger baseTypeMin = null;
-      BigInteger baseTypeMax = null;
-      if (kind != null)
+      switch (kind)
       {
-        switch (kind)
-        {
-          case INT16:
-            baseTypeMin = INT16_MIN;
-            baseTypeMax = INT16_MAX;
-            break;
-          case INT32:
-            baseTypeMin = INT32_MIN;
-            baseTypeMax = INT32_MAX;
-            break;
-          case INT64:
-            baseTypeMin = INT64_MIN;
-            baseTypeMax = INT64_MAX;
-            break;
-          case INT8:
-            baseTypeMin = INT8_MIN;
-            baseTypeMax = INT8_MAX;
-            break;
-          case UINT16:
-            baseTypeMin = ZERO;
-            baseTypeMax = UINT16_MAX;
-            break;
-          case UINT32:
-            baseTypeMin = ZERO;
-            baseTypeMax = UINT32_MAX;
-            break;
-          case UINT64:
-            baseTypeMin = ZERO;
-            baseTypeMax = UINT64_MAX;
-            break;
-          case UINT8:
-            baseTypeMin = ZERO;
-            baseTypeMax = UINT8_MAX;
-            break;
-          default:
-            error("Expecting an Integral Type, got " + kind.name() + ".",
-                    XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE);
-            return;
-        }
+        case INT16:
+        case INT32:
+        case INT64:
+        case INT8:
+        case UINT16:
+        case UINT32:
+        case UINT64:
+        case UINT8:
+          final var min = safeExpression(elem.getMinimum(), elem);
+          final var max = safeExpression(elem.getMaximum(), elem);
+          if (min != null && max != null && min.compareTo(max) > 0)
+          {
+            error("Minimum shall be less or equal than Maximum.",
+                    XcataloguePackage.Literals.INTEGER__MINIMUM);
+          }
+          break;
+        default:
+          error("Expecting an Integral Type, got " + kind.name() + ".",
+                  XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE);
       }
-      getInteger(elem.getMinimum(), baseTypeMin, baseTypeMax);
-      getInteger(elem.getMaximum(), baseTypeMin, baseTypeMax);
-    }
 
-    final var min = getInteger(elem.getMinimum());
-    final var max = getInteger(elem.getMaximum());
-
-    if (min != null && max != null && min.compareTo(max) > 0)
-    {
-      error("Minimum shall be less or equal than Maximum.",
-              XcataloguePackage.Literals.INTEGER__MINIMUM);
     }
 
   }
@@ -1298,7 +1242,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final Set<Type> visited = new HashSet<>();
     for (var i = 0; i < nbBases; ++i)
     {
-      if (xsmpUtil.isBaseOf(elem, bases.get(i)))
+      if (checkTypeReference(bases.get(i), elem, XcataloguePackage.Literals.INTERFACE__BASE, i)
+              && xsmpUtil.isBaseOf(elem, bases.get(i)))
       {
         error("An Interface cannot extends a derived Type.",
                 XcataloguePackage.Literals.INTERFACE__BASE, i,
@@ -1310,7 +1255,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
                 XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
 
-      checkTypeReference(bases.get(i), elem, XcataloguePackage.Literals.INTERFACE__BASE, i);
     }
 
     final var members = elem.getMember();
@@ -1474,12 +1418,28 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     }
     // check exceptions
-    final var raisedException = op.getRaisedException();
-    final var nbRaisedExceptions = raisedException.size();
-    for (var i = 0; i < nbRaisedExceptions; ++i)
+    checkNoDuplicate(op, XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION,
+            "Raised Exception");
+
+  }
+
+  private void checkNoDuplicate(EObject obj, EReference reference, String name)
+  {
+
+    @SuppressWarnings("unchecked")
+    final var list = (List<Type>) obj.eGet(reference);
+    final var size = list.size();
+
+    final Set<Type> visited = new HashSet<>();
+    for (var i = 0; i < size; ++i)
     {
-      checkTypeReference(raisedException.get(i), op,
-              XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION, i);
+      checkTypeReference(list.get(i), obj, reference, i);
+
+      if (!visited.add(list.get(i)))
+      {
+        error("Duplicate " + name + ".", reference, i,
+                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+      }
     }
   }
 
@@ -1489,7 +1449,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
     {
-      check(p.getType(), p.getDefault(), xsmpUtil.isByPointer(p));
+      checkExpression(p.getType(), p.getDefault(), xsmpUtil.isByPointer(p));
 
     }
     // an element cannot be both byPointer and ByReference
@@ -1501,9 +1461,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   }
 
   @Check
-  protected void checkPrimitiveType(PrimitiveType elem)
+  protected void checkPrimitiveType(org.eclipse.xsmp.xcatalogue.PrimitiveType elem)
   {
-    if (xsmpUtil.getPrimitiveType(elem) == null)
+    if (xsmpUtil.getPrimitiveTypeKind(elem) == null)
     {
       error("Unknown Primitive Type.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
@@ -1566,20 +1526,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PROPERTY__TYPE);
 
     // check set exceptions
-    final var setRaises = p.getSetRaises();
-    final var nbSetRaises = setRaises.size();
-    for (var i = 0; i < nbSetRaises; ++i)
-    {
-      checkTypeReference(setRaises.get(i), p, XcataloguePackage.Literals.PROPERTY__SET_RAISES, i);
-    }
+    checkNoDuplicate(p, XcataloguePackage.Literals.PROPERTY__SET_RAISES, "Set Raised Excpetion");
 
     // check get exceptions
-    final var getRaises = p.getGetRaises();
-    final var nbGetRaises = getRaises.size();
-    for (var i = 0; i < nbGetRaises; ++i)
-    {
-      checkTypeReference(getRaises.get(i), p, XcataloguePackage.Literals.PROPERTY__GET_RAISES, i);
-    }
+    checkNoDuplicate(p, XcataloguePackage.Literals.PROPERTY__GET_RAISES, "Get Raised Excpetion");
 
   }
 
@@ -1618,7 +1568,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkString(org.eclipse.xsmp.xcatalogue.String elem)
   {
     // check size > 0
-    getInteger(elem.getLength(), BigInteger.ZERO, INT64_MAX);
+    safeExpression(elem.getLength(), v -> v, Int64.ZERO, Int64.MAX_VALUE);
 
     if (elem.getLength() instanceof CollectionLiteral)
     {
@@ -1737,7 +1687,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
 
     final EObject value = literal.getValue();
-    if (value instanceof EnumerationLiteral)
+    if (value instanceof org.eclipse.xsmp.xcatalogue.EnumerationLiteral)
     {
       final var type = (Type) value.eContainer();
       final var minVisibility = xsmpUtil.getMinVisibility(type, literal);
