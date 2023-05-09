@@ -116,21 +116,6 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   }
 
   @Override
-  protected Bool doLogicalOr(UInt32 other)
-  {
-
-    return Bool.valueOf(value.compareTo(UnsignedInteger.ZERO) != 0
-            || other.value.compareTo(UnsignedInteger.ZERO) != 0);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(UInt32 other)
-  {
-    return Bool.valueOf(value.compareTo(UnsignedInteger.ZERO) != 0
-            && other.value.compareTo(UnsignedInteger.ZERO) != 0);
-  }
-
-  @Override
   protected AbstractPrimitiveType< ? > doOr(UInt32 other)
   {
     return valueOf(UnsignedInteger.fromIntBits(value.intValue() | other.value.intValue()));
@@ -188,12 +173,6 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   protected AbstractPrimitiveType< ? > doShiftRight(UInt32 offset)
   {
     return valueOf(UnsignedInteger.fromIntBits(value.intValue() >> offset.value.intValue()));
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value.compareTo(UnsignedInteger.ZERO) != 0);
   }
 
   @Override

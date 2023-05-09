@@ -16,12 +16,9 @@ import org.eclipse.jface.text.codemining.ICodeMining;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.nodemodel.INode;
@@ -79,9 +76,6 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
           createCodeMinings((Property) obj, acceptor);
           it.prune();
           break;
-        // case XcataloguePackage.COLLECTION_LITERAL:
-        // createCodeMinings((CollectionLiteral) obj, acceptor);
-        // break;
         default:
           break;
       }
@@ -101,22 +95,28 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     }
   }
 
+  protected void addVirtualCodeMining(INode node, String kw,
+          IAcceptor< ? super ICodeMining> acceptor)
+  {
+    for (final INode n : node.getAsTreeIterable())
+    {
+      final var ge = n.getGrammarElement();
+      if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
+      {
+        acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
+        break;
+      }
+    }
+  }
+
   protected void createCodeMinings(Operation o, IAcceptor< ? super ICodeMining> acceptor)
   {
     final INode node = NodeModelUtils.findActualNodeFor(o);
 
     if (xsmpUtil.isVirtual(o))
     {
-      final var kw = ga.getOperationDeclarationAccess().getDefKeyword_1().getValue();
-      for (final INode n : node.getAsTreeIterable())
-      {
-        final var ge = n.getGrammarElement();
-        if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
-        {
-          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
-          break;
-        }
-      }
+      addVirtualCodeMining(node, ga.getOperationDeclarationAccess().getDefKeyword_1().getValue(),
+              acceptor);
     }
 
     var m = "";
@@ -150,17 +150,8 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 
     if (xsmpUtil.isVirtual(o))
     {
-
-      final var kw = ga.getPropertyDeclarationAccess().getPropertyKeyword_1().getValue();
-      for (final INode n : node.getAsTreeIterable())
-      {
-        final var ge = n.getGrammarElement();
-        if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
-        {
-          acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
-          break;
-        }
-      }
+      addVirtualCodeMining(node,
+              ga.getPropertyDeclarationAccess().getPropertyKeyword_1().getValue(), acceptor);
     }
     if (xsmpUtil.isByPointer(o) || xsmpUtil.isByReference(o))
     {
@@ -219,28 +210,4 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     }
   }
 
-  protected void createCodeMinings(CollectionLiteral obj, IAcceptor< ? super ICodeMining> acceptor)
-  {
-    final var type = xsmpUtil.getType(obj);
-    if (type instanceof Structure)
-    {
-      final var fields = xsmpUtil.getAssignableFields((Structure) type);
-
-      final var elems = obj.getElements();
-      final var size = Math.min(fields.size(), elems.size());
-      for (var i = 0; i < size; ++i)
-      {
-        final var elem = elems.get(i);
-        if (!(elem instanceof DesignatedInitializer))
-        {
-          final var node = NodeModelUtils.getNode(elem);
-          if (node != null)
-          {
-            acceptor.accept(createNewLineContentCodeMining(node.getOffset(),
-                    "." + fields.get(i).getName() + " = "));
-          }
-        }
-      }
-    }
-  }
 }

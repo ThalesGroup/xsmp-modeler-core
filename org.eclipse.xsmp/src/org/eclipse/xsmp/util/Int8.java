@@ -77,30 +77,6 @@ public final class Int8 extends AbstractPrimitiveType<Int8>
   }
 
   @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != (byte) 0);
-  }
-
-  @Override
-  public Int32 unaryComplement()
-  {
-    return Int32.valueOf(~value);
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(value);
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(-value);
-  }
-
-  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (byte) 0);

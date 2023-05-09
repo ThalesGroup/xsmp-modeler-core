@@ -43,7 +43,6 @@ import org.eclipse.xsmp.xcatalogue.util.XcatalogueSwitch;
 
 final class ElementCreator extends XcatalogueSwitch<EObject>
 {
-  public static final ElementCreator INSTANCE = new ElementCreator();
 
   @Override
   public EObject caseArray(final Array object)

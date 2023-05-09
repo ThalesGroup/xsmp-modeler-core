@@ -13,8 +13,6 @@ package org.eclipse.xsmp.generator.cpp
 import com.google.common.collect.ImmutableMap
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.time.Duration
-import java.time.Instant
 import java.util.Collections
 import java.util.List
 import org.eclipse.emf.ecore.EObject
@@ -132,12 +130,10 @@ class GeneratorUtil extends XsmpUtil {
         switch (expectedType.primitiveTypeKind ) {
             // convert DateTime and Duration to a number of ns
             case DATE_TIME: {
-                val i = Instant.parse(it.getString8())
-                '''«i.epochSecond * 1_000_000_000 + i.nano»L'''
+                '''«getValue(it).dateTimeValue.value»L'''
             }
             case DURATION: {
-                val i = Duration.parse(it.getString8())
-                '''«i.seconds * 1_000_000_000 + i.nano»L'''
+                '''«getValue(it).durationValue.value»L'''
             }
             default: {
                 '''«FOR v : value»«v»«ENDFOR»'''

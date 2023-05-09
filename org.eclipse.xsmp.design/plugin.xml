@@ -7,15 +7,6 @@
 	       name="xsmp">
     </component>
   </extension>
- <!-- <extension
-        point="org.eclipse.eef.ide.ui.eefLifecycleManagerProvider">
-     <descriptor
-           class="org.eclipse.xsmp.sirius.XtextReferenceLifecycleManagerProvider"
-           description="description"
-           id="org.eclipse.xsmp.widget.reference"
-           label="XtextReferenceWidget">
-     </descriptor>
-  </extension>-->
   <extension
         point="org.eclipse.eef.properties.ui.eefTabDescriptorFilter">
      <descriptor

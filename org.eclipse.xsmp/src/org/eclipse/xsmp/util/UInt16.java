@@ -12,7 +12,7 @@ package org.eclipse.xsmp.util;
 
 public final class UInt16 extends AbstractPrimitiveType<UInt16>
 {
-  private final static short UINT16_MAX = (short) 0xffff;
+  private static final short UINT16_MAX = (short) 0xffff;
 
   public static final UInt16 ZERO = new UInt16((short) 0);
 
@@ -76,30 +76,6 @@ public final class UInt16 extends AbstractPrimitiveType<UInt16>
       return value == ((UInt16) obj).value;
     }
     return false;
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != 0);
-  }
-
-  @Override
-  public Int32 unaryComplement()
-  {
-    return Int32.valueOf(~Short.toUnsignedInt(value));
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(Short.toUnsignedInt(value));
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(-Short.toUnsignedInt(value));
   }
 
   @Override

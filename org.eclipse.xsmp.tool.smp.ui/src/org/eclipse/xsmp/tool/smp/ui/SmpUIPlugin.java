@@ -30,17 +30,22 @@ public final class SmpUIPlugin extends AbstractXsmpcatUIPlugin
     return instance;
   }
 
+  private static void setInstance(SmpUIPlugin instance)
+  {
+    SmpUIPlugin.instance = instance;
+  }
+
   @Override
   public void start(BundleContext context) throws Exception
   {
     super.start(context);
-    instance = this;
+    setInstance(this);
   }
 
   @Override
   public void stop(BundleContext context) throws Exception
   {
-    instance = null;
+    setInstance(null);
     super.stop(context);
   }
 

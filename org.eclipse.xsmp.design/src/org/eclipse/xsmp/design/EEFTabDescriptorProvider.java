@@ -37,12 +37,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 
-import com.google.common.collect.ImmutableSet;
-
 public class EEFTabDescriptorProvider implements IEEFTabDescriptorProvider
 {
 
-  Set<String> contributors = ImmutableSet.of("org.eclipse.sirius.diagram.ui",
+  private static final Set<String> contributors = Set.of("org.eclipse.sirius.diagram.ui",
           "org.eclipse.sirius.ui.tools.views.model.explorer");
 
   @Override

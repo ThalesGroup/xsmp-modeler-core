@@ -85,18 +85,6 @@ public final class Float64 extends AbstractPrimitiveType<Float64>
   }
 
   @Override
-  protected Bool doLogicalOr(Float64 other)
-  {
-    return Bool.valueOf(value != 0.0 || other.value != 0.0);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(Float64 other)
-  {
-    return Bool.valueOf(value != 0.0 && other.value != 0.0);
-  }
-
-  @Override
   protected Float64 doAdd(Float64 other)
   {
     return valueOf(value + other.value);
@@ -118,12 +106,6 @@ public final class Float64 extends AbstractPrimitiveType<Float64>
   protected Float64 doMultiply(Float64 other)
   {
     return valueOf(value * other.value);
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != 0.0);
   }
 
   @Override

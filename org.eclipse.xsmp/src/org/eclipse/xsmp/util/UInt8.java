@@ -12,7 +12,7 @@ package org.eclipse.xsmp.util;
 
 public final class UInt8 extends AbstractPrimitiveType<UInt8>
 {
-  private final static byte UINT8_MAX = (byte) 0xff;
+  private static final byte UINT8_MAX = (byte) 0xff;
 
   public static final UInt8 ZERO = new UInt8((byte) 0);
 
@@ -76,30 +76,6 @@ public final class UInt8 extends AbstractPrimitiveType<UInt8>
       return value == ((UInt8) obj).value;
     }
     return false;
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != (byte) 0);
-  }
-
-  @Override
-  public Int32 unaryComplement()
-  {
-    return Int32.valueOf(~Byte.toUnsignedInt(value));
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(Byte.toUnsignedInt(value));
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(-Byte.toUnsignedInt(value));
   }
 
   @Override

@@ -185,7 +185,7 @@ public class Documentation
   {
 
     final var sb = new StringBuilder();
-
+    final var newLine = "\n * ";
     if (tags.isEmpty())
     {
       return "";
@@ -194,7 +194,7 @@ public class Documentation
     final var multiline = tags.size() > 1 || tags.get(0).fragments().size() > 1;
     if (multiline)
     {
-      sb.append("\n * ");
+      sb.append(newLine);
     }
     else
     {
@@ -209,11 +209,11 @@ public class Documentation
     // add an empty line between description and first tag
     if (firstTag.getTagName() == null && it.hasNext())
     {
-      sb.append("\n * ");
+      sb.append(newLine);
     }
     while (it.hasNext())
     {
-      sb.append("\n * ");
+      sb.append(newLine);
       sb.append(it.next());
     }
 

@@ -53,8 +53,7 @@ public class XsmpcatImportsConfiguration
     if (!rules.isEmpty() && rules.get(0) instanceof ParserRule)
     {
       final LinkedList<EObject> pathToImportSection = newLinkedList();
-      if (internalFindPathToImportSection(pathToImportSection, new HashSet<ParserRule>(),
-              rules.get(0)))
+      if (internalFindPathToImportSection(pathToImportSection, new HashSet<>(), rules.get(0)))
       {
         return pathToImportSection;
       }
@@ -81,7 +80,7 @@ public class XsmpcatImportsConfiguration
         final var elementInNode = childNode.getGrammarElement();
         if (elementInNode != null)
         {
-          for (final Iterator<EObject> i = ruleInGrammar.eAllContents(); i.hasNext();)
+          for (final var i = ruleInGrammar.eAllContents(); i.hasNext();)
           {
             final var nextInGrammar = i.next();
             // check for type of childNode, otherwise we get a ClassCastException
@@ -107,7 +106,7 @@ public class XsmpcatImportsConfiguration
    * @param resource
    * @return the implicitly imported packages
    */
-  public Set<String> getImplicitlyImportedPackages(XtextResource resource)
+  public Set<String> getImplicitlyImportedPackages()
   {
     final Set<String> implicitlyImportedPackages = newHashSetWithExpectedSize(2);
 

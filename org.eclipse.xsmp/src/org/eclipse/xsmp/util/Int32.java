@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigInteger;
 import java.util.function.BiFunction;
 
 public final class Int32 extends AbstractPrimitiveType<Int32>
@@ -111,18 +112,6 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   }
 
   @Override
-  protected Bool doLogicalOr(Int32 other)
-  {
-    return Bool.valueOf(value != 0 || other.value != 0);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(Int32 other)
-  {
-    return Bool.valueOf(value != 0 && other.value != 0);
-  }
-
-  @Override
   protected Int32 doOr(Int32 other)
   {
     return valueOf(value | other.value);
@@ -173,19 +162,20 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   @Override
   protected Int32 doShiftLeft(Int32 offset)
   {
-    return valueOf(value << offset.value);
+    try
+    {
+      return valueOf(BigInteger.valueOf(value).shiftLeft(offset.value).intValueExact());
+    }
+    catch (final ArithmeticException ex)
+    {
+      throw new UnsupportedOperationException("Shift overflow.");
+    }
   }
 
   @Override
   protected Int32 doShiftRight(Int32 offset)
   {
     return valueOf(value >> offset.value);
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != 0);
   }
 
   @Override

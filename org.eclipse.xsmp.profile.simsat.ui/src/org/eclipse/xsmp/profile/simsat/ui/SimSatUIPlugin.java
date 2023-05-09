@@ -23,6 +23,11 @@ public final class SimSatUIPlugin extends AbstractXsmpcatUIPlugin
 
   private static SimSatUIPlugin instance;
 
+  private static void setInstance(SimSatUIPlugin instance)
+  {
+    SimSatUIPlugin.instance = instance;
+  }
+
   public static SimSatUIPlugin getInstance()
   {
     return instance;
@@ -32,13 +37,13 @@ public final class SimSatUIPlugin extends AbstractXsmpcatUIPlugin
   public void start(BundleContext context) throws Exception
   {
     super.start(context);
-    instance = this;
+    setInstance(this);
   }
 
   @Override
   public void stop(BundleContext context) throws Exception
   {
-    instance = null;
+    setInstance(null);
     super.stop(context);
   }
 

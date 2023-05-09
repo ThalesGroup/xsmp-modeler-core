@@ -111,21 +111,6 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   }
 
   @Override
-  protected Bool doLogicalOr(UInt64 other)
-  {
-
-    return Bool.valueOf(value.compareTo(UnsignedLong.ZERO) != 0
-            || other.value.compareTo(UnsignedLong.ZERO) != 0);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(UInt64 other)
-  {
-    return Bool.valueOf(value.compareTo(UnsignedLong.ZERO) != 0
-            && other.value.compareTo(UnsignedLong.ZERO) != 0);
-  }
-
-  @Override
   protected AbstractPrimitiveType< ? > doOr(UInt64 other)
   {
     return valueOf(UnsignedLong.fromLongBits(value.longValue() | other.value.longValue()));
@@ -186,15 +171,9 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   }
 
   @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value.compareTo(UnsignedLong.ZERO) != 0);
-  }
-
-  @Override
   public AbstractPrimitiveType< ? > unaryComplement()
   {
-    return valueOf(UnsignedLong.valueOf(~value.longValue()));
+    return valueOf(UnsignedLong.fromLongBits(~value.longValue()));
   }
 
   @Override

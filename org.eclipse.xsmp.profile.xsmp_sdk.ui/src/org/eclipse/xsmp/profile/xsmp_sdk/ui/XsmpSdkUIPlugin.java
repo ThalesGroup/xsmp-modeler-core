@@ -23,6 +23,11 @@ public final class XsmpSdkUIPlugin extends AbstractXsmpcatUIPlugin
 
   private static XsmpSdkUIPlugin instance;
 
+  private static void setInstance(XsmpSdkUIPlugin instance)
+  {
+    XsmpSdkUIPlugin.instance = instance;
+  }
+
   public static XsmpSdkUIPlugin getInstance()
   {
     return instance;
@@ -32,13 +37,13 @@ public final class XsmpSdkUIPlugin extends AbstractXsmpcatUIPlugin
   public void start(BundleContext context) throws Exception
   {
     super.start(context);
-    instance = this;
+    setInstance(this);
   }
 
   @Override
   public void stop(BundleContext context) throws Exception
   {
-    instance = null;
+    setInstance(null);
     super.stop(context);
   }
 
