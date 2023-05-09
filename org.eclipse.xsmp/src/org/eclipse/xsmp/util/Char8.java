@@ -77,30 +77,6 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   }
 
   @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != (char) 0);
-  }
-
-  @Override
-  public Int32 unaryComplement()
-  {
-    return Int32.valueOf(~value);
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(value);
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(-value);
-  }
-
-  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (char) 0);
@@ -133,19 +109,19 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public Int16 int16Value()
   {
-    return Int16.valueOf((short) value);
+    return Int16.valueOf((byte) value);
   }
 
   @Override
   public Int32 int32Value()
   {
-    return Int32.valueOf(value);
+    return Int32.valueOf((byte) value);
   }
 
   @Override
   public Int64 int64Value()
   {
-    return Int64.valueOf(value);
+    return Int64.valueOf((byte) value);
   }
 
   @Override
@@ -157,18 +133,18 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public UInt16 uint16Value()
   {
-    return convert(() -> UInt16.valueOf((short) value));
+    return convert(() -> UInt16.valueOf((byte) value));
   }
 
   @Override
   public UInt32 uint32Value()
   {
-    return convert(() -> UInt32.valueOf(value));
+    return convert(() -> UInt32.valueOf((byte) value));
   }
 
   @Override
   public UInt64 uint64Value()
   {
-    return convert(() -> UInt64.valueOf(value));
+    return convert(() -> UInt64.valueOf((byte) value));
   }
 }

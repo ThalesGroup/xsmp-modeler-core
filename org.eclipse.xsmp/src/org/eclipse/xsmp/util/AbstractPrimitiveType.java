@@ -23,74 +23,74 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
     return getClass().getSimpleName() + "(" + getValue() + ")";
   }
 
+  protected static class UnsupportedConversionException extends UnsupportedOperationException
+  {
+    private static final long serialVersionUID = 1L;
+
+    public UnsupportedConversionException(AbstractPrimitiveType< ? > type, String name)
+    {
+      super("Could not convert \"" + type.getClass().getSimpleName() + "\" to \"" + name + "\".");
+    }
+  }
+
   @Override
   public EnumerationLiteral enumerationLiteralValue()
   {
-    throw new UnsupportedOperationException("Could not convert \"" + this.getClass().getSimpleName()
-            + "\" to \"EnumerationLiteral\".");
+    throw new UnsupportedConversionException(this, "EnumerationLiteral");
   }
 
   @Override
   public Bool boolValue()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Bool\".");
+    throw new UnsupportedConversionException(this, "Bool");
   }
 
   @Override
   public Char8 char8Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Char8\".");
+    throw new UnsupportedConversionException(this, "Char8");
   }
 
   @Override
   public Float32 float32Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Float32\".");
+    throw new UnsupportedConversionException(this, "Float32");
   }
 
   @Override
   public Float64 float64Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Float64\".");
+    throw new UnsupportedConversionException(this, "Float64");
   }
 
   @Override
   public Int8 int8Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Int8\".");
+    throw new UnsupportedConversionException(this, "Int8");
   }
 
   @Override
   public Int16 int16Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Int16\".");
+    throw new UnsupportedConversionException(this, "Int16");
   }
 
   @Override
   public Int32 int32Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Int32\".");
+    throw new UnsupportedConversionException(this, "Int32");
   }
 
   @Override
   public Int64 int64Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"Int64\".");
+    throw new UnsupportedConversionException(this, "Int64");
   }
 
   @Override
   public String8 string8Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"String8\".");
+    throw new UnsupportedConversionException(this, "String8");
   }
 
   @Override
@@ -108,39 +108,25 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
   @Override
   public UInt8 uint8Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"UInt8\".");
+    throw new UnsupportedConversionException(this, "UInt8");
   }
 
   @Override
   public UInt16 uint16Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"UInt16\".");
+    throw new UnsupportedConversionException(this, "UInt16");
   }
 
   @Override
   public UInt32 uint32Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"UInt32\".");
+    throw new UnsupportedConversionException(this, "UInt32");
   }
 
   @Override
   public UInt64 uint64Value()
   {
-    throw new UnsupportedOperationException(
-            "Could not convert \"" + this.getClass().getSimpleName() + "\" to \"UInt64\".");
-  }
-
-  protected Bool doLogicalOr(T other)
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  protected Bool doLogicalAnd(T other)
-  {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedConversionException(this, "UInt64");
   }
 
   protected PrimitiveType doOr(T other)
@@ -194,31 +180,27 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
   }
 
   @Override
-  public Bool not()
+  public final Bool not()
   {
-    throw new UnsupportedOperationException(
-            "Unary \"operator!\" does not support \"" + getClass().getSimpleName() + "\" operand.");
+    return Bool.valueOf(!boolValue().getValue());
   }
 
   @Override
   public PrimitiveType unaryComplement()
   {
-    throw new UnsupportedOperationException(
-            "Unary \"operator~\" does not support \"" + getClass().getSimpleName() + "\" operand.");
+    return int32Value().unaryComplement();
   }
 
   @Override
   public PrimitiveType plus()
   {
-    throw new UnsupportedOperationException(
-            "Unary \"operator+\" does not support \"" + getClass().getSimpleName() + "\" operand.");
+    return int32Value().plus();
   }
 
   @Override
   public PrimitiveType negate()
   {
-    throw new UnsupportedOperationException(
-            "Unary \"operator-\" does not support \"" + getClass().getSimpleName() + "\" operand.");
+    return int32Value().negate();
   }
 
   protected int doCompareTo(T other)
@@ -237,13 +219,13 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
     {
       throw new UnsupportedOperationException("error: conversion from \""
               + this.getClass().getSimpleName() + "\" to \"" + result.getClass().getSimpleName()
-              + "\" change value from \"" + getValue() + "\" to \"" + result.getValue() + "\".");
+              + "\" changes value from \"" + getValue() + "\" to \"" + result.getValue() + "\".");
     }
     return result;
   }
 
   @Override
-  public PrimitiveType convert(PrimitiveTypeKind kind)
+  public final PrimitiveType convert(PrimitiveTypeKind kind)
   {
     switch (kind)
     {
@@ -283,7 +265,7 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
         break;
     }
 
-    throw new UnsupportedOperationException("Could not convert " + this + " to " + kind.label);
+    throw new UnsupportedConversionException(this, kind.label);
 
   }
 
@@ -313,91 +295,89 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
 
   @Override
   @SuppressWarnings("unchecked")
-  public int compareTo(PrimitiveType other)
+  public final int compareTo(PrimitiveType other)
   {
     return promote(other, AbstractPrimitiveType::doCompareTo);
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public Bool logicalOr(PrimitiveType val)
+  public final Bool logicalOr(PrimitiveType val)
   {
-    return promote(val, AbstractPrimitiveType::doLogicalOr);
+    return Bool.logicalOr(boolValue(), val.boolValue());
+  }
+
+  @Override
+  public final Bool logicalAnd(PrimitiveType val)
+  {
+    return Bool.logicalAnd(boolValue(), val.boolValue());
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Bool logicalAnd(PrimitiveType val)
-  {
-    return promote(val, AbstractPrimitiveType::doLogicalAnd);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public PrimitiveType or(PrimitiveType val)
+  public final PrimitiveType or(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doOr);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType and(PrimitiveType val)
+  public final PrimitiveType and(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doAnd);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType xor(PrimitiveType val)
+  public final PrimitiveType xor(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doXor);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType add(PrimitiveType val)
+  public final PrimitiveType add(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doAdd);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType subtract(PrimitiveType val)
+  public final PrimitiveType subtract(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doSubtract);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType divide(PrimitiveType val)
+  public final PrimitiveType divide(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doDivide);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType multiply(PrimitiveType val)
+  public final PrimitiveType multiply(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doMultiply);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType remainder(PrimitiveType val)
+  public final PrimitiveType remainder(PrimitiveType val)
   {
     return promote(val, AbstractPrimitiveType::doRemainder);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType shiftLeft(PrimitiveType n)
+  public final PrimitiveType shiftLeft(PrimitiveType n)
   {
     return promote(n, AbstractPrimitiveType::doShiftLeft);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveType shiftRight(PrimitiveType n)
+  public final PrimitiveType shiftRight(PrimitiveType n)
   {
     return promote(n, AbstractPrimitiveType::doShiftRight);
   }

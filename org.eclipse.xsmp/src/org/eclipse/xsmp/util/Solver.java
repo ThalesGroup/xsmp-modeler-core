@@ -61,9 +61,9 @@ public class Solver
 
   public static class SolverException extends RuntimeException
   {
-    private static final long serialVersionUID = 9137810865804865010L;
+    private static final long serialVersionUID = 6052092630728022867L;
 
-    private final Expression expression;
+    private final transient Expression expression;
 
     public SolverException(Expression expression, String msg)
     {
@@ -274,13 +274,63 @@ public class Solver
     final var text = e.getText();
 
     final var withoutSeparator = text.replace("'", "");
-
-    if (withoutSeparator.endsWith("F") || withoutSeparator.endsWith("f"))
+    final var lastChar = withoutSeparator.charAt(withoutSeparator.length() - 1);
+    if (lastChar == 'F' || lastChar == 'f')
     {
       return Float32.valueOf(withoutSeparator.substring(0, withoutSeparator.length() - 1));
     }
 
     return Float64.valueOf(withoutSeparator);
+  }
+
+  private PrimitiveType parseIntegral(String text, int radix, boolean isLong, boolean isUnsigned)
+  {
+    if (isUnsigned)
+    {
+      if (!isLong)
+      {
+        try
+        {
+          return UInt32.valueOf(text, radix);
+        }
+        catch (final NumberFormatException ex)
+        {
+          // ignore try to parse as UnsignedLong
+        }
+      }
+
+      try
+      {
+        return UInt64.valueOf(text, radix);
+      }
+      catch (final NumberFormatException ex)
+      {
+        throw new UnsupportedOperationException(
+                "\'" + text + "\' is not parsable as UnsignedLong.");
+      }
+
+    }
+
+    if (!isLong)
+    {
+      try
+      {
+        return Int32.valueOf(text, radix);
+      }
+      catch (final NumberFormatException ex)
+      {
+        // ignore try to parse as Long
+      }
+    }
+
+    try
+    {
+      return Int64.valueOf(text, radix);
+    }
+    catch (final NumberFormatException ex)
+    {
+      throw new UnsupportedOperationException("\'" + text + "\' is not parsable as Long.");
+    }
   }
 
   protected PrimitiveType doGetValue(IntegerLiteral e) throws SolverException
@@ -291,18 +341,21 @@ public class Solver
     var isLong = false;
     var isUnsigned = false;
 
+    var lastChar = withoutSeparator.charAt(withoutSeparator.length() - 1);
     // remove trailing suffix
-    if (withoutSeparator.endsWith("U") || withoutSeparator.endsWith("u"))
+    if (lastChar == 'U' || lastChar == 'u')
     {
       withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 1);
+      lastChar = withoutSeparator.charAt(withoutSeparator.length() - 1);
       isUnsigned = true;
     }
-    if (withoutSeparator.endsWith("L") || withoutSeparator.endsWith("l"))
+    if (lastChar == 'L' || lastChar == 'l')
     {
       withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 1);
+      lastChar = withoutSeparator.charAt(withoutSeparator.length() - 1);
       isLong = true;
     }
-    if (withoutSeparator.endsWith("U") || withoutSeparator.endsWith("u"))
+    if (lastChar == 'U' || lastChar == 'u')
     {
       withoutSeparator = withoutSeparator.substring(0, withoutSeparator.length() - 1);
       isUnsigned = true;
@@ -313,7 +366,6 @@ public class Solver
     {
       radix = 16;
       withoutSeparator = withoutSeparator.substring(2);
-
     }
     else if (withoutSeparator.startsWith("0B") || withoutSeparator.startsWith("0b"))
     {
@@ -328,52 +380,14 @@ public class Solver
     {
       radix = 10;
     }
-    if (isUnsigned)
-    {
-      if (!isLong)
-      {
-        try
-        {
-          return UInt32.valueOf(withoutSeparator, radix);
-        }
-        catch (final NumberFormatException ex)
-        {
-          // ignore try to parse as UnsignedLong
-        }
-      }
-
-      try
-      {
-        return UInt64.valueOf(withoutSeparator, radix);
-      }
-      catch (final NumberFormatException ex)
-      {
-        throw new SolverException(e, "\'" + text + "\' is not parsable as UnsignedLong.");
-      }
-
-    }
-
-    if (!isLong)
-    {
-      try
-      {
-        return Int32.valueOf(withoutSeparator, radix);
-      }
-      catch (final NumberFormatException ex)
-      {
-        // ignore try to parse as Long
-      }
-    }
-
     try
     {
-      return Int64.valueOf(withoutSeparator, radix);
+      return parseIntegral(withoutSeparator, radix, isLong, isUnsigned);
     }
-    catch (final NumberFormatException ex)
+    catch (final UnsupportedOperationException ex)
     {
-      throw new SolverException(e, "\'" + text + "\' is not parsable as Long.");
+      throw new SolverException(e, ex.getMessage());
     }
-
   }
 
   protected PrimitiveType doGetValue(Expression e) throws SolverException

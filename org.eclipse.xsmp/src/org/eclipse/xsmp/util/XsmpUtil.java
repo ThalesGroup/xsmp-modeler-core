@@ -1241,4 +1241,9 @@ public class XsmpUtil
   {
     return solver.getValue(e).char8Value().getValue();
   }
+
+  public org.eclipse.xsmp.util.PrimitiveType getValue(Expression e)
+  {
+    return solver.getValue(e);
+  }
 }

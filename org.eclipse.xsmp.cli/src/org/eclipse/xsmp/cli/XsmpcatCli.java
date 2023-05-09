@@ -29,6 +29,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.XsmpcatStandaloneSetup;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -229,6 +230,59 @@ public class XsmpcatCli
 
   }
 
+  /**
+   * Validate a resource
+   *
+   * @param resource
+   *          the resource to validate
+   * @return true if the resource has error(s)
+   */
+  protected boolean validate(Resource resource)
+  {
+    LOG.info("Validating " + resource.getURI().toFileString() + " ... ");
+    final var list = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
+    var hasError = false;
+    for (final Issue issue : list)
+    {
+      if (issue.getSeverity() == Severity.ERROR)
+      {
+        LOG.error(issue);
+        hasError = true;
+      }
+      else
+      {
+        LOG.info(issue);
+      }
+
+    }
+
+    if (hasError)
+    {
+      LOG.error("Failed.");
+    }
+    else
+    {
+      LOG.info("Done.");
+    }
+
+    return hasError;
+  }
+
+  /**
+   * Generate the resource
+   *
+   * @param resource
+   *          the resource to generate
+   */
+  protected void generate(Resource resource)
+  {
+    LOG.info("Generating " + resource.getURI().toFileString() + " ... ");
+    final var context = new GeneratorContext();
+    context.setCancelIndicator(CancelIndicator.NullImpl);
+    generator.generate(resource, fileAccess, context);
+    LOG.info("Done.");
+  }
+
   protected class XsmpcatFileLoader extends SimpleFileVisitor<Path>
   {
     private final ResourceSet resourceSet;
@@ -287,39 +341,15 @@ public class XsmpcatCli
         // Load the resource
         final var resource = resourceSet.getResource(uri, true);
         // Validate the resource
-        if (validate)
+        if (validate && validate(resource))
         {
-          LOG.info("Validating " + uri.toFileString() + " ... ");
-          final var list = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
-          var hasError = false;
-          for (final Issue issue : list)
-          {
-            if (issue.getSeverity() == Severity.ERROR)
-            {
-              LOG.error(issue);
-              hasError = true;
-            }
-            else
-            {
-              LOG.info(issue);
-            }
-
-          }
-          if (hasError)
-          {
-            LOG.error("Failed.");
-            return FileVisitResult.CONTINUE;
-          }
-          LOG.info("Done.");
+          // return in case of validation error
+          return FileVisitResult.CONTINUE;
         }
         // start the generator
         if (generate)
         {
-          LOG.info("Generating " + uri.toFileString() + " ... ");
-          final var context = new GeneratorContext();
-          context.setCancelIndicator(CancelIndicator.NullImpl);
-          generator.generate(resource, fileAccess, context);
-          LOG.info("Done.");
+          generate(resource);
         }
       }
       return super.visitFile(file, attrs);

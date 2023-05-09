@@ -40,28 +40,14 @@ public final class Bool extends AbstractPrimitiveType<Bool>
     return value;
   }
 
-  @Override
-  public Bool not()
+  public static Bool logicalOr(Bool left, Bool right)
   {
-    return Bool.valueOf(!value);
+    return Bool.valueOf(Boolean.logicalOr(left.value, right.value));
   }
 
-  @Override
-  public Int32 unaryComplement()
+  public static Bool logicalAnd(Bool left, Bool right)
   {
-    return Int32.valueOf(~(value ? 1 : 0));
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(value ? 1 : 0);
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(value ? -1 : 0);
+    return Bool.valueOf(Boolean.logicalAnd(left.value, right.value));
   }
 
   @Override

@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -144,6 +145,7 @@ public class SmpImporterAction extends AbstractHandler
       }
       catch (final CoreException e1)
       {
+        // ignore
       }
       rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("smpcat",
               new SmpResourceFactoryImpl());
@@ -180,7 +182,7 @@ public class SmpImporterAction extends AbstractHandler
           {
             class PromtDialog implements Runnable
             {
-              public boolean ok;
+              private boolean ok;
 
               @Override
               public void run()
@@ -215,12 +217,12 @@ public class SmpImporterAction extends AbstractHandler
           {
             class PromtDialog implements Runnable
             {
-              public boolean ok;
+              private boolean ok;
 
               @Override
               public void run()
               {
-                ok = DiagnosticDialog.OK == DiagnosticDialog.openProblem(shell,
+                ok = Window.OK == DiagnosticDialog.openProblem(shell,
                         "The Catalogue file is invalid",
                         "Do you want to continue the Xsmpcat conversion ?", diag);
               }
@@ -248,7 +250,7 @@ public class SmpImporterAction extends AbstractHandler
 
             class PromtDialog implements Runnable
             {
-              public boolean ok;
+              private boolean ok;
 
               @Override
               public void run()

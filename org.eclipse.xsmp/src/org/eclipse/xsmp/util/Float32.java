@@ -93,18 +93,6 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   }
 
   @Override
-  protected Bool doLogicalOr(Float32 other)
-  {
-    return Bool.valueOf(value != 0.0f || other.value != 0.0f);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(Float32 other)
-  {
-    return Bool.valueOf(value != 0.0f && other.value != 0.0f);
-  }
-
-  @Override
   protected Float32 doAdd(Float32 other)
   {
     return valueOf(value + other.value);
@@ -126,12 +114,6 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   protected Float32 doMultiply(Float32 other)
   {
     return valueOf(value * other.value);
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != 0.0f);
   }
 
   @Override

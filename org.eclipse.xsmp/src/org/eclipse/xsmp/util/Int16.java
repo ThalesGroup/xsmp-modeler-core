@@ -79,30 +79,6 @@ public final class Int16 extends AbstractPrimitiveType<Int16>
   }
 
   @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != (short) 0);
-  }
-
-  @Override
-  public Int32 unaryComplement()
-  {
-    return Int32.valueOf(~value);
-  }
-
-  @Override
-  public Int32 plus()
-  {
-    return Int32.valueOf(value);
-  }
-
-  @Override
-  public Int32 negate()
-  {
-    return Int32.valueOf(-value);
-  }
-
-  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (short) 0);

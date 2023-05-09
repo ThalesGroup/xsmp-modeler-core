@@ -107,19 +107,6 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   }
 
   @Override
-  protected Bool doLogicalOr(Int64 other)
-  {
-
-    return Bool.valueOf(value != 0L || other.value != 0L);
-  }
-
-  @Override
-  protected Bool doLogicalAnd(Int64 other)
-  {
-    return Bool.valueOf(value != 0L && other.value != 0L);
-  }
-
-  @Override
   protected Int64 doOr(Int64 other)
   {
     return valueOf(value | other.value);
@@ -177,12 +164,6 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   protected Int64 doShiftRight(Int64 offset)
   {
     return valueOf(value >> offset.value);
-  }
-
-  @Override
-  public Bool not()
-  {
-    return Bool.valueOf(value != 0L);
   }
 
   @Override

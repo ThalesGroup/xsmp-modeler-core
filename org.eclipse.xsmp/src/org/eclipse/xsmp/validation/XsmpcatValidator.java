@@ -247,10 +247,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return supplier.apply(xsmpUtil.getSolver().getValue(e));
     }
-    // catch (final SolverException ex)
-    // {
-    // error(ex.getMessage(), ex.getExpression(), null);
-    // }
     catch (final Exception ex)
     {
       error(ex.getMessage(), e, null);
@@ -264,10 +260,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       return xsmpUtil.getSolver().getValue(e);
     }
-
     catch (final Exception ex)
     {
-      // error(ex.getMessage(), e, null);
+      // ignore
     }
     return null;
   }
@@ -1143,59 +1138,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       }
 
     }
-
   }
 
-  /*
-   * private PrimitiveType getValue(Expression e)
-   * {
-   * try
-   * {
-   * return xsmpUtil.getSolver().getValue(e);
-   * }
-   * catch (final SolverException ex)
-   * {
-   * error(ex.getMessage(), ex.getExpression(), null);
-   * }
-   * catch (final Exception ex)
-   * {
-   * error(ex.getMessage(), e, null);
-   * }
-   * return null;
-   * }
-   * private PrimitiveType getValue(Expression e, Type type)
-   * {
-   * try
-   * {
-   * return xsmpUtil.getSolver().getValue(e, type);
-   * }
-   * catch (final SolverException ex)
-   * {
-   * error(ex.getMessage(), ex.getExpression(), null);
-   * }
-   * catch (final Exception ex)
-   * {
-   * error(ex.getMessage(), e, null);
-   * }
-   * return null;
-   * }
-   * private PrimitiveType getValue(Expression e, PrimitiveTypeKind kind)
-   * {
-   * try
-   * {
-   * return xsmpUtil.getSolver().getValue(e, kind);
-   * }
-   * catch (final SolverException ex)
-   * {
-   * error(ex.getMessage(), ex.getExpression(), null);
-   * }
-   * catch (final Exception ex)
-   * {
-   * error(ex.getMessage(), e, null);
-   * }
-   * return null;
-   * }
-   */
   @Check
   protected void checkInteger(org.eclipse.xsmp.xcatalogue.Integer elem)
   {
