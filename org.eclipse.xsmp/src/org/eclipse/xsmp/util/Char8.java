@@ -12,7 +12,7 @@ package org.eclipse.xsmp.util;
 
 public final class Char8 extends AbstractPrimitiveType<Char8>
 {
-  private final char value;
+  private final byte value;
 
   public static final Char8 ZERO = new Char8((char) 0);
 
@@ -28,7 +28,7 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
 
   private Char8(char value)
   {
-    this.value = value;
+    this.value = (byte) value;
   }
 
   public static Char8 valueOf(char value)
@@ -39,7 +39,13 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public Character getValue()
   {
-    return value;
+    return (char) value;
+  }
+
+  @Override
+  public String toString()
+  {
+    return Byte.toString(value);
   }
 
   /**
@@ -79,7 +85,7 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public Bool boolValue()
   {
-    return Bool.valueOf(value != (char) 0);
+    return Bool.valueOf(value != (byte) 0);
   }
 
   @Override
@@ -103,48 +109,48 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public Int8 int8Value()
   {
-    return Int8.valueOf((byte) value);
+    return Int8.valueOf(value);
   }
 
   @Override
   public Int16 int16Value()
   {
-    return Int16.valueOf((byte) value);
+    return Int16.valueOf(value);
   }
 
   @Override
   public Int32 int32Value()
   {
-    return Int32.valueOf((byte) value);
+    return Int32.valueOf(value);
   }
 
   @Override
   public Int64 int64Value()
   {
-    return Int64.valueOf((byte) value);
+    return Int64.valueOf(value);
   }
 
   @Override
   public UInt8 uint8Value()
   {
-    return convert(() -> UInt8.valueOf((byte) value));
+    return convert(() -> UInt8.valueOf(value));
   }
 
   @Override
   public UInt16 uint16Value()
   {
-    return convert(() -> UInt16.valueOf((byte) value));
+    return convert(() -> UInt16.valueOf(value));
   }
 
   @Override
   public UInt32 uint32Value()
   {
-    return convert(() -> UInt32.valueOf((byte) value));
+    return convert(() -> UInt32.valueOf(value));
   }
 
   @Override
   public UInt64 uint64Value()
   {
-    return convert(() -> UInt64.valueOf((byte) value));
+    return convert(() -> UInt64.valueOf(value));
   }
 }

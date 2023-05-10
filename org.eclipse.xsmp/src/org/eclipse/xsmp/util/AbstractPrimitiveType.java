@@ -17,19 +17,14 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
         implements PrimitiveType
 {
 
-  @Override
-  public String toString()
-  {
-    return getClass().getSimpleName() + "(" + getValue() + ")";
-  }
-
   protected static class UnsupportedConversionException extends UnsupportedOperationException
   {
     private static final long serialVersionUID = 1L;
 
     public UnsupportedConversionException(AbstractPrimitiveType< ? > type, String name)
     {
-      super("Could not convert \"" + type.getClass().getSimpleName() + "\" to \"" + name + "\".");
+      super("Could not convert \" " + type.getClass().getSimpleName() + " \" to \" " + name
+              + " \".");
     }
   }
 
@@ -203,23 +198,17 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
     return int32Value().negate();
   }
 
-  protected int doCompareTo(T other)
-  {
-    throw new UnsupportedOperationException(
-            "Comparison \"operator==/!=/</>/<=/>=\" does not support \""
-                    + getClass().getSimpleName() + "\" operands.");
-  }
-
   protected <R extends AbstractPrimitiveType<R>> R convert(Supplier<R> func)
   {
     final var result = func.get();
 
     // check that conversion does not changes value
-    if (float64Value().compareTo(result) != 0)
+    if (compareTo(result) != 0)
     {
-      throw new UnsupportedOperationException("error: conversion from \""
-              + this.getClass().getSimpleName() + "\" to \"" + result.getClass().getSimpleName()
-              + "\" changes value from \"" + getValue() + "\" to \"" + result.getValue() + "\".");
+      throw new UnsupportedOperationException(
+              "error: conversion from \" " + this.getClass().getSimpleName() + " \" to \" "
+                      + result.getClass().getSimpleName() + " \" changes value from \" "
+                      + toString() + " \" to \" " + result.toString() + " \".");
     }
     return result;
   }
@@ -294,10 +283,9 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public final int compareTo(PrimitiveType other)
   {
-    return promote(other, AbstractPrimitiveType::doCompareTo);
+    return float64Value().getValue().compareTo(other.float64Value().getValue());
   }
 
   @Override
@@ -387,4 +375,8 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
 
   @Override
   public abstract int hashCode();
+
+  @Override
+  public abstract String toString();
+
 }

@@ -79,6 +79,12 @@ public final class Int16 extends AbstractPrimitiveType<Int16>
   }
 
   @Override
+  public String toString()
+  {
+    return Short.toString(value);
+  }
+
+  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (short) 0);

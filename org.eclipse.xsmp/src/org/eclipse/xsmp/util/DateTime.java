@@ -12,6 +12,14 @@ package org.eclipse.xsmp.util;
 
 public final class DateTime extends Int64
 {
+  public static final DateTime ZERO = new DateTime(0);
+
+  public static final DateTime ONE = new DateTime(1);
+
+  public static final DateTime MIN_VALUE = new DateTime(Long.MIN_VALUE);
+
+  public static final DateTime MAX_VALUE = new DateTime(Long.MAX_VALUE);
+
   @Override
   public PrimitiveTypeKind getPrimitiveTypeKind()
   {

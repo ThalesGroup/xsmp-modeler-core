@@ -12,6 +12,14 @@ package org.eclipse.xsmp.util;
 
 public final class Duration extends Int64
 {
+  public static final Duration ZERO = new Duration(0);
+
+  public static final Duration ONE = new Duration(1);
+
+  public static final Duration MIN_VALUE = new Duration(Long.MIN_VALUE);
+
+  public static final Duration MAX_VALUE = new Duration(Long.MAX_VALUE);
+
   @Override
   public PrimitiveTypeKind getPrimitiveTypeKind()
   {

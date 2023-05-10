@@ -112,6 +112,12 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   }
 
   @Override
+  public String toString()
+  {
+    return Integer.toString(value);
+  }
+
+  @Override
   protected Int32 doOr(Int32 other)
   {
     return valueOf(value | other.value);
@@ -194,12 +200,6 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   public Int32 negate()
   {
     return valueOf(-value);
-  }
-
-  @Override
-  protected int doCompareTo(Int32 other)
-  {
-    return Integer.compare(value, other.value);
   }
 
   @Override

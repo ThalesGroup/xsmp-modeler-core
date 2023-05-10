@@ -79,6 +79,12 @@ public final class UInt8 extends AbstractPrimitiveType<UInt8>
   }
 
   @Override
+  public String toString()
+  {
+    return Byte.toUnsignedInt(value) + "U";
+  }
+
+  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (short) 0);

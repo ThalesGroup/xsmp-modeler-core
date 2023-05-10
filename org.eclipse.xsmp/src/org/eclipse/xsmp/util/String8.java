@@ -79,6 +79,12 @@ public final class String8 extends AbstractPrimitiveType<String8>
   }
 
   @Override
+  public String toString()
+  {
+    return "\"" + value + "\"";
+  }
+
+  @Override
   public Duration durationValue()
   {
     try

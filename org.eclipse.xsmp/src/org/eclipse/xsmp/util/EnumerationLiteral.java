@@ -75,4 +75,10 @@ public final class EnumerationLiteral extends AbstractPrimitiveType<EnumerationL
     }
     return false;
   }
+
+  @Override
+  public String toString()
+  {
+    return value.getName();
+  }
 }

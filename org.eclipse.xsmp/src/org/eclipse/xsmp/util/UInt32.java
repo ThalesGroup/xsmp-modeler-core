@@ -81,6 +81,12 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
     return value.longValue();
   }
 
+  @Override
+  public String toString()
+  {
+    return value.toString() + "U";
+  }
+
   /**
    * Returns a hash code for this {@code UInt32}.
    *
@@ -191,12 +197,6 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   public AbstractPrimitiveType< ? > negate()
   {
     return valueOf(UnsignedInteger.fromIntBits(-value.intValue()));
-  }
-
-  @Override
-  protected int doCompareTo(UInt32 other)
-  {
-    return value.compareTo(other.value);
   }
 
   @Override
