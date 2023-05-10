@@ -77,6 +77,12 @@ public final class Int8 extends AbstractPrimitiveType<Int8>
   }
 
   @Override
+  public String toString()
+  {
+    return Byte.toString(value);
+  }
+
+  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != (byte) 0);

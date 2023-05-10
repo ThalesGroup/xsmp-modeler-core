@@ -50,6 +50,12 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
     return PrimitiveTypeKind.UINT64;
   }
 
+  @Override
+  public String toString()
+  {
+    return value.toString() + "UL";
+  }
+
   private UInt64(UnsignedLong value)
   {
     this.value = value;
@@ -186,12 +192,6 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   public AbstractPrimitiveType< ? > negate()
   {
     return valueOf(UnsignedLong.fromLongBits(-value.longValue()));
-  }
-
-  @Override
-  protected int doCompareTo(UInt64 other)
-  {
-    return value.compareTo(other.value);
   }
 
   @Override

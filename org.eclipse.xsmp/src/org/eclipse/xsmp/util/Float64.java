@@ -14,6 +14,8 @@ import java.util.function.BiFunction;
 
 public final class Float64 extends AbstractPrimitiveType<Float64>
 {
+  public static final Float64 ZERO = new Float64(0.0);
+
   private final double value;
 
   @Override
@@ -48,6 +50,12 @@ public final class Float64 extends AbstractPrimitiveType<Float64>
   public Double getValue()
   {
     return value;
+  }
+
+  @Override
+  public String toString()
+  {
+    return Double.toString(value);
   }
 
   /**
@@ -118,12 +126,6 @@ public final class Float64 extends AbstractPrimitiveType<Float64>
   public Float64 negate()
   {
     return valueOf(-value);
-  }
-
-  @Override
-  protected int doCompareTo(Float64 other)
-  {
-    return Double.compare(value, other.value);
   }
 
   @Override

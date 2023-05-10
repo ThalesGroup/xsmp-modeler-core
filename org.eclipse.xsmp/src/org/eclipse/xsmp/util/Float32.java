@@ -14,6 +14,8 @@ import java.util.function.BiFunction;
 
 public final class Float32 extends AbstractPrimitiveType<Float32>
 {
+  public static final Float32 ZERO = new Float32(0.0f);
+
   private final float value;
 
   @Override
@@ -56,6 +58,12 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   public Float getValue()
   {
     return value;
+  }
+
+  @Override
+  public String toString()
+  {
+    return Float.toString(value) + "f";
   }
 
   /**
@@ -126,12 +134,6 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   public Float32 negate()
   {
     return valueOf(-value);
-  }
-
-  @Override
-  protected int doCompareTo(Float32 other)
-  {
-    return Float.compare(value, other.value);
   }
 
   @Override

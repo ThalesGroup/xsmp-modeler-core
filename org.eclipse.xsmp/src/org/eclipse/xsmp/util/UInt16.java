@@ -79,6 +79,12 @@ public final class UInt16 extends AbstractPrimitiveType<UInt16>
   }
 
   @Override
+  public String toString()
+  {
+    return Short.toUnsignedInt(value) + "U";
+  }
+
+  @Override
   public Bool boolValue()
   {
     return Bool.valueOf(value != 0);

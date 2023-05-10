@@ -107,6 +107,12 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   }
 
   @Override
+  public String toString()
+  {
+    return value + "L";
+  }
+
+  @Override
   protected Int64 doOr(Int64 other)
   {
     return valueOf(value | other.value);
@@ -182,12 +188,6 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   public Int64 negate()
   {
     return valueOf(-value);
-  }
-
-  @Override
-  protected int doCompareTo(Int64 other)
-  {
-    return Long.compare(value, other.value);
   }
 
   @Override
