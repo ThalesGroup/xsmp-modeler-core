@@ -708,8 +708,8 @@ public class XsmpUtil
   public boolean isByPointer(Property o)
   {
     final var id = QualifiedNames.Attributes_ByPointer;
-    return cache.get(Tuples.pair(o, id), o.eResource(),
-            () -> attributeBoolValue(o, id, () -> o.getType() instanceof ReferenceType));
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id,
+            () -> o.getType() instanceof ReferenceType && !isByReference(o)));
   }
 
   public boolean isByPointer(Association o)
@@ -723,7 +723,8 @@ public class XsmpUtil
   {
     final var id = QualifiedNames.Attributes_ByPointer;
     return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id,
-            () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_PTR));
+            () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_PTR
+                    && !attributeBoolValue(o, QualifiedNames.Attributes_ByReference, false)));
   }
 
   public boolean isByReference(Property o)
@@ -735,8 +736,10 @@ public class XsmpUtil
   public boolean isByReference(Parameter o)
   {
     final var id = QualifiedNames.Attributes_ByReference;
-    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id,
-            () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_REF));
+    return cache.get(Tuples.pair(o, id), o.eResource(),
+            () -> attributeBoolValue(o, id,
+                    () -> kind(o.getDirection(), o.getType()) == ArgKind.BY_REF
+                            && !attributeBoolValue(o, QualifiedNames.Attributes_ByPointer, false)));
 
   }
 
@@ -806,8 +809,6 @@ public class XsmpUtil
         case OUT:
         case RETURN:
           return ArgKind.BY_PTR;
-        default:
-          throw new UnsupportedOperationException();
       }
     }
 
@@ -821,8 +822,6 @@ public class XsmpUtil
         case INOUT:
         case OUT:
           return ArgKind.BY_PTR;
-        default:
-          throw new UnsupportedOperationException();
       }
     }
     return ArgKind.BY_VALUE;
