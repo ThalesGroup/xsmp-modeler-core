@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
-import java.math.BigInteger;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,13 +46,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class Solver
 {
-
-  public static final BigInteger ZERO = BigInteger.ZERO;
-
-  public static final Short UINT8_MAX = (short) 0xff;
-
-  public static final Integer UINT16_MAX = 0xffff;
-
   @Inject
   private XsmpUtil xsmpUtil;
 
@@ -88,47 +80,28 @@ public class Solver
 
     try
     {
-      switch (e.getFeature())
+      return switch (e.getFeature())
       {
-        case "||":
-          return leftOperand.logicalOr(rightOperand);
-        case "&&":
-          return leftOperand.logicalAnd(rightOperand);
-        case "|":
-          return leftOperand.or(rightOperand);
-        case "&":
-          return leftOperand.and(rightOperand);
-        case "^":
-          return leftOperand.xor(rightOperand);
-        case "==":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
-        case "!=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
-        case "<=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
-        case ">=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
-        case "<":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
-        case ">":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
-        case "+":
-          return leftOperand.add(rightOperand);
-        case "-":
-          return leftOperand.subtract(rightOperand);
-        case "/":
-          return leftOperand.divide(rightOperand);
-        case "*":
-          return leftOperand.multiply(rightOperand);
-        case "%":
-          return leftOperand.remainder(rightOperand);
-        case "<<":
-          return leftOperand.shiftLeft(rightOperand);
-        case ">>":
-          return leftOperand.shiftRight(rightOperand);
-        default:
-          throw new UnsupportedOperationException();
-      }
+        case "||" -> leftOperand.logicalOr(rightOperand);
+        case "&&" -> leftOperand.logicalAnd(rightOperand);
+        case "|" -> leftOperand.or(rightOperand);
+        case "&" -> leftOperand.and(rightOperand);
+        case "^" -> leftOperand.xor(rightOperand);
+        case "==" -> Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
+        case "!=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
+        case "<=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
+        case ">=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
+        case "<" -> Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
+        case ">" -> Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
+        case "+" -> leftOperand.add(rightOperand);
+        case "-" -> leftOperand.subtract(rightOperand);
+        case "/" -> leftOperand.divide(rightOperand);
+        case "*" -> leftOperand.multiply(rightOperand);
+        case "%" -> leftOperand.remainder(rightOperand);
+        case "<<" -> leftOperand.shiftLeft(rightOperand);
+        case ">>" -> leftOperand.shiftRight(rightOperand);
+        default -> throw new UnsupportedOperationException();
+      };
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -172,19 +145,14 @@ public class Solver
 
     try
     {
-      switch (e.getFeature())
+      return switch (e.getFeature())
       {
-        case "!":
-          return value.not();
-        case "~":
-          return value.unaryComplement();
-        case "-":
-          return value.negate();
-        case "+":
-          return value.plus();
-        default:
-          throw new UnsupportedOperationException();
-      }
+        case "!" -> value.not();
+        case "~" -> value.unaryComplement();
+        case "-" -> value.negate();
+        case "+" -> value.plus();
+        default -> throw new UnsupportedOperationException();
+      };
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -207,9 +175,8 @@ public class Solver
       {
         throw new SolverException(e, "the value is recursive.");
       }
-      if (value instanceof Constant)
+      if (value instanceof final Constant cst)
       {
-        final var cst = (Constant) value;
         return getValue(cst.getValue(), cst.getType());
       }
       if (value instanceof org.eclipse.xsmp.xcatalogue.EnumerationLiteral)
@@ -284,12 +251,12 @@ public class Solver
     final var value = e.getValue();
     try
     {
+      // remove quotes and escape sequences
       final var v = xsmpUtil.translateEscapes(value.substring(1, value.length() - 1));
       if (v.length() > 1)
       {
         throw new UnsupportedOperationException("Invalid char length.");
       }
-      // remove quotes and escape sequences
       return Char8.valueOf(v.charAt(0));
     }
     catch (final Exception ex)
@@ -565,9 +532,8 @@ public class Solver
   public EnumerationLiteral getValue(Expression e, Enumeration enumeration)
   {
     final var value = getValue(e);
-    if (value instanceof EnumerationLiteral)
+    if (value instanceof final EnumerationLiteral literal)
     {
-      final var literal = (EnumerationLiteral) value;
       if (!EcoreUtil.isAncestor(enumeration, literal.getValue()))
       {
         throw new SolverException(e, "Literal " + literal.getValue().getName() + " is not of type "
@@ -580,8 +546,7 @@ public class Solver
     final var integer = value.int32Value().getValue();
 
     final var literal = enumeration.getLiteral().stream()
-            .filter(l -> integer.equals(getValue(l.getValue()).int32Value().getValue()))
-            .findFirst();
+            .filter(l -> integer == getValue(l.getValue()).int32Value().getValue()).findFirst();
     if (literal.isPresent())
     {
       return EnumerationLiteral.valueOf(literal.get());

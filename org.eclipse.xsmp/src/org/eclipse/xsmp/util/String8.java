@@ -38,7 +38,6 @@ public final class String8 extends AbstractPrimitiveType<String8>
     return new String8(value);
   }
 
-  @Override
   public String getValue()
   {
     return value;

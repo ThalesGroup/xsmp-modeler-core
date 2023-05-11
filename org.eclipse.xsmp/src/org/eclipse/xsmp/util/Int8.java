@@ -38,8 +38,7 @@ public final class Int8 extends AbstractPrimitiveType<Int8>
     return new Int8(value);
   }
 
-  @Override
-  public Byte getValue()
+  public byte getValue()
   {
     return value;
   }

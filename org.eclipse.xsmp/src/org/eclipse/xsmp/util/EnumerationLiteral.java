@@ -30,7 +30,6 @@ public final class EnumerationLiteral extends AbstractPrimitiveType<EnumerationL
     return new EnumerationLiteral(value);
   }
 
-  @Override
   public org.eclipse.xsmp.xcatalogue.EnumerationLiteral getValue()
   {
     return value;

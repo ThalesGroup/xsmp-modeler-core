@@ -232,9 +232,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         final var max = uncheckedExpression(type.getMaximum());
 
         acceptError(
-                "Value " + value.getValue() + " is not in range "
-                        + (min != null ? min.getValue() : "*") + (minInclusive ? " ." : " <") + "."
-                        + (maxInclusive ? ". " : "< ") + (max != null ? max.getValue() : "*") + ".",
+                "Value " + value + " is not in range " + (min != null ? min : "*")
+                        + (minInclusive ? " ." : " <") + "." + (maxInclusive ? ". " : "< ")
+                        + (max != null ? max : "*") + ".",
                 e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
                 XsmpcatIssueCodesProvider.INVALID_VALUE_RANGE);
       }
@@ -579,27 +579,18 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
 
     final var kind = xsmpUtil.getPrimitiveTypeKind(type);
-    switch (kind)
+    return switch (kind)
     {
-      case INT16:
-        return Int16.MAX_VALUE;
-      case INT32:
-        return Int32.MAX_VALUE;
-      case UINT64:
-        return UInt64.MAX_VALUE;
-      case INT64:
-        return Int64.MAX_VALUE;
-      case INT8:
-        return Int8.MAX_VALUE;
-      case UINT16:
-        return UInt16.MAX_VALUE;
-      case UINT32:
-        return UInt32.MAX_VALUE;
-      case UINT8:
-        return UInt8.MAX_VALUE;
-      default:
-        return null;
-    }
+      case INT16 -> Int16.MAX_VALUE;
+      case INT32 -> Int32.MAX_VALUE;
+      case UINT64 -> UInt64.MAX_VALUE;
+      case INT64 -> Int64.MAX_VALUE;
+      case INT8 -> Int8.MAX_VALUE;
+      case UINT16 -> UInt16.MAX_VALUE;
+      case UINT32 -> UInt32.MAX_VALUE;
+      case UINT8 -> UInt8.MAX_VALUE;
+      default -> null;
+    };
   }
 
   private PrimitiveType getMin(org.eclipse.xsmp.xcatalogue.Integer type)
@@ -610,48 +601,28 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
 
     final var kind = xsmpUtil.getPrimitiveTypeKind(type);
-    switch (kind)
+    return switch (kind)
     {
-      case INT16:
-        return Int16.MIN_VALUE;
-      case INT32:
-        return Int32.MIN_VALUE;
-      case INT64:
-        return Int64.MIN_VALUE;
-      case INT8:
-        return Int8.MIN_VALUE;
-      case UINT16:
-        return UInt16.MIN_VALUE;
-      case UINT32:
-        return UInt32.MIN_VALUE;
-      case UINT64:
-        return UInt64.MIN_VALUE;
-      case UINT8:
-        return UInt8.MIN_VALUE;
-      default:
-        return null;
-    }
+      case INT16 -> Int16.MIN_VALUE;
+      case INT32 -> Int32.MIN_VALUE;
+      case INT64 -> Int64.MIN_VALUE;
+      case INT8 -> Int8.MIN_VALUE;
+      case UINT16 -> UInt16.MIN_VALUE;
+      case UINT32 -> UInt32.MIN_VALUE;
+      case UINT64 -> UInt64.MIN_VALUE;
+      case UINT8 -> UInt8.MIN_VALUE;
+      default -> null;
+    };
   }
 
   boolean startWithVowel(String word)
   {
 
-    switch (word.charAt(0))
+    return switch (word.charAt(0))
     {
-      case 'a':
-      case 'e':
-      case 'i':
-      case 'o':
-      case 'u':
-      case 'A':
-      case 'E':
-      case 'I':
-      case 'O':
-      case 'U':
-        return true;
-      default:
-        return false;
-    }
+      case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' -> true;
+      default -> false;
+    };
   }
 
   protected boolean checkTypeReference(Type type, EObject source, EReference feature)

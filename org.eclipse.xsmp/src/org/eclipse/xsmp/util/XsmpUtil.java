@@ -301,20 +301,14 @@ public class XsmpUtil
 
   public boolean isBaseOf(EObject base, EObject derived)
   {
-    switch (derived.eClass().getClassifierID())
+    return switch (derived.eClass().getClassifierID())
     {
-      case XcataloguePackage.INTERFACE:
-        return isBaseOf(base, (Interface) derived);
-      case XcataloguePackage.MODEL:
-        return isBaseOf(base, (Model) derived);
-      case XcataloguePackage.SERVICE:
-        return isBaseOf(base, (Service) derived);
-      case XcataloguePackage.CLASS:
-      case XcataloguePackage.EXCEPTION:
-        return isBaseOf(base, (Class) derived);
-      default:
-        return false;
-    }
+      case XcataloguePackage.INTERFACE -> isBaseOf(base, (Interface) derived);
+      case XcataloguePackage.MODEL -> isBaseOf(base, (Model) derived);
+      case XcataloguePackage.SERVICE -> isBaseOf(base, (Service) derived);
+      case XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION -> isBaseOf(base, (Class) derived);
+      default -> false;
+    };
   }
 
   protected boolean isBaseOf(EObject base, Interface derived)
@@ -783,16 +777,12 @@ public class XsmpUtil
   {
     final var id = QualifiedNames.Attributes_Const;
     return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, () -> {
-      switch (o.getDirection())
+      return switch (o.getDirection())
       {
-        case IN:
-          return !(o.getType() instanceof ValueType);
-        case RETURN:
-        case OUT:
-        case INOUT:
-        default:
-          return false;
-      }
+        case IN -> !(o.getType() instanceof ValueType);
+        case RETURN, OUT, INOUT -> false;
+        default -> false;
+      };
     }));
 
   }
@@ -801,28 +791,20 @@ public class XsmpUtil
   {
     if (type instanceof ReferenceType)
     {
-      switch (direction)
+      return switch (direction)
       {
-        case IN:
-          return ArgKind.BY_REF;
-        case INOUT:
-        case OUT:
-        case RETURN:
-          return ArgKind.BY_PTR;
-      }
+        case IN -> ArgKind.BY_REF;
+        case INOUT, OUT, RETURN -> ArgKind.BY_PTR;
+      };
     }
 
     if (type instanceof NativeType || type instanceof ValueType)
     {
-      switch (direction)
+      return switch (direction)
       {
-        case IN:
-        case RETURN:
-          return ArgKind.BY_VALUE;
-        case INOUT:
-        case OUT:
-          return ArgKind.BY_PTR;
-      }
+        case IN, RETURN -> ArgKind.BY_VALUE;
+        case INOUT, OUT -> ArgKind.BY_PTR;
+      };
     }
     return ArgKind.BY_VALUE;
   }
@@ -841,9 +823,8 @@ public class XsmpUtil
               .map(Field.class::cast)
               .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
               .collect(Collectors.toList());
-      if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
+      if (structure instanceof org.eclipse.xsmp.xcatalogue.Class clazz)
       {
-        final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
         final var base = clazz.getBase();
         if (base instanceof Structure && !isBaseOf(base, clazz))
         {
@@ -862,9 +843,8 @@ public class XsmpUtil
     final var fields = Iterables.filter(Iterables.filter(structure.getMember(), Field.class),
             it -> !isStatic(it));
 
-    if (structure instanceof org.eclipse.xsmp.xcatalogue.Class)
+    if (structure instanceof org.eclipse.xsmp.xcatalogue.Class clazz)
     {
-      final var clazz = (org.eclipse.xsmp.xcatalogue.Class) structure;
       final var base = clazz.getBase();
       if (base instanceof Structure && !isBaseOf(base, clazz))
       {
@@ -957,49 +937,38 @@ public class XsmpUtil
   private Type findType(EObject parent)
   {
 
-    switch (parent.eClass().getClassifierID())
+    return switch (parent.eClass().getClassifierID())
     {
-      case XcataloguePackage.FIELD:
-        return ((Field) parent).getType();
-      case XcataloguePackage.CONSTANT:
-        return ((Constant) parent).getType();
-      case XcataloguePackage.ASSOCIATION:
-        return ((Association) parent).getType();
-      case XcataloguePackage.PARAMETER:
-        return ((Parameter) parent).getType();
-      case XcataloguePackage.STRING:
-      case XcataloguePackage.ARRAY:
-      case XcataloguePackage.MULTIPLICITY:
-        return findPrimitiveType(parent, QualifiedNames.Smp_Int64);
-      case XcataloguePackage.FLOAT:
+      case XcataloguePackage.FIELD -> ((Field) parent).getType();
+      case XcataloguePackage.CONSTANT -> ((Constant) parent).getType();
+      case XcataloguePackage.ASSOCIATION -> ((Association) parent).getType();
+      case XcataloguePackage.PARAMETER -> ((Parameter) parent).getType();
+      case XcataloguePackage.STRING, XcataloguePackage.ARRAY, XcataloguePackage.MULTIPLICITY -> findPrimitiveType(parent, QualifiedNames.Smp_Int64);
+      case XcataloguePackage.FLOAT ->
       {
         final var type = ((Float) parent).getPrimitiveType();
-        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
+        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
-      case XcataloguePackage.INTEGER:
+      case XcataloguePackage.INTEGER ->
       {
         final var type = ((org.eclipse.xsmp.xcatalogue.Integer) parent).getPrimitiveType();
-        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
-      case XcataloguePackage.ENUMERATION_LITERAL:
-        return findPrimitiveType(parent, QualifiedNames.Smp_Int32);
-      case XcataloguePackage.ENUMERATION:
-        return (Type) parent;
-      case XcataloguePackage.ATTRIBUTE:
+      case XcataloguePackage.ENUMERATION_LITERAL -> findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+      case XcataloguePackage.ENUMERATION -> (Type) parent;
+      case XcataloguePackage.ATTRIBUTE ->
       {
         final var type = ((Attribute) parent).getType();
-        return type instanceof AttributeType ? ((AttributeType) type).getType() : type;
+        yield type instanceof AttributeType ? ((AttributeType) type).getType() : type;
       }
-      case XcataloguePackage.ATTRIBUTE_TYPE:
-        return ((AttributeType) parent).getType();
-      case XcataloguePackage.COLLECTION_LITERAL:
+      case XcataloguePackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
+      case XcataloguePackage.COLLECTION_LITERAL ->
       {
         final var collection = (CollectionLiteral) parent;
-        return getType(collection);
+        yield getType(collection);
       }
-      default:
-        return parent instanceof Expression ? getType((Expression) parent) : null;
-    }
+      default -> parent instanceof Expression ? getType((Expression) parent) : null;
+    };
   }
 
   private Type findType(Expression e)
@@ -1236,7 +1205,7 @@ public class XsmpUtil
     return solver.getValue(e).int8Value().getValue();
   }
 
-  public char getChar8(Expression e)
+  public String getChar8(Expression e)
   {
     return solver.getValue(e).char8Value().getValue();
   }

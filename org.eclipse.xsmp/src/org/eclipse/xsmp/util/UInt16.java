@@ -40,8 +40,7 @@ public final class UInt16 extends AbstractPrimitiveType<UInt16>
     return new UInt16(value);
   }
 
-  @Override
-  public Integer getValue()
+  public int getValue()
   {
     return Short.toUnsignedInt(value);
   }

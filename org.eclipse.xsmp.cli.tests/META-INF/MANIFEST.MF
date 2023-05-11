@@ -12,5 +12,5 @@ Require-Bundle: org.eclipse.xsmp.cli,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0"
 Import-Package: org.junit.jupiter.api;version="[5.1.0,6.0.0)",
  org.junit.jupiter.api.extension;version="[5.1.0,6.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.cli.tests;x-internal=true
