@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public final class UInt16 extends AbstractPrimitiveType<UInt16>
 {
   private static final short UINT16_MAX = (short) 0xffff;
@@ -42,6 +44,12 @@ public final class UInt16 extends AbstractPrimitiveType<UInt16>
   public Integer getValue()
   {
     return Short.toUnsignedInt(value);
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(Short.toUnsignedInt(value));
   }
 
   /**

@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public final class Char8 extends AbstractPrimitiveType<Char8>
 {
   private final byte value;
@@ -46,6 +48,12 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   public String toString()
   {
     return Byte.toString(value);
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value);
   }
 
   /**

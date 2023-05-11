@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -283,9 +284,15 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
   }
 
   @Override
+  public BigDecimal bigDecimalValue()
+  {
+    throw new UnsupportedConversionException(this, "BigDecimal");
+  }
+
+  @Override
   public final int compareTo(PrimitiveType other)
   {
-    return float64Value().getValue().compareTo(other.float64Value().getValue());
+    return bigDecimalValue().compareTo(other.bigDecimalValue());
   }
 
   @Override

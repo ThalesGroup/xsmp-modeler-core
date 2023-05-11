@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public final class UInt8 extends AbstractPrimitiveType<UInt8>
 {
   private static final byte UINT8_MAX = (byte) 0xff;
@@ -82,6 +84,12 @@ public final class UInt8 extends AbstractPrimitiveType<UInt8>
   public String toString()
   {
     return Byte.toUnsignedInt(value) + "U";
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(Byte.toUnsignedInt(value));
   }
 
   @Override

@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.BiFunction;
 
@@ -117,6 +118,12 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   }
 
   @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return new BigDecimal(value.bigIntegerValue());
+  }
+
+  @Override
   protected AbstractPrimitiveType< ? > doOr(UInt64 other)
   {
     return valueOf(UnsignedLong.fromLongBits(value.longValue() | other.value.longValue()));
@@ -209,13 +216,13 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   @Override
   public Float32 float32Value()
   {
-    return Float32.valueOf(value.floatValue());
+    return convert(() -> Float32.valueOf(value.floatValue()));
   }
 
   @Override
   public Float64 float64Value()
   {
-    return Float64.valueOf(value.doubleValue());
+    return convert(() -> Float64.valueOf(value.doubleValue()));
   }
 
   @Override
