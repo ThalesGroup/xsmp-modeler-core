@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 
 import com.google.common.primitives.UnsignedInteger;
@@ -85,6 +86,12 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   public String toString()
   {
     return value.toString() + "U";
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value.longValue());
   }
 
   /**
@@ -215,7 +222,7 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   @Override
   public Float32 float32Value()
   {
-    return Float32.valueOf(value.floatValue());
+    return convert(() -> Float32.valueOf(value.floatValue()));
   }
 
   @Override

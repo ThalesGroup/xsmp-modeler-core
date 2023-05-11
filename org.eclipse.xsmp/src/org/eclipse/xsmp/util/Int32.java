@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.function.BiFunction;
 
@@ -109,6 +110,12 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
       return value == ((Int32) obj).value;
     }
     return false;
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value);
   }
 
   @Override
@@ -217,7 +224,7 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   @Override
   public Float32 float32Value()
   {
-    return Float32.valueOf(value);
+    return convert(() -> Float32.valueOf(value));
   }
 
   @Override

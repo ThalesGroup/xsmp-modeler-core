@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public final class Int16 extends AbstractPrimitiveType<Int16>
 {
   public static final Int16 ZERO = new Int16((short) 0);
@@ -82,6 +84,12 @@ public final class Int16 extends AbstractPrimitiveType<Int16>
   public String toString()
   {
     return Short.toString(value);
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value);
   }
 
   @Override

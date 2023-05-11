@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public interface PrimitiveType extends Comparable<PrimitiveType>
 {
   /**
@@ -302,4 +304,5 @@ public interface PrimitiveType extends Comparable<PrimitiveType>
    */
   PrimitiveType shiftRight(PrimitiveType n);
 
+  BigDecimal bigDecimalValue();
 }

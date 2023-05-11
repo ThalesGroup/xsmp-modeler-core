@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 
 public class Int64 extends AbstractPrimitiveType<Int64>
@@ -104,6 +105,12 @@ public class Int64 extends AbstractPrimitiveType<Int64>
       return value == ((Int64) obj).value;
     }
     return false;
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value);
   }
 
   @Override
@@ -205,13 +212,13 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   @Override
   public Float32 float32Value()
   {
-    return Float32.valueOf(value);
+    return convert(() -> Float32.valueOf(value));
   }
 
   @Override
   public Float64 float64Value()
   {
-    return Float64.valueOf(value);
+    return convert(() -> Float64.valueOf(value));
   }
 
   @Override

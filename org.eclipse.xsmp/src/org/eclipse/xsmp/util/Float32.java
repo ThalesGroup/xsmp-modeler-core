@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
 import java.util.function.BiFunction;
 
 public final class Float32 extends AbstractPrimitiveType<Float32>
@@ -64,6 +65,12 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   public String toString()
   {
     return Float.toString(value) + "f";
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return BigDecimal.valueOf(value);
   }
 
   /**

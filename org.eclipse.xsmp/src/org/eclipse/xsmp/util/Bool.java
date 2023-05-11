@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.util;
 
+import java.math.BigDecimal;
+
 public final class Bool extends AbstractPrimitiveType<Bool>
 {
   private final boolean value;
@@ -160,5 +162,11 @@ public final class Bool extends AbstractPrimitiveType<Bool>
       return value == ((Bool) obj).value;
     }
     return false;
+  }
+
+  @Override
+  public BigDecimal bigDecimalValue()
+  {
+    return value ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 }
