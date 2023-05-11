@@ -34,15 +34,12 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   protected <R> R promote(PrimitiveType right,
           @SuppressWarnings("rawtypes") BiFunction<AbstractPrimitiveType, AbstractPrimitiveType, R> func)
   {
-    switch (right.getPrimitiveTypeKind())
+    return switch (right.getPrimitiveTypeKind())
     {
-      case FLOAT64:
-        return func.apply(this.float64Value(), (Float64) right);
-      case FLOAT32:
-        return func.apply(this, (Float32) right);
-      default:
-        return func.apply(this, right.float32Value());
-    }
+      case FLOAT64 -> func.apply(this.float64Value(), (Float64) right);
+      case FLOAT32 -> func.apply(this, (Float32) right);
+      default -> func.apply(this, right.float32Value());
+    };
   }
 
   public static Float32 valueOf(float value)
@@ -55,8 +52,7 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
     return new Float32(Float.parseFloat(value));
   }
 
-  @Override
-  public Float getValue()
+  public float getValue()
   {
     return value;
   }

@@ -33,7 +33,7 @@ class XsmpcatProjectUtil
                     .append("Bundle-SymbolicName: ").append(projectName).append("; singleton:=true")
                     .append(newLine).append("Bundle-ActivationPolicy: lazy").append(newLine)
                     .append("Require-Bundle: org.eclipse.xsmp.lib").append(newLine)
-                    .append("Bundle-RequiredExecutionEnvironment: JavaSE-11").append(newLine)
+                    .append("Bundle-RequiredExecutionEnvironment: JavaSE-17").append(newLine)
                     .toString()
 
     );

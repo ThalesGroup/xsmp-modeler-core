@@ -47,8 +47,7 @@ public final class Float64 extends AbstractPrimitiveType<Float64>
     return new Float64(Double.parseDouble(value));
   }
 
-  @Override
-  public Double getValue()
+  public double getValue()
   {
     return value;
   }

@@ -41,7 +41,7 @@ class PrimitiveTypeTest
   void testChar8()
   {
     // Test conversion from char to Int8
-    assertEquals((char) 42, Char8.valueOf((char) 42).getValue());
+    assertEquals("*", Char8.valueOf((char) 42).getValue());
 
     // Test conversion from UInt8 to Bool
     assertEquals(Bool.TRUE, Char8.valueOf((char) 42).boolValue());

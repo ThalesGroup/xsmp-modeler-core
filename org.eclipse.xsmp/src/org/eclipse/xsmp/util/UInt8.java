@@ -40,8 +40,7 @@ public final class UInt8 extends AbstractPrimitiveType<UInt8>
     return new UInt8(value);
   }
 
-  @Override
-  public Short getValue()
+  public short getValue()
   {
     return (short) Byte.toUnsignedInt(value);
   }

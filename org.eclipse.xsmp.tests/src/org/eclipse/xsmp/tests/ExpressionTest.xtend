@@ -80,8 +80,8 @@ class ExpressionTest extends Solver {
 
     @Test
     def void checkCharacter() {
-        assertEquals(Character.valueOf('c'), xsmpUtil.getChar8(parse("'c'")))
-        assertEquals(Character.valueOf('\n'), xsmpUtil.getChar8(parse("'\\n'")))
+        assertEquals("c", xsmpUtil.getChar8(parse("'c'")))
+        assertEquals("\\n", xsmpUtil.getChar8(parse("'\\n'")))
     }
 
     @Test

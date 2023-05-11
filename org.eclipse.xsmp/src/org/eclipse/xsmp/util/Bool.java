@@ -42,8 +42,7 @@ public final class Bool extends AbstractPrimitiveType<Bool>
     return Boolean.toString(value);
   }
 
-  @Override
-  public Boolean getValue()
+  public boolean getValue()
   {
     return value;
   }

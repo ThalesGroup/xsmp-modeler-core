@@ -40,8 +40,7 @@ public final class Int16 extends AbstractPrimitiveType<Int16>
     return new Int16(value);
   }
 
-  @Override
-  public Short getValue()
+  public short getValue()
   {
     return value;
   }

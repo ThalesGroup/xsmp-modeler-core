@@ -18,9 +18,9 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
 
   public static final Char8 ZERO = new Char8((char) 0);
 
-  public static final Char8 MIN_VALUE = new Char8(Character.MIN_VALUE);
+  public static final Char8 MIN_VALUE = new Char8((char) Byte.MIN_VALUE);
 
-  public static final Char8 MAX_VALUE = new Char8(Character.MAX_VALUE);
+  public static final Char8 MAX_VALUE = new Char8((char) Byte.MAX_VALUE);
 
   @Override
   public PrimitiveTypeKind getPrimitiveTypeKind()
@@ -38,16 +38,27 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
     return new Char8(value);
   }
 
-  @Override
-  public Character getValue()
+  public String getValue()
   {
-    return (char) value;
+    return switch (value)
+    {
+      case 0x07 -> "\\a";
+      case 0x08 -> "\\b";
+      case 0x0c -> "\\f";
+      case 0x0b -> "\\v";
+      case '\\' -> "\\\\";
+      case '\n' -> "\\n";
+      case '\r' -> "\\r";
+      case '\t' -> "\\t";
+      default -> value >= 32 && value <= 126 ? Character.toString(value)
+              : "\\" + Integer.toOctalString(value);
+    };
   }
 
   @Override
   public String toString()
   {
-    return Byte.toString(value);
+    return "'" + getValue() + "'";
   }
 
   @Override

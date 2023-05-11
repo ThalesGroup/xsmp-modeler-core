@@ -8,5 +8,5 @@ Bundle-SymbolicName: org.eclipse.xsmp.profile.xsmp_sdk.cli;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xsmp.cli,
  org.eclipse.xsmp.profile.xsmp_sdk
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.profile.xsmp_sdk.cli

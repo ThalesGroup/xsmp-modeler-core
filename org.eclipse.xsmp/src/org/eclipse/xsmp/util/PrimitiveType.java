@@ -35,7 +35,7 @@ public interface PrimitiveType extends Comparable<PrimitiveType>
    *
    * @return the raw value
    */
-  Object getValue();
+  // Object getValue();
 
   /**
    * Convert this to an EnumerationLiteral {@code ((EnumerationLiteral)this)}.
