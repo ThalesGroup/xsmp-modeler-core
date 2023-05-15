@@ -78,25 +78,27 @@ public class XsmpcatCli
   }
 
   @Inject
-  private Provider<ResourceSet> resourceSetProvider;
+  protected Provider<ResourceSet> resourceSetProvider;
 
   @Inject
   private IResourceValidator validator;
 
   @Inject
-  private GeneratorDelegate generator;
+  protected GeneratorDelegate generator;
 
   @Inject
-  private JavaIoFileSystemAccess fileAccess;
+  protected JavaIoFileSystemAccess fileAccess;
 
   @Inject
-  private IResourceServiceProvider resourceServiceProvider;
+  protected IResourceServiceProvider resourceServiceProvider;
 
   @Inject
   private IOutputConfigurationProvider outputConfigurationProvider;
 
   @Inject
   private IResourceFactory resourceFactory;
+
+  protected ResourceSet resourceSet;
 
   protected Options getOptions()
   {
@@ -185,13 +187,18 @@ public class XsmpcatCli
     LOG.info("Executed in " + df.format((System.nanoTime() - ns) / 1000000000.) + " s");
   }
 
-  protected void doExecute(CommandLine cmd)
+  protected ResourceSet createResourceSet(CommandLine cmd)
   {
     final var rs = resourceSetProvider.get();
-
     LOG.info("Loading ECSS SMP library ... ");
     loadEcssSmpLibrary(rs);
     LOG.info("Done.");
+    return rs;
+  }
+
+  protected void doExecute(CommandLine cmd)
+  {
+    resourceSet = createResourceSet(cmd);
 
     final var context = cmd.getOptionValues(CONTEXT_OPTION);
     if (context != null)
@@ -200,7 +207,7 @@ public class XsmpcatCli
       {
         try
         {
-          Files.walkFileTree(Paths.get(ctx), new XsmpcatFileLoader(rs));
+          Files.walkFileTree(Paths.get(ctx), new FileLoader());
         }
         catch (final IOException e)
         {
@@ -221,13 +228,21 @@ public class XsmpcatCli
     // generate / validate files in smdl_dir
     try
     {
-      Files.walkFileTree(Paths.get(smdlDir), new XsmpcatFileVisitor(rs, validate, generate));
+      Files.walkFileTree(Paths.get(smdlDir), new FileVisitor(validate, generate));
     }
     catch (final IOException e)
     {
       LOG.fatal(e);
     }
 
+  }
+
+  protected void load(URI uri)
+  {
+    // Load the context resource
+    LOG.info("Loading " + uri.toFileString() + " ... ");
+    resourceSet.getResource(uri, true);
+    LOG.info("Done.");
   }
 
   /**
@@ -283,14 +298,8 @@ public class XsmpcatCli
     LOG.info("Done.");
   }
 
-  protected class XsmpcatFileLoader extends SimpleFileVisitor<Path>
+  protected class FileLoader extends SimpleFileVisitor<Path>
   {
-    private final ResourceSet resourceSet;
-
-    public XsmpcatFileLoader(ResourceSet resourceSet)
-    {
-      this.resourceSet = resourceSet;
-    }
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
@@ -298,10 +307,7 @@ public class XsmpcatCli
       final var uri = URI.createFileURI(file.toFile().getCanonicalPath());
       if (resourceServiceProvider.canHandle(uri))
       {
-        // Load the context resource
-        LOG.info("Loading " + uri.toFileString() + " ... ");
-        resourceSet.getResource(uri, true);
-        LOG.info("Done.");
+        load(uri);
       }
       return super.visitFile(file, attrs);
     }
@@ -317,17 +323,15 @@ public class XsmpcatCli
     }
   }
 
-  protected class XsmpcatFileVisitor extends SimpleFileVisitor<Path>
+  protected class FileVisitor extends SimpleFileVisitor<Path>
   {
-    private final ResourceSet resourceSet;
 
     private final boolean validate;
 
     private final boolean generate;
 
-    public XsmpcatFileVisitor(ResourceSet resourceSet, boolean validate, boolean generate)
+    public FileVisitor(boolean validate, boolean generate)
     {
-      this.resourceSet = resourceSet;
       this.validate = validate;
       this.generate = generate;
     }
@@ -339,7 +343,9 @@ public class XsmpcatCli
       if (resourceServiceProvider.canHandle(uri))
       {
         // Load the resource
+        LOG.info("Loading " + uri.toFileString() + " ... ");
         final var resource = resourceSet.getResource(uri, true);
+        LOG.info("Done.");
         // Validate the resource
         if (validate && validate(resource))
         {

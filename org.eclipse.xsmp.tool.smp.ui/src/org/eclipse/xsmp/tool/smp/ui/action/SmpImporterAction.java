@@ -31,7 +31,7 @@ import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -42,7 +42,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants2;
 import org.eclipse.xsmp.tool.smp.importer.SmpImporter;
 import org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl;
-import org.eclipse.xsmp.tool.smp.util.SmpURIConverter;
+import org.eclipse.xsmp.tool.smp.util.SmpResourceSet;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 
@@ -67,16 +67,16 @@ public class SmpImporterAction extends AbstractHandler
   private CancelableDiagnostician diagnostician;
 
   @Inject
-  private SmpURIConverter uriConverter;
+  private Provider<SmpResourceSet> resourceSetProvider;
 
   @Inject
   Shell shell;
 
   class Visitor implements IResourceProxyVisitor
   {
-    private final SmpURIConverter uriConverter;
+    private final URIConverter uriConverter;
 
-    public Visitor(SmpURIConverter uriConverter)
+    public Visitor(URIConverter uriConverter)
     {
       this.uriConverter = uriConverter;
     }
@@ -136,12 +136,12 @@ public class SmpImporterAction extends AbstractHandler
     protected IStatus run(IProgressMonitor monitor)
     {
 
-      final ResourceSet rs = new ResourceSetImpl();
-      rs.setURIConverter(uriConverter);
+      final ResourceSet rs = resourceSetProvider.get();
 
       try
       {
-        ResourcesPlugin.getWorkspace().getRoot().accept(new Visitor(uriConverter), IResource.FILE);
+        ResourcesPlugin.getWorkspace().getRoot().accept(new Visitor(rs.getURIConverter()),
+                IResource.FILE);
       }
       catch (final CoreException e1)
       {
@@ -281,7 +281,7 @@ public class SmpImporterAction extends AbstractHandler
         }
         catch (final Exception e)
         {
-          log.error(e);
+          SmpImporterAction.log.error(e);
           Display.getDefault()
                   .asyncExec(() -> DiagnosticDialog.openProblem(shell,
                           CommonUIPlugin.INSTANCE.getString("_UI_Error_label"),

@@ -46,14 +46,4 @@ public class SmpURIConverter extends ExtensibleURIConverterImpl
     }
 
   }
-
-  @Override
-  public URI normalize(URI uri)
-  {
-    if (uri.isFile())
-    {
-      return URI.createURI(uri.lastSegment());
-    }
-    return super.normalize(uri);
-  }
 }
