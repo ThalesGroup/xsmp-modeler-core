@@ -86,8 +86,10 @@ import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xsmp.tool.smp.core.types.Value
 import org.eclipse.xsmp.util.XsmpUtil
+import org.eclipse.xtext.generator.GeneratorDelegate
+import org.eclipse.xtext.generator.IGeneratorContext
 
-class SmpImporter {
+class SmpImporter extends GeneratorDelegate {
 
     static final Set<EStructuralFeature> transientFeatures = ImmutableSet.<EStructuralFeature>builder().add(
         ElementsPackage.Literals.DOCUMENT__CREATOR, ElementsPackage.Literals.DOCUMENT__DATE,
@@ -96,7 +98,7 @@ class SmpImporter {
         TypesPackage.Literals.PROPERTY__CATEGORY, TypesPackage.Literals.TYPE__UUID, TypesPackage.Literals.INTEGER__UNIT,
         TypesPackage.Literals.FLOAT__UNIT, CataloguePackage.Literals.EVENT_SOURCE__MULTICAST).build();
 
-    def doGenerate(Resource resource, IFileSystemAccess2 fsa) {
+    override doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         // create result resource
         val rs = new XtextResourceSet
         val filename = resource.URI.trimFileExtension.appendFileExtension("xsmpcat").lastSegment
@@ -117,8 +119,8 @@ class SmpImporter {
 
     @Inject
     extension SmpUtil
-        @Inject
-     XsmpUtil xsmpUtil
+    @Inject
+    XsmpUtil xsmpUtil
 
     def CharSequence qfn(NamedElement e) {
 
@@ -575,7 +577,7 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(String8Value o, Type type) {
-        
+
         '''«o.field()»"«xsmpUtil.escape(o.value)»"'''
     }
 
@@ -584,7 +586,7 @@ class SmpImporter {
     }
 
     def dispatch CharSequence generate(Char8Value o, Type type) {
-        
+
         '''«o.field()»«"'"»«xsmpUtil.escape(o.value)»«"'"»'''
     }
 
@@ -674,8 +676,8 @@ class SmpImporter {
         return fields;
 
     }
-    def field(Value value)
-    {
+
+    def field(Value value) {
         '''«IF value.field !== null && !value.field.empty && value.eContainer instanceof StructureValue».«value.field» = «ENDIF»'''
     }
 
