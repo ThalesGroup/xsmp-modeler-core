@@ -322,10 +322,6 @@ class GeneratorUtil extends XsmpUtil {
     }
 
     def CharSequence uuidDefinition(Type it) {
-        '''
-            /// Definition of the Uuid constexpr for «name»
-            constexpr Smp::Uuid Uuid_«name»;
-        '''
     }
 
     def CharSequence generatePrimitiveKind(Type it) {
