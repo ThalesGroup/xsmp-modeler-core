@@ -13,6 +13,7 @@ package org.eclipse.xsmp.profile.xsmp_sdk;
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil;
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EntryPointGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EventSinkGenerator;
@@ -24,6 +25,7 @@ import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpSdkGenerator;
+import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpSdkGeneratorExtension;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.XsmpSdkOutputConfigurationProvider;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpSdkCatalogueGenerator;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.XsmpSdkCopyrightProvider;
@@ -58,6 +60,11 @@ public class XsmpSdkRuntimeModule extends XsmpcatExtensionRuntimeModule
   public Class< ? extends XsmpSdkValidator> bindXsmpValidator()
   {
     return XsmpSdkValidator.class;
+  }
+
+  public Class< ? extends GeneratorUtil> bindGeneratorExtension()
+  {
+    return XsmpSdkGeneratorExtension.class;
   }
 
   @Override

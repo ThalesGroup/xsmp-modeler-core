@@ -13,7 +13,6 @@ package org.eclipse.xsmp.util;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -535,7 +534,7 @@ public class XsmpUtil
   /**
    * Return the list of all direct dependent packages
    */
-  public Collection<Catalogue> dependentPackages(Catalogue t)
+  public List<Catalogue> dependentPackages(Catalogue t)
   {
     final var dependencies = new HashSet<Catalogue>();
     // collect all referenced Catalogue of interest
