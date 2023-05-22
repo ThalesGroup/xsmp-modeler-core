@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.generator.cpp
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.tool.python
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.tool.python;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.cdt.core,
+ org.eclipse.xsmp;bundle-version="1.1.0",
+ org.eclipse.jface.text,
+ org.eclipse.xtext
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.eclipse.xsmp.tool.python,
+ org.eclipse.xsmp.tool.python.generator,
+ org.eclipse.xsmp.tool.python.generator.member,
+ org.eclipse.xsmp.tool.python.generator.type

@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.tool.python.ui
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.tool.python.ui
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.tool.python.ui;singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.xsmp.tool.python.ui.PythonUIPlugin
+Require-Bundle: org.eclipse.xsmp.ui,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xsmp.tool.python;bundle-version="1.1.0"
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.eclipse.xsmp.tool.python.ui
