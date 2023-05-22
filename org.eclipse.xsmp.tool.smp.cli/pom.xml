@@ -1,18 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.eclipse.xsmp</groupId>
-		<artifactId>org.eclipse.xsmp.parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>org.eclipse.xsmp.tool.smp.cli</artifactId>
-	<packaging>eclipse-plugin</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.eclipse.xsmp</groupId>
+        <artifactId>org.eclipse.xsmp.parent</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>org.eclipse.xsmp.tool.smp.cli</artifactId>
+    <packaging>eclipse-plugin</packaging>
 
-	<properties>
-		<sonar.sources>src</sonar.sources>
-	</properties>
+    <properties>
+        <sonar.skip>true</sonar.skip>
+    </properties>
 
-	<build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.xtend</groupId>
@@ -117,17 +119,21 @@
                     <artifactSet>
                         <excludes><!-- avoid duplicate inclusion due to addjars
                             plugin -->
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-org.eclipse.lsp4j*</exclude>
+                            <exclude>
+                                *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.lsp4j*</exclude>
                             <exclude>
                                 *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.xtext.xbase.lib*</exclude>
                             <exclude>
                                 *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.xtend.lib*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-com.google.guava*</exclude>
+                            <exclude>
+                                *:org.eclipse.xsmp.tool.smp.cli-com.google.guava*</exclude>
                             <exclude>*:org.eclipse.xsmp.tool.smp.cli-asm*</exclude>
                             <exclude>*:org.eclipse.xsmp.tool.smp.cli-log4j*</exclude>
                             <exclude>*:org.eclipse.xsmp.tool.smp.cli-reload4j*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-org.objectweb.asm*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-org.apache.log4j*</exclude>
+                            <exclude>
+                                *:org.eclipse.xsmp.tool.smp.cli-org.objectweb.asm*</exclude>
+                            <exclude>
+                                *:org.eclipse.xsmp.tool.smp.cli-org.apache.log4j*</exclude>
                         </excludes>
                     </artifactSet>
                     <filters>

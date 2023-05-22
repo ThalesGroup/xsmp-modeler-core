@@ -11,7 +11,7 @@
     <packaging>eclipse-plugin</packaging>
 
     <properties>
-        <sonar.sources>src</sonar.sources>
+        <sonar.skip>true</sonar.skip>
     </properties>
 
     <build>
