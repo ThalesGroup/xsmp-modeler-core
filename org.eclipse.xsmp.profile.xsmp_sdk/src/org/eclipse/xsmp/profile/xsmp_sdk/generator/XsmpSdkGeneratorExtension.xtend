@@ -11,12 +11,12 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator
 
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.Document
 import org.eclipse.xsmp.xcatalogue.XcataloguePackage
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.emf.ecore.util.EcoreUtil
 
 @Singleton
 class XsmpSdkGeneratorExtension extends GeneratorUtil {
@@ -26,8 +26,9 @@ class XsmpSdkGeneratorExtension extends GeneratorUtil {
 
         var cdk = EcoreUtil.resolve(
             resourceDescriptionProvider.getResourceDescriptions(t.eResource.resourceSet).getExportedObjects(
-                XcataloguePackage.Literals.CATALOGUE, QualifiedName.create("xsmp_cdk"), false).head.EObjectOrProxy,
+                XcataloguePackage.Literals.CATALOGUE, QualifiedName.create("xsmp_sdk"), false).head.EObjectOrProxy,
             t) as Catalogue
+
         if (cdk !== t)
             dependencies += cdk
         return dependencies

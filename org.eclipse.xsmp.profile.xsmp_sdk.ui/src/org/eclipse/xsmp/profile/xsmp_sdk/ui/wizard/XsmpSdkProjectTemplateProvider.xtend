@@ -98,7 +98,6 @@ final class XsmpProject {
                   xsmp-sdk
                   GIT_REPOSITORY https://github.com/ydaveluy/xsmp-sdk.git
                   GIT_TAG        main
-                  SOURCE_DIR     ${PROJECT_SOURCE_DIR}/../xsmp-sdk
                 )
                 
                 FetchContent_MakeAvailable(xsmp-sdk)
@@ -106,8 +105,8 @@ final class XsmpProject {
                 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
                 
                 add_library(«name» SHARED ${SRC})
-                target_include_directories(«name» PUBLIC include include-gen PRIVATE src src-gen)
-                target_link_libraries(«name» XsmpCdk)
+                target_include_directories(«name» PUBLIC  src src-gen)
+                target_link_libraries(«name» Xsmp::Cdk)
                 
                 
                 # --------------------------------------------------------------------

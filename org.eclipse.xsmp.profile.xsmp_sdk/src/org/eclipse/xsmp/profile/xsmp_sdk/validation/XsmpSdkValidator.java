@@ -35,11 +35,11 @@ public class XsmpSdkValidator extends XsmpcatValidator
     super.checkCatalogue(doc);
     final var it = resourceDescriptionProvider
             .getResourceDescriptions(doc.eResource().getResourceSet()).getExportedObjects(
-                    XcataloguePackage.Literals.CATALOGUE, QualifiedName.create("xsmp_cdk"), false);
+                    XcataloguePackage.Literals.CATALOGUE, QualifiedName.create("xsmp_sdk"), false);
 
     if (!it.iterator().hasNext())
     {
-      error("Could not find the xsmp.cdk Catalogue.",
+      error("Could not find the xsmp.sdk Catalogue.",
               XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
     }
   }

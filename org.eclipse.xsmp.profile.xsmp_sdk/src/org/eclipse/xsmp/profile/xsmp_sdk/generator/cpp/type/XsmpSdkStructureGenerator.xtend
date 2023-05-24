@@ -41,7 +41,7 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                 struct _Field : public _BASE
                 {
                  // the _raw_type
-                 using _raw_type = «idGen»;
+                 using _raw_type = «id(useGenPattern)»;
                 
                     // constructor
                     template<typename ..._Args>
