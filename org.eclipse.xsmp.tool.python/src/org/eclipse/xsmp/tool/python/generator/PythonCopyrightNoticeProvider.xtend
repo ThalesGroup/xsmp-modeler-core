@@ -7,8 +7,6 @@ import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
 
 class PythonCopyrightNoticeProvider {
 
-	@Inject
-	protected extension GeneratorExtension
 
 	@Inject
 	CopyrightNoticeProvider provider

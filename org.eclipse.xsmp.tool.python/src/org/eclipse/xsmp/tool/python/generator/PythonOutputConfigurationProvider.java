@@ -21,34 +21,22 @@ import org.eclipse.xtext.generator.OutputConfiguration;
  */
 public class PythonOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider {
 
-	public static final String PYTHON_GEN = "PYTHON-GEN";
-
 	public static final String PYTHON = "PYTHON";
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations() {
 		final var outputs = super.getOutputConfigurations();
 
-		final var testsGenOutput = new OutputConfiguration(PYTHON_GEN);
-		testsGenOutput.setDescription("Generated Python Gen Folder");
-		testsGenOutput.setOutputDirectory("./python-gen");
-		testsGenOutput.setOverrideExistingResources(true);
-		testsGenOutput.setCreateOutputDirectory(true);
-		testsGenOutput.setCleanUpDerivedResources(true);
-		testsGenOutput.setSetDerivedProperty(true);
-		testsGenOutput.setKeepLocalHistory(true);
+		final var pythonOutputConfiguration = new OutputConfiguration(PYTHON);
+		pythonOutputConfiguration.setDescription("Generated Python Source Folder");
+		pythonOutputConfiguration.setOutputDirectory("./python");
+		pythonOutputConfiguration.setOverrideExistingResources(true);
+		pythonOutputConfiguration.setCreateOutputDirectory(true);
+		pythonOutputConfiguration.setCleanUpDerivedResources(true);
+		pythonOutputConfiguration.setSetDerivedProperty(true);
+		pythonOutputConfiguration.setKeepLocalHistory(false);
 
-		final var testsSrcOutput = new OutputConfiguration(PYTHON);
-		testsSrcOutput.setDescription("Generated Python Source Folder");
-		testsSrcOutput.setOutputDirectory("./python");
-		testsSrcOutput.setOverrideExistingResources(false);
-		testsSrcOutput.setCreateOutputDirectory(true);
-		testsSrcOutput.setCleanUpDerivedResources(false);
-		testsSrcOutput.setSetDerivedProperty(false);
-		testsSrcOutput.setKeepLocalHistory(true);
-
-		outputs.add(testsGenOutput);
-		outputs.add(testsSrcOutput);
+		outputs.add(pythonOutputConfiguration);
 
 		return outputs;
 	}
