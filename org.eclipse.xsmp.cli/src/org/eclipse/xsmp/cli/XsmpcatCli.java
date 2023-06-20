@@ -294,8 +294,15 @@ public class XsmpcatCli
     LOG.info("Generating " + resource.getURI().toFileString() + " ... ");
     final var context = new GeneratorContext();
     context.setCancelIndicator(CancelIndicator.NullImpl);
-    generator.generate(resource, fileAccess, context);
-    LOG.info("Done.");
+    try
+    {
+      generator.generate(resource, fileAccess, context);
+      LOG.info("Done.");
+    }
+    catch (final Exception e)
+    {
+      LOG.error("Failed: " + e.getMessage());
+    }
   }
 
   protected class FileLoader extends SimpleFileVisitor<Path>
