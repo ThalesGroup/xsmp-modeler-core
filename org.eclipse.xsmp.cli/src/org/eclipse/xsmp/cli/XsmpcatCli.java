@@ -104,7 +104,7 @@ public class XsmpcatCli
   {
     final var options = new Options();
     options.addOption("s", SMDL_DIR_OPTION, true,
-            "The relative directory containing the xsmpcat files to validate/generate (default ./smdl)");
+            "Absolute or relative directory containing the input files (default ./smdl)");
 
     options.addOption("v", VALIDATE_OPTION, false, "Validate files");
     options.addOption("g", GENERATE_OPTION, false, "Run generation");
