@@ -242,7 +242,8 @@ public class SmpGenerator extends AbstractModelConverter
       {
 
         var id = ((NamedElement) e).getName();
-        // Prefix the document ID with _ to avoid ID conflict in case of a namespace with the same
+        // Prefix the document ID with _ to avoid ID conflict in case of a namespace
+        // with the same
         // name than the document
         if (e instanceof Document)
         {
@@ -256,7 +257,8 @@ public class SmpGenerator extends AbstractModelConverter
           {
             id = eObjectToIdMap.get(container) + "." + id;
           }
-          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID should
+          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID
+          // should
           // be
           // prefixed with "Smp."
           if ("ecss_smp_smp".equals(container.getName())
@@ -265,7 +267,8 @@ public class SmpGenerator extends AbstractModelConverter
             id = "Smp." + id;
           }
         }
-        // in case of ID conflict (e.g: operations with same name but different signature),
+        // in case of ID conflict (e.g: operations with same name but different
+        // signature),
         // increment the ID
         if (idToEObjectMap.containsKey(id))
         {
@@ -319,15 +322,20 @@ public class SmpGenerator extends AbstractModelConverter
 
     ref.setTitle(src.getName());
     ref.setReference(ElementsFactory.eINSTANCE.createNamedElement());
-
-    if (src.eResource() == resource)
+    final var srcResource = src.eResource();
+    if (srcResource == resource)
     {
       ((InternalEObject) ref.getReference()).eSetProxyURI(URI.createURI("#" + id(src)));
+    }
+    else if (srcResource == null)
+    {
+      ((InternalEObject) ref.getReference())
+              .eSetProxyURI(URI.createFileURI("<unresolved>.smpcat").appendFragment(id(src)));
     }
     else
     {
       ((InternalEObject) ref.getReference())
-              .eSetProxyURI(toSmpcatURI(src.eResource().getURI()).appendFragment(id(src)));
+              .eSetProxyURI(toSmpcatURI(srcResource.getURI()).appendFragment(id(src)));
     }
 
     return ref;
