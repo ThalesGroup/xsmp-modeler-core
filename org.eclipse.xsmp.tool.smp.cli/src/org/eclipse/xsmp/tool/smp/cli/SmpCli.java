@@ -53,7 +53,7 @@ public class SmpCli extends XsmpcatCli
   {
     final var options = super.getOptions();
 
-    options.addOption("i", IMPORT_OPTION, false, "Import smpcat file");
+    options.addOption("i", IMPORT_OPTION, false, "Import smpcat file(s) and convert to xsmpcat");
 
     return options;
   }
