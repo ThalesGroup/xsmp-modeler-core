@@ -23,7 +23,7 @@ class XsmpSdkCatalogueGenerator extends CatalogueGenerator {
             simulator->RegisterFactory(::Xsmp::Factory::Create<«id»>(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator, // simulator
+                                ::simulator, // simulator
                                 «uuid()», // UUID
                                 "«id»"// type name
                                 ));
@@ -37,7 +37,4 @@ class XsmpSdkCatalogueGenerator extends CatalogueGenerator {
             acceptor.userSource("Xsmp/Factory.h")
     }
 
-    override CharSequence globalNamespaceName() {
-        '''Xsmp'''
-    }
 }

@@ -254,7 +254,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             
             void «name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
                 «IF base !== null»
-                    // Call CDK implementation first
+                    // Call parent implementation first
                     «base»::Connect(simulator);
                     
                 «ENDIF»

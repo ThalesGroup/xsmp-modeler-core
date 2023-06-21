@@ -25,7 +25,7 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
             simulator->RegisterFactory( new ::esa::ecss::smp::cdk::Factory<«id»>(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator, // simulator
+                                ::simulator, // simulator
                                 «uuid()» // UUID
                                 ));
         '''
@@ -37,8 +37,8 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
             simulator->AddService( new «id»(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator, // parent
-                                «globalNamespaceName»::simulator // parent
+                                ::simulator, // parent
+                                ::simulator // simulator
                                 ));
         '''
     }
@@ -50,12 +50,8 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
             acceptor.userSource("esa/ecss/smp/cdk/Factory.h")
     }
 
-    override CharSequence globalNamespaceName() {
-        ''''''
-    }
-    
     override protected unregisterComponent(Component model) {
         // Done by the simulator
     }
-    
+
 }

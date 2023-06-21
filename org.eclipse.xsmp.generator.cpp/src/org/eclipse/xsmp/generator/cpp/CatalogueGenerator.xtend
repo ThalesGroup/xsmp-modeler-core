@@ -38,7 +38,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             simulator->AddService( new «id»(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator // parent
+                                ::simulator // parent
                                 ));
         '''
     }
@@ -205,9 +205,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
 
 
 
-    def CharSequence globalNamespaceName() {
-        ''''''
-    }
+
 
     override protected generateSourceGenBody(Catalogue it, boolean useGenPattern) {
 
@@ -222,7 +220,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             // ----------------------------- Global variables ------------------------------
             // ----------------------------------------------------------------------------------
             
-            namespace «globalNamespaceName»{
+            namespace {
                 /// Simulator.
                 ::Smp::ISimulator* simulator = nullptr;
             }
@@ -241,11 +239,11 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                         ::Smp::ISimulator* simulator,
                         ::Smp::Publication::ITypeRegistry* typeRegistry) {
                     // Avoid double initialisation
-                    if («globalNamespaceName»::simulator) {
+                    if (::simulator) {
                         return true;
                     }
                     else if (simulator) {
-                        «globalNamespaceName»::simulator = simulator;
+                        ::simulator = simulator;
                     }
                     else     {
                         return false;
@@ -283,13 +281,13 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     /// @return True if finalisation was successful, false otherwise.
                     bool Finalise_«name(useGenPattern)»() {
                         
-                        if («globalNamespaceName»::simulator) {
+                        if (::simulator) {
                             «FOR cmp : cmps AFTER '''
                             
                             '''»
                                 «cmp.unregisterComponent»
                             «ENDFOR»
-                            «globalNamespaceName»::simulator = nullptr;
+                            ::simulator = nullptr;
                         }
                         «IF deps.empty»
                             return true;

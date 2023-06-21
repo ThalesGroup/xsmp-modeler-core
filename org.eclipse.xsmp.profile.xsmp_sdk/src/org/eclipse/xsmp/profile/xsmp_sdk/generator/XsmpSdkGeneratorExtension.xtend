@@ -11,30 +11,33 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator
 
 import com.google.inject.Singleton
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Document
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage
-import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
 
 @Singleton
 class XsmpSdkGeneratorExtension extends GeneratorUtil {
 
+    private static def Catalogue createFakeCatalogue(String name) {
+        val cat = XcatalogueFactory.eINSTANCE.createCatalogue
+        cat.name = name
+
+        return cat
+    }
+
+    static final Catalogue fakeXsmpSdkCatalogue = createFakeCatalogue("xsmp_sdk");
+
+/**
+ * Add the xsmp-sdk package to initialize the CDK
+ */
     override dependentPackages(Catalogue t) {
         var dependencies = super.dependentPackages(t)
 
-        var cdk = EcoreUtil.resolve(
-            resourceDescriptionProvider.getResourceDescriptions(t.eResource.resourceSet).getExportedObjects(
-                XcataloguePackage.Literals.CATALOGUE, QualifiedName.create("xsmp_sdk"), false).head.EObjectOrProxy,
-            t) as Catalogue
-
-        if (cdk !== t)
-            dependencies += cdk
+        dependencies += fakeXsmpSdkCatalogue
         return dependencies
     }
 
-    override String name(Document elem) {
+    /*override String name(Document elem) {
         elem.name.replace('_', '.')
-    }
+    }*/
 }
