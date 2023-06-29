@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.vscode_extension
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.vscode_extension
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.vscode_extension;singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -1,0 +1,54 @@
+{
+	"name": "xsmp-modeler",
+	"description": "VSCode extension for XSMP Modeler",
+	"author": "Thales Alenia Space",
+	"icon": "",
+	"license": "EPL-2.0",
+	"version": "1.1.0",
+	"publisher": "Thales Alenia Space",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"devDependencies": {
+        "@types/node": "^17.0.34",
+        "@types/vscode": "^1.67.0",
+        "typescript": "^4.6.4",
+        "@vscode/test-electron": "^2.1.3"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.0.1"
+    },
+	"scripts": {
+        "prepublish": "tsc -p ./src",
+        "compile": "tsc -p ./src",
+        "watch": "tsc -w -p ./src",
+        "update-vscode": "node ./node_modules/vscode/bin/install"
+    },"categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:mydsl"
+    ],
+    "main": "target/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "xsmpcat",
+                "aliases": [
+                    "xsmpcat"
+                ],
+                "extensions": [
+                    ".xsmpcat"
+                ],
+                "configuration": "./xsmp.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "xsmpcat",
+                "scopeName": "source.xsmpcat",
+                "path": "./syntaxes/xsmp.tmLanguage.json"
+            }
+        ]
+    }
+}

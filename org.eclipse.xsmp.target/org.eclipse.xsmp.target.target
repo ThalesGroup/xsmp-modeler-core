@@ -14,6 +14,7 @@
 			<unit id="org.eclipse.sirius.properties.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.specifier.properties.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.specifier.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.lsp4j.sdk.feature.group" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/releases/2023-03"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

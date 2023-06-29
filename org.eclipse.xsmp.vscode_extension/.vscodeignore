@@ -1,0 +1,9 @@
+.classpath
+.project
+.gitignore
+package.json
+package-lock.json
+build.properties
+
+.settings/
+META-INF/

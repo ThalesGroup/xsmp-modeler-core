@@ -48,6 +48,7 @@
         <module>org.eclipse.xsmp.profile.simsat.cli</module>
         <module>org.eclipse.xsmp.profile.simsat.feature</module>
         <module>org.eclipse.xsmp.profile.simsat.ui</module>
+        <module>org.eclipse.xsmp.vscode_extension</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
