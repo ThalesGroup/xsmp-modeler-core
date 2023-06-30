@@ -9,9 +9,9 @@
 	</parent>
 	<artifactId>org.eclipse.xsmp.ide</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
+	
 	<properties>
-		<sonar.sources>src</sonar.sources>
+	    <sonar.skip>true</sonar.skip>
 	</properties>
 
 	<dependencies>
@@ -174,8 +174,8 @@
 							</excludes>
 						</filter>
 					</filters>
-					<shadedArtifactAttached>true</shadedArtifactAttached>
-					<shadedClassifierName>ls</shadedClassifierName>
+					<shadedArtifactAttached>false</shadedArtifactAttached>
+					<finalName>${project.artifactId}-ls</finalName>
 					<minimizeJar>true</minimizeJar>
 				</configuration>
 				<executions>

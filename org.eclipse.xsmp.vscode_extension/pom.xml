@@ -31,7 +31,7 @@
 									<directory>
 										${project.basedir}/../org.eclipse.xsmp.ide/target</directory>
 									<includes>
-										<include>*-ls.jar</include>
+										<include>org.eclipse.xsmp.ide-ls.jar</include>
 									</includes>
 								</resource>
 							</resources>

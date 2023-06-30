@@ -19,7 +19,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-lan
 let lc: LanguageClient;
 
 export function activate(context: ExtensionContext) {
-	let launcher = 'org.eclipse.xsmp.ide-1.1.0-SNAPSHOT-ls.jar';
+	let launcher = 'org.eclipse.xsmp.ide-ls.jar';
 	let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
 
 	let serverOptions: ServerOptions = {
