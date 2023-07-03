@@ -261,12 +261,12 @@ public class XsmpcatCli
     {
       if (issue.getSeverity() == Severity.ERROR)
       {
-        LOG.error(issue);
+        LOG.error(createIssueMessage(issue));
         hasError = true;
       }
       else
       {
-        LOG.info(issue);
+        LOG.info(createIssueMessage(issue));
       }
 
     }
@@ -303,6 +303,19 @@ public class XsmpcatCli
     {
       LOG.error("Failed: " + e.getMessage());
     }
+  }
+
+  private String createIssueMessage(Issue issue)
+  {
+    final var result = new StringBuilder(issue.getMessage());
+    result.append(" (");
+    if (issue.getUriToProblem() != null)
+    {
+      result.append(issue.getUriToProblem().path());
+    }
+    result.append(":").append(issue.getLineNumber()).append(":").append(issue.getColumn())
+            .append(")");
+    return result.toString();
   }
 
   protected class FileLoader extends SimpleFileVisitor<Path>
