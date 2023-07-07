@@ -28,7 +28,7 @@ import org.eclipse.emf.ecp.view.spi.context.ViewModelContext;
 import org.eclipse.emfforms.common.Optional;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xsmp.ui.contentassist.IReferenceFilter;
+import org.eclipse.xsmp.ide.contentassist.IReferenceFilter;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScopeProvider;
 

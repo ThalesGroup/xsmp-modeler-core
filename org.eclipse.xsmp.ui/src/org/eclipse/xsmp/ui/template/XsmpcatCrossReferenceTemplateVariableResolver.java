@@ -19,7 +19,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.templates.TemplateVariable;
-import org.eclipse.xsmp.ui.contentassist.IReferenceFilter;
+import org.eclipse.xsmp.ide.contentassist.IReferenceFilter;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;

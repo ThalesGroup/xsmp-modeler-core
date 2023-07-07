@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide;
 
+import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.quickfix.IQuickFixProvider;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codeActions.QuickFixCodeActionService;
@@ -19,7 +21,6 @@ import org.eclipse.xtext.ide.server.codeActions.QuickFixCodeActionService;
  */
 public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
 {
-
   public Class< ? extends IQuickFixProvider> bindIQuickFixProvider()
   {
     return XsmpcatIdeQuickfixProvider.class;
@@ -28,5 +29,10 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends ICodeActionService2> bindICodeActionService2()
   {
     return QuickFixCodeActionService.class;
+  }
+
+  public Class< ? extends IdeContentProposalProvider> bindIdeContentProposalProvider()
+  {
+    return XsmpcatIdeContentProposalProvider.class;
   }
 }
