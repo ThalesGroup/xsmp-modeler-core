@@ -11,16 +11,27 @@
 package org.eclipse.xsmp.ide;
 
 import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
+import org.eclipse.xsmp.ide.hover.XsmpcatHoverService;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.quickfix.IQuickFixProvider;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codeActions.QuickFixCodeActionService;
+import org.eclipse.xtext.ide.server.hover.HoverService;
 
 /**
  * Use this class to register ide components.
  */
 public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
 {
+  static
+  {
+    @SuppressWarnings("unused")
+    final Class< ? >[] classes = {
+      org.apache.log4j.ConsoleAppender.class,
+      org.apache.log4j.DailyRollingFileAppender.class,
+      org.apache.log4j.PatternLayout.class };
+  }
+
   public Class< ? extends IQuickFixProvider> bindIQuickFixProvider()
   {
     return XsmpcatIdeQuickfixProvider.class;
@@ -35,4 +46,10 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   {
     return XsmpcatIdeContentProposalProvider.class;
   }
+
+  public Class< ? extends HoverService> bindHoverService()
+  {
+    return XsmpcatHoverService.class;
+  }
+
 }

@@ -25,26 +25,26 @@
 			]
 		},
 		"linecomment": {
-			"name": "comment.line.double-dash.mydsl",
+			"name": "comment.line.double-dash.xsmpcat",
 			"begin": "(^[ \\t]+)?(?=//)",
 			"end": "(?=$)"
 		},
 		"blockcomment": {
-			"name": "comment.block.mydsl",
+			"name": "comment.block.xsmpcat",
 			"begin": "/\\*(?!\\*)",
 			"end": "\\*/"
 		},
 		"blockcommentdocumentation": {
-			"name": "comment.block.documentation.mydsl",
+			"name": "comment.block.documentation.xsmpcat",
 			"begin": "/\\*\\*",
 			"end": "\\*/"
 		},
 		"keyword": {
-			"name": "keyword.control.mydsl",
+			"name": "keyword.control.xsmpcat",
 			"match": "\\b(catalogue|model|struct|exception|container|writeOnly|constant|def|integer|float|eventsink|eventsource|reference|output|protected|entrypoint|property|using|void|readOnly|throws|enum|input|extends|field|transient|true|false|abstract|inout|service|namespace|array|native|get|readWrite|attribute|event|class|set|string|primitive|association|interface|out|public|private|import)\\b"
 		},
 		"keyword_operators": {
-			"name": "keyword.operator.mydsl",
+			"name": "keyword.operator.xsmpcat",
 			"match": "\\b(\\|\\||<<|<=|>=|==|!=|<|>|&&|->|\\[|\\]|\\{|\\}|\\.|~|\\$|%|\\(|\\)|\\*|\\+|,|-|/|@|\\?|\\^)\\b"
 		}
 	},

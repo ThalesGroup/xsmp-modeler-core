@@ -224,6 +224,10 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 	def private String getCrossReferences(EObject eObject, EReference eReference) {
 		val scope = scopeProvider.getScope(eObject, eReference)
 		val filteredCandidates = Iterables.filter(scope.allElements, filter.getFilter(eObject, eReference))
+		
+		if (filteredCandidates.empty) {
+			return "None"
+		}
 
 		return Joiner.on(",").join(filteredCandidates.map[it|it.name])
 	}
