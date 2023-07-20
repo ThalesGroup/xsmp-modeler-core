@@ -12,6 +12,7 @@ package org.eclipse.xsmp.ide;
 
 import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
 import org.eclipse.xsmp.ide.hover.XsmpcatHoverService;
+import org.eclipse.xsmp.ide.quickfix.XsmpcatIdeQuickfixProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.quickfix.IQuickFixProvider;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;

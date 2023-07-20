@@ -295,7 +295,7 @@ class XsmpcatKeywordHovers {
 				The parameter must be specified on call, and may be changed by the operation.
 			'''
 			default:
-				return null
+				''''''
 		}
 		result.toString;
 	}

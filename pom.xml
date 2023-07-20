@@ -32,6 +32,7 @@
 		<module>org.eclipse.xsmp.lib</module>
 		<module>org.eclipse.xsmp.forms</module>
 		<module>org.eclipse.xsmp.ide</module>
+		<module>org.eclipse.xsmp.ide.tests</module>
 		<module>org.eclipse.xsmp.design</module>
 		<module>org.eclipse.xsmp.ui</module>
 		<module>org.eclipse.xsmp.ui.tests</module>

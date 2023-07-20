@@ -10,8 +10,8 @@ Require-Bundle: org.eclipse.xsmp,
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
- org.eclipse.xsmp.lib;bundle-version="1.1.0";visibility:=reexport,
  org.apache.log4j;bundle-version="1.2.24",
+ com.google.gson;bundle-version="2.10.1",
  org.eclipse.lsp4j;bundle-version="0.20.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ide,

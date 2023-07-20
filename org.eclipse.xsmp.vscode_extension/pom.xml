@@ -29,7 +29,8 @@
 							<resources>
 								<resource>
 									<directory>
-										${project.basedir}/../org.eclipse.xsmp.ide/target</directory>
+										${project.basedir}/../org.eclipse.xsmp.ide/target
+									</directory>
 									<includes>
 										<include>org.eclipse.xsmp.ide-ls.jar</include>
 									</includes>

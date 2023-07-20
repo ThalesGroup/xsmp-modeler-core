@@ -10,13 +10,14 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.contentassist;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Keyword;
@@ -26,7 +27,6 @@ import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
 import org.eclipse.xtext.util.PolymorphicDispatcher.WarningErrorHandler;
-import org.eclipse.xtext.xtext.CurrentTypeFinder;
 
 import com.google.inject.Inject;
 
@@ -34,9 +34,6 @@ public class AbstractIdeContentProposalProvider extends IdeContentProposalProvid
 {
   @Inject
   protected XsmpcatReferenceFilter filter;
-
-  @Inject
-  private CurrentTypeFinder currentTypeFinder;
 
   private final Map<String, PolymorphicDispatcher<Void>> dispatchers;
 
@@ -52,7 +49,10 @@ public class AbstractIdeContentProposalProvider extends IdeContentProposalProvid
           IIdeContentProposalAcceptor acceptor)
   {
     final var method = "complete_" + keyword.getValue();
-    invokeMethod(method, acceptor, context);
+    if (methodExists(getClass(), method))
+    {
+      invokeMethod(method, acceptor, context);
+    }
 
     super._createProposals(keyword, context, acceptor);
   }
@@ -85,17 +85,38 @@ public class AbstractIdeContentProposalProvider extends IdeContentProposalProvid
   protected void _createProposals(CrossReference reference, ContentAssistContext context,
           IIdeContentProposalAcceptor acceptor)
   {
-    final var type = currentTypeFinder.findCurrentTypeAfter(reference);
-    if (type instanceof EClass)
+    final var containingParserRule = GrammarUtil.containingParserRule(reference);
+    if (!GrammarUtil.isDatatypeRule(containingParserRule))
     {
-      final var eReference = GrammarUtil.getReference(reference, (EClass) type);
-      final var currentModel = context.getCurrentModel();
-      if (eReference != null && currentModel != null)
+      EReference ref;
+      if (containingParserRule.isWildcard())
       {
-        final var scope = getScopeProvider().getScope(currentModel, eReference);
+        ref = GrammarUtil.getReference(reference, context.getCurrentModel().eClass());
+      }
+      else
+      {
+        ref = GrammarUtil.getReference(reference);
+      }
+      final var currentModel = context.getCurrentModel();
+      if (ref != null && currentModel != null)
+      {
+        final var scope = getScopeProvider().getScope(currentModel, ref);
         getCrossrefProposalProvider().lookupCrossReference(scope, reference, context, acceptor,
-                filter.getFilter(currentModel, eReference));
+                filter.getFilter(currentModel, ref));
       }
     }
+  }
+
+  protected static boolean methodExists(Class< ? > clazz, String methodName)
+  {
+    final var methods = clazz.getDeclaredMethods();
+    for (final Method method : methods)
+    {
+      if (method.getName().equals(methodName))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 }

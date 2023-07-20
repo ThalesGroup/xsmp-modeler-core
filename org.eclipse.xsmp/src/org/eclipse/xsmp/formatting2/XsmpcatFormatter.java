@@ -88,6 +88,7 @@ import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.UnaryOperation;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
 import org.eclipse.xtext.Keyword;
+import org.eclipse.xtext.formatting.IIndentationInformation;
 import org.eclipse.xtext.formatting2.AbstractJavaFormatter;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
 import org.eclipse.xtext.formatting2.ITextReplacer;
@@ -108,6 +109,15 @@ import com.google.inject.Inject;
 @SuppressWarnings("restriction")
 public class XsmpcatFormatter extends AbstractJavaFormatter
 {
+  public static class IndentationInformation implements IIndentationInformation
+  {
+    @Override
+    public java.lang.String getIndentString()
+    {
+      return "    ";
+    }
+  }
+
   @Inject
   private XsmpcatGrammarAccess ga;
 
