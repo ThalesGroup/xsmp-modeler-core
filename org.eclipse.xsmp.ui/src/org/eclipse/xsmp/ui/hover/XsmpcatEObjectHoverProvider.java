@@ -37,12 +37,7 @@ public class XsmpcatEObjectHoverProvider
   {
     if (o instanceof Keyword)
     {
-      final var hover = keywordHovers.hoverText((Keyword) o);
-
-      if (hover != null)
-      {
-        return hover;
-      }
+      return keywordHovers.hoverText((Keyword) o);
     }
 
     final var hover = super.getHoverInfoAsHtml(o);

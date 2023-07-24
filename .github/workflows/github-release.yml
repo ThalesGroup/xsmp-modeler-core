@@ -1,6 +1,6 @@
-# This workflow will release the Eclipse repository on github when a new tag is pushed
+# This workflow will release the Eclipse repository on GitHub when a new tag is pushed
 
-name: Release on github
+name: Release on GitHub
 
 on:
   push:
@@ -9,48 +9,73 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          This release contains XSMP modeler ${{ github.ref_name }}
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
           
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+        
+      - name: Install npm dependencies
+        working-directory: org.eclipse.xsmp.vscode_extension
+        run: |
+            npm install
+            npm install -g @vscode/vsce
+        
+      - name: Package VS Code Extension
+        working-directory: org.eclipse.xsmp.vscode_extension
+        run: |
+            vsce package --out "target/xsmp-modeler.vsix"
+            ls -l target
+        
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            This release contains XSMP modeler ${{ github.ref_name }}
+            
+            To install XSMP Modeler in Eclipse, add or update the XSMP [software site](https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-127.htm) with URL:
+            `jar:https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip!/`
+            
+            To use XSMP Modeler in Visual Studio Code, please install this [extension](https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/xsmp-modeler-${{ github.ref_name }}.vsix).
+          draft: true
+          prerelease: false
           
-          To install, add or update the XSMP [software site](https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-127.htm) with URL:
-          `jar:https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip!/`
-        draft: true
-        prerelease: false
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
-        asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
-        asset_content_type: application/zip
-    - name: Publish release
-      uses: StuYarrow/publish-release@v1.1.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        id: ${{ steps.create_release.outputs.id }}
-  
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
+          asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload extension
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix
+          asset_name: xsmp-modeler-${{ github.ref_name }}.vsix
+          asset_content_type: application/octet-stream
+          
+      - name: Publish release
+        uses: StuYarrow/publish-release@v1.1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ steps.create_release.outputs.id }}

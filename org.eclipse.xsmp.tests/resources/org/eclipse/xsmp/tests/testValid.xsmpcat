@@ -294,12 +294,12 @@ namespace ns
 
 		field AStruct aStruct = {true, 10}
 
-		container IComposite container = AModel
-		container IComposite? optional_container = AnAbstractModel
-		container IComposite[*] list_container = AnAbstractModel
-		container IComposite[+] non_empty_list_container = AnAbstractModel
-		container IComposite[4] list_container_4 = AnAbstractModel
-		container IComposite[4 ... *] list_container_4_or_more = AnAbstractModel
+		container IComponent container = AModel
+		container IComponent? optional_container = AnAbstractModel
+		container IComponent[*] list_container = AnAbstractModel
+		container IComponent[+] non_empty_list_container = AnAbstractModel
+		container IComponent[4] list_container_4 = AnAbstractModel
+		container IComponent[4 ... *] list_container_4_or_more = AnAbstractModel
 		container IComposite[4 ... 10] list_container_betwwen_4_and_10
 
 		reference IComposite reference

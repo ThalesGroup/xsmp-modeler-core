@@ -21,6 +21,7 @@ import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.formatting.IIndentationInformation;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -51,6 +52,11 @@ public abstract class XsmpcatExtensionRuntimeModule extends AbstractXsmpcatRunti
   public Class< ? extends IValueConverterService> bindIValueConverterService()
   {
     return XsmpcatValueConverterService.class;
+  }
+
+  public Class< ? extends IIndentationInformation> bindIIndentationInformation()
+  {
+    return org.eclipse.xsmp.formatting2.XsmpcatFormatter.IndentationInformation.class;
   }
 
   /**

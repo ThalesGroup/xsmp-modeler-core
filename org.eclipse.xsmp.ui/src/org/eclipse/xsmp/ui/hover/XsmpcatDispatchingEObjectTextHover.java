@@ -14,12 +14,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
+import org.eclipse.xsmp.ide.hover.XsmpcatKeywordAtOffsetHelper;
 import org.eclipse.xsmp.xcatalogue.BuiltInExpression;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.hover.DispatchingEObjectTextHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.inject.Inject;
 
@@ -63,10 +66,18 @@ public class XsmpcatDispatchingEObjectTextHover extends DispatchingEObjectTextHo
   @Override
   protected Pair<EObject, IRegion> getXtextElementAt(XtextResource resource, final int offset)
   {
-    var result = super.getXtextElementAt(resource, offset);
+    final var result = super.getXtextElementAt(resource, offset);
     if (result == null)
     {
-      result = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
+      final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
+      if (tmp == null)
+      {
+        return null;
+      }
+
+      final var textRegion = tmp.getSecond();
+      return Tuples.create(tmp.getFirst(),
+              (IRegion) new Region(textRegion.getOffset(), textRegion.getLength()));
     }
     return result;
   }

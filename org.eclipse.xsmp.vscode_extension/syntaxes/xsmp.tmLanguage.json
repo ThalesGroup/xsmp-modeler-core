@@ -1,0 +1,57 @@
+{
+	"name": "Xsmpcat",
+	"scopeName": "source.xsmpcat",
+	"fileTypes": [
+		"xsmpcat"
+	],
+	"repository": {
+		"general": {
+			"patterns": [
+				{
+					"include": "#linecomment"
+				},
+				{
+					"include": "#blockcomment"
+				},
+				{
+					"include": "#blockcommentdocumentation"
+				},
+				{
+					"include": "#keyword"
+				},
+				{
+					"include": "#keyword_operators"
+				}
+			]
+		},
+		"linecomment": {
+			"name": "comment.line.double-dash.xsmpcat",
+			"begin": "(^[ \\t]+)?(?=//)",
+			"end": "(?=$)"
+		},
+		"blockcomment": {
+			"name": "comment.block.xsmpcat",
+			"begin": "/\\*(?!\\*)",
+			"end": "\\*/"
+		},
+		"blockcommentdocumentation": {
+			"name": "comment.block.documentation.xsmpcat",
+			"begin": "/\\*\\*",
+			"end": "\\*/"
+		},
+		"keyword": {
+			"name": "keyword.control.xsmpcat",
+			"match": "\\b(catalogue|model|struct|exception|container|writeOnly|constant|def|integer|float|eventsink|eventsource|reference|output|protected|entrypoint|property|using|void|readOnly|throws|enum|input|extends|field|transient|true|false|abstract|inout|service|namespace|array|native|get|readWrite|attribute|event|class|set|string|primitive|association|interface|out|public|private|import)\\b"
+		},
+		"keyword_operators": {
+			"name": "keyword.operator.xsmpcat",
+			"match": "\\b(\\|\\||<<|<=|>=|==|!=|<|>|&&|->|\\[|\\]|\\{|\\}|\\.|~|\\$|%|\\(|\\)|\\*|\\+|,|-|/|@|\\?|\\^)\\b"
+		}
+	},
+	"patterns": [
+		{
+			"include": "#general"
+		}
+	],
+	"uuid": "8383e49a-fa0d-4bb5-827b-10e8abb294ca"
+}
