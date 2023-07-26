@@ -1,7 +1,7 @@
 autoEnabled=true
 bindingSuggestionsDisabled=false
 eclipse.preferences.version=1
-idePrefixKey=src/org/eclipse/xsmp/profile/simsat
+idePrefixKey=
 projectKey=ThalesGroup_xsmp-modeler-core
 serverId=SonarCloud/thalesgroup
-sqPrefixKey=org.eclipse.xsmp.ui/src/org/eclipse/xsmp
+sqPrefixKey=org.eclipse.xsmp.profile.simsat.ui
