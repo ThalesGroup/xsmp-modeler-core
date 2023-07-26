@@ -217,7 +217,7 @@
       <Description></Description>
       <PrimitiveType xlink:title="UInt64" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.UInt64"/>
     </Type>
-    <Type xsi:type="Types:Integer" Id="ns.AnIntegerWithRange" Name="AnIntegerWithRange" Visibility="protected" Uuid="93b6170a-b9b9-4df5-b69d-14493f7c9cf5" Minimum="0" Maximum="100">
+    <Type xsi:type="Types:Integer" Id="ns.AnIntegerWithRange" Name="AnIntegerWithRange" Visibility="private" Uuid="93b6170a-b9b9-4df5-b69d-14493f7c9cf5" Minimum="0" Maximum="100">
       <Description></Description>
     </Type>
     <Type xsi:type="Types:String" Id="ns.AString" Name="AString" Uuid="adfec040-aba1-4bc8-8561-476c1e738a02" Length="10">
@@ -265,7 +265,7 @@
       <Base xlink:title="IComponent" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.IComponent"/>
       <Base xlink:title="ICollection" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.ICollection"/>
     </Type>
-    <Type xsi:type="Catalogue:Model" Id="ns.AnAbstractModel" Name="AnAbstractModel" Visibility="private" Uuid="02b2a015-71c8-48bc-beb1-95a494c5e438">
+    <Type xsi:type="Catalogue:Model" Id="ns.AnAbstractModel" Name="AnAbstractModel" Visibility="protected" Uuid="02b2a015-71c8-48bc-beb1-95a494c5e438">
       <Description></Description>
       <Field Id="ns.AnAbstractModel.hidden_field" Name="hidden_field" State="true" Input="false" Output="false">
         <Description></Description>

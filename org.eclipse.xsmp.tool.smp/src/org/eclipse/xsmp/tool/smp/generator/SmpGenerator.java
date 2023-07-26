@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.documentation.TextElement;
 import org.eclipse.xsmp.tool.smp.core.elements.ElementsFactory;
 import org.eclipse.xsmp.tool.smp.core.types.AccessKind;
 import org.eclipse.xsmp.tool.smp.core.types.ArrayValue;
@@ -76,7 +77,6 @@ import org.eclipse.xsmp.tool.smp.core.types.VisibilityKind;
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.Interface;
 import org.eclipse.xsmp.tool.smp.smdl.package_.PackageFactory;
 import org.eclipse.xsmp.tool.smp.util.SmpURIConverter;
-import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
@@ -240,31 +240,36 @@ public class SmpGenerator extends AbstractModelConverter
 
       if (e instanceof NamedElement && !eObjectToIdMap.containsKey(e))
       {
+        final var idTag = ((NamedElement) e).getMetadatum().getXsmpcatdoc().tags().stream()
+                .filter(t -> "@id".equals(t.getTagName())).findFirst();
 
-        var id = ((NamedElement) e).getName();
-        // Prefix the document ID with _ to avoid ID conflict in case of a namespace
-        // with the same
-        // name than the document
-        if (e instanceof Document)
+        String id;
+        if (idTag.isPresent())
         {
-          id = "_" + id;
+          // get the id from the @id tag in the description
+          id = idTag.get().fragments().stream().map(TextElement::getText)
+                  .collect(Collectors.joining("\n")).trim();
         }
         else
         {
-          final var container = EcoreUtil2.getContainerOfType(e.eContainer(), NamedElement.class);
+          // compute the id manually
 
-          if (!(container instanceof Document))
+          id = ((NamedElement) e).getName();
+          // Prefix the document ID with _ to avoid ID conflict in case of a namespace
+          // with the same
+          // name than the document
+          if (e instanceof Document)
           {
-            id = eObjectToIdMap.get(container) + "." + id;
+            id = "_" + id;
           }
-          // patch for ecss_smp_smp catalogue: in this case the Attributes namespace ID
-          // should
-          // be
-          // prefixed with "Smp."
-          if ("ecss_smp_smp".equals(container.getName())
-                  && QualifiedNames.Attributes.toString().equals(id))
+          else
           {
-            id = "Smp." + id;
+            final var container = EcoreUtil2.getContainerOfType(e.eContainer(), NamedElement.class);
+
+            if (!(container instanceof Document))
+            {
+              id = eObjectToIdMap.get(container) + "." + id;
+            }
           }
         }
         // in case of ID conflict (e.g: operations with same name but different
@@ -459,7 +464,7 @@ public class SmpGenerator extends AbstractModelConverter
 
     if (src.isSetVisibility())
     {
-      dest.setVisibility(VisibilityKind.get(src.getRealVisibility().ordinal()));
+      dest.setVisibility(VisibilityKind.get(src.getRealVisibility().getLiteral()));
     }
   }
 

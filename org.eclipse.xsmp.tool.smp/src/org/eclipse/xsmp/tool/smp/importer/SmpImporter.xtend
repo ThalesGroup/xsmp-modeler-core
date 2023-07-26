@@ -242,6 +242,8 @@ class SmpImporter extends GeneratorDelegate {
                     '''.toString
             }
         }
+        m+= "@id " + o.id
+        
         '''
             «IF m.empty && !o.description.nullOrEmpty»/** «o.description.replaceAll("\n", "\n * ")» */ «ENDIF»
             «FOR i : m.filterNull BEFORE '/** \n' + (o.description!==null&& !o.description.isEmpty? ' * ' + o.description.replaceAll("\n", "\n * ")+'\n * \n':'\n') AFTER ' */'» * «i»«ENDFOR»

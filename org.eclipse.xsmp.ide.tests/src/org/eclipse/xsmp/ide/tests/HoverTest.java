@@ -68,7 +68,7 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
       final var expectedHover = """
               [[7, 14] .. [7, 18]]
               kind: markdown
-              value: boolean with true or false<dl></dl>
+              value: boolean with true or false<dl><dt>@id</dt><dd>Smp.Bool</dd></dl>
                             """;
       it.setExpectedHover(expectedHover);
     });
