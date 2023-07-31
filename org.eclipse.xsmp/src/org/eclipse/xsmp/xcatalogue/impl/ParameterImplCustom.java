@@ -96,7 +96,7 @@ public class ParameterImplCustom extends ParameterImpl
             .filter(t -> "@param".equals(t.getTagName()) && t.fragments().size() > 1
                     && t.fragments().get(0).getText().equals(name))
             .map(t -> t.fragments().stream().skip(1).map(TextElement::getText)
-                    .collect(Collectors.joining("\n")))
+                    .collect(Collectors.joining(System.lineSeparator())))
             .findFirst().orElse(null);
 
   }
@@ -126,7 +126,7 @@ public class ParameterImplCustom extends ParameterImpl
           tag.fragments().clear();
         }
 
-        for (final String line : newDescription.split("\n"))
+        for (final String line : newDescription.split(System.lineSeparator()))
         {
           tag.fragments().add(new TextElement(-1, line));
         }
@@ -154,7 +154,7 @@ public class ParameterImplCustom extends ParameterImpl
           tag.fragments().clear();
         }
         tag.fragments().add(new TextElement(-1, name));
-        for (final String line : newDescription.split("\n"))
+        for (final String line : newDescription.split(System.lineSeparator()))
         {
           tag.fragments().add(new TextElement(-1, line));
         }

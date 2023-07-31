@@ -79,10 +79,11 @@ public class TagElement
       {
         sb.append(" ");
         sb.append(fragments.stream().map(Object::toString)
-                .collect(Collectors.joining("\n *       ")));
+                .collect(Collectors.joining(System.lineSeparator() + " *       ")));
       }
       return sb.toString();
     }
-    return fragments.stream().map(Object::toString).collect(Collectors.joining("\n * "));
+    return fragments.stream().map(Object::toString)
+            .collect(Collectors.joining(System.lineSeparator() + " * "));
   }
 }

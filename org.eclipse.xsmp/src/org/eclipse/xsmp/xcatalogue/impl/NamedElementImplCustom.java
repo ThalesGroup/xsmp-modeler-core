@@ -177,7 +177,8 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
               .ifPresent(tag -> {
                 tag.fragments().clear();
                 // set the value
-                for (final String v : serialize(eStructuralFeature, newObject).split("\n"))
+                for (final String v : serialize(eStructuralFeature, newObject)
+                        .split(System.lineSeparator()))
                 {
                   tag.fragments().add(new TextElement(-1, v));
                 }
@@ -282,7 +283,8 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
   protected String printFragment(List< ? extends TextElement> list)
   {
-    return list.stream().map(TextElement::getText).collect(Collectors.joining("\n")).trim();
+    return list.stream().map(TextElement::getText)
+            .collect(Collectors.joining(System.lineSeparator())).trim();
   }
 
   @SuppressWarnings({"unchecked", "rawtypes" })
@@ -493,7 +495,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     // set the value
     if (newDescription != null)
     {
-      for (final String v : newDescription.split("\n"))
+      for (final String v : newDescription.split(System.lineSeparator()))
       {
         tag.fragments().add(new TextElement(-1, v));
       }
@@ -559,7 +561,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
         tag.fragments().clear();
       }
       // set the value
-      for (final String v : strValue.split("\n"))
+      for (final String v : strValue.split(System.lineSeparator()))
       {
         tag.fragments().add(new TextElement(-1, v));
       }

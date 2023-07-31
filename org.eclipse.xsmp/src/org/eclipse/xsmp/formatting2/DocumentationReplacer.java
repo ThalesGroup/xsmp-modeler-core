@@ -53,14 +53,14 @@ public class DocumentationReplacer implements ITextReplacer
       if (!tag.fragments().isEmpty())
       {
         sb.append(" ");
-        sb.append(tag.fragments().stream().map(Object::toString)
-                .collect(Collectors.joining("\n" + context.getIndentationString() + " *       ")));
+        sb.append(tag.fragments().stream().map(Object::toString).collect(Collectors
+                .joining(System.lineSeparator() + context.getIndentationString() + " *       ")));
       }
     }
     else
     {
-      sb.append(tag.fragments().stream().map(Object::toString)
-              .collect(Collectors.joining("\n" + context.getIndentationString() + " * ")));
+      sb.append(tag.fragments().stream().map(Object::toString).collect(
+              Collectors.joining(System.lineSeparator() + context.getIndentationString() + " * ")));
     }
   }
 
@@ -75,7 +75,7 @@ public class DocumentationReplacer implements ITextReplacer
     final var tags = elem.getXsmpcatdoc().tags();
 
     final var indentation = context.getIndentationString();
-    final var newLine = "\n" + indentation + " * ";
+    final var newLine = System.lineSeparator() + indentation + " * ";
     final var sb = new StringBuilder();
 
     if (tags.isEmpty())
@@ -111,7 +111,7 @@ public class DocumentationReplacer implements ITextReplacer
 
     if (multiline)
     {
-      sb.append("\n");
+      sb.append(System.lineSeparator());
       sb.append(indentation);
     }
 
