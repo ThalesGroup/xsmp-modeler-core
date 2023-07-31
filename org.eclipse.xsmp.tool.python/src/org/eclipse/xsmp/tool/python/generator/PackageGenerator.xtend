@@ -41,6 +41,7 @@ class PackageGenerator {
                 «FOR member : ns.member»
                     «member.doGenerate»
                 «ENDFOR»
+                
                 pass
             
         '''
@@ -55,8 +56,8 @@ class PackageGenerator {
                     «"'''"»
                     
                 «ENDIF»
-                def __init__(self, name: str, description: str, container: ecss_smp_smp.Smp.IContainer):
-                    super().__init__(package_name=__name__, uuid="«model.uuid»", name=name, description=description, container=container)
+                uuid:ecss_smp_smp.Smp.Uuid = ecss_smp_smp.Smp.Uuid("«model.uuid»")
+                package_name:str = __name__
             
         '''
     }
