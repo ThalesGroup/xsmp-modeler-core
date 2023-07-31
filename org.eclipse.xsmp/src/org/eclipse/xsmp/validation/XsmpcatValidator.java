@@ -983,8 +983,10 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var upper = element.getUpper();
     if (upper != -1 && upper < lower)
     {
-      error("Lower bound shall be less or equal to the upper bound, if present.\nUpper bound shall be -1 or larger or equal to the lower bound.",
-              element.getMultiplicity(), XcataloguePackage.Literals.MULTIPLICITY__LOWER);
+      error("""
+              Lower bound shall be less or equal to the upper bound, if present.
+              Upper bound shall be -1 or larger or equal to the lower bound.
+              """, element.getMultiplicity(), XcataloguePackage.Literals.MULTIPLICITY__LOWER);
     }
 
   }

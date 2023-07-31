@@ -185,7 +185,7 @@ public class Documentation
   {
 
     final var sb = new StringBuilder();
-    final var newLine = "\n * ";
+    final var newLine = System.lineSeparator() + " * ";
     if (tags.isEmpty())
     {
       return "";
@@ -219,7 +219,7 @@ public class Documentation
 
     if (multiline)
     {
-      sb.append("\n");
+      sb.append(System.lineSeparator());
     }
     sb.append(" */");
 

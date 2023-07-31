@@ -167,10 +167,8 @@ public class XsmpcatdocContentAccess
 
     String[] exceptionDescriptions = null;
 
-    if (fElement instanceof Operation)
+    if (fElement instanceof Operation fMethod)
     {
-      final var fMethod = (Operation) fElement;
-
       exceptionNames = new String[fMethod.getRaisedException().size()];
       exceptionDescriptions = new String[exceptionNames.length];
       for (var i = 0; i < exceptionNames.length; ++i)
@@ -417,7 +415,7 @@ public class XsmpcatdocContentAccess
     for (final TagElement p : param)
     {
       final var description = p.fragments().stream().skip(1).map(TextElement::getText)
-              .collect(Collectors.joining("\n"));
+              .collect(Collectors.joining(System.lineSeparator()));
       final var name = p.fragments().stream().map(TextElement::getText).findFirst().orElse(null);
       if (name != null)
       {
