@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
+import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.Type;
 import org.eclipse.xsmp.xcatalogue.VisibilityElement;
 import org.eclipse.xsmp.xcatalogue.VisibilityKind;
@@ -31,12 +32,16 @@ public class XsmpcatIdeQuickfixProvider extends AbstractDeclarativeIdeQuickfixPr
   {
     acceptor.accept("Generate UUID", e -> {
 
+      if (e instanceof Metadatum)
+      {
+        e = e.eContainer();
+      }
+
       if (e instanceof Type)
       {
         ((Type) e).setUuid(UUID.randomUUID().toString());
       }
     });
-
   }
 
   @QuickFix(XsmpcatIssueCodesProvider.HIDDEN_ELEMENT)
