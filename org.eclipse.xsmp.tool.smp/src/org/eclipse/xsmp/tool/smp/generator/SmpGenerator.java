@@ -785,7 +785,7 @@ public class SmpGenerator extends AbstractModelConverter
 
   protected void copy(Association src, org.eclipse.xsmp.tool.smp.core.types.Association dest)
   {
-    copy((NamedElement) src, (org.eclipse.xsmp.tool.smp.core.elements.NamedElement) dest);
+    copy((VisibilityElement) src, (org.eclipse.xsmp.tool.smp.core.types.VisibilityElement) dest);
 
     dest.setType(getReference(src.getType(), src.eResource()));
   }

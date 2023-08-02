@@ -650,7 +650,7 @@
           <FieldValue xsi:type="Types:Int16Value" Value="10"/>
         </Default>
       </Field>
-      <Field Id="ns.AModel.input" Name="input" State="true" Input="true" Output="false">
+      <Field Id="ns.AModel.input" Name="input" Visibility="protected" State="true" Input="true" Output="false">
         <Description></Description>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
       </Field>
@@ -666,7 +666,7 @@
         <Description></Description>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
       </Field>
-      <Association Id="ns.AModel.asso" Name="asso">
+      <Association Id="ns.AModel.asso" Name="asso" Visibility="protected">
         <Description></Description>
         <Type xlink:title="Bool" xlink:href="http://www.ecss.nl/smp/2019/Smdl#Smp.Bool"/>
       </Association>

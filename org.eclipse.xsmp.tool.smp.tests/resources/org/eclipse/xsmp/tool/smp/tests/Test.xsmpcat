@@ -313,8 +313,8 @@ namespace ns
 		reference IComposite[4 ... 10] list_reference_betwwen_4_and_10
 
 
-		association Bool asso
-		input field Bool input
+		protected association Bool asso
+		protected input field Bool input
 		output field Bool output
 		transient field Bool transient
 		input output field Bool inout
