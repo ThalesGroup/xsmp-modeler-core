@@ -10,7 +10,7 @@
   [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThalesGroup_xsmp-modeler-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ThalesGroup_xsmp-modeler-core)
   [![Open questions](https://img.shields.io/badge/Open-questions-blue.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/labels/question)
   [![Open bugs](https://img.shields.io/badge/Open-bugs-red.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/labels/bug)
-
+  [![Documentation Status](https://readthedocs.org/projects/xsmp-modeler/badge/?version=latest)](https://xsmp-modeler.readthedocs.io/en/latest/?badge=latest)
 
 </div>
 
@@ -34,7 +34,7 @@ It comes with:
 
 ### How To Install
 
-Refers to instructions provided in the [releases page](https://github.com/ThalesGroup/xsmp-modeler-core/releases) or in the [wiki](https://github.com/ThalesGroup/xsmp-modeler-core/wiki/User-guide#installation)
+Refers to instructions provided in the [releases page](https://github.com/ThalesGroup/xsmp-modeler-core/releases) or in the [ReadTheDoc documentation](https://xsmp-modeler.readthedocs.io).
 
 ### Debug and Build
 
@@ -43,7 +43,7 @@ To build from a command-line, run `mvn package` in the root directory of the pro
 
 ## Documentation
 
-Documentation is available [here](https://github.com/ThalesGroup/xsmp-modeler-core/wiki).
+Documentation is available [here](https://xsmp-modeler.readthedocs.io).
 
 ## Contributing
 
