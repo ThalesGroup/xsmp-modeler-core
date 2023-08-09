@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -20,15 +20,18 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
  * Use this class to register components to be used at runtime / without the
  * Equinox extension registry.
  */
-public class PythonRuntimeModule extends XsmpcatExtensionRuntimeModule {
+public class PythonRuntimeModule extends XsmpcatExtensionRuntimeModule
+{
 
-	@Override
-	public Class<? extends IGenerator2> bindIGenerator2() {
-		return PythonGenerator.class;
-	}
+  @Override
+  public Class< ? extends IGenerator2> bindIGenerator2()
+  {
+    return PythonGenerator.class;
+  }
 
-	@Override
-	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
-		return PythonOutputConfigurationProvider.class;
-	}
+  @Override
+  public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
+  {
+    return PythonOutputConfigurationProvider.class;
+  }
 }

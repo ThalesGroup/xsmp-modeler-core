@@ -14,7 +14,6 @@ import org.eclipse.xsmp.generator.cpp.type.StructureGenerator
 import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.Structure
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkStructureGenerator extends StructureGenerator {
 
@@ -40,30 +39,24 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                 template<typename _BASE>
                 struct _Field : public _BASE
                 {
-                 // the _raw_type
-                 using _raw_type = «id(useGenPattern)»;
-                
                     // constructor
-                    template<typename ..._Args>
-                    _Field (_Args ...args, const _raw_type &default_value = {}) : _BASE(args...)
-                    «FOR f : member.filter(Field) BEFORE ', ' SEPARATOR ', '»
+                    //template<typename ..._Args>
+                    _Field ( ::Smp::Publication::ITypeRegistry *typeRegistry, ::Smp::Uuid typeUuid,
+                             ::Smp::String8 name, ::Smp::String8 description = "", ::Smp::IObject *parent = nullptr,
+                             ::Smp::ViewKind view = ::Smp::ViewKind::VK_None, const «id(useGenPattern)» &value = {}) :
+                             _BASE(typeRegistry, typeUuid, name ,description, parent, view)
+                    «FOR f : member.filter(Field) BEFORE ',\n' SEPARATOR ', '»
                         /// «f.name» initialization
-                        «f.name» { this, «f.type.uuid()», "«f.name»", «f.description()», «f.viewKind»,  default_value.«f.name» }
+                        «f.name» {  typeRegistry, «f.type.uuid()», "«f.name»", «f.description()», this, «f.viewKind("view")», value.«f.name» }
                     «ENDFOR»
                     {
                     }
+                    _Field(const _Field&) = delete;
+                    _Field& operator = (const _Field&) = delete;
+
                     
-                    // copy operator
-                    _Field & operator=(const _Field  &other)
-                    {
-                        «FOR f : member.filter(Field)»
-                            this->«f.name» = other.«f.name»;
-                        «ENDFOR»
-                        return *this;
-                    }
-                    
-                    // copy operator from _raw_type
-                    _Field & operator=(const _raw_type &other)
+                    // copy operator from «id(useGenPattern)»
+                    _Field & operator=(const «id(useGenPattern)» &other)
                     {
                        «FOR f : member.filter(Field)»
                            this->«f.name» = other.«f.name»;
@@ -71,14 +64,14 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                        return *this;
                     }
                     
-                    // convert to _raw_type
-                    operator _raw_type() const noexcept
+                    // convert to «id(useGenPattern)»
+                    operator «id(useGenPattern)»() const noexcept
                     {
                         return {«FOR f : member.filter(Field) SEPARATOR ', '»«f.name»«ENDFOR»};
                     }
-                     «FOR f : member.filter(Field)»
+                     «FOR f : member.filter(Field) BEFORE "\n// Fields declaration\n"»
                          «f.comment»
-                         «IF f.isMutable»mutable «ENDIF»typename _BASE::template Field<«f.type.id»>«IF f.transient»::transient«ENDIF»«IF f.input»::input«ENDIF»«IF f.output»::output«ENDIF»«IF f.failure»::failure«ENDIF»«IF f.forcible»::forcible«ENDIF» «f.name»;
+                         «IF f.isMutable»mutable «ENDIF»typename _BASE::template Field<«f.type.id»>«IF f.transient»::transient«ENDIF»«IF f.input»::input«ENDIF»«IF f.output»::output«ENDIF»«IF f.forcible»::forcible«ENDIF»«IF f.failure»::failure«ENDIF» «f.name»;
                     «ENDFOR»
                    };
             };
@@ -87,7 +80,4 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
         '''
     }
 
-    override collectIncludes(Structure it, IncludeAcceptor acceptor) {
-        super.collectIncludes(it, acceptor)
-    }
 }

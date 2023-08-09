@@ -158,23 +158,18 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
             null
     }
 
-    def CharSequence generateSource(T type, boolean useGenPattern, IncludeAcceptor acceptor, Catalogue cat) {
+    def CharSequence generateSource(T type, boolean useGenPattern, Catalogue cat) {
         val body = type.generateSourceBody(useGenPattern)
         if (body !== null && body.length > 0)
             '''
                 «copyright.getSourceText(type, cat)»
                 
-                «type.generateSourceIncludes(acceptor)»
+                «type.include»
                 
                 «namespace(type, body)»
             '''
     }
 
-    def protected CharSequence generateSourceIncludes(T type) {
-        '''
-            #include "«type.fqn.toString("/")».h"
-        '''
-    }
 
     def protected CharSequence generateSourceIncludes(T type, IncludeAcceptor acceptor) {
         val Set<String> includeList = newHashSet

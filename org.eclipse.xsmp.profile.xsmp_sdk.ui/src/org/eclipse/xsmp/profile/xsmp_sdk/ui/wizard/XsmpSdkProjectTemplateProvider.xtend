@@ -60,8 +60,13 @@ final class XsmpProject {
             projectName = projectInfo.projectName
             location = projectInfo.locationPath
 
+            projectNatures += "org.python.pydev.pythonNature"
+            projectNatures += "de.marw.cmake4eclipse.mbs.cmake4eclipsenature"
+            builderIds += "de.marw.cmake4eclipse.mbs.genscriptbuilder"
+
             profile = "org.eclipse.xsmp.profile.xsmp_sdk"
-            defaultOutput = "_build"
+            tools += "org.eclipse.xsmp.tool.python"
+            defaultOutput = "_build/smdl"
 
             addFile('''smdl/«name».xsmpcat''', '''
                 // Copyright «Year.now.value» YOUR ORGANIZATION. All rights reserved.
@@ -80,46 +85,65 @@ final class XsmpProject {
                 namespace «name»
                 {
                     
-                }
+                } // namespace «name»
             ''')
 
             addFile('''CMakeLists.txt''', '''
                 cmake_minimum_required(VERSION 3.14)
                 
-                # set the project name and version
-                project(«name» LANGUAGES CXX)
-                
-                # specify the C++ standard
-                set(CMAKE_CXX_STANDARD 11)
-                set(CMAKE_CXX_STANDARD_REQUIRED True)
+                project(
+                    «name»
+                #   VERSION 1.0.0
+                #   DESCRIPTION ""
+                #   HOMEPAGE_URL ""
+                    LANGUAGES CXX)
                 
                 include(FetchContent)
                 FetchContent_Declare(
-                  xsmp-sdk
-                  GIT_REPOSITORY https://github.com/ydaveluy/xsmp-sdk.git
-                  GIT_TAG        main
+                    xsmp-sdk
+                    GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
+                    GIT_TAG        main # replace with a specific tag
                 )
                 
                 FetchContent_MakeAvailable(xsmp-sdk)
-                        
+                set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${xsmp-sdk_SOURCE_DIR}/cmake)
+                
                 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
                 
                 add_library(«name» SHARED ${SRC})
-                target_include_directories(«name» PUBLIC  src src-gen)
-                target_link_libraries(«name» Xsmp::Cdk)
+                target_include_directories(«name» PUBLIC src src-gen)
+                target_link_libraries(«name» PUBLIC Xsmp::Cdk)
                 
                 
                 # --------------------------------------------------------------------
                 
                 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
                     include(CTest)
+                    include(Pytest)
+                    pytest_discover_tests(«name»Test)
                 endif()
                 
-                #if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-                #    add_subdirectory(tests)
-                #endif()
                 
             ''')
+
+            addFile('''python/«name»/test_«name».py''', '''
+                import ecss_smp
+                import xsmp
+                import «name»
+                
+                class «name»Test(xsmp.unittest.TestCase):
+                    try:
+                        sim: «name»._test_«name».Simulator
+                    except AttributeError:
+                        pass
+                    
+                    def loadAssembly(self, sim: ecss_smp.Smp.ISimulator):
+                        sim.LoadLibrary("«name»")
+                
+                    def test_«name»(self):
+                        pass
+            ''')
+
             addFile('''.gitignore''', '''
                 /_build/
             ''')
@@ -129,23 +153,63 @@ final class XsmpProject {
 
             addFile("README.md", '''
                 # «name»
+                
+                ## System Requirements
+                
+                - Linux or MacOS
+                - A compiler with support for C++ 17 (at least GCC 7 or Clang 5)
+                - CMake 3.14 or newer
+                - Ninja or Make
+                - Python 3.7 or newer (for unit-tests)
+                
+                ## How to Build
+                
+                Both CMake and Python (pip) builds are supported.
+                
+                ### Build with CMake
+                
+                ```bash
+                cmake -B ./build -DCMAKE_BUILD_TYPE=Release
+                cmake --build ./build --config Release
+                ```
+                
+                ### Build with Python (pip)
+                
+                ```bash
+                python -m pip install .[test] -v
+                ```
+                
             ''')
+
+            addFile(".pydevproject", '''
+                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <?eclipse-pydev version="1.0"?><pydev_project>
+                    <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+                    <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python interpreter</pydev_property>
+                    <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
+                        <path>/${PROJECT_DIR_NAME}/python</path>
+                        <path>/${PROJECT_DIR_NAME}/_build/Debug/lib</path>
+                        <path>/${PROJECT_DIR_NAME}/_build/Debug/_deps/xsmp-sdk-src/python</path>
+                    </pydev_pathproperty>
+                </pydev_project>
+            ''')
+
             val debugConfId = Math.abs(random.nextInt())
             val releaseConfId = Math.abs(random.nextInt())
-            val debugCmakeId = Math.abs(random.nextInt())
-            val releaseCmakeId = Math.abs(random.nextInt())
-
-            val debugCId = Math.abs(random.nextInt())
-            val releaseCId = Math.abs(random.nextInt())
-            val debugCppId = Math.abs(random.nextInt())
-            val releaseCppId = Math.abs(random.nextInt())
 
             addFile('''.cproject''', '''
                 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+                    <storageModule cmakelistsFolder="" moduleId="de.marw.cmake4eclipse.mbs.settings">
+                        <targets>
+                            <target name="all"/>
+                            <target name="clean"/>
+                            <target name="test"/>
+                        </targets>
+                    </storageModule>
                     <storageModule moduleId="org.eclipse.cdt.core.settings">
                         <cconfiguration id="cmake4eclipse.mbs.config.debug.«debugConfId»">
-                            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.debug.«debugConfId»" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+                            <storageModule buildSystemId="de.marw.cmake4eclipse.mbs.cmake4eclipse" id="cmake4eclipse.mbs.config.debug.«debugConfId»" moduleId="org.eclipse.cdt.core.settings" name="Debug">
                                 <externalSettings/>
                                 <extensions>
                                     <extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -153,31 +217,30 @@ final class XsmpProject {
                                     <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
                                     <extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
                                     <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                                    <extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
                                     <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
                                 </extensions>
                             </storageModule>
                             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
-                                <configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.«debugConfId»" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cmake4eclipse.mbs.config.debug">
+                                <configuration buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.«debugConfId»" name="Debug" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.debug">
                                     <folderInfo id="cmake4eclipse.mbs.config.debug.«debugConfId»." name="/" resourcePath="">
-                                        <toolChain id="cmake4eclipse.mbs.toolchain.cmake.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.toolchain.cmake">
+                                        <toolChain id="cmake4eclipse.mbs.config.debug.toolChain.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.config.debug.toolChain">
                                             <targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-                                            <builder buildPath="/«name»/_build/Debug" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-                                                <inputType id="cmake4eclipse.mbs.inputType.c.«debugCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
-                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«debugCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
+                                            <builder autoBuildTarget="all" buildPath="/«name»/_build/Debug" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cmake4eclipse.mbs.builder"/>
+                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«Math.abs(random.nextInt())»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
+                                                <inputType id="cmake4eclipse.mbs.inputType.c.«Math.abs(random.nextInt())»" superClass="cmake4eclipse.mbs.inputType.c"/>
+                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«Math.abs(random.nextInt())»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
                                             </tool>
                                         </toolChain>
                                     </folderInfo>
                                 </configuration>
                             </storageModule>
-                            <storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
+                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+                            <storageModule buildDir="_build/${ConfigName}" dirtyTs="1693321018059" moduleId="de.marw.cmake4eclipse.mbs.settings">
                                 <options/>
                             </storageModule>
-                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
                         </cconfiguration>
                         <cconfiguration id="cmake4eclipse.mbs.config.release.«releaseConfId»">
-                            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.release.«releaseConfId»" moduleId="org.eclipse.cdt.core.settings" name="Release">
+                            <storageModule buildSystemId="de.marw.cmake4eclipse.mbs.cmake4eclipse" id="cmake4eclipse.mbs.config.release.«releaseConfId»" moduleId="org.eclipse.cdt.core.settings" name="Release">
                                 <externalSettings/>
                                 <extensions>
                                     <extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -185,58 +248,37 @@ final class XsmpProject {
                                     <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
                                     <extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
                                     <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-                                    <extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
                                     <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
                                 </extensions>
                             </storageModule>
                             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
-                                <configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.«releaseConfId»" name="Release" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
+                                <configuration buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.«releaseConfId»" name="Release" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
                                     <folderInfo id="cmake4eclipse.mbs.config.release.«releaseConfId»." name="/" resourcePath="">
                                         <toolChain id="cmake4eclipse.mbs.config.release.toolChain.«Math.abs(random.nextInt())»" name="CMake driven" superClass="cmake4eclipse.mbs.config.release.toolChain">
                                             <targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.«Math.abs(random.nextInt())»" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-                                            <builder buildPath="/«name»/build/Release" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-                                                <inputType id="cmake4eclipse.mbs.inputType.c.«releaseCId»" superClass="cmake4eclipse.mbs.inputType.c"/>
-                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«releaseCppId»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
+                                            <builder autoBuildTarget="all" buildPath="/«name»/_build/Release" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="cmake4eclipse.mbs.builder.«Math.abs(random.nextInt())»" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cmake4eclipse.mbs.builder"/>
+                                            <tool id="cmake4eclipse.mbs.toolchain.tool.dummy.«Math.abs(random.nextInt())»" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
+                                                <inputType id="cmake4eclipse.mbs.inputType.c.«Math.abs(random.nextInt())»" superClass="cmake4eclipse.mbs.inputType.c"/>
+                                                <inputType id="cmake4eclipse.mbs.inputType.cpp.«Math.abs(random.nextInt())»" superClass="cmake4eclipse.mbs.inputType.cpp"/>
                                             </tool>
                                         </toolChain>
                                     </folderInfo>
                                 </configuration>
                             </storageModule>
-                            <storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings" rootDir="">
+                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+                            <storageModule buildDir="_build/${ConfigName}" dirtyTs="«Math.abs(random.nextInt())»" moduleId="de.marw.cmake4eclipse.mbs.settings">
                                 <options/>
                             </storageModule>
-                            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
                         </cconfiguration>
                     </storageModule>
                     <storageModule moduleId="cdtBuildSystem" version="4.0.0">
                         <project id="«name».cmake4eclipse.mbs.projectType.«Math.abs(random.nextInt())»" name="Cmake4eclipse" projectType="cmake4eclipse.mbs.projectType"/>
                     </storageModule>
                     <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-                    <storageModule moduleId="refreshScope" versionNumber="2">
-                        <configuration configurationName="Debug">
-                            <resource resourceType="PROJECT" workspacePath="/«name»"/>
-                        </configuration>
-                        <configuration configurationName="Release">
-                            <resource resourceType="PROJECT" workspacePath="/«name»"/>
-                        </configuration>
-                    </storageModule>
+                    <storageModule moduleId="refreshScope" versionNumber="2"/>
                     <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-                    <storageModule moduleId="scannerConfiguration">
-                        <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.c.«debugCId»">
-                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                        </scannerConfigBuildInfo>
-                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.debug.«debugConfId»;cmake4eclipse.mbs.config.debug.«debugConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«debugCmakeId»;cmake4eclipse.mbs.inputType.cpp.«debugCppId»">
-                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                        </scannerConfigBuildInfo>
-                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.c.«releaseCId»">
-                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                        </scannerConfigBuildInfo>
-                        <scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.«releaseConfId»;cmake4eclipse.mbs.config.release.«releaseConfId».;cmake4eclipse.mbs.toolchain.tool.dummy.«releaseCmakeId»;cmake4eclipse.mbs.inputType.cpp.«releaseCppId»">
-                            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-                        </scannerConfigBuildInfo>
-                    </storageModule>
+                    <storageModule moduleId="scannerConfiguration"/>
+                    <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
                 </cproject>
             ''')
         ])

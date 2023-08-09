@@ -59,15 +59,6 @@ class SimSatComponentGenerator extends ComponentGenerator {
 
     }
 
-    protected override CharSequence initializeBase(Component c) {
-        val base = c.base()
-        if (base !== null)
-            '''
-                // Base class initialization
-                «base»(name, description, parent, simulator)
-            '''
-    }
-
     protected override List<CharSequence> bases(Component e) {
         val bases = super.bases(e)
 
@@ -75,16 +66,12 @@ class SimSatComponentGenerator extends ComponentGenerator {
             bases += '''public virtual ::esa::ecss::smp::cdk::Composite'''
         if (e.member.exists[it instanceof Reference])
             bases += '''public virtual ::esa::ecss::smp::cdk::Aggregate'''
-        // if (e.useDynamicInvocation)
-        // bases += '''::WithOperations'''
         if (e.member.exists[it instanceof EventSource])
             bases += '''public virtual ::esa::ecss::smp::cdk::EventProvider'''
         if (e.member.exists[it instanceof EventSink])
             bases += '''public virtual ::esa::ecss::smp::cdk::EventConsumer'''
         if (e.member.exists[it instanceof EntryPoint])
             bases += '''public virtual ::esa::ecss::smp::cdk::EntryPointPublisher'''
-        // if (e instanceof Model && e.member.filter(Field).exists[it.isFailureField])
-        // bases += '''::WithFailures'''
         return bases;
     }
 

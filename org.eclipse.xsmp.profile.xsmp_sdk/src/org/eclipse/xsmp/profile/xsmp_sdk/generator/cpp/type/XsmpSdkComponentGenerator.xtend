@@ -11,6 +11,8 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.FieldHelper
 import org.eclipse.xsmp.xcatalogue.Component
@@ -26,20 +28,244 @@ import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
 import org.eclipse.xsmp.xcatalogue.Reference
 import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
+import org.eclipse.xsmp.xcatalogue.VisibilityKind
 
 class XsmpSdkComponentGenerator extends ComponentGenerator {
 
     @Inject extension FieldHelper
 
-    override collectIncludes(Component type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
-        acceptor.userHeader("Xsmp/" + type.eClass.name + ".h")
-        if (type.useDynamicInvocation) {
+    override collectIncludes(Component it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
+
+        acceptor.userSource("Xsmp/ComponentHelper.h")
+        if (base === null)
+            acceptor.userHeader("Xsmp/" + eClass.name + ".h")
+        if (useDynamicInvocation) {
             acceptor.systemHeader("map")
             acceptor.userSource("Smp/IPublication.h")
             acceptor.userSource("Xsmp/Request.h")
         }
+        if (member.exists[it instanceof Container])
+            acceptor.userHeader("Xsmp/Composite.h")
+        if (member.exists[it instanceof Reference])
+            acceptor.userHeader("Xsmp/Aggregate.h")
+        if (member.exists[it instanceof EventSource])
+            acceptor.userHeader("Xsmp/EventProvider.h")
+        if (member.exists[it instanceof EventSink])
+            acceptor.userHeader("Xsmp/EventConsumer.h")
+        if (member.exists[it instanceof EntryPoint])
+            acceptor.userHeader("Xsmp/EntryPointPublisher.h")
+        if (it instanceof Model && member.exists[it instanceof Field && (it as Field).isFailure])
+            acceptor.userHeader("Xsmp/FallibleModel.h")
+    }
+
+    override protected generateHeaderBody(Component it) {
+        '''
+            «comment»
+            class «name»: public «nameGen» {
+            public:
+                /// Re-use parent constructors
+                using «nameGen»::«nameGen»;
+                
+                /// Virtual destructor to release memory.
+                ~«name»() noexcept override = default;
+                
+            private:
+                // visibility to call DoPublish/DoConfigure/DoConnect/DoDisconnect
+                friend class ::Xsmp::Component::Helper;
+                
+                /// Publish fields, operations and properties of the model.
+                /// @param receiver Publication receiver.
+                void DoPublish(::Smp::IPublication* receiver);
+                
+                /// Request for configuration.
+                /// @param logger Logger to use for log messages during Configure().
+                /// @param linkRegistry Link Registry to use for registration of
+                ///         links created during Configure() or later.
+                void DoConfigure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry);
+                
+                /// Connect model to simulator.
+                /// @param simulator Simulation Environment that hosts the model.
+                ///
+                void DoConnect( ::Smp::ISimulator* simulator);
+                
+                /// Disconnect model to simulator.
+                /// @throws Smp::InvalidComponentState
+                void DoDisconnect();
+            
+                «declareMembers(VisibilityKind.PRIVATE)»
+            };
+        '''
+    }
+
+    override protected generateHeaderGenBody(Component it, boolean useGenPattern) {
+        '''
+            «IF useGenPattern»
+                // forward declaration of user class
+                class «name»;
+            «ENDIF»
+            «uuidDeclaration»
+            
+            «comment»
+            class «name(useGenPattern)»«FOR base : bases BEFORE ": " SEPARATOR ", "»«base»«ENDFOR»{
+            
+            «IF useGenPattern»
+                friend class «id»;
+            «ENDIF»
+            
+            public:
+            «constructorDeclaration(useGenPattern)»
+            
+            // ----------------------------------------------------------------------------------
+            // -------------------------------- IComponent ---------------------------------
+            // ----------------------------------------------------------------------------------
+            
+            /// Publish fields, operations and properties of the model.
+            /// @param receiver Publication receiver.
+            void Publish(::Smp::IPublication* receiver) override;
+            
+            /// Request for configuration.
+            /// @param logger Logger to use for log messages during Configure().
+            /// @param linkRegistry Link Registry to use for registration of
+            ///         links created during Configure() or later.
+            void Configure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) override;
+            
+            /// Connect model to simulator.
+            /// @param simulator Simulation Environment that hosts the model.
+            ///
+            void Connect( ::Smp::ISimulator* simulator) override;
+            
+            /// Disconnect model to simulator.
+            /// @throws Smp::InvalidComponentState
+            void Disconnect() override;
+            
+            /// Return the Universally Unique Identifier of the Model.
+            /// @return Universally Unique Identifier of the Model.
+            const Smp::Uuid& GetUuid() const override;
+            
+            «IF useDynamicInvocation»
+                // ----------------------------------------------------------------------------------
+                // --------------------------- IDynamicInvocation ---------------------------
+                // ----------------------------------------------------------------------------------
+                using RequestHandlers = std::map<std::string, std::function<void(«name(useGenPattern)»*, ::Smp::IRequest*)>>;
+                static RequestHandlers requestHandlers;
+                static RequestHandlers InitRequestHandlers();
+                
+                /// Invoke the operation for the given request.
+                /// @param request Request object to invoke.
+                void Invoke(::Smp::IRequest* request) override;
+                
+            «ENDIF»
+            
+                «declareMembersGen(useGenPattern, VisibilityKind.PUBLIC)»
+            };
+        '''
+    }
+
+    override protected generateSourceGenBody(Component it, boolean useGenPattern) {
+        val base = base()
+        '''
+            //--------------------------- Constructor -------------------------
+            «name(useGenPattern)»::«name(useGenPattern)»(
+                ::Smp::String8 name,
+                ::Smp::String8 description,
+                ::Smp::IObject* parent,
+                ::Smp::ISimulator* simulator) «FOR i : initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+            {
+                «FOR f : member»
+                    «construct(f, useGenPattern)»
+                «ENDFOR»
+            }
+            
+            /// Virtual destructor that is called by inherited classes as well.
+            «name(useGenPattern)»::~«name(useGenPattern)»() {
+                «FOR f : member»
+                    «f.finalize»
+                «ENDFOR»
+            }
+            
+            void «name(useGenPattern)»::Publish(::Smp::IPublication* receiver) {
+                «IF base !== null»
+                    // Call parent class implementation first
+                    «base»::Publish(receiver);
+                «ENDIF»
+                
+                «FOR m : member»«m.Publish»«ENDFOR»
+                // Call user DoPublish if any
+                ::Xsmp::Component::Helper::Publish<«id»>(this, receiver);
+            }
+            
+            
+            
+            void «name(useGenPattern)»::Configure(::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) {
+                «IF base !== null»
+                    // Call parent implementation first
+                    «base»::Configure(logger, linkRegistry);
+                    
+                «ENDIF»
+                // Call user DoConfigure if any
+                ::Xsmp::Component::Helper::Configure<«id»>(this, logger, linkRegistry);
+            }
+            
+            
+            void «name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
+                «IF base !== null»
+                    // Call parent implementation first
+                    «base»::Connect(simulator);
+                    
+                «ENDIF»
+                // Call user DoConnect if any
+                ::Xsmp::Component::Helper::Connect<«id»>(this, simulator);
+            }
+            
+            void «name(useGenPattern)»::Disconnect() {
+                // Call user DoDisconnect if any
+                ::Xsmp::Component::Helper::Disconnect<«id»>(this);
+                «IF base !== null»
+                    
+                    // Call parent implementation last, to remove references to the Simulator and its services
+                    «base»::Disconnect();
+                «ENDIF»
+            }
+            
+            
+            «IF useDynamicInvocation»
+                «name(useGenPattern)»::RequestHandlers «name(useGenPattern)»::requestHandlers = InitRequestHandlers();
+                
+                «name(useGenPattern)»::RequestHandlers «name(useGenPattern)»::InitRequestHandlers()
+                {
+                    RequestHandlers handlers;
+                    «FOR op : member.filter(Operation).filter[isInvokable]»
+                        «generateRqHandlerParam(op, useGenPattern)»
+                    «ENDFOR»
+                    return handlers;
+                }
+                
+                void «name(useGenPattern)»::Invoke(::Smp::IRequest* request) {
+                    if (request == nullptr) {
+                        return;
+                    }
+                    auto handler = requestHandlers.find(request->GetOperationName());
+                    if (handler != requestHandlers.end()) {
+                        handler->second(this, request);
+                    }
+                    else {
+                        «IF base !== null»
+                            // pass the request down to the base model
+                            «base»::Invoke(request);
+                        «ELSE»
+                            «InvokeFallback»
+                        «ENDIF»
+                    }
+                }
+                
+            «ENDIF»
+            const Smp::Uuid& «name(useGenPattern)»::GetUuid() const {
+                return Uuid_«name»;
+            }
+            «uuidDefinition»
+            «defineMembersGen(useGenPattern)»
+        '''
     }
 
     override protected declareGen(Component type, Field it, boolean useGenPattern) {
@@ -47,31 +273,34 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
         if (isCdkField)
             '''
                 «comment»
-                «IF isMutable»mutable «ENDIF»::Xsmp::Field<«type.id»>«IF transient»::transient«ENDIF»«IF input»::input«ENDIF»«IF output»::output«ENDIF»«IF failure»::failure«ENDIF»«IF forcible»::forcible«ENDIF» «name»;
+                «IF isMutable»mutable «ENDIF»::Xsmp::Field<«it.type.id»>«IF transient»::transient«ENDIF»«IF input»::input«ENDIF»«IF output»::output«ENDIF»«IF forcible»::forcible«ENDIF»«IF failure»::failure«ENDIF» «name»;
             '''
         else
             super.declareGen(type, it, useGenPattern)
     }
 
     override protected base(Component e) {
-        var base = '''::Xsmp::«e.eClass.name»<«IF e.base !==null»«e.base.id»«ENDIF»>'''
+        if (e.base !== null)
+            '''«e.base.id»'''
+        else
+            '''::Xsmp::«e.eClass.name»'''
+    }
 
+    protected override List<CharSequence> bases(Component e) {
+        val bases = super.bases(e)
         if (e.member.exists[it instanceof Container])
-            base += '''::WithContainers'''
+            bases += '''public virtual ::Xsmp::Composite'''
         if (e.member.exists[it instanceof Reference])
-            base += '''::WithReferences'''
-        if (e.useDynamicInvocation)
-            base += '''::WithOperations'''
+            bases += '''public virtual ::Xsmp::Aggregate'''
         if (e.member.exists[it instanceof EventSource])
-            base += '''::WithEventSources'''
+            bases += '''public virtual ::Xsmp::EventProvider'''
         if (e.member.exists[it instanceof EventSink])
-            base += '''::WithEventSinks'''
+            bases += '''public virtual ::Xsmp::EventConsumer'''
         if (e.member.exists[it instanceof EntryPoint])
-            base += '''::WithEntryPoints'''
-        if (e instanceof Model && e.member.filter(Field).exists[it.isFailureField])
-            base += '''::WithFailures'''
-
-        return base
+            bases += '''public virtual ::Xsmp::EntryPointPublisher'''
+        if (e.member.exists[it instanceof Field && (it as Field).isFailure])
+            bases += '''public virtual ::Xsmp::FallibleModel'''
+        return bases;
     }
 
     protected override CharSequence generateRqHandlerParam(NamedElementWithMembers container, Operation o,

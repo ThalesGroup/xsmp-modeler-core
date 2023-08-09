@@ -11,11 +11,12 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member
 
 import com.google.inject.Inject
+import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.FieldGenerator
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.FieldHelper
+import org.eclipse.xsmp.xcatalogue.Component
 import org.eclipse.xsmp.xcatalogue.Field
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkFieldGenerator extends FieldGenerator {
 
@@ -24,7 +25,7 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
     override collectIncludes(Field it, IncludeAcceptor acceptor) {
         super.collectIncludes(it, acceptor)
 
-        if (isCdkField)
+        if (isCdkField && eContainer instanceof Component)
             acceptor.userHeader("Xsmp/Field.h")
     }
 
@@ -42,7 +43,7 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
         if (isCdkField)
             '''
                 // «name» initialization
-                «name»{this, «type.uuid()», "«name»", «description()», «viewKind»«IF ^default !== null», «^default.generateExpression()»«ENDIF»}
+                «name»{simulator->GetTypeRegistry(), «type.uuid()», "«name»", «description()», this, «viewKind»«IF ^default !== null», «^default.generateExpression()»«ENDIF»}
             '''
         else
             super.initialize(container, it, useGenPattern)

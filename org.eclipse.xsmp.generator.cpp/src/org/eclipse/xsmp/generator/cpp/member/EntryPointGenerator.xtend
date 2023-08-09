@@ -18,7 +18,7 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
 
     override declare(NamedElementWithMembers parent, EntryPoint it) {
         '''
-            virtual void _«name»() override;
+            void _«name»() override;
         '''
     }
 
@@ -50,8 +50,4 @@ class EntryPointGenerator extends AbstractMemberGenerator<EntryPoint> {
         '''
     }
 
-    override Publish(EntryPoint it) {
-        // Publish EntryPoint «element.name»
-        // receiver->PublishOperation("«element.name»", «element.description()», «element.viewKind»);
-    }
 }

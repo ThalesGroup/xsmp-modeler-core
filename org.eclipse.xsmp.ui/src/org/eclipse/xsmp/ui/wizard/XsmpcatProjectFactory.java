@@ -13,11 +13,8 @@ package org.eclipse.xsmp.ui.wizard;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.cdt.build.core.scannerconfig.ScannerConfigBuilder;
-import org.eclipse.cdt.build.core.scannerconfig.ScannerConfigNature;
 import org.eclipse.cdt.core.CCProjectNature;
 import org.eclipse.cdt.core.CProjectNature;
-import org.eclipse.cdt.managedbuilder.core.ManagedCProjectNature;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -53,11 +50,6 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
   {
     getProjectNatures().add(CProjectNature.C_NATURE_ID);
     getProjectNatures().add(CCProjectNature.CC_NATURE_ID);
-    getProjectNatures().add(ManagedCProjectNature.MNG_NATURE_ID);
-    getProjectNatures().add(ScannerConfigNature.NATURE_ID);
-
-    getBuilderIds().add(ScannerConfigBuilder.BUILDER_ID);
-    getBuilderIds().add(ManagedCProjectNature.BUILDER_ID);
   }
 
   public XsmpcatProjectFactory()
@@ -83,9 +75,9 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
 
   public List<String> getTools()
   {
-    if (this.tools == null)
+    if (tools == null)
     {
-      this.tools = Lists.newArrayList();
+      tools = Lists.newArrayList();
     }
     return tools;
   }

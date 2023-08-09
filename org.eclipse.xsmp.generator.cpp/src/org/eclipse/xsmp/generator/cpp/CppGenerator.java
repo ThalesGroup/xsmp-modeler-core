@@ -155,7 +155,7 @@ public class CppGenerator extends AbstractGenerator
     if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
     {
       generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
-              typeGenerator.generateSource(type, useGenerationGapPattern, acceptor, cat));
+              typeGenerator.generateSource(type, useGenerationGapPattern, cat));
     }
 
     // generate header in include-gen directory
@@ -208,34 +208,21 @@ public class CppGenerator extends AbstractGenerator
   @SuppressWarnings("rawtypes")
   protected AbstractFileGenerator getGenerator(Type t)
   {
-    switch (t.eClass().getClassifierID())
+    return switch (t.eClass().getClassifierID())
     {
-      case XcataloguePackage.ARRAY:
-        return arrayGenerator;
-      case XcataloguePackage.ENUMERATION:
-        return enumerationGenerator;
-      case XcataloguePackage.FLOAT:
-        return floatGenerator;
-      case XcataloguePackage.INTEGER:
-        return integerGenerator;
-      case XcataloguePackage.STRING:
-        return stringGenerator;
-      case XcataloguePackage.STRUCTURE:
-        return structureGenerator;
-      case XcataloguePackage.CLASS:
-        return classGenerator;
-      case XcataloguePackage.EXCEPTION:
-        return exceptionGenerator;
-      case XcataloguePackage.INTERFACE:
-        return interfaceGenerator;
-      case XcataloguePackage.MODEL:
-      case XcataloguePackage.SERVICE:
-        return componentGenerator;
-      case XcataloguePackage.NATIVE_TYPE:
-        return nativeTypeGenerator;
-      default:
-        return null;
-    }
+      case XcataloguePackage.ARRAY -> arrayGenerator;
+      case XcataloguePackage.ENUMERATION -> enumerationGenerator;
+      case XcataloguePackage.FLOAT -> floatGenerator;
+      case XcataloguePackage.INTEGER -> integerGenerator;
+      case XcataloguePackage.STRING -> stringGenerator;
+      case XcataloguePackage.STRUCTURE -> structureGenerator;
+      case XcataloguePackage.CLASS -> classGenerator;
+      case XcataloguePackage.EXCEPTION -> exceptionGenerator;
+      case XcataloguePackage.INTERFACE -> interfaceGenerator;
+      case XcataloguePackage.MODEL, XcataloguePackage.SERVICE -> componentGenerator;
+      case XcataloguePackage.NATIVE_TYPE -> nativeTypeGenerator;
+      default -> null;
+    };
   }
 
   /**

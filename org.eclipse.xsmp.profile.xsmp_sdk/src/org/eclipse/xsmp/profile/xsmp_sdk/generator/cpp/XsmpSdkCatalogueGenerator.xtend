@@ -23,9 +23,8 @@ class XsmpSdkCatalogueGenerator extends CatalogueGenerator {
             simulator->RegisterFactory(::Xsmp::Factory::Create<«id»>(
                                 "«name»", // name
                                 «description()», // description
-                                ::simulator, // simulator
-                                «uuid()», // UUID
-                                "«id»"// type name
+                                simulator, // simulator
+                                «uuid()» // UUID
                                 ));
         '''
     }
