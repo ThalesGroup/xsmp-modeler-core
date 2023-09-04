@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -58,7 +58,7 @@ class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
             
                 // Register the Literals of the Enumeration
                 «FOR l : literal»
-                    typeState->AddLiteral("«l.name»", «l.description()», «l.value.getInt32()»);
+                    typeState->AddLiteral("«l.name»", «l.description()», static_cast<::Smp::Int32>(«l.id»));
                 «ENDFOR»
                 }
                 «uuidDefinition»

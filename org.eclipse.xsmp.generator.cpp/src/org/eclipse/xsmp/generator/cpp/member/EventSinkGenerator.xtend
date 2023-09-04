@@ -29,7 +29,7 @@ class EventSinkGenerator extends AbstractMemberGenerator<EventSink> {
 
     override declare(NamedElementWithMembers parent, EventSink it) {
         '''
-            virtual void _«name»(«eventArgs») override;
+            void _«name»(«eventArgs») override;
         '''
     }
 

@@ -245,7 +245,7 @@ class GeneratorUtil extends XsmpUtil {
         if (n.description === null)
             '''""'''
         else
-            '''«FOR s : n.description.split("\n") SEPARATOR '\n'»"«s.replace("\\","\\\\").replace("\"","\\\"")»"«ENDFOR»'''
+            '''«FOR s : n.description.split("\n") SEPARATOR "\\n\"\n"»"«s.replace("\\","\\\\").replace("\"","\\\"")»«ENDFOR»"'''
     }
 
     def CharSequence comment(NamedElement elem) {
@@ -298,16 +298,20 @@ class GeneratorUtil extends XsmpUtil {
     }
 
     def dispatch String include(Document type) {
-        '''#include "«type.name()».h"'''
+        '''#include "«type.fqn.toString("/")».h"'''
     }
 
-    def CharSequence viewKind(NamedElement t) {
+    def CharSequence viewKind(NamedElement t, CharSequence defaultView) {
 
         var value = t.attributeValue(QualifiedNames.Attributes_View)
         if (value !== null)
             '''«value.doGenerateExpression()»'''
         else
-            '''::Smp::ViewKind::VK_None'''
+            defaultView
+    }
+
+    def CharSequence viewKind(NamedElement t) {
+        t.viewKind('''::Smp::ViewKind::VK_None''')
     }
 
     protected def CharSequence generateUUID(Type t) {
@@ -322,10 +326,6 @@ class GeneratorUtil extends XsmpUtil {
     }
 
     def CharSequence uuidDefinition(Type it) {
-        '''
-            /// Definition of the Uuid constexpr for «name»
-            constexpr Smp::Uuid Uuid_«name»;
-        '''
     }
 
     def CharSequence generatePrimitiveKind(Type it) {

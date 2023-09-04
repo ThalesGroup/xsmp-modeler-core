@@ -26,7 +26,7 @@ class XsmpSdkEventSinkGenerator extends EventSinkGenerator {
         val arg = eventType
         '''
             // Event Sink: «name»
-            «name»{new ::Xsmp::EventSink<«IF arg !== null»«arg.id»«ENDIF»>("«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1«IF arg !==null», std::placeholders::_2«ENDIF»)«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF»)}
+            «name»{new ::Xsmp::EventSink<«IF arg !== null»«arg.id»«ENDIF»>("«name»", «description()», this, &«parent.name(useGenPattern)»::_«name»«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF»)}
         '''
     }
 

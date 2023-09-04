@@ -100,5 +100,35 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.simsat</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.simsat.cli</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.profile.simsat.ui</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.tool.python</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xsmp</groupId>
+			<artifactId>org.eclipse.xsmp.tool.python.ui</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>

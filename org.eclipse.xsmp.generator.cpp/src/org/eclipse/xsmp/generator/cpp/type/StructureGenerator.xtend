@@ -38,12 +38,13 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
                 «declareMembersGen(useGenPattern,  VisibilityKind.PUBLIC)»
                 
                 «IF hasConstructor»
-                «name(useGenPattern)»();
-                ~«name(useGenPattern)»() noexcept;
-                «name(useGenPattern)»(const «name(useGenPattern)» &);
-                «name(useGenPattern)»(«name(useGenPattern)» &&);
-                «name(useGenPattern)»& operator=(const «name(useGenPattern)» &);
-                
+                    «name(useGenPattern)»(«FOR f : member.filter(Field) SEPARATOR ", "»«f.type.id» «f.name» = «IF f.^default !== null»«f.^default.generateExpression()»«ELSE»{}«ENDIF»«ENDFOR»):
+                            «FOR f : member.filter(Field) SEPARATOR ", "»«f.name»(«f.name»)«ENDFOR» {}
+                    ~«name(useGenPattern)»() = default;
+                    «name(useGenPattern)»(const «name(useGenPattern)» &) = default;
+                    «name(useGenPattern)»(«name(useGenPattern)» &&) = default;
+                    «name(useGenPattern)»& operator=(const «name(useGenPattern)» &) = default;
+                    
                 «ENDIF»
                 static void _Register(::Smp::Publication::ITypeRegistry* registry);
             };
@@ -61,7 +62,6 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
 
     override protected generateSourceGenBody(Structure it, boolean useGenPattern) {
         val fields = assignableFields
-        val hasConstructor = fields.exists[^default !== null]
         '''
             void «name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
@@ -85,18 +85,6 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
                         );  
                 «ENDFOR»
             }
-            «IF hasConstructor»
-                «name(useGenPattern)»::«name(useGenPattern)»()«FOR f : initializerList(fields, useGenPattern) BEFORE ':' SEPARATOR ", "»«f»«ENDFOR» 
-                {
-                 «FOR f : member»
-                     «construct(f, useGenPattern)»
-                 «ENDFOR»
-                }
-                «name(useGenPattern)»::~«name(useGenPattern)»() noexcept = default;
-                «name(useGenPattern)»::«name(useGenPattern)»(const «name(useGenPattern)» &) = default;
-                «name(useGenPattern)»::«name(useGenPattern)»(«name(useGenPattern)» &&) = default;
-                «name(useGenPattern)»& «name(useGenPattern)»::operator=(const «name(useGenPattern)» &) = default;
-            «ENDIF»
             «defineMembersGen(useGenPattern)»
             
             «uuidDefinition»

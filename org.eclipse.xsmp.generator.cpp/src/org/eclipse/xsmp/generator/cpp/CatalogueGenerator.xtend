@@ -1,4 +1,14 @@
-package org.eclipse.xsmp.generator.cpp
+/*******************************************************************************
+ * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ ******************************************************************************/
+ package org.eclipse.xsmp.generator.cpp
 
 import java.util.Collections
 import java.util.List
@@ -20,6 +30,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
     override void collectIncludes(Catalogue type, IncludeAcceptor acceptor) {
 
         acceptor.userHeader("Smp/ISimulator.h")
+        acceptor.systemSource("unordered_set")
 
         type.eAllContents.filter(LanguageType).filter[!(it instanceof ValueReference)].forEach[acceptor.source(it)]
         type.dependentPackages().forEach[acceptor.userSource(it.name() + ".h")]
@@ -38,20 +49,10 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             simulator->AddService( new «id»(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator // parent
+                                simulator, // parent
+                                simulator // simulator
                                 ));
         '''
-    }
-
-    protected def dispatch CharSequence unregisterComponent(Model model) {
-        // delete of Model Factories is the responsibility of the simulator
-        /*'''
-            // Delete Factory for the Model «model.name»
-            delete «globalNamespaceName»::simulator->GetFactory(«model.uuidQfn»);
-        '''*/
-    }
-
-    protected def dispatch CharSequence unregisterComponent(Service service) {
     }
 
     protected def dispatch CharSequence register(ValueType t) {
@@ -112,8 +113,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             extern "C" {                        
                         /// Global Finalise function of Package «name».
                         /// @return True if finalisation was successful, false otherwise.
-                        DLL_EXPORT bool Finalise() {
-                            return Finalise_«name»();
+                        DLL_EXPORT bool Finalise(::Smp::ISimulator* simulator) {
+                            return Finalise_«name»(simulator);
                         }
             }
         '''
@@ -132,8 +133,9 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
                 /// Finalise Package «name».
+                /// @param simulator Optional Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»();
+                bool Finalise_«name»(::Smp::ISimulator* simulator = nullptr);
             }
         '''
     }
@@ -151,8 +153,9 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
                 /// Finalise Package «name».
+                /// @param simulator Optional Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»();
+                bool Finalise_«name»(::Smp::ISimulator* simulator = nullptr);
             }
         '''
     }
@@ -203,12 +206,6 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
         t.getAssignableFields().map[type]
     }
 
-
-
-    def CharSequence globalNamespaceName() {
-        ''''''
-    }
-
     override protected generateSourceGenBody(Catalogue it, boolean useGenPattern) {
 
         // list of dependent packages
@@ -222,10 +219,25 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             // ----------------------------- Global variables ------------------------------
             // ----------------------------------------------------------------------------------
             
-            namespace «globalNamespaceName»{
-                /// Simulator.
-                ::Smp::ISimulator* simulator = nullptr;
+            namespace {
+            /// Simulators set.
+            std::unordered_set<::Smp::ISimulator*> simulators { };
+            «IF !deps.empty»
+            /// Helper function to call Finalise function
+            bool CallFinalise(bool (*f)(::Smp::ISimulator*), ::Smp::ISimulator *simulator) {
+                return f(simulator);
             }
+            bool CallFinalise(bool (*f)(), ::Smp::ISimulator*) {
+                return f();
+            }
+            «ENDIF»
+            } // namespace
+            
+            #if __cplusplus >= 201703L
+                #define MAYBE_UNUSED [[maybe_unused]]
+            #else
+                #define MAYBE_UNUSED
+            #endif
             
             // --------------------------------------------------------------------------------
             // --------------------------- Initialise Function -----------------------------
@@ -239,26 +251,23 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 /// @return True if initialisation was successful, false otherwise.
                 bool Initialise_«name(useGenPattern)»(
                         ::Smp::ISimulator* simulator,
-                        ::Smp::Publication::ITypeRegistry* typeRegistry) {
-                    // Avoid double initialisation
-                    if («globalNamespaceName»::simulator) {
-                        return true;
-                    }
-                    else if (simulator) {
-                        «globalNamespaceName»::simulator = simulator;
-                    }
-                    else     {
+                        MAYBE_UNUSED ::Smp::Publication::ITypeRegistry* typeRegistry) {
+                    // check simulator validity
+                    if (!simulator) {
                         return false;
                     }
+                    // avoid double initialisation
+                    else if (!::simulators.emplace(simulator).second) {
+                        return true;
+                    }
                     
-                    «FOR c : deps BEFORE '''    // Initialisation of dependent Packages
+                    «FOR c : deps BEFORE '''    // Initialisation of dependent Package(s)
                         bool initialised_«name» = true;''' AFTER '''if (!initialised_«name») {
                                 return false;
                             }
                         '''»
                         initialised_«name» &= Initialise_«c.name»(simulator, typeRegistry);
                     «ENDFOR»
-            
             
                     «FOR v : sortedTypes»
                         «v.register»
@@ -280,27 +289,28 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 extern "C"
                 {
                     /// Finalise Package «name(useGenPattern)».
+                    /// @param simulator Simulator.
                     /// @return True if finalisation was successful, false otherwise.
-                    bool Finalise_«name(useGenPattern)»() {
-                        
-                        if («globalNamespaceName»::simulator) {
-                            «FOR cmp : cmps AFTER '''
-                            
-                            '''»
-                                «cmp.unregisterComponent»
-                            «ENDFOR»
-                            «globalNamespaceName»::simulator = nullptr;
+                    bool Finalise_«name(useGenPattern)»(::Smp::ISimulator* simulator) {
+                        // backward compatibility
+                        if (!simulator) {
+                            ::simulators.clear();
                         }
+                        // avoid double finalisation
+                        else if (!::simulators.erase(simulator)) {
+                            return true;
+                        }
+                        
                         «IF deps.empty»
                             return true;
                         «ELSEIF deps.size == 1»
                             // Finalisation of dependent Package
-                            return Finalise_«deps.get(0).name»();
+                            return CallFinalise(Finalise_«deps.get(0).name», simulator);
                         «ELSE»
                             bool result = true;
                             // Finalisation of dependent Packages
                             «FOR c : deps»
-                                result &= Finalise_«c.name»();
+                                result &= CallFinalise(Finalise_«c.name», simulator);
                             «ENDFOR»
                             
                             return result;
@@ -339,10 +349,11 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             extern "C"
             {
                 /// Finalise Package «name».
+                /// @param simulator Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»() {
-                    
-                    return Finalise_«nameGen»() ;
+                bool Finalise_«name»(::Smp::ISimulator* simulator) {
+            
+                    return Finalise_«nameGen»(simulator);
                 }
             }
         '''

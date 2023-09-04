@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.xsmp</groupId>
 	<version>1.1.0-SNAPSHOT</version>
@@ -12,13 +14,13 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>3.0.4</tycho-version>
+		<tycho-version>3.0.5</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
 		<systemProperties></systemProperties>
 		<additionalTestArguments></additionalTestArguments>
-		<jacoco-version>0.8.8</jacoco-version>
+		<jacoco-version>0.8.10</jacoco-version>
 	</properties>
 	<modules>
 		<module>org.eclipse.xsmp.feature</module>
@@ -44,12 +46,15 @@
 		<module>org.eclipse.xsmp.tool.smp</module>
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ui</module>
-        <module>org.eclipse.xsmp.tool.smp.cli</module>
-        <module>org.eclipse.xsmp.profile.simsat</module>
-        <module>org.eclipse.xsmp.profile.simsat.cli</module>
-        <module>org.eclipse.xsmp.profile.simsat.feature</module>
-        <module>org.eclipse.xsmp.profile.simsat.ui</module>
-        <module>org.eclipse.xsmp.vscode_extension</module>
+		<module>org.eclipse.xsmp.tool.smp.cli</module>
+		<module>org.eclipse.xsmp.tool.python</module>
+		<module>org.eclipse.xsmp.tool.python.feature</module>
+		<module>org.eclipse.xsmp.tool.python.ui</module>
+		<module>org.eclipse.xsmp.profile.simsat</module>
+		<module>org.eclipse.xsmp.profile.simsat.cli</module>
+		<module>org.eclipse.xsmp.profile.simsat.feature</module>
+		<module>org.eclipse.xsmp.profile.simsat.ui</module>
+		<module>org.eclipse.xsmp.vscode_extension</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -139,9 +144,6 @@
 								<id>org.eclipse.xtext.logging</id>
 								<versionRange>1.2.24</versionRange>
 							</requirement>
-							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target
-								platform is Luna or later. (backward compatible with kepler and previous
-								versions) see https://bugs.eclipse.org/bugs/show_bug.cgi?id=492149 -->
 							<requirement>
 								<type>eclipse-feature</type>
 								<id>org.eclipse.rcp</id>
@@ -246,10 +248,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<!--
-						Can be removed after first generator execution
-						https://bugs.eclipse.org/bugs/show_bug.cgi?id=480097
-					-->
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho-version}</version>
@@ -258,16 +256,13 @@
 						<useProjectSettings>false</useProjectSettings>
 					</configuration>
 				</plugin>
-				<!-- to skip running (and compiling) tests use commandline flag: -Dmaven.test.skip
-					To skip tests, but still compile them, use: -DskipTests
-					To allow all tests in a pom to pass/fail, use commandline flag: -fae (fail
-					at end) -->
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<configuration>
-						<!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
+						<!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY
+						AUTOFORMATTING -->
 						<argLine>${platformSystemProperties} ${systemProperties} ${moduleProperties} ${additionalTestArguments}</argLine>
 						<failIfNoTests>false</failIfNoTests>
 						<useUIHarness>false</useUIHarness>
@@ -279,7 +274,8 @@
 	<repositories>
 		<repository>
 			<id>codehaus-snapshots</id>
-			<name>disable dead 'Codehaus Snapshots' repository, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
+			<name>disable dead 'Codehaus Snapshots' repository, see
+				https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
 			<url>http://nexus.codehaus.org/snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
@@ -288,8 +284,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<!-- This must be disabled explicitly, otherwise it is enabled by https://github.com/mojohaus/mojo-parent 
-			which is taken from exec-maven-plugin from at least version 1.6.0 -->
 		<repository>
 			<id>ossrh-snapshots</id>
 			<name>ossrh-snapshots</name>
@@ -301,8 +295,6 @@
 			</snapshots>
 			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
-		<!-- This is enabled by /org/sonatype/oss/oss-parent/7 used as parent by 
-			org/xtext/antlr-generator/3.2.1 -->
 		<repository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
@@ -318,7 +310,8 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>codehaus-snapshots</id>
-			<name>disable dead 'Codehaus Snapshots' repository, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
+			<name>disable dead 'Codehaus Snapshots' repository, see
+				https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
 			<url>http://nexus.codehaus.org/snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
@@ -372,7 +365,6 @@
 				<moduleProperties>--add-modules=ALL-SYSTEM</moduleProperties>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>sonar</id>
 			<activation>
@@ -384,7 +376,8 @@
 				<sonar.organization>thalesgroup</sonar.organization>
 				<sonar.projectName>xsmp-modeler-core</sonar.projectName>
 				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-				<sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/org.eclipse.xsmp.report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+				<sonar.coverage.jacoco.xmlReportPaths>
+					${maven.multiModuleProjectDirectory}/org.eclipse.xsmp.report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 			</properties>
 			<build>
 				<plugins>
@@ -404,8 +397,18 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>exclude-under-windows</id>
+			<activation>
+				<os>
+					<family>!windows</family>
+				</os>
+			</activation>
+			<modules>
+				<module>org.eclipse.xsmp.profile.xsmp_sdk.tests</module>
+			</modules>
+		</profile>
 	</profiles>
-	
 	<dependencies>
 	</dependencies>
 </project>

@@ -13,9 +13,7 @@ package org.eclipse.xsmp.profile.simsat.generator.cpp
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Service
 import org.eclipse.xsmp.xcatalogue.Model
-import org.eclipse.xsmp.xcatalogue.Component
 
 class SimSatCatalogueGenerator extends CatalogueGenerator {
 
@@ -25,37 +23,17 @@ class SimSatCatalogueGenerator extends CatalogueGenerator {
             simulator->RegisterFactory( new ::esa::ecss::smp::cdk::Factory<«id»>(
                                 "«name»", // name
                                 «description()», // description
-                                «globalNamespaceName»::simulator, // simulator
+                                simulator, // simulator
                                 «uuid()» // UUID
                                 ));
         '''
     }
 
-    override dispatch CharSequence registerComponent(Service it) {
-        '''
-            // Register Service «name»
-            simulator->AddService( new «id»(
-                                "«name»", // name
-                                «description()», // description
-                                «globalNamespaceName»::simulator, // parent
-                                «globalNamespaceName»::simulator // parent
-                                ));
-        '''
-    }
+    override collectIncludes(Catalogue it, IncludeAcceptor acceptor) {
+        super.collectIncludes(it, acceptor)
 
-    override collectIncludes(Catalogue type, IncludeAcceptor acceptor) {
-        super.collectIncludes(type, acceptor)
-
-        if (type.requireFactory)
+        if (requireFactory)
             acceptor.userSource("esa/ecss/smp/cdk/Factory.h")
     }
 
-    override CharSequence globalNamespaceName() {
-        ''''''
-    }
-    
-    override protected unregisterComponent(Component model) {
-        // Done by the simulator
-    }
-    
 }

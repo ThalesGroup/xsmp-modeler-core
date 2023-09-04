@@ -23,7 +23,7 @@ class FieldHelper {
     extension XsmpUtil
 
     /**
-     * Mdk field are output or failure or forcible
+     * Cdk field are output or failure or forcible
      */
     def boolean isCdkField(Field f) {
         return f.output || f.isFailure || f.isForcible || f.type.isCdkFieldType

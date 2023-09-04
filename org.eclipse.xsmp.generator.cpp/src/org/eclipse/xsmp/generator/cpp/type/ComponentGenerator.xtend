@@ -26,7 +26,11 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             «comment»
             class «name»: public «nameGen» {
             public:
-                «constructorDeclaration(false)»
+                /// Re-use parent constructors
+                using «nameGen»::«nameGen»;
+                
+                /// Virtual destructor to release memory.
+                ~«name»() noexcept override = default;
                 
             private:
                 // «nameGen» call DoPublish/DoConfigure/DoConnect/DoDisconnect
@@ -64,14 +68,16 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             // ------------------------------------------------------------------------------------
             
             
-            /// Constructor setting name, description and parent.
+            /// Constructor setting name, description, parent and simulator.
             /// @param name Name of new model instance.
             /// @param description Description of new model instance.
             /// @param parent Parent of new model instance.
+            /// @param simulator The simulator instance.
             «name»(
                     ::Smp::String8 name,
                     ::Smp::String8 description,
-                    ::Smp::IObject* parent);
+                    ::Smp::IObject* parent,
+                    ::Smp::ISimulator* simulator);
             /// deleted copy constructor
             «name»(const «name»&) = delete;
             /// deleted move constructor
@@ -89,16 +95,6 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
     override protected generateSourceBody(Component type, boolean useGenPattern) {
         if (useGenPattern)
             '''
-                «type.name»::«type.name»(
-                        ::Smp::String8 name,
-                        ::Smp::String8 description,
-                        ::Smp::IObject* parent)
-                        : «type.nameGen»::«type.nameGen»(name, description, parent) {
-                }
-                
-                «type.name»::~«type.name»() {
-                }
-                
                 void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
                 }
                 
@@ -142,26 +138,26 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             
             /// Publish fields, operations and properties of the model.
             /// @param receiver Publication receiver.
-            virtual void Publish(::Smp::IPublication* receiver) override;
+            void Publish(::Smp::IPublication* receiver) override;
             
             /// Request for configuration.
             /// @param logger Logger to use for log messages during Configure().
             /// @param linkRegistry Link Registry to use for registration of
             ///         links created during Configure() or later.
-            virtual void Configure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) override;
+            void Configure( ::Smp::Services::ILogger* logger, ::Smp::Services::ILinkRegistry* linkRegistry) override;
             
             /// Connect model to simulator.
             /// @param simulator Simulation Environment that hosts the model.
             ///
-            virtual void Connect( ::Smp::ISimulator* simulator) override;
+            void Connect( ::Smp::ISimulator* simulator) override;
             
             /// Disconnect model to simulator.
             /// @throws Smp::InvalidComponentState
-            virtual void Disconnect() override;
+            void Disconnect() override;
             
             /// Return the Universally Unique Identifier of the Model.
             /// @return Universally Unique Identifier of the Model.
-            virtual const Smp::Uuid& GetUuid() const override;
+            const Smp::Uuid& GetUuid() const override;
             
             «IF useDynamicInvocation»
                 // ----------------------------------------------------------------------------------
@@ -173,7 +169,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 
                 /// Invoke the operation for the given request.
                 /// @param request Request object to invoke.
-                virtual void Invoke(::Smp::IRequest* request) override;
+                void Invoke(::Smp::IRequest* request) override;
                 
             «ENDIF»
             private:
@@ -192,7 +188,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
         if (base !== null)
             '''
                 // Base class initialization
-                «base»(name, description, parent)
+                «base»(name, description, parent, simulator)
             '''
     }
 
@@ -215,7 +211,8 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             «name(useGenPattern)»::«name(useGenPattern)»(
                 ::Smp::String8 name,
                 ::Smp::String8 description,
-                ::Smp::IObject* parent) «FOR i : initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
+                ::Smp::IObject* parent,
+                ::Smp::ISimulator* simulator) «FOR i : initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
                 «FOR f : member»
                     «construct(f, useGenPattern)»
@@ -254,7 +251,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
             
             void «name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
                 «IF base !== null»
-                    // Call CDK implementation first
+                    // Call parent implementation first
                     «base»::Connect(simulator);
                     
                 «ENDIF»
@@ -352,6 +349,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
         super.collectIncludes(acceptor)
         acceptor.userHeader("Smp/ISimulator.h")
         acceptor.userSource("Smp/IPublication.h")
+        acceptor.systemHeader("type_traits")
     }
 
     protected def CharSequence base(Component it) {

@@ -45,7 +45,7 @@ public class CppOutputConfigurationProvider extends OutputConfigurationProvider
 
     final var includeOutput = new OutputConfiguration(INCLUDE);
     includeOutput.setDescription("Include Folder");
-    includeOutput.setOutputDirectory("./include");
+    includeOutput.setOutputDirectory("./src");
     includeOutput.setOverrideExistingResources(false);
     includeOutput.setCreateOutputDirectory(true);
     includeOutput.setCleanUpDerivedResources(false);
@@ -64,7 +64,7 @@ public class CppOutputConfigurationProvider extends OutputConfigurationProvider
 
     final var includeGenOutput = new OutputConfiguration(INCLUDE_GEN);
     includeGenOutput.setDescription("Generated Includes Folder");
-    includeGenOutput.setOutputDirectory("./include-gen");
+    includeGenOutput.setOutputDirectory("./src-gen");
     includeGenOutput.setOverrideExistingResources(true);
     includeGenOutput.setCreateOutputDirectory(true);
     includeGenOutput.setCleanUpDerivedResources(true);

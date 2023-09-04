@@ -22,7 +22,7 @@ class XsmpSdkCopyrightProvider extends CppCopyrightNoticeProvider {
 
     protected override generatedBy() {
         '''
-            XsmpGenerator-«XsmpVersion.VERSION»
+            XsmpSdkGenerator-«XsmpVersion.VERSION»
         '''
     }
 }
