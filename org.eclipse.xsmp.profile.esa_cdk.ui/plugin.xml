@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.xsmp.ui.profile">
+      <factory
+            id="org.eclipse.xsmp.profile.esa_cdk"
+            injector="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExecutableExtensionFactory:com.google.inject.Injector"
+            name="ESA CDK Profile">
+      </factory>
+   </extension>
+    <extension point="org.eclipse.xtext.builder.participant">
+		<participant
+			class="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="xsmpcat"/>
+	</extension>
+		<extension
+		point="org.eclipse.xtext.ui.projectTemplate">
+		<projectTemplateProvider
+			class="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExecutableExtensionFactory:org.eclipse.xsmp.profile.esa_cdk.ui.wizard.EsaCdkProjectTemplateProvider"
+			grammarName="org.eclipse.xsmp.Xsmpcat">
+		</projectTemplateProvider>
+	</extension>
+</plugin>

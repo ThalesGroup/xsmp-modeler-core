@@ -6,7 +6,7 @@
    <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature" version="0.0.0">
       <category name="main"/>
    </feature>
-   <feature id="org.eclipse.xsmp.profile.simsat.feature">
+   <feature id="org.eclipse.xsmp.profile.esa_cdk.feature">
       <category name="main"/>
    </feature>
    <feature id="org.eclipse.xsmp.feature.source" version="0.0.0">
@@ -15,7 +15,7 @@
    <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature.source" version="0.0.0">
       <category name="main.source"/>
    </feature>
-   <feature id="org.eclipse.xsmp.profile.simsat.feature.source">
+   <feature id="org.eclipse.xsmp.profile.esa_cdk.feature.source">
       <category name="main.source"/>
    </feature>
    <category-def name="main" label="Xsmp"/>

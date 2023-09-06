@@ -102,19 +102,19 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.simsat</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.esa_cdk</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.simsat.cli</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.esa_cdk.cli</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.simsat.ui</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.esa_cdk.ui</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.profile.esa_cdk.cli
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.profile.esa_cdk.cli
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.profile.esa_cdk.cli;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xsmp.cli,
+ org.eclipse.xsmp.profile.esa_cdk
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.xsmp.profile.esa_cdk.cli
