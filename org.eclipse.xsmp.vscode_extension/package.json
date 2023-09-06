@@ -1,9 +1,9 @@
 {
-	"name": "xsmp-modeler",
+	"name": "xsmp",
 	"displayName": "XSMP Modeler",
 	"description": "VSCode extension for XSMP Modeler",
 	"version": "1.1.0",
-	"publisher": "Thales Alenia Space",
+	"publisher": "thales-alenia-space",
 	"author": "Thales Alenia Space",
 	"icon": "images/xsmp.png",
 	"license": "EPL-2.0",
@@ -47,11 +47,11 @@
 		"configuration": [
 			{
 				"type": "object",
-				"title": "Path to java Executable",
+				"title": "Xsmp",
 				"properties": {
-					"javaPath": {
+					"xsmp.javaPath": {
 						"type": "string",
-						"default": "java"
+						"description": "Java executable path."
 					}
 				}
 			}

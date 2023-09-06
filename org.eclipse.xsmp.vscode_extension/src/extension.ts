@@ -13,42 +13,65 @@
 import * as path from 'path';
 
 import { Trace } from 'vscode-jsonrpc';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, Disposable } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
 
 let lc: LanguageClient;
 
 export function activate(context: ExtensionContext) {
-	let launcher = 'org.eclipse.xsmp.ide-ls.jar';
-	let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
-	let javaPath = workspace.getConfiguration('xsmp-modeler').get('javaPath', 'java');
+    let launcher = 'org.eclipse.xsmp.ide-ls.jar';
+    let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
+    let defaultJavaPath = process.platform === 'win32' ? 'java.exe' : 'java';
 
-	let serverOptions: ServerOptions = {
-		run: { command: javaPath, args: ['-jar', script] },
-		debug: { command: javaPath, args: ['-jar', script], options: { env: createDebugEnv() } }
-	};
 
-	let clientOptions: LanguageClientOptions = {
-		documentSelector: ['xsmpcat'],
-		synchronize: {
-			fileEvents: workspace.createFileSystemWatcher('**/*.*')
-		}
-	};
+    const startServer = () => {
+        const javaPath = workspace.getConfiguration('xsmp').get<string>('javaPath') || defaultJavaPath;
 
-	// Create the language client and start the client.
-	lc = new LanguageClient('Xtext Server', serverOptions, clientOptions);
+        const serverOptions: ServerOptions = {
+            run: { command: javaPath, args: ['-jar', script] },
+            debug: { command: javaPath, args: ['-jar', script], options: { env: createDebugEnv() } },
+        };
 
-	// enable tracing (.Off, .Messages, Verbose)
-	lc.setTrace(Trace.Verbose);
-	lc.start();
+        const clientOptions: LanguageClientOptions = {
+            documentSelector: ['xsmpcat'],
+            synchronize: {
+                fileEvents: workspace.createFileSystemWatcher('**/*.*'),
+            },
+        };
+        // Create the language client and start the client.
+        lc = new LanguageClient('Xtext Server', serverOptions, clientOptions);
+
+        // Enable tracing (.Off, .Messages, Verbose)
+        lc.setTrace(Trace.Verbose);
+        lc.start();
+
+    };
+
+    // Watch for changes in the 'xsmp.javaPath' setting
+    const disposables: Disposable[] = [];
+    disposables.push(
+        workspace.onDidChangeConfiguration((event) => {
+            if (event.affectsConfiguration('xsmp.javaPath')) {
+                // The 'xsmp.javaPath' setting has changed, so stop the existing server and start a new one.
+                if (lc) {
+                    lc.stop().then(() => {
+                        startServer();
+                    });
+                }
+            }
+        })
+    );
+
+    context.subscriptions.push(...disposables);
+    // Start the server when the extension activates
+    startServer();
+
 }
 
 export function deactivate() {
-	return lc.stop();
+    return lc.stop();
 }
 
 function createDebugEnv() {
-	return Object.assign({
-		JAVA_OPTS: "-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n,quiet=y"
-	}, process.env)
+    return { JAVA_OPTS: "-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n,quiet=y", ...process.env }
 }
