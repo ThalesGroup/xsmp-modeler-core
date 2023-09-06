@@ -43,6 +43,18 @@
 				"scopeName": "source.xsmpcat",
 				"path": "./syntaxes/xsmp.tmLanguage.json"
 			}
+		],
+		"configuration": [
+			{
+				"type": "object",
+				"title": "Path to java Executable",
+				"properties": {
+					"javaPath": {
+						"type": "string",
+						"default": "java"
+					}
+				}
+			}
 		]
 	},
 	"devDependencies": {

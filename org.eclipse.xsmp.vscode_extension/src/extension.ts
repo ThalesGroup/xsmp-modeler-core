@@ -21,10 +21,11 @@ let lc: LanguageClient;
 export function activate(context: ExtensionContext) {
 	let launcher = 'org.eclipse.xsmp.ide-ls.jar';
 	let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
+	let javaPath = workspace.getConfiguration('xsmp-modeler').get('javaPath', 'java');
 
 	let serverOptions: ServerOptions = {
-		run: { command: 'java', args: ['-jar', script] },
-		debug: { command: 'java', args: ['-jar', script], options: { env: createDebugEnv() } }
+		run: { command: javaPath, args: ['-jar', script] },
+		debug: { command: javaPath, args: ['-jar', script], options: { env: createDebugEnv() } }
 	};
 
 	let clientOptions: LanguageClientOptions = {
