@@ -50,10 +50,10 @@
 		<module>org.eclipse.xsmp.tool.python</module>
 		<module>org.eclipse.xsmp.tool.python.feature</module>
 		<module>org.eclipse.xsmp.tool.python.ui</module>
-		<module>org.eclipse.xsmp.profile.simsat</module>
-		<module>org.eclipse.xsmp.profile.simsat.cli</module>
-		<module>org.eclipse.xsmp.profile.simsat.feature</module>
-		<module>org.eclipse.xsmp.profile.simsat.ui</module>
+		<module>org.eclipse.xsmp.profile.esa_cdk</module>
+		<module>org.eclipse.xsmp.profile.esa_cdk.cli</module>
+		<module>org.eclipse.xsmp.profile.esa_cdk.feature</module>
+		<module>org.eclipse.xsmp.profile.esa_cdk.ui</module>
 		<module>org.eclipse.xsmp.vscode_extension</module>
 	</modules>
 	<dependencyManagement>
