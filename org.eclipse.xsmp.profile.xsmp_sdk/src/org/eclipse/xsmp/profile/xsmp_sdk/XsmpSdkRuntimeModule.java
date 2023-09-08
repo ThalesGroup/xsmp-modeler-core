@@ -12,7 +12,9 @@ package org.eclipse.xsmp.profile.xsmp_sdk;
 
 import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
+import org.eclipse.xsmp.generator.cpp.CppConfiguration;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
+import org.eclipse.xsmp.generator.cpp.CxxStandard;
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EntryPointGenerator;
 import org.eclipse.xsmp.generator.cpp.member.EventSinkGenerator;
@@ -42,12 +44,21 @@ import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 
+import com.google.inject.Binder;
+import com.google.inject.name.Names;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
 public class XsmpSdkRuntimeModule extends XsmpcatExtensionRuntimeModule
 {
+  public void configureCxxStandard(Binder binder)
+  {
+    binder.bind(CxxStandard.class).annotatedWith(Names.named(CppConfiguration.CXX_STANDARD))
+            .toInstance(CxxStandard.CXX_STD_17);
+  }
+
   @Override
   public Class< ? extends IGenerator2> bindIGenerator2()
   {

@@ -233,11 +233,6 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             «ENDIF»
             } // namespace
             
-            #if __cplusplus >= 201703L
-                #define MAYBE_UNUSED [[maybe_unused]]
-            #else
-                #define MAYBE_UNUSED
-            #endif
             
             // --------------------------------------------------------------------------------
             // --------------------------- Initialise Function -----------------------------
@@ -251,7 +246,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 /// @return True if initialisation was successful, false otherwise.
                 bool Initialise_«name(useGenPattern)»(
                         ::Smp::ISimulator* simulator,
-                        MAYBE_UNUSED ::Smp::Publication::ITypeRegistry* typeRegistry) {
+                        «IF cxxStandard >= CxxStandard.CXX_STD_17»[[maybe_unused]] «ENDIF»::Smp::Publication::ITypeRegistry* typeRegistry) {
                     // check simulator validity
                     if (!simulator) {
                         return false;

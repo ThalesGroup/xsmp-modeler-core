@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -17,6 +17,7 @@ import org.eclipse.xsmp.xcatalogue.Catalogue
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.Namespace
 import org.eclipse.xtext.EcoreUtil2
+import com.google.inject.name.Named
 
 abstract class AbstractFileGenerator<T extends NamedElement> {
 
@@ -29,17 +30,34 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
     @Inject
     IProtectionGuardProvider guardProvider;
 
+    @Inject(optional=true)
+    @Named(CppConfiguration.CXX_STANDARD)
+    CxxStandard cxxStandard = CxxStandard.CXX_STD_11
+
+    def getCxxStandard() {
+        cxxStandard
+    }
+
     def protected CharSequence namespace(EObject object, CharSequence body) {
         val namespace = EcoreUtil2.getContainerOfType(object, Namespace)
         if (namespace !== null)
-            namespace.eContainer.namespace(
-            '''
-                «namespace.comment()»
-                namespace «namespace.name»
-                {
-                    «body»
-                } // namespace «namespace.name»
-            ''')
+            if (cxxStandard >= CxxStandard.CXX_STD_17)
+                '''
+                    «namespace.comment()»
+                    namespace «namespace.fqn.toString("::")»
+                    {
+                        «body»
+                    } // namespace «namespace.fqn.toString("::")»
+                '''
+            else
+                namespace.eContainer.namespace(
+                '''
+                    «namespace.comment()»
+                    namespace «namespace.name»
+                    {
+                        «body»
+                    } // namespace «namespace.name»
+                ''')
         else
             body
 
@@ -169,7 +187,6 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
                 «namespace(type, body)»
             '''
     }
-
 
     def protected CharSequence generateSourceIncludes(T type, IncludeAcceptor acceptor) {
         val Set<String> includeList = newHashSet
