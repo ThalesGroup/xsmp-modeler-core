@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.xsmp_sdk;
 
-import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
+import org.eclipse.xsmp.XsmpcatRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
 import org.eclipse.xsmp.generator.cpp.CppConfiguration;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
@@ -51,7 +51,7 @@ import com.google.inject.name.Names;
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
-public class XsmpSdkRuntimeModule extends XsmpcatExtensionRuntimeModule
+public class XsmpSdkRuntimeModule extends XsmpcatRuntimeModule
 {
   public void configureCxxStandard(Binder binder)
   {
@@ -66,7 +66,7 @@ public class XsmpSdkRuntimeModule extends XsmpcatExtensionRuntimeModule
   }
 
   @SingletonBinding(eager = true)
-  public Class< ? extends XsmpSdkValidator> bindXsmpValidator()
+  public Class< ? extends XsmpSdkValidator> bindXsmpSdkValidator()
   {
     return XsmpSdkValidator.class;
   }

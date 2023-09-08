@@ -10,30 +10,22 @@
 ******************************************************************************/
 package org.eclipse.xsmp.tool.smp;
 
-import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
+import org.eclipse.xsmp.XsmpcatRuntimeModule;
 import org.eclipse.xsmp.tool.smp.generator.SmpGenerator;
 import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider;
-import org.eclipse.xsmp.tool.smp.validation.SmpValidator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.service.SingletonBinding;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
-public class SmpRuntimeModule extends XsmpcatExtensionRuntimeModule
+public class SmpRuntimeModule extends XsmpcatRuntimeModule
 {
   @Override
   public Class< ? extends IGenerator2> bindIGenerator2()
   {
     return SmpGenerator.class;
-  }
-
-  @SingletonBinding(eager = true)
-  public Class< ? extends SmpValidator> bindSmpValidator()
-  {
-    return SmpValidator.class;
   }
 
   @Override

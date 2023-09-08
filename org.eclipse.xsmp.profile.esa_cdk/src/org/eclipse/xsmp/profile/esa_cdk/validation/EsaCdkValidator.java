@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.esa_cdk.validation;
 
-import org.eclipse.xsmp.validation.XsmpcatValidator;
+import org.eclipse.xsmp.validation.AbstractXsmpcatValidator;
 
 import com.google.inject.Singleton;
 
@@ -19,7 +19,7 @@ import com.google.inject.Singleton;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-public class EsaCdkValidator extends XsmpcatValidator
+public class EsaCdkValidator extends AbstractXsmpcatValidator
 {
 
 }

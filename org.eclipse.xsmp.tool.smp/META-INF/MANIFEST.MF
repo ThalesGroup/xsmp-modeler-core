@@ -20,6 +20,5 @@ Export-Package: org.eclipse.xsmp.tool.smp,
  org.eclipse.xsmp.tool.smp.smdl.configuration,
  org.eclipse.xsmp.tool.smp.smdl.package_,
  org.eclipse.xsmp.tool.smp.util,
- org.eclipse.xsmp.tool.smp.validation,
  org.eclipse.xsmp.tool.smp.xlink,
  org.eclipse.xsmp.tool.smp.xlink.util

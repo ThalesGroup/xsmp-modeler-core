@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.esa_cdk;
 
-import org.eclipse.xsmp.XsmpcatExtensionRuntimeModule;
+import org.eclipse.xsmp.XsmpcatRuntimeModule;
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator;
 import org.eclipse.xsmp.generator.cpp.CppCopyrightNoticeProvider;
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil;
@@ -48,7 +48,7 @@ import org.eclipse.xtext.service.SingletonBinding;
  * Use this class to register components to be used at runtime / without the Equinox extension
  * registry.
  */
-public class EsaCdkRuntimeModule extends XsmpcatExtensionRuntimeModule
+public class EsaCdkRuntimeModule extends XsmpcatRuntimeModule
 {
 
   @Override
@@ -58,7 +58,7 @@ public class EsaCdkRuntimeModule extends XsmpcatExtensionRuntimeModule
   }
 
   @SingletonBinding(eager = true)
-  public Class< ? extends EsaCdkValidator> bindXsmpValidator()
+  public Class< ? extends EsaCdkValidator> bindEsaCdkValidator()
   {
     return EsaCdkValidator.class;
   }
