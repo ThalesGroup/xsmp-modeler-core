@@ -11,5 +11,10 @@ Require-Bundle: org.eclipse.xsmp,
  org.eclipse.xsmp.generator.cpp,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.eclipse.xsmp.profile.xsmp_sdk
+Export-Package: org.eclipse.xsmp.profile.xsmp_sdk,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type,
+ org.eclipse.xsmp.profile.xsmp_sdk.validation
 Import-Package: org.apache.log4j

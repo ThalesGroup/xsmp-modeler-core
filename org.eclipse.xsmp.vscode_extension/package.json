@@ -2,7 +2,7 @@
 	"name": "xsmp",
 	"displayName": "XSMP Modeler",
 	"description": "VSCode extension for XSMP Modeler",
-	"version": "1.1.0",
+	"version": "1.1.0-rc3",
 	"publisher": "thales-alenia-space",
 	"author": "Thales Alenia Space",
 	"icon": "images/xsmp.png",
@@ -21,7 +21,8 @@
 		"Programming Languages"
 	],
 	"activationEvents": [
-		"onLanguage:xsmpcat"
+		"onLanguage:xsmpcat",
+		"onCommand:xsmp.createNewProject"
 	],
 	"main": "target/extension",
 	"contributes": {
@@ -42,6 +43,28 @@
 				"language": "xsmpcat",
 				"scopeName": "source.xsmpcat",
 				"path": "./syntaxes/xsmp.tmLanguage.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "xsmp.smdl.proxy",
+				"title": "Xsmp: Generate SMDL files"
+			},
+			{
+				"command": "xsmp.python.proxy",
+				"title": "Xsmp: Generate Python code"
+			},
+			{
+				"command": "xsmp.esa_cdk.proxy",
+				"title": "Xsmp: Generate ESA CDK C++ code"
+			},
+			{
+				"command": "xsmp.xsmp_sdk.proxy",
+				"title": "Xsmp: Generate XSMP SDK C++ code"
+			},
+			{
+				"command": "xsmp.createNewProject",
+				"title": "Create: new Xsmp project"
 			}
 		],
 		"configuration": [

@@ -13,7 +13,7 @@
 import * as path from 'path';
 
 import { Trace } from 'vscode-jsonrpc';
-import { workspace, ExtensionContext, Disposable } from 'vscode';
+import { commands, window, Uri, workspace, ExtensionContext, Disposable } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
 
 let lc: LanguageClient;
@@ -39,10 +39,10 @@ export function activate(context: ExtensionContext) {
             },
         };
         // Create the language client and start the client.
-        lc = new LanguageClient('Xtext Server', serverOptions, clientOptions);
+        lc = new LanguageClient('Xsmp Server', serverOptions, clientOptions);
 
         // Enable tracing (.Off, .Messages, Verbose)
-        lc.setTrace(Trace.Verbose);
+        lc.setTrace(Trace.Off);
         lc.start();
 
     };
@@ -61,8 +61,49 @@ export function activate(context: ExtensionContext) {
             }
         })
     );
+    disposables.push(
+        commands.registerCommand("xsmp.python.proxy", async () => {
+            let activeEditor = window.activeTextEditor;
+            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
+                commands.executeCommand("xsmp.python", activeEditor.document.uri.toString());
+            }
+        }));
+    disposables.push(
+        commands.registerCommand("xsmp.smdl.proxy", async () => {
+            let activeEditor = window.activeTextEditor;
+            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
+                commands.executeCommand("xsmp.smdl", activeEditor.document.uri.toString());
+            }
+        }));
+    disposables.push(
+        commands.registerCommand("xsmp.xsmp_sdk.proxy", async () => {
+            let activeEditor = window.activeTextEditor;
+            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
+                commands.executeCommand("xsmp.xsmp_sdk", activeEditor.document.uri.toString());
+            }
+        }));
+    disposables.push(
+        commands.registerCommand("xsmp.esa_cdk.proxy", async () => {
+            let activeEditor = window.activeTextEditor;
+            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
+                commands.executeCommand("xsmp.esa_cdk", activeEditor.document.uri.toString());
+            }
+        }));
+    disposables.push(commands.registerCommand('xsmp.createNewProject', () => {
+        // Prompt the user for a folder to create the files
+        window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false }).then((uri) => {
+            if (!uri || uri.length === 0) {
+                window.showErrorMessage('No folder selected. Aborting file creation.');
+                return;
+            }
+
+            window.showInformationMessage('Not implemented yet.');
+        });
+    }));
 
     context.subscriptions.push(...disposables);
+
+
     // Start the server when the extension activates
     startServer();
 
