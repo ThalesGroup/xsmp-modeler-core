@@ -55,26 +55,56 @@ jobs:
 
             draft: true
             prerelease: false
-      -  name: Upload release asset
+      -  name: Upload P2 repository
          uses: actions/upload-release-asset@v1
          env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
-
             asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
             asset_content_type: application/zip
-      -  name: Upload extension
+            
+      -  name: Upload VSCode extension
          uses: actions/upload-release-asset@v1
          env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix
-
             asset_name: xsmp-modeler-${{ github.ref_name }}.vsix
-            asset_content_type: application/octet-stream
+            asset_content_type: application/zip
+            
+      -  name: Upload SMP Tools CLI
+         uses: actions/upload-release-asset@v1
+         env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli.jar
+            asset_name: org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
+            asset_content_type: application/java-archive
+            
+      -  name: Upload XSMP SDK Profile CLI
+         uses: actions/upload-release-asset@v1
+         env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli.jar
+            asset_name: org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
+            asset_content_type: application/java-archive
+            
+      -  name: Upload ESA CDK Profile CLI
+         uses: actions/upload-release-asset@v1
+         env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli.jar
+            asset_name: org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
+            asset_content_type: application/java-archive
+            
       -  name: Publish release
          uses: StuYarrow/publish-release@v1.1.2
          env:

@@ -179,8 +179,7 @@
 							</excludes>
 						</filter>
 					</filters>
-					<shadedArtifactAttached>false</shadedArtifactAttached>
-					<finalName>${project.artifactId}-ls</finalName>
+					<outputFile>${project.build.directory}/org.eclipse.xsmp.ide-lsp.jar</outputFile>
 					<minimizeJar>true</minimizeJar>
 				</configuration>
 				<executions>

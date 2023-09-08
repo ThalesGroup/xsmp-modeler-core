@@ -19,7 +19,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-lan
 let lc: LanguageClient;
 
 export function activate(context: ExtensionContext) {
-    let launcher = 'org.eclipse.xsmp.ide-ls.jar';
+    let launcher = 'org.eclipse.xsmp.ide-lsp.jar';
     let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
     let defaultJavaPath = process.platform === 'win32' ? 'java.exe' : 'java';
 

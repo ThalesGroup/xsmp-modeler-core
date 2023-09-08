@@ -160,8 +160,7 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>cli</shadedClassifierName>
+                    <outputFile>${project.build.directory}/org.eclipse.xsmp.tool.smp.cli.jar</outputFile>
                     <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>

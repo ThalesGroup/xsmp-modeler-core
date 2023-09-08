@@ -162,8 +162,7 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>cli</shadedClassifierName>
+                    <outputFile>${project.build.directory}/org.eclipse.xsmp.profile.esa_cdk.cli.jar</outputFile>
                     <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
