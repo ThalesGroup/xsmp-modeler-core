@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
@@ -28,6 +29,7 @@ import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
 import org.eclipse.xtext.util.PolymorphicDispatcher.WarningErrorHandler;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class AbstractIdeContentProposalProvider extends IdeContentProposalProvider
@@ -37,12 +39,20 @@ public class AbstractIdeContentProposalProvider extends IdeContentProposalProvid
 
   private final Map<String, PolymorphicDispatcher<Void>> dispatchers;
 
-  private final static Logger log = Logger.getLogger(AbstractIdeContentProposalProvider.class);
+  private static final Logger log = Logger.getLogger(AbstractIdeContentProposalProvider.class);
 
   protected AbstractIdeContentProposalProvider()
   {
     dispatchers = new HashMap<>();
   }
+
+  protected static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$", "@",
+          "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
+          "class", "exception", "public", "private", "protected", "field", "constant", "def",
+          "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
+          "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
+          "eventsink", "eventsource", "namespace", "association", "property", "nullptr", "default",
+          "typename");
 
   @Override
   protected void _createProposals(Keyword keyword, ContentAssistContext context,
@@ -53,8 +63,10 @@ public class AbstractIdeContentProposalProvider extends IdeContentProposalProvid
     {
       invokeMethod(method, acceptor, context);
     }
-
-    super._createProposals(keyword, context, acceptor);
+    if (!FILTERED_KEYWORDS.contains(keyword.getValue()))
+    {
+      super._createProposals(keyword, context, acceptor);
+    }
   }
 
   protected void invokeMethod(String methodName, IIdeContentProposalAcceptor acceptor,

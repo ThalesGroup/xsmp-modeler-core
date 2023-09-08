@@ -106,7 +106,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           "class", "exception", "public", "private", "protected", "field", "constant", "def",
           "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
           "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
-          "eventsink", "eventsource", "namespace", "association", "property", "{", "}", "nullptr");
+          "eventsink", "eventsource", "namespace", "association", "property",
+          /* "{", "}", */ "nullptr", "default", "typename");
 
   /**
    * {@inheritDoc}
@@ -131,9 +132,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
     final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-    if (cur instanceof Field)
+    if (cur instanceof final Field field)
     {
-      final var field = (Field) cur;
       if (!field.isInput())
       {
         acceptor.accept(createKeywordCompletionProposal("input", context));
@@ -173,22 +173,19 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
     final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-    if (cur instanceof VisibilityElement)
+    if (cur instanceof final VisibilityElement elem && !elem.isSetVisibility()
+            && elem.isUseVisibility())
     {
-      final var elem = (VisibilityElement) cur;
-      if (!elem.isSetVisibility() && elem.isUseVisibility())
-      {
 
-        acceptor.accept(createKeywordCompletionProposal(
-                grammarAccess.getVisibilityModifiersAccess().getPrivateKeyword_0().getValue(),
-                context));
-        acceptor.accept(createKeywordCompletionProposal(
-                grammarAccess.getVisibilityModifiersAccess().getProtectedKeyword_1().getValue(),
-                context));
-        acceptor.accept(createKeywordCompletionProposal(
-                grammarAccess.getVisibilityModifiersAccess().getPublicKeyword_2().getValue(),
-                context));
-      }
+      acceptor.accept(createKeywordCompletionProposal(
+              grammarAccess.getVisibilityModifiersAccess().getPrivateKeyword_0().getValue(),
+              context));
+      acceptor.accept(createKeywordCompletionProposal(
+              grammarAccess.getVisibilityModifiersAccess().getProtectedKeyword_1().getValue(),
+              context));
+      acceptor.accept(createKeywordCompletionProposal(
+              grammarAccess.getVisibilityModifiersAccess().getPublicKeyword_2().getValue(),
+              context));
     }
   }
 
@@ -392,9 +389,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     {
       final var proposal = super.apply(candidate);
 
-      if (proposal instanceof ConfigurableCompletionProposal)
+      if (proposal instanceof final ConfigurableCompletionProposal cproposal)
       {
-        final var cproposal = (ConfigurableCompletionProposal) proposal;
         // increase the priority for primitive types
         if (candidate.getEObjectOrProxy() instanceof PrimitiveType)
         {

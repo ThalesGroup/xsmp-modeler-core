@@ -34,8 +34,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
                [[2, 0] .. [2, 0]]
               documentation (ML_DOCUMENTATION) -> documentation [[2, 0] .. [2, 0]]
               import -> import [[2, 0] .. [2, 0]]
-              namespace -> namespace [[2, 0] .. [2, 0]]
-              @ -> @ [[2, 0] .. [2, 0]]
                             """;
 
       it.setExpectedCompletionItems(expected);
@@ -82,17 +80,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
               Create an Operation -> def void ${1:name} ($0)
                [[7, 0] .. [7, 0]]
               documentation (ML_DOCUMENTATION) -> documentation [[7, 0] .. [7, 0]]
-              association -> association [[7, 0] .. [7, 0]]
-              constant -> constant [[7, 0] .. [7, 0]]
-              container -> container [[7, 0] .. [7, 0]]
-              def -> def [[7, 0] .. [7, 0]]
-              entrypoint -> entrypoint [[7, 0] .. [7, 0]]
-              eventsink -> eventsink [[7, 0] .. [7, 0]]
-              eventsource -> eventsource [[7, 0] .. [7, 0]]
-              field -> field [[7, 0] .. [7, 0]]
-              property -> property [[7, 0] .. [7, 0]]
-              reference -> reference [[7, 0] .. [7, 0]]
-              @ -> @ [[7, 0] .. [7, 0]]
               } -> } [[7, 0] .. [7, 0]]
                             """;
 
