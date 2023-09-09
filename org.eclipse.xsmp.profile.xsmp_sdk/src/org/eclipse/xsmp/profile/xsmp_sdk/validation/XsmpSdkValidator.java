@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.xsmp_sdk.validation;
 
-import org.eclipse.xsmp.validation.AbstractXsmpcatValidator;
+import org.eclipse.xsmp.validation.AbstractXsmpcatContextValidator;
 
 import com.google.inject.Singleton;
 
@@ -19,7 +19,7 @@ import com.google.inject.Singleton;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-public class XsmpSdkValidator extends AbstractXsmpcatValidator
+public class XsmpSdkValidator extends AbstractXsmpcatContextValidator
 {
 
 }

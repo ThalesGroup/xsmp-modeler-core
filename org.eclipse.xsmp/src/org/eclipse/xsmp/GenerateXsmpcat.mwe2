@@ -64,7 +64,6 @@ Workflow {
 				generateStub = false
 			}
 
-			validator = null
 			qualifiedNamesProvider = {}
 
 			scopeProvider = {

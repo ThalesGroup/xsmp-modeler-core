@@ -10,16 +10,10 @@
 ******************************************************************************/
 package org.eclipse.xsmp.validation;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
-import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 
 import com.google.inject.Inject;
 
@@ -28,18 +22,12 @@ import com.google.inject.Inject;
  *
  * @author yannick
  */
-public class AbstractXsmpcatValidator extends AbstractDeclarativeValidator
+public class AbstractXsmpcatContextValidator extends AbstractXsmpcatValidator
 {
   private final String isResponsible = getClass().getCanonicalName() + ".isResponsible";
 
   @Inject
   private IXsmpcatServiceProvider xsmpcatServiceProvider;
-
-  @Override
-  protected List<EPackage> getEPackages()
-  {
-    return Arrays.asList(XcataloguePackage.eINSTANCE, EcorePackage.eINSTANCE);
-  }
 
   /**
    * Cache the result in the context map
