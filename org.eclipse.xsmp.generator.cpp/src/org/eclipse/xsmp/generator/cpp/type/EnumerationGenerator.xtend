@@ -49,16 +49,16 @@ class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
     override protected generateSourceGenBody(Enumeration it, boolean useGenPattern) {
         '''
             void _Register_«name»(::Smp::Publication::ITypeRegistry* registry) {
-                ::Smp::Publication::IEnumerationType* typeState = registry->AddEnumerationType(
+                auto *type = registry->AddEnumerationType(
                     "«name»", // name
                     «description()», // description
                     «uuid()», // UUID
-                    sizeof(«name») // Size
+                    sizeof(«id») // Size
                     );
             
                 // Register the Literals of the Enumeration
                 «FOR l : literal»
-                    typeState->AddLiteral("«l.name»", «l.description()», static_cast<::Smp::Int32>(«l.id»));
+                    type->AddLiteral("«l.name»", «l.description()», static_cast<::Smp::Int32>(«l.id»));
                 «ENDFOR»
                 }
                 «uuidDefinition»

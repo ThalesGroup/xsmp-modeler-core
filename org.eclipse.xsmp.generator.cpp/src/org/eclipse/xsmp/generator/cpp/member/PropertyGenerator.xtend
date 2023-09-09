@@ -66,7 +66,7 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
 
     protected def defineSetter(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
         '''
-            void «parent.name(useGenPattern)»::set_«name»(«type()»«name»)«IF isConst» const«ENDIF»
+            void «parent.name(useGenPattern)»::set_«name»(«type()»value)«IF isConst» const«ENDIF»
             {
                  // TODO
             }
@@ -135,16 +135,16 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
         '''
             «type()»«parent.name(useGenPattern)»::get_«name»()«IF isConstGetter» const«ENDIF»
             {
-                return «attachedField.name»;
+                return «IF it.static»«parent.name(useGenPattern)»::«ELSE»this->«ENDIF»«attachedField.name»;
             }
         '''
     }
 
     protected def defineSetterGen(NamedElementWithMembers parent, Property it, boolean useGenPattern) {
         '''
-            void «parent.name(useGenPattern)»::set_«name»(«type()»«name»)«IF isConst» const«ENDIF»
+            void «parent.name(useGenPattern)»::set_«name»(«type()»value)«IF isConst» const«ENDIF»
             {
-                «attachedField.name» = «name»;
+                «IF it.static»«parent.name(useGenPattern)»::«ELSE»this->«ENDIF»«attachedField.name» = value;
             }
         '''
     }
@@ -175,10 +175,11 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
     }
 
     override Publish(Property it) {
-        '''
-            // Publish Property «name»
-            receiver->PublishProperty("«name»", «description()», «type.uuid()», «accessKind», «viewKind»);
-        '''
+        if (it.isInvokable)
+            '''
+                // Publish Property «name»
+                receiver->PublishProperty("«name»", «description()», «type.uuid()», «accessKind», «viewKind»);
+            '''
     }
 
     protected def CharSequence accessKind(Property it) {

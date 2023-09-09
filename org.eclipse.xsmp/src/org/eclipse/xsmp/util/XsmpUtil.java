@@ -904,6 +904,11 @@ public class XsmpUtil
     return cache.get(Tuples.pair(op, "isInvokable"), op.eResource(), () -> computeIsInvokable(op));
   }
 
+  public boolean isInvokable(Property property)
+  {
+    return property.getType() instanceof SimpleType;
+  }
+
   private Type findPrimitiveType(EObject e, QualifiedName name)
   {
 

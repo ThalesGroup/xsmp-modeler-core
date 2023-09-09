@@ -65,23 +65,23 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
         '''
             void «name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                 «IF !fields.empty»auto* pStructure = «ENDIF»registry->AddStructureType(
-                    "«name»"  /// Name
-                    ,«description()»   /// description
-                    ,«uuid()» /// UUID
+                 «IF !fields.empty»auto *type = «ENDIF»registry->AddStructureType(
+                    "«name»",  /// Name
+                    «description()», /// description
+                    «uuid()» /// UUID
                     ); 
                     
                 
                 «FOR l : fields BEFORE "/// Register the Fields of the Structure\n"»
-                    pStructure->AddField(
-                        "«l.name»"
-                        ,«l.description()»
-                        ,«l.type.uuid()»  ///UUID of the Field Type
-                        ,offsetof(«name», «l.name»)  ///Compute the offset of the current item
-                        ,«l.viewKind»  ///viewkind
-                        ,«!l.isTransient»  ///state
-                        ,«l.isInput»  ///is an input field
-                        ,«l.isOutput»  ///is an output field
+                    type->AddField(
+                        "«l.name»",
+                        «l.description()»,
+                        «l.type.uuid()», ///UUID of the Field Type
+                        offsetof(«name», «l.name»), ///Compute the offset of the current item
+                        «l.viewKind», ///viewkind
+                        «!l.isTransient», ///state
+                        «l.isInput», ///is an input field
+                        «l.isOutput» ///is an output field
                         );  
                 «ENDFOR»
             }

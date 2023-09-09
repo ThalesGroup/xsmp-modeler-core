@@ -65,7 +65,7 @@ class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
         '''
             void «name(useGenPattern)»::_Register(::Smp::Publication::ITypeRegistry* registry) 
             {
-                «IF !fields.empty»auto* type = «ENDIF»registry->AddClassType(
+                «IF !fields.empty»auto *type = «ENDIF»registry->AddClassType(
                     "«name»"  /// Name
                     ,«description()»   /// description
                     ,«uuid()» /// UUID
@@ -74,14 +74,14 @@ class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
                     
                 «FOR l : fields BEFORE "/// Register the Fields of the Class\n"»
                     type->AddField(
-                        "«l.name»"
-                        ,«l.description()»
-                        ,«l.type.uuid()»  /// UUID of the Field Type
-                        ,offsetof(«name», «l.name»)  ///Compute the offset of the current item
-                        ,«l.viewKind»  /// viewkind
-                        ,«!l.isTransient»  /// state
-                        ,«l.isInput»  /// input
-                        ,«l.isOutput»/// output
+                        "«l.name»",
+                        «l.description()»,
+                        «l.type.uuid()», /// UUID of the Field Type
+                        offsetof(«name», «l.name»), ///Compute the offset of the current item
+                        «l.viewKind», /// viewkind
+                        «!l.isTransient», /// state
+                        «l.isInput», /// input
+                        «l.isOutput»/// output
                         );  
                 «ENDFOR»
             }

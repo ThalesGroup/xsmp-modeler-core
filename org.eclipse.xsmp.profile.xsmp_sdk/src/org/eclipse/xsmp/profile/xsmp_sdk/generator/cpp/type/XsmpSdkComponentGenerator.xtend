@@ -29,6 +29,8 @@ import org.eclipse.xsmp.xcatalogue.Parameter
 import org.eclipse.xsmp.xcatalogue.Reference
 import org.eclipse.xsmp.xcatalogue.SimpleType
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.xcatalogue.Property
+import org.eclipse.xsmp.xcatalogue.AccessKind
 
 class XsmpSdkComponentGenerator extends ComponentGenerator {
 
@@ -238,6 +240,9 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
                     «FOR op : member.filter(Operation).filter[isInvokable]»
                         «generateRqHandlerParam(op, useGenPattern)»
                     «ENDFOR»
+                    «FOR property : member.filter(Property).filter[isInvokable]»
+                        «generateRqHandlerParam(property, useGenPattern)»
+                    «ENDFOR»
                     return handlers;
                 }
                 
@@ -365,4 +370,26 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
         }
     }
 
+    protected override CharSequence generateRqHandlerParam(NamedElementWithMembers container, Property o,
+        boolean useGenPattern) {
+
+        '''
+            «IF o.access !== AccessKind.WRITE_ONLY»
+                if (handlers.find("get_«o.name»") == handlers.end()) {
+                    handlers["get_«o.name»"] = [](«container.name(useGenPattern)»* component, ::Smp::IRequest* request) {
+                        /// Invoke get_«o.name»
+                        ::Xsmp::Request::setReturnValue(request, «o.type.generatePrimitiveKind», component->get_«o.name»());
+                    };
+                }
+            «ENDIF»
+            «IF o.access !== AccessKind.READ_ONLY»
+                if (handlers.find("set_«o.name»") == handlers.end()) {
+                    handlers["set_«o.name»"] = [](«container.name(useGenPattern)»* component, ::Smp::IRequest* request) {
+                        /// Invoke set_«o.name»
+                        component->set_«o.name»(::Xsmp::Request::get<«o.type.id»>(component, request, "«o.name»", «o.type.generatePrimitiveKind»));
+                    };
+                }
+            «ENDIF»
+        '''
+    }
 }

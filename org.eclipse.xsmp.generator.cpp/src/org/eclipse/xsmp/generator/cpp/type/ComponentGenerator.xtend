@@ -18,6 +18,8 @@ import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.xcatalogue.Property
+import org.eclipse.xsmp.xcatalogue.AccessKind
 
 abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Component> {
 
@@ -288,6 +290,9 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                     «FOR op : member.filter(Operation).filter[isInvokable]»
                         «generateRqHandlerParam(op, useGenPattern)»
                     «ENDFOR»
+                    «FOR property : member.filter(Property).filter[isInvokable]»
+                        «generateRqHandlerParam(property, useGenPattern)»
+                    «ENDFOR»
                     return handlers;
                 }
                 
@@ -326,7 +331,9 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
     }
 
     protected def useDynamicInvocation(Component e) {
-        return e.member.exists[it instanceof Operation && (it as Operation).isInvokable]
+        return e.member.exists[it instanceof Operation && (it as Operation).isInvokable] || e.member.exists [
+            it instanceof Property && (it as Property).isInvokable
+        ]
     }
 
     override collectIncludes(Component type, IncludeAcceptor acceptor) {
@@ -399,6 +406,29 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 «IF r !== null»request->SetReturnValue({«r.type.generatePrimitiveKind», p_«r.name»});«ENDIF»
                 };
             }
+        '''
+    }
+
+    protected def CharSequence generateRqHandlerParam(NamedElementWithMembers container, Property o,
+        boolean useGenPattern) {
+
+        '''
+            «IF o.access === AccessKind.READ_ONLY || o.access === AccessKind.READ_WRITE »
+                if (handlers.find("get_«o.name»") == handlers.end()) {
+                    handlers["get_«o.name»"] = [](«container.name(useGenPattern)»* component, ::Smp::IRequest* request) {
+                        /// Invoke get_«o.name»
+                        //request->SetReturnValue(component->get_«o.name»());
+                    };
+                }
+            «ENDIF»
+            «IF o.access === AccessKind.WRITE_ONLY || o.access === AccessKind.READ_WRITE »
+                if (handlers.find("set_«o.name»") == handlers.end()) {
+                    handlers["set_«o.name»"] = [](«container.name(useGenPattern)»* component, ::Smp::IRequest* request) {
+                        /// Invoke set_«o.name»
+                        //component->set_«o.name»(request->GetParameter(0));
+                    };
+                }
+            «ENDIF»
         '''
     }
 }
