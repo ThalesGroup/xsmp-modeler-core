@@ -25,7 +25,7 @@ class XsmpSdkEntryPointGenerator extends EntryPointGenerator {
     override initialize(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
             // EntryPoint: «name»
-            «name» { new ::Xsmp::EntryPoint( "«name»",  «description()»,  this, &«parent.name(useGenPattern)»::_«name») }
+            «name» { new ::Xsmp::EntryPoint( "«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this)) }
         '''
     }
 }
