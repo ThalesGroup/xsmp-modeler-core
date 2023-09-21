@@ -19,7 +19,6 @@ import org.eclipse.xsmp.resource.XsmpcatResourceFactory;
 import org.eclipse.xsmp.scoping.XsmpcatImportedNamespaceScopeProvider;
 import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
-import org.eclipse.xsmp.validation.XsmpcatValidator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.formatting.IIndentationInformation;
@@ -29,7 +28,6 @@ import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
-import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 
@@ -42,11 +40,6 @@ import com.google.inject.name.Names;
  */
 public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
 {
-  @SingletonBinding(eager = true)
-  public Class< ? extends XsmpcatValidator> bindXsmpcatValidator()
-  {
-    return XsmpcatValidator.class;
-  }
 
   @Override
   public void configureIScopeProviderDelegate(Binder binder)

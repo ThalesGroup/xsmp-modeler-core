@@ -18,7 +18,9 @@ import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpcatHoverService extends HoverService
 {
   @Inject
@@ -30,11 +32,11 @@ public class XsmpcatHoverService extends HoverService
   @Override
   public String getContents(EObject element)
   {
-    if (element instanceof Keyword)
+    if (element instanceof final Keyword keyword)
     {
-      return keywordHovers.hoverText((Keyword) element);
+      return keywordHovers.hoverText(keyword);
     }
-    return super.getContents(element);
+    return super.getContents(element).replace("\n", "\n\n");
   }
 
   @Override

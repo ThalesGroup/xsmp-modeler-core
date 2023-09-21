@@ -64,7 +64,7 @@
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
 							<excludeTransitive>true</excludeTransitive>
-							<excludeArtifactIds>
+<!--							<excludeArtifactIds>
 								com.ibm.icu,
 								org.apache.ant,
 								org.apache.commons.lang,
@@ -91,7 +91,7 @@
 								org.eclipse.jdt.debug,
 								org.eclipse.jdt.launching,
 								org.eclipse.text,
-							</excludeArtifactIds>
+							</excludeArtifactIds>-->
 						</configuration>
 					</execution>
 				</executions>
@@ -125,7 +125,7 @@
 						<transformer
 							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 							<mainClass>
-								org.eclipse.xsmp.ide.server.XsmpcatServerLauncher</mainClass>
+								org.eclipse.xsmp.ide.server.XsmpServerLauncher</mainClass>
 						</transformer>
 						<transformer
 							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
@@ -136,23 +136,22 @@
 						</transformer>
 					</transformers>
 					<artifactSet>
-						<excludes><!-- avoid duplicate inclusion due to addjars
-							plugin -->
+						<excludes>
+	<!--						<exclude>
+								*:org.eclipse.xsmp.ide-org.eclipse.lsp4j*</exclude>
 							<exclude>
-								*:org.xtext.example.mydsl1.ide-org.eclipse.lsp4j*</exclude>
+								*:org.eclipse.xsmp.ide-org.eclipse.xtext.xbase.lib*</exclude>
 							<exclude>
-								*:org.xtext.example.mydsl1.ide-org.eclipse.xtext.xbase.lib*</exclude>
+								*:org.eclipse.xsmp.ide-org.eclipse.xtend.lib*</exclude>
 							<exclude>
-								*:org.xtext.example.mydsl1.ide-org.eclipse.xtend.lib*</exclude>
+								*:org.eclipse.xsmp.ide-com.google.guava*</exclude>
+							<exclude>*:org.eclipse.xsmp.ide-asm*</exclude>
+							<exclude>*:org.eclipse.xsmp.ide-log4j*</exclude>
+							<exclude>*:org.eclipse.xsmp.ide-reload4j*</exclude>
 							<exclude>
-								*:org.xtext.example.mydsl1.ide-com.google.guava*</exclude>
-							<exclude>*:org.xtext.example.mydsl1.ide-asm*</exclude>
-							<exclude>*:org.xtext.example.mydsl1.ide-log4j*</exclude>
-							<exclude>*:org.xtext.example.mydsl1.ide-reload4j*</exclude>
+								*:org.eclipse.xsmp.ide-org.objectweb.asm*</exclude>
 							<exclude>
-								*:org.xtext.example.mydsl1.ide-org.objectweb.asm*</exclude>
-							<exclude>
-								*:org.xtext.example.mydsl1.ide-org.apache.log4j*</exclude>
+								*:org.eclipse.xsmp.ide-org.apache.log4j*</exclude>-->
 						</excludes>
 					</artifactSet>
 					<filters>

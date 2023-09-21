@@ -19,6 +19,9 @@ import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.TextRegion;
 import org.eclipse.xtext.util.Tuples;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class XsmpcatKeywordAtOffsetHelper
 {
   public Pair<EObject, ITextRegion> resolveKeywordAt(XtextResource resource, int offset)

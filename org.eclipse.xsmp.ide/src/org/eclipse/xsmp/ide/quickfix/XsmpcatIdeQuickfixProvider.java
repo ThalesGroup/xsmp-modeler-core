@@ -37,13 +37,13 @@ public class XsmpcatIdeQuickfixProvider extends AbstractDeclarativeIdeQuickfixPr
         e = e.eContainer();
       }
 
-      if (e instanceof Type)
+      if (e instanceof final Type type)
       {
-        ((Type) e).setUuid(UUID.randomUUID().toString());
+        type.setUuid(UUID.randomUUID().toString());
       }
     });
   }
-
+  
   @QuickFix(XsmpcatIssueCodesProvider.HIDDEN_ELEMENT)
   public void changeVisibility(DiagnosticResolutionAcceptor acceptor)
   {

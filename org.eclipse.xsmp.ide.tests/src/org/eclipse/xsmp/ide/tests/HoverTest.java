@@ -35,7 +35,9 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
               A **Namespace** is a primary ordering mechanism.
 
               A **namespace** may contain other namespaces (nested namespaces), and does typically contain types.
+
               In SMDL, namespaces are contained within a **Catalogue** (either directly, or within another namespace in a catalogue).
+
               All sub-elements of a namespace (namespaces and types) must have unique names.
               """;
       it.setExpectedHover(expectedHover);

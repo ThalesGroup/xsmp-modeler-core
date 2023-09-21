@@ -1,3 +1,13 @@
+/*******************************************************************************
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
 package org.eclipse.xsmp.ide.commands;
 
 import java.util.HashMap;
@@ -9,11 +19,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.xsmp.XsmpcatStandaloneSetupGenerated;
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
 import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
 import org.eclipse.xsmp.tool.python.PythonStandaloneSetup;
 import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
-import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
@@ -21,27 +31,29 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
-import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonPrimitive;
 
-public class CommandService implements IExecutableCommandService
+public class XsmpCommandService implements IExecutableCommandService
 {
-  private static final String SMDL_CMD = "xsmp.smdl";
+  private static final String GENERATE_SMP_CMD = "xsmp.generator.smp";
 
-  private static final String PYTHON_CMD = "xsmp.python";
+  private static final String GENERATE_PYTHON_CMD = "xsmp.generator.python";
 
-  private static final String ESA_CDK_CMD = "xsmp.esa_cdk";
+  private static final String GENERATE_ESA_CDK_CMD = "xsmp.generator.esa-cdk";
 
-  private static final String XSMP_SDK_CMD = "xsmp.xsmp_sdk";
+  private static final String GENERATE_XSMP_SDK_CMD = "xsmp.generator.xsmp-sdk";
+
+  @SuppressWarnings("unused")
+  private static final String IMPORT_SMPCAT_CMD = "xsmp.import.smpcat";
 
   protected static class Command
   {
-    public Command(ISetup setup)
+    public Command(XsmpcatStandaloneSetupGenerated setup)
     {
-      final var injector = setup.createInjectorAndDoEMFRegistration();
+      final var injector = setup.createInjector();
       generator = injector.getInstance(IGenerator2.class);
       fileAccess = injector.getInstance(JavaIoFileSystemAccess.class);
       final var outputConfigurationProvider = injector
@@ -64,31 +76,21 @@ public class CommandService implements IExecutableCommandService
 
   protected Map<String, Command> commands = new HashMap<>();
 
-  protected CommandService()
+  protected XsmpCommandService()
   {
-    final var languageName = "xsmpcat";
-    // store ResourceFactory & ServiceProvider
-    final var resourceFactory = Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap()
-            .get(languageName);
-    final var serviceProvider = IResourceServiceProvider.Registry.INSTANCE
-            .getExtensionToFactoryMap().get(languageName);
 
-    commands.put(SMDL_CMD, new Command(new SmpStandaloneSetup()));
-    commands.put(PYTHON_CMD, new Command(new PythonStandaloneSetup()));
-    commands.put(ESA_CDK_CMD, new Command(new EsaCdkStandaloneSetup()));
-    commands.put(XSMP_SDK_CMD, new Command(new XsmpSdkStandaloneSetup()));
+    commands.put(GENERATE_SMP_CMD, new Command(new SmpStandaloneSetup()));
+    commands.put(GENERATE_PYTHON_CMD, new Command(new PythonStandaloneSetup()));
+    commands.put(GENERATE_ESA_CDK_CMD, new Command(new EsaCdkStandaloneSetup()));
+    commands.put(GENERATE_XSMP_SDK_CMD, new Command(new XsmpSdkStandaloneSetup()));
 
-    // restore ResourceFactory & ServiceProvider
-    Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(languageName,
-            resourceFactory);
-    IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(languageName,
-            serviceProvider);
   }
 
   @Override
   public List<String> initialize()
   {
-    return Lists.newArrayList(SMDL_CMD, PYTHON_CMD, ESA_CDK_CMD, XSMP_SDK_CMD);
+    return Lists.newArrayList(GENERATE_SMP_CMD, GENERATE_PYTHON_CMD, GENERATE_ESA_CDK_CMD,
+            GENERATE_XSMP_SDK_CMD);
   }
 
   @Override

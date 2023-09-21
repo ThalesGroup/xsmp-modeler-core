@@ -1,9 +1,9 @@
 {
 	"name": "xsmp",
-	"displayName": "XSMP Modeler",
-	"description": "VSCode extension for XSMP Modeler",
+	"displayName": "XSMP",
+	"description": "XSMP language support",
 	"version": "1.1.0-rc6",
-	"publisher": "thales-alenia-space",
+	"publisher": "ThalesAleniaSpace",
 	"author": "Thales Alenia Space",
 	"icon": "images/xsmp.png",
 	"license": "EPL-2.0",
@@ -21,8 +21,9 @@
 		"Programming Languages"
 	],
 	"activationEvents": [
+		"onStartupFinished",
 		"onLanguage:xsmpcat",
-		"onCommand:xsmp.createNewProject"
+		"onCommand:xsmp.wizard.xsmp-sdk"
 	],
 	"main": "target/extension",
 	"contributes": {
@@ -45,28 +46,79 @@
 				"path": "./syntaxes/xsmp.tmLanguage.json"
 			}
 		],
-		"commands": [
+		"customEditors": [
 			{
-				"command": "xsmp.smdl.proxy",
-				"title": "Xsmp: Generate SMDL files"
-			},
-			{
-				"command": "xsmp.python.proxy",
-				"title": "Xsmp: Generate Python code"
-			},
-			{
-				"command": "xsmp.esa_cdk.proxy",
-				"title": "Xsmp: Generate ESA CDK C++ code"
-			},
-			{
-				"command": "xsmp.xsmp_sdk.proxy",
-				"title": "Xsmp: Generate XSMP SDK C++ code"
-			},
-			{
-				"command": "xsmp.createNewProject",
-				"title": "Create: new Xsmp project"
+				"viewType": "xsmp.settingsEditor",
+				"displayName": "Xsmp settings",
+				"selector": [
+					{
+						"filenamePattern": "**/.xsmp/settings.json"
+					}
+				],
+				"priority": "default"
 			}
 		],
+		"commands": [
+			{
+				"command": "xsmp.import.smpcat.proxy",
+				"category": "Xsmp",
+				"title": "Convert smpcat file to xsmpcat"
+			},
+			{
+				"command": "xsmp.generator.smp.proxy",
+				"category": "Xsmp",
+				"title": "Generate SMP models."
+			},
+			{
+				"command": "xsmp.generator.python.proxy",
+				"category": "Xsmp",
+				"title": "Generate python files."
+			},
+			{
+				"command": "xsmp.generator.xsmp-sdk.proxy",
+				"category": "Xsmp",
+				"title": "Generate xsmp-sdk C++ files."
+			},
+			{
+				"command": "xsmp.generator.esa-cdk.proxy",
+				"category": "Xsmp",
+				"title": "Generate esa-cdk C++ files."
+			},
+			{
+				"command": "xsmp.wizard.xsmp-sdk",
+				"category": "Xsmp",
+				"title": "Create new xsmp-sdk project"
+			},
+			{
+				"category": "Xsmp",
+				"command": "xsmp.openSettingsEditor",
+				"title": "Open Settings (UI)"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "xsmp.import.smpcat.proxy",
+					"when": "resourceFilename =~ /\\b\\.smpcat\\b/"
+				},
+				{
+					"command": "xsmp.generator.smp.proxy",
+					"when": "editorLangId == xsmpcat"
+				},
+				{
+					"command": "xsmp.generator.python.proxy",
+					"when": "editorLangId == xsmpcat"
+				},
+				{
+					"command": "xsmp.generator.xsmp-sdk.proxy",
+					"when": "editorLangId == xsmpcat"
+				},
+				{
+					"command": "xsmp.generator.esa-cdk.proxy",
+					"when": "editorLangId == xsmpcat"
+				}
+			]
+		},
 		"configuration": [
 			{
 				"type": "object",
@@ -74,7 +126,53 @@
 				"properties": {
 					"xsmp.javaPath": {
 						"type": "string",
+						"scope": "machine",
 						"description": "Java executable path."
+					},
+					"xsmp.build.automatically": {
+						"type": "boolean",
+						"default": "true",
+						"description": "Build automatically."
+					},
+					"xsmp.profile": {
+						"type": "string",
+						"scope": "resource",
+						"enum": [
+							"esa-cdk",
+							"xsmp-sdk"
+						],
+						"default": "xsmp-sdk",
+						"description": "Select the Profile:"
+					},
+					"xsmp.tool.smp": {
+						"type": "boolean",
+						"scope": "resource",
+						"default": true,
+						"description": "Enable/Disable SMP model generator."
+					},
+					"xsmp.tool.python": {
+						"type": "boolean",
+						"scope": "resource",
+						"default": false,
+						"description": "Enable/Disable Python generator."
+					},
+					"xsmp.dependencies": {
+						"type": "array",
+						"scope": "resource",
+						"item": "string",
+						"default": [
+							"ecss_smp"
+						],
+						"description": "Project dependencies:"
+					},
+					"xsmp.source.folders": {
+						"type": "array",
+						"scope": "resource",
+						"item": "string",
+						"default": [
+							"smdl"
+						],
+						"description": "Project relative source folders:"
 					}
 				}
 			}
@@ -83,10 +181,11 @@
 	"devDependencies": {
 		"@types/node": "^17.0.34",
 		"@types/vscode": "^1.67.0",
-		"typescript": "^4.6.4",
-		"@vscode/test-electron": "^2.1.3"
+		"@vscode/test-electron": "^2.1.3",
+		"typescript": "^4.6.4"
 	},
 	"dependencies": {
+		"@json-editor/json-editor": "^2.10.1",
 		"vscode-languageclient": "^8.0.1"
 	},
 	"scripts": {

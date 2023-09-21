@@ -165,9 +165,15 @@ final class XsmpProject {
                 - CMake 3.14+ (3.20+ for Python tests)
                 - Python 3.7+ and pytest
                 
-                ## How to Build
-
-                ### Build with CMake
+                ## Plugins for Eclipse integration
+                
+                Install from Marketplace:
+                
+                - Eclipse C/C++ IDE CDT
+                - CMake4Eclipse
+                - PyDev
+                
+                ## How to Build with CMake
                 
                 ```bash
                 cmake -B ./build -DCMAKE_BUILD_TYPE=Release
