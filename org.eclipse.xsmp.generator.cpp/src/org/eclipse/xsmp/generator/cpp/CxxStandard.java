@@ -12,5 +12,5 @@ package org.eclipse.xsmp.generator.cpp;
 
 public enum CxxStandard
 {
-  CXX_STD_11, CXX_STD_14, CXX_STD_17, CXX2_STD_0, CXX_STD_23, CXX_STD_26
+  CXX_STD_11, CXX_STD_14, CXX_STD_17, CXX_STD_20, CXX_STD_23, CXX_STD_26
 }

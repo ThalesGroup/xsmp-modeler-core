@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -102,17 +102,6 @@ class EsaCdkComponentGenerator extends ComponentGenerator {
     override protected generateSourceBody(Component type, boolean useGenPattern) {
         if (useGenPattern)
             '''
-                «type.name»::«type.name»(
-                        ::Smp::String8 name,
-                        ::Smp::String8 description,
-                        ::Smp::IComposite* parent,
-                        ::Smp::ISimulator* simulator)
-                        : «type.nameGen»::«type.nameGen»(name, description, parent, simulator) {
-                }
-                
-                «type.name»::~«type.name»() {
-                }
-                
                 void «type.name»::DoPublish( ::Smp::IPublication* receiver) {
                 }
                 
