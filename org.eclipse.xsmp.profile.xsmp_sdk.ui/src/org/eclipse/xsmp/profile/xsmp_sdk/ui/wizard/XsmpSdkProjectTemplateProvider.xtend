@@ -139,8 +139,10 @@ final class XsmpProject {
                     
                     def loadAssembly(self, sim: ecss_smp.Smp.ISimulator):
                         sim.LoadLibrary("«name»")
+                        #TODO create instances, configuration, connections, ...
                 
                     def test_«name»(self):
+                        # TODO write unit-test
                         pass
             ''')
 
@@ -154,29 +156,22 @@ final class XsmpProject {
             addFile("README.md", '''
                 # «name»
                 
+                Project description.
+                
                 ## System Requirements
                 
-                - Linux or MacOS
-                - A compiler with support for C++ 17 (at least GCC 7 or Clang 5)
-                - CMake 3.14 or newer
-                - Ninja or Make
-                - Python 3.7 or newer (for unit-tests)
+                - Linux, Windows or MacOS
+                - A C++ 17 compiler: Clang 5+, GCC 7+ and MSVC 2019+ are officially supported
+                - CMake 3.14+ (3.20+ for Python tests)
+                - Python 3.7+ and pytest
                 
                 ## How to Build
-                
-                Both CMake and Python (pip) builds are supported.
-                
+
                 ### Build with CMake
                 
                 ```bash
                 cmake -B ./build -DCMAKE_BUILD_TYPE=Release
                 cmake --build ./build --config Release
-                ```
-                
-                ### Build with Python (pip)
-                
-                ```bash
-                python -m pip install .[test] -v
                 ```
                 
             ''')
