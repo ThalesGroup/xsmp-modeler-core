@@ -2,7 +2,7 @@
 	"name": "xsmp",
 	"displayName": "XSMP Modeler",
 	"description": "VSCode extension for XSMP Modeler",
-	"version": "1.1.0-rc5",
+	"version": "1.1.0-rc6",
 	"publisher": "thales-alenia-space",
 	"author": "Thales Alenia Space",
 	"icon": "images/xsmp.png",
