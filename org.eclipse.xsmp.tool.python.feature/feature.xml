@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.xsmp.tool.python.feature"
-      label="Python Wrapper Tool Feature"
+      label="Python Wrapper Tool"
       version="1.1.0.qualifier">
 
    <copyright>
-      Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+      Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
    </copyright>
 
    <license url="https://www.eclipse.org/legal/epl-2.0/">

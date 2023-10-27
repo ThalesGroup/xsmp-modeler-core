@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="org.eclipse.xsmp.feature" version="0.0.0">
+   <feature id="org.eclipse.xsmp.feature">
       <category name="main"/>
    </feature>
-   <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature" version="0.0.0">
+   <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature">
       <category name="main"/>
    </feature>
    <feature id="org.eclipse.xsmp.profile.esa_cdk.feature">
       <category name="main"/>
    </feature>
-   <feature id="org.eclipse.xsmp.feature.source" version="0.0.0">
+   <feature id="org.eclipse.xsmp.feature.source">
       <category name="main.source"/>
    </feature>
-   <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature.source" version="0.0.0">
+   <feature id="org.eclipse.xsmp.profile.xsmp_sdk.feature.source">
       <category name="main.source"/>
    </feature>
    <feature id="org.eclipse.xsmp.profile.esa_cdk.feature.source">
+      <category name="main.source"/>
+   </feature>
+   <feature id="org.eclipse.xsmp.tool.python.feature">
+      <category name="main"/>
+   </feature>
+   <feature id="org.eclipse.xsmp.tool.python.feature.source">
       <category name="main.source"/>
    </feature>
    <category-def name="main" label="Xsmp"/>
