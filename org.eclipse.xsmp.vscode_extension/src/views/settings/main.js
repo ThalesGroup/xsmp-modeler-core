@@ -18,17 +18,17 @@ import store from './store'
 createApp(App).use(store).mount('#app')
 
 window.addEventListener('message', (event) => {
-	const msg = event.data;
+    const msg = event.data;
 
-	switch (msg.command) {
-		case 'setAvailableDependencies':
-			store.commit('setAvailableDependencies', msg.dependencies);
-			break;
-		case 'update':
-			let json = JSON.parse(msg.settings);
-			store.dispatch('updateSettings', json);
-			break;
-		default:
-			break;
-	}
+    switch (msg.command) {
+        case 'setAvailableDependencies':
+            store.commit('setAvailableDependencies', msg.dependencies);
+            break;
+        case 'update':
+            let json = JSON.parse(msg.settings);
+            store.dispatch('updateSettings', json);
+            break;
+        default:
+            break;
+    }
 });

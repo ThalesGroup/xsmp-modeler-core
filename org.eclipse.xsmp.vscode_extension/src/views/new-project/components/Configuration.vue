@@ -56,6 +56,17 @@
 </template>
 
 <script>
+/*******************************************************************************
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
+
 import FolderOpen from "./FolderOpen.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
 
@@ -65,7 +76,7 @@ export default {
   },
   data() {
     return {
-      availableProfile: ["xsmp-sdk", "esa-sdk"],
+      availableProfile: ["xsmp-sdk", "esa-cdk"],
       availableTools: ["smp", "python"],
     };
   },

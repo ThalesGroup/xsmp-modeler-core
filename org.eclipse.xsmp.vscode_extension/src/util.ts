@@ -13,19 +13,19 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
-	ensureDir,
+    ensureDir,
 } from "fs-extra";
 
 
 export async function createTemplateProject(projectName: string, dirPath: string, profile: string, tools: string[]) {
-	const smdlPath = path.join(dirPath, 'smdl');
-	await ensureDir(smdlPath, { mode: 0o775 });
+    const smdlPath = path.join(dirPath, 'smdl');
+    await ensureDir(smdlPath, { mode: 0o775 });
 
-	// Create the catalog file
-	const catalogFilePath = path.join(smdlPath, `${projectName}.xsmpcat`);
-	const creator = os.userInfo().username;
-	const currentDate = new Date().toISOString();
-	const catalogContent = `/**
+    // Create the catalog file
+    const catalogFilePath = path.join(smdlPath, `${projectName}.xsmpcat`);
+    const creator = os.userInfo().username;
+    const currentDate = new Date().toISOString();
+    const catalogContent = `/**
  * Catalogue ${projectName}
  * 
  * @creator ${creator}
@@ -39,38 +39,38 @@ namespace ${projectName}
 }
 `;
 
-	await fs.promises.writeFile(catalogFilePath, catalogContent);
+    await fs.promises.writeFile(catalogFilePath, catalogContent);
 
-	// Create the settings.json file
-	const xsmpPath = path.join(dirPath, '.xsmp');
-	await ensureDir(xsmpPath, { mode: 0o775 });
+    // Create the settings.json file
+    const xsmpPath = path.join(dirPath, '.xsmp');
+    await ensureDir(xsmpPath, { mode: 0o775 });
 
-	const settingsFilePath = path.join(xsmpPath, 'settings.json');
-	const settingsContent = JSON.stringify({
-		build_automatically: true,
-		profile,
-		sources: [],
-		dependencies: [],
-		tools
-	}, null, 2);
+    const settingsFilePath = path.join(xsmpPath, 'settings.json');
+    const settingsContent = JSON.stringify({
+        build_automatically: true,
+        profile,
+        sources: [],
+        dependencies: [],
+        tools
+    }, null, 2);
 
-	await fs.promises.writeFile(settingsFilePath, settingsContent);
+    await fs.promises.writeFile(settingsFilePath, settingsContent);
 }
 
 export function dirExistPromise(dirPath: string) {
-	return new Promise<boolean>((resolve, reject) => {
-		if (!dirPath) {
-			return resolve(false);
-		}
-		fs.stat(dirPath, (err, stats) => {
-			if (err) {
-				return resolve(false);
-			} else {
-				if (stats.isDirectory()) {
-					return resolve(true);
-				}
-				return resolve(false);
-			}
-		});
-	});
+    return new Promise<boolean>((resolve, reject) => {
+        if (!dirPath) {
+            return resolve(false);
+        }
+        fs.stat(dirPath, (err, stats) => {
+            if (err) {
+                return resolve(false);
+            } else {
+                if (stats.isDirectory()) {
+                    return resolve(true);
+                }
+                return resolve(false);
+            }
+        });
+    });
 }

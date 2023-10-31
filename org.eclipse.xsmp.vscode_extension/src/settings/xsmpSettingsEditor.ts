@@ -13,70 +13,68 @@ import * as vscode from 'vscode';
 
 export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvider {
 
-	public static register(context: vscode.ExtensionContext): vscode.Disposable {
-		const provider = new XsmpSettingsEditorProvider(context);
-		const providerRegistration = vscode.window.registerCustomEditorProvider(XsmpSettingsEditorProvider.viewType, provider);
-		return providerRegistration;
-	}
+    public static register(context: vscode.ExtensionContext): vscode.Disposable {
+        const provider = new XsmpSettingsEditorProvider(context);
+        const providerRegistration = vscode.window.registerCustomEditorProvider(XsmpSettingsEditorProvider.viewType, provider);
+        return providerRegistration;
+    }
 
-	private static readonly viewType = 'xsmp.settingsEditor';
+    private static readonly viewType = 'xsmp.settingsEditor';
 
-	public static documentUri = null;
+    public static documentUri = null;
 
-	constructor(
-		private readonly context: vscode.ExtensionContext
-	) { }
+    constructor(
+        private readonly context: vscode.ExtensionContext
+    ) { }
 
-	/**
-	 * Called when our custom editor is opened.
-	 */
-	public async resolveCustomTextEditor(
-		document: vscode.TextDocument,
-		webviewPanel: vscode.WebviewPanel,
-		_token: vscode.CancellationToken
-	): Promise<void> {
-		XsmpSettingsEditorProvider.documentUri = document.uri;
+    /**
+     * Called when our custom editor is opened.
+     */
+    public async resolveCustomTextEditor(
+        document: vscode.TextDocument,
+        webviewPanel: vscode.WebviewPanel,
+        _token: vscode.CancellationToken
+    ): Promise<void> {
+        XsmpSettingsEditorProvider.documentUri = document.uri;
 
-		// Setup initial content for the webview
-		webviewPanel.webview.options = {
-			enableScripts: true,
-		};
+        // Setup initial content for the webview
+        webviewPanel.webview.options = {
+            enableScripts: true,
+        };
 
-		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
+        webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
-		// Load available dependencies
-		webviewPanel.webview.postMessage({
-			command: "setAvailableDependencies",
-			dependencies: this.getWorkspaceFolderNames(),
-		})
+        // Load available dependencies
+        webviewPanel.webview.postMessage({
+            command: "setAvailableDependencies",
+            dependencies: this.getWorkspaceFolderNames(),
+        })
 
-		function updateWebview() {
-			webviewPanel.webview.postMessage({
-				command: 'update',
-				settings: document.getText(),
-			});
-		}
+        function updateWebview() {
+            webviewPanel.webview.postMessage({
+                command: 'update',
+                settings: document.getText(),
+            });
+        }
 
-		// Receive message from the webview.
-		webviewPanel.webview.onDidReceiveMessage(e => {
-			switch (e.command) {
-				case 'save':
-					this.save(document, e.settings);
-					break;
-			}
-		});
+        // Receive message from the webview.
+        webviewPanel.webview.onDidReceiveMessage(e => {
+            if (e.command === 'save') {
+                this.save(document, e.settings);
+            }
+        });
 
-		updateWebview();
-	}
+        updateWebview();
+    }
 
-	/**
-	 * Get the static html used for the editor webviews.
-	 */
-	private getHtmlForWebview(webview: vscode.Webview): string {
-		const scriptPath = webview.asWebviewUri(vscode.Uri.joinPath(
-			this.context.extensionUri, 'dist', 'views', 'settings-bundle.js'));
+    /**
+     * Get the static html used for the editor webviews.
+     */
+    private getHtmlForWebview(webview: vscode.Webview): string {
+        const scriptPath = webview.asWebviewUri(vscode.Uri.joinPath(
+            this.context.extensionUri, 'dist', 'views', 'settings-bundle.js'));
 
-		return `
+        return `
 			<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -89,37 +87,58 @@ export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvid
 			<div id="app"></div>
 			</body>
 			</html>`;
-	}
+    }
 
-	private getWorkspaceFolderNames() {
-		return (vscode.workspace.workspaceFolders?.map(folder => folder.name) || []);
-	}
+    private getWorkspaceFolderNames() {
+        const documentUri = XsmpSettingsEditorProvider.documentUri;
 
-	private save(document: vscode.TextDocument, data: any) {
-		return this.updateTextDocument(document, data);
-	}
+        if (!documentUri) {
+            vscode.window.showErrorMessage("No document is open.");
+            return [];
+        }
 
-	/**
-	 * Write out the json to a given document.
-	 */
-	private updateTextDocument(document: vscode.TextDocument, jsonString: any) {
-		const edit = new vscode.WorkspaceEdit();
+        const activeWorkspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri);
 
-		const json = {
-			build_automatically: jsonString.build_automatically,
-			profile: jsonString.profile,
-			sources: JSON.parse(jsonString.sources),
-			dependencies: JSON.parse(jsonString.dependencies),
-			tools: JSON.parse(jsonString.tools)
-		}
+        if (!activeWorkspaceFolder) {
+            vscode.window.showErrorMessage("No workspace folder is open.");
+            return [];
+        }
 
-		// Just replace the entire document every time for this example extension.
-		// A more complete extension should compute minimal edits instead.
-		edit.replace(
-			document.uri,
-			new vscode.Range(0, 0, document.lineCount, 0),
-			JSON.stringify(json, null, 2));
+        const allWorkspaceFolders = vscode.workspace.workspaceFolders || [];
 
-		return vscode.workspace.applyEdit(edit);
-	}
+        // Filter out the active workspace folder by its name
+        const folderNames = allWorkspaceFolders.map(folder => folder.name);
+        const activeFolderName = activeWorkspaceFolder.name;
+        const filteredFolderNames = folderNames.filter(name => name !== activeFolderName);
+
+        return filteredFolderNames;
+    }
+
+    private save(document: vscode.TextDocument, data: any) {
+        return this.updateTextDocument(document, data);
+    }
+
+    /**
+     * Write out the json to a given document.
+     */
+    private updateTextDocument(document: vscode.TextDocument, jsonString: any) {
+        const edit = new vscode.WorkspaceEdit();
+
+        const json = {
+            build_automatically: jsonString.build_automatically,
+            profile: jsonString.profile,
+            sources: JSON.parse(jsonString.sources),
+            dependencies: JSON.parse(jsonString.dependencies),
+            tools: JSON.parse(jsonString.tools)
+        }
+
+        // Just replace the entire document every time for this example extension.
+        // A more complete extension should compute minimal edits instead.
+        edit.replace(
+            document.uri,
+            new vscode.Range(0, 0, document.lineCount, 0),
+            JSON.stringify(json, null, 2));
+
+        return vscode.workspace.applyEdit(edit);
+    }
 }

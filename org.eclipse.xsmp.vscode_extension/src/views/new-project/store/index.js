@@ -13,51 +13,51 @@ import { createStore } from 'vuex'
 
 let vscode;
 try {
-	vscode = acquireVsCodeApi();
+    vscode = acquireVsCodeApi();
 } catch (error) {
-	console.error(error);
+    console.error(error);
 }
 
 export default createStore({
-	state: {
-		projectName: "",
-		containerDirectory: "",
-		profile: "",
-		tools: []
-	},
-	mutations: {
-		setProjectName(state, projectName) {
-			state.projectName = projectName;
-		},
-		setContainerDirectory(state, containerDir) {
-			state.containerDirectory = containerDir;
-		},
-		setProfile(state, profile) {
-			state.profile = profile;
-		},
-		setTools(state, tools) {
-			state.tools = tools;
-		},
-	},
-	actions: {
-		requestInitialValues() {
-			vscode.postMessage({
-				command: "requestInitValues",
-			});
-		},
-		createProject({ state }) {
-			vscode.postMessage({
-				command: "createProject",
-				projectName: state.projectName,
-				containerFolder: state.containerDirectory,
-				profile: state.profile,
-				tools: JSON.stringify(state.tools)
-			})
-		},
-		openProjectDirectory() {
-			vscode.postMessage({
-				command: "openProjectDirectory",
-			});
-		},
-	}
+    state: {
+        projectName: "",
+        containerDirectory: "",
+        profile: "",
+        tools: []
+    },
+    mutations: {
+        setProjectName(state, projectName) {
+            state.projectName = projectName;
+        },
+        setContainerDirectory(state, containerDir) {
+            state.containerDirectory = containerDir;
+        },
+        setProfile(state, profile) {
+            state.profile = profile;
+        },
+        setTools(state, tools) {
+            state.tools = tools;
+        },
+    },
+    actions: {
+        requestInitialValues() {
+            vscode.postMessage({
+                command: "requestInitValues",
+            });
+        },
+        createProject({ state }) {
+            vscode.postMessage({
+                command: "createProject",
+                projectName: state.projectName,
+                containerFolder: state.containerDirectory,
+                profile: state.profile,
+                tools: JSON.stringify(state.tools)
+            })
+        },
+        openProjectDirectory() {
+            vscode.postMessage({
+                command: "openProjectDirectory",
+            });
+        },
+    }
 })

@@ -18,30 +18,30 @@ import store from './store'
 createApp(App).use(store).mount('#app')
 
 window.addEventListener("message", (event) => {
-	const msg = event.data;
+    const msg = event.data;
 
-	switch (msg.command) {
-		case "initialLoad":
-			if (msg.projectName) {
-				store.commit('setProjectName', msg.projectName);
-			}
-			if (msg.containerDirectory) {
-				store.commit('setContainerDirectory', msg.containerDirectory);
-			}
-			if (msg.profile) {
-				store.commit('setProfile', msg.profile);
+    switch (msg.command) {
+        case "initialLoad":
+            if (msg.projectName) {
+                store.commit('setProjectName', msg.projectName);
+            }
+            if (msg.containerDirectory) {
+                store.commit('setContainerDirectory', msg.containerDirectory);
+            }
+            if (msg.profile) {
+                store.commit('setProfile', msg.profile);
 
-			}
-			if (msg.tools) {
-				store.commit('setTools', msg.tools);
-			}
-			break;
-		case "setContainerDirectory":
-			if (msg.projectDirectory) {
-				store.commit('setContainerDirectory', msg.projectDirectory);
-			}
-			break;
-		default:
-			break;
-	}
+            }
+            if (msg.tools) {
+                store.commit('setTools', msg.tools);
+            }
+            break;
+        case "setContainerDirectory":
+            if (msg.projectDirectory) {
+                store.commit('setContainerDirectory', msg.projectDirectory);
+            }
+            break;
+        default:
+            break;
+    }
 });
