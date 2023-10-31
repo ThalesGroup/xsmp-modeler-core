@@ -83,9 +83,9 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
       {
         profile = root.get("profile").getAsString();
       }
-      if (root.has("build.automatically"))
+      if (root.has("build_automatically"))
       {
-        isBuildAutomatically = root.get("build.automatically").getAsBoolean();
+        isBuildAutomatically = root.get("build_automatically").getAsBoolean();
       }
 
       if (root.has("sources"))

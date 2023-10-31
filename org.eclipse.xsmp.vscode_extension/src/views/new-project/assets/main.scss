@@ -1,0 +1,137 @@
+/*******************************************************************************
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
+
+@import 'bulma/bulma';
+
+html,
+body {
+	min-height: 100vh;
+}
+
+body {
+	background-color: var(--vscode-editor-background);
+	color: var(--vscode-editor-foreground);
+	font-family: var(--vscode-font-family);
+	font-weight: var(--vscode-font-weight);
+	font-size: var(--vscode-font-size);
+}
+
+.title:not(:last-child) {
+	margin-bottom: 0.2rem;
+}
+
+.section.no-padding-top {
+	padding-top: 0;
+}
+
+h1.title,
+p.subtitle {
+	color: var(--vscode-foreground);
+}
+
+.title,
+.subtitle,
+.label {
+	color: var(--vscode-foreground);
+}
+
+.notification {
+	color: var(--vscode-foreground);
+	background-color: var(--vscode-notifications-background);
+}
+
+.notification:not(:last-child) {
+	margin-bottom: 0.8em;
+}
+
+.table,
+.table thead td,
+.table thead th {
+	color: var(--vscode-foreground);
+	background-color: var(--vscode-notifications-background);
+}
+
+.table td,
+.table th {
+	border-color: var(--vscode-sideBar-dropBackground);
+}
+
+body.vscode-dark table.is-hoverable tbody tr:not(.is-selected):hover {
+	background-color: var(--vscode-sideBar-dropBackground);
+}
+
+.button {
+	background-color: var(--vscode-button-background);
+	border-color: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+}
+
+.button:disabled {
+	background-color: var(--vscode-notifications-background);
+}
+
+.button:active {
+	box-shadow: none;
+}
+
+.button:hover:disabled {
+	color: var(--vscode-button-foreground);
+}
+
+.button:hover:enabled,
+button>span.icon:hover,
+button>span.icon>i:hover {
+	background-color: var(--vscode-button-hoverBackground);
+	border-color: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+}
+
+.button:focus,
+.button.is-focused {
+	border-color: var(--vscode-button-foreground);
+}
+
+.input,
+.textarea,
+.select select {
+	background-color: var(--vscode-input-background);
+	border-color: var(--vscode-input-border);
+	color: var(--vscode-input-foreground);
+}
+
+.input::placeholder {
+	color: var(--vscode-input-placeholderForeground);
+}
+
+.select select:hover,
+.textarea,
+.input:hover {
+	border-color: var(--vscode-inputOption-activeBorder) !important;
+}
+
+.select:hover::after {
+	border-color: var(--vscode-focusBorder) !important;
+}
+
+.select select:active,
+.select select:focus,
+.input:active,
+.input:focus {
+	border-color: var(--vscode-inputOption-activeBorder);
+}
+
+.is-hidden {
+	opacity: 0;
+}
+
+div.plotly-notifier {
+	visibility: hidden;
+}
