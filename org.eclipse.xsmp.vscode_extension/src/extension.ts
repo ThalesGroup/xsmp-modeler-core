@@ -165,7 +165,7 @@ export function activate(context: ExtensionContext) {
                     try {
                         NewProjectPanel.createOrShow(context.extensionPath);
                     } catch (error) {
-                        // Mettre des logs
+                        window.showErrorMessage("Error: " + error.message);
                     }
                 }
             )

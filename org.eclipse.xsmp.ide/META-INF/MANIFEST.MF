@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.xsmp,
  org.eclipse.xsmp.profile.xsmp_sdk;bundle-version="1.1.0",
  org.eclipse.xsmp.tool.python;bundle-version="1.1.0",
  org.eclipse.xsmp.tool.smp;bundle-version="1.1.0",
- org.eclipse.lsp4j.jsonrpc
+ org.eclipse.lsp4j.jsonrpc,
+ org.eclipse.xsmp.lib;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ide,
  org.eclipse.xsmp.ide.build,

@@ -25,8 +25,8 @@ window.addEventListener('message', (event) => {
             store.commit('setAvailableDependencies', msg.dependencies);
             break;
         case 'update':
-            let json = JSON.parse(msg.settings);
-            store.dispatch('updateSettings', json);
+            let settings = JSON.parse(msg.settings);
+            store.dispatch('updateSettings', settings);
             break;
         default:
             break;

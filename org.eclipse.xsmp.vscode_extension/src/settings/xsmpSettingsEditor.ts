@@ -60,11 +60,19 @@ export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvid
         // Receive message from the webview.
         webviewPanel.webview.onDidReceiveMessage(e => {
             if (e.command === 'save') {
-                this.save(document, e.settings);
+                let settings = JSON.parse(e.settings);
+                this.save(document, settings);
             }
         });
 
         updateWebview();
+
+        // Update the webview when it becomes visible
+        webviewPanel.onDidChangeViewState((e) => {
+            if (e.webviewPanel.visible) {
+                updateWebview();
+            }
+        });
     }
 
     /**
@@ -121,24 +129,17 @@ export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvid
     /**
      * Write out the json to a given document.
      */
-    private updateTextDocument(document: vscode.TextDocument, jsonString: any) {
+    private async updateTextDocument(document: vscode.TextDocument, settings: any) {
         const edit = new vscode.WorkspaceEdit();
 
-        const json = {
-            build_automatically: jsonString.build_automatically,
-            profile: jsonString.profile,
-            sources: JSON.parse(jsonString.sources),
-            dependencies: JSON.parse(jsonString.dependencies),
-            tools: JSON.parse(jsonString.tools)
-        }
-
-        // Just replace the entire document every time for this example extension.
-        // A more complete extension should compute minimal edits instead.
         edit.replace(
             document.uri,
             new vscode.Range(0, 0, document.lineCount, 0),
-            JSON.stringify(json, null, 2));
+            JSON.stringify(settings, null, 2));
 
-        return vscode.workspace.applyEdit(edit);
+        const success = await vscode.workspace.applyEdit(edit);
+        if (success) {
+            return document.save();
+        }
     }
 }

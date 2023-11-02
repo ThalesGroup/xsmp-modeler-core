@@ -88,7 +88,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
         isBuildAutomatically = root.get("build_automatically").getAsBoolean();
       }
 
-      if (root.has("sources"))
+      if (root.has("sources") && !root.get("sources").getAsJsonArray().isEmpty())
       {
         getSourceFolders().clear();
         for (final var source : root.get("sources").getAsJsonArray())

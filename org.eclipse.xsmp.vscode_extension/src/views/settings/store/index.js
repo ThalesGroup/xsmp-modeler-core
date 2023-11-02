@@ -38,13 +38,15 @@ export default createStore({
             state.sources = sources;
         },
         setDependencies(state, dependencies) {
-            state.dependencies = dependencies;
+            for (const dependency of dependencies) {
+                this.commit("addDependency", dependency);
+            }
         },
         setTools(state, tools) {
             state.tools = tools;
         },
         addDependency(state, dependency) {
-            if (!state.dependencies.includes(dependency)) {
+            if (dependency && dependency !== "" && !state.dependencies.includes(dependency)) {
                 state.dependencies.push(dependency);
                 const index = state.availableDependencies.indexOf(dependency);
                 if (index !== -1) {
@@ -57,7 +59,7 @@ export default createStore({
             state.availableDependencies.push(removedDependency);
         },
         addSourceFolder(state, folder) {
-            if (!state.sources.includes(folder)) {
+            if (folder && folder !== "" && !state.sources.includes(folder)) {
                 state.sources.push(folder);
             }
         },
@@ -70,15 +72,17 @@ export default createStore({
     },
     actions: {
         saveSettings({ state }) {
+            const settings = {
+                build_automatically: state.buildAutomatically,
+                profile: state.profile,
+                sources: state.sources,
+                dependencies: state.dependencies,
+                tools: state.tools
+            };
+
             vscode.postMessage({
                 command: 'save',
-                settings: {
-                    build_automatically: state.buildAutomatically,
-                    profile: state.profile,
-                    sources: JSON.stringify(state.sources),
-                    dependencies: JSON.stringify(state.dependencies),
-                    tools: JSON.stringify(state.tools)
-                }
+                settings: JSON.stringify(settings)
             });
         },
         updateSettings({ commit }, settings) {

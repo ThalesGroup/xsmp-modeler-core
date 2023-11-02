@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.IShouldGenerate.OnlyWithoutErrors;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,7 +31,17 @@ public class XsmpShouldGenerate extends OnlyWithoutErrors
   {
     final var config = configProvider.getProjectConfig(resource.getResourceSet());
 
-    return config != null && config.shouldGenerate()
-            && super.shouldGenerate(resource, cancelIndicator);
+    if (config != null && config.shouldGenerate())
+    {
+      for (ISourceFolder sourceFolder : config.getSourceFolders())
+      {
+        if (sourceFolder.contains(resource.getURI()))
+        {
+          return super.shouldGenerate(resource, cancelIndicator);
+        }
+      }
+    }
+
+    return false;
   }
 }
