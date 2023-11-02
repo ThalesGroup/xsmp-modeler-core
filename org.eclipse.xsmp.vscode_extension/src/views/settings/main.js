@@ -21,14 +21,17 @@ window.addEventListener('message', (event) => {
     const msg = event.data;
 
     switch (msg.command) {
-        case 'setAvailableDependencies':
+        case 'setAvailableDependencies': {
             store.commit('setAvailableDependencies', msg.dependencies);
             break;
-        case 'update':
+        }
+        case 'update': {
             let settings = JSON.parse(msg.settings);
             store.dispatch('updateSettings', settings);
             break;
-        default:
+        }
+        default: {
             break;
+        }
     }
 });

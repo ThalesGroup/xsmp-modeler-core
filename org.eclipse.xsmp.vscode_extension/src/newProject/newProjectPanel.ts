@@ -73,7 +73,7 @@ export class NewProjectPanel {
 
         this.panel.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
-                case "createProject":
+                case "createProject": {
                     this.createProject(
                         message.projectName,
                         message.containerFolder,
@@ -81,7 +81,8 @@ export class NewProjectPanel {
                         JSON.parse(message.tools)
                     )
                     break;
-                case "openProjectDirectory":
+                }
+                case "openProjectDirectory": {
                     let selectedProjectDir = await this.openFolder();
                     if (selectedProjectDir) {
                         this.panel.webview.postMessage({
@@ -90,7 +91,8 @@ export class NewProjectPanel {
                         });
                     }
                     break;
-                case "requestInitValues":
+                }
+                case "requestInitValues": {
                     this.panel.webview.postMessage({
                         command: "initialLoad",
                         projectName: "project-name",
@@ -99,8 +101,10 @@ export class NewProjectPanel {
                         tools: ["smp", "python"]
                     });
                     break;
-                default:
+                }
+                default: {
                     break;
+                }
             }
         });
 
