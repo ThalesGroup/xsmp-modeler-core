@@ -18,7 +18,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from
 import * as fs from 'fs';
 
 import { XsmpSettingsEditorProvider } from './settings/xsmpSettingsEditor';
-import { NewProjectPanel } from './newProject/newProjectPanel';
+import { NewProjectPanel } from './wizard/newProjectPanel';
 
 let lc: LanguageClient;
 
@@ -84,7 +84,7 @@ async function openSettingsEditor() {
     } catch (err) {
         // If the file doesn't exist, create it with default content
         const defaultSettings = {
-            build_automatically: true,
+            generate_automatically: true,
             profile: "",
             sources: [],
             dependencies: [],
@@ -151,12 +151,12 @@ export function activate(context: ExtensionContext) {
 
     // New project Wizard
     context.subscriptions.push(
-        commands.registerCommand('xsmp.wizard.xsmp-sdk', () => {
+        commands.registerCommand('xsmp.wizard', () => {
             window.withProgress(
                 {
                     cancellable: false,
                     location: ProgressLocation.Notification,
-                    title: "XSMP-SDK: New Project"
+                    title: "XSMP: New Project"
                 },
                 async (
                     progress: Progress<{ increment: number; message: string }>,
@@ -192,29 +192,12 @@ export function activate(context: ExtensionContext) {
     );
 
     context.subscriptions.push(
-        commands.registerCommand("xsmp.generator.python.proxy", async () => {
+        commands.registerCommand("xsmp.generate.proxy", async () => {
             if (await isValidXsmpcatCommand()) {
-                commands.executeCommand("xsmp.generator.python", window.activeTextEditor.document.uri.toString());
+                commands.executeCommand("xsmp.generate", window.activeTextEditor.document.uri.toString());
             }
         }));
-    context.subscriptions.push(
-        commands.registerCommand("xsmp.generator.smp.proxy", async () => {
-            if (await isValidXsmpcatCommand()) {
-                commands.executeCommand("xsmp.generator.smp", window.activeTextEditor.document.uri.toString());
-            }
-        }));
-    context.subscriptions.push(
-        commands.registerCommand("xsmp.generator.xsmp-sdk.proxy", async () => {
-            if (await isValidXsmpcatCommand()) {
-                commands.executeCommand("xsmp.generator.xsmp-sdk", window.activeTextEditor.document.uri.toString());
-            }
-        }));
-    context.subscriptions.push(
-        commands.registerCommand("xsmp.generator.esa-cdk.proxy", async () => {
-            if (await isValidXsmpcatCommand()) {
-                commands.executeCommand("xsmp.generator.esa-cdk", window.activeTextEditor.document.uri.toString());
-            }
-        }));
+
     context.subscriptions.push(
         commands.registerCommand("xsmp.import.smpcat.proxy", async () => {
             // Get the active text editor
@@ -234,19 +217,6 @@ export function activate(context: ExtensionContext) {
             }
         })
     );
-    context.subscriptions.push(commands.registerCommand('xsmp.createNewProject', () => {
-        // Prompt the user for a folder to create the files
-        window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false }).then((uri) => {
-            if (!uri || uri.length === 0) {
-                window.showErrorMessage('No folder selected. Aborting file creation.');
-                return;
-            }
-
-            window.showInformationMessage('Not implemented yet.');
-        });
-    }));
-
-
 
     // Start the server when the extension activates
     startServer();

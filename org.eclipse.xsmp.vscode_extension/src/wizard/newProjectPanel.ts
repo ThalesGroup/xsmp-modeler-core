@@ -63,7 +63,7 @@ export class NewProjectPanel {
 
         const scriptPath = this.panel.webview.asWebviewUri(
             vscode.Uri.file(
-                path.join(this.extensionPath, "dist", "views", "newProject-bundle.js")
+                path.join(this.extensionPath, "dist", "views", "wizard-bundle.js")
             )
         );
         this.panel.webview.html = this.createHtml(scriptPath);
@@ -129,7 +129,7 @@ export class NewProjectPanel {
             {
                 cancellable: true,
                 location: vscode.ProgressLocation.Notification,
-                title: "XSMP Modeler: Create project"
+                title: "XSMP: Create project"
             },
             async (
                 progress: vscode.Progress<{ message: string; increment: number }>,

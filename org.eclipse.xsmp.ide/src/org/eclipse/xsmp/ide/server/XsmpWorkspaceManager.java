@@ -55,10 +55,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-/**
- * @author Sven Efftinge - Initial contribution and API
- * @since 2.11
- */
 public class XsmpWorkspaceManager
 {
 
@@ -105,8 +101,6 @@ public class XsmpWorkspaceManager
 
   /**
    * Removes a build listener if it was previously registered
-   *
-   * @since 2.18
    */
   public void removeBuildListener(ILanguageServerAccess.IBuildListener listener)
   {
@@ -178,7 +172,6 @@ public class XsmpWorkspaceManager
    *          the issue acceptor
    * @param cancelIndicator
    *          allows to cancel the initialization
-   * @since 2.21
    */
   public void initialize(List<WorkspaceFolder> workspaceFolders,
           Procedure2< ? super URI, ? super Iterable<Issue>> issueAcceptor,
@@ -196,8 +189,6 @@ public class XsmpWorkspaceManager
 
   /**
    * Creates the open document map and returns it, never {@code null}.
-   *
-   * @since 2.28
    */
   protected Map<URI, Document> createOpenDocuments()
   {
@@ -206,7 +197,6 @@ public class XsmpWorkspaceManager
 
   /**
    * @return the open document map, never {@code null}.
-   * @since 2.28
    */
   protected Map<URI, Document> getOpenDocuments()
   {
@@ -215,8 +205,6 @@ public class XsmpWorkspaceManager
 
   /**
    * Updates the workspace folders and refreshes the workspace.
-   *
-   * @since 2.21
    */
   public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params,
           CancelIndicator cancelIndicator)
@@ -413,7 +401,6 @@ public class XsmpWorkspaceManager
    * characters at the end of a
    * line.
    *
-   * @since 2.18
    * @param version
    *          unused
    */

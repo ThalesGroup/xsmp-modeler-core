@@ -185,35 +185,15 @@ public class XsmpBuildManager
     final Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
     for (final URI dirty : allDirty)
     {
-      project2dirty.put(workspaceManager.getProjectManager(dirty).getProjectDescription(), dirty);
+      workspaceManager.getProjectManagers()
+              .forEach(p -> project2dirty.put(p.getProjectDescription(), dirty));
     }
     final Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
     for (final URI deleted : deletedFiles)
     {
-      final var projectManager = workspaceManager.getProjectManager(deleted)
-              .getProjectDescription();
-      project2deleted.put(projectManager, deleted);
+      workspaceManager.getProjectManagers()
+              .forEach(p -> project2deleted.put(p.getProjectDescription(), deleted));
     }
-
-    /*
-     * final Set<ProjectDescription> dependencies = new HashSet<>();
-     * // add dependencies
-     * for (final var project : Sets.union(project2dirty.keySet(), project2deleted.keySet()))
-     * {
-     * dependencies.add(project);
-     * workspaceManager.getProjectManagers().forEach(m -> {
-     * if (m.getProjectDescription().getDependencies().contains(project.getName()))
-     * {
-     * dependencies.add(m.getProjectDescription());
-     * for (final ISourceFolder srcFolder : m.getProjectConfig().getSourceFolders())
-     * {
-     * project2dirty.putAll(m.getProjectDescription(),
-     * srcFolder.getAllResources(fileSystemScanner));
-     * }
-     * }
-     * });
-     * }
-     */
 
     final var sortedDescriptions = sortByDependencies(
             Sets.union(project2dirty.keySet(), project2deleted.keySet()));
@@ -236,9 +216,6 @@ public class XsmpBuildManager
     return result;
   }
 
-  /**
-   * @since 2.18
-   */
   protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas)
   {
     if (unreportedDeltas.isEmpty())

@@ -3,13 +3,13 @@
     <div class="columns">
       <div class="column is-half">
         <div class="field mb-6">
-          <label for="build-automatically" class="label">Build Automatically</label>
+          <label for="generate-automatically" class="label">Generate Automatically</label>
           <div class="control">
             <label class="radio">
-              <input type="radio" v-model="buildAutomatically" value="true"> Yes
+              <input type="radio" v-model="generateAutomatically" value="true"> Yes
             </label>
             <label class="radio">
-              <input type="radio" v-model="buildAutomatically" value="false"> No
+              <input type="radio" v-model="generateAutomatically" value="false"> No
             </label>
           </div>
         </div>
@@ -108,12 +108,12 @@ export default {
     };
   },
   computed: {
-    buildAutomatically: {
+    generateAutomatically: {
       get() {
-        return this.$store.state.buildAutomatically;
+        return this.$store.state.generateAutomatically;
       },
       set(val) {
-        this.$store.state.buildAutomatically = val;
+        this.$store.state.generateAutomatically = val;
       },
     },
     profile: {
@@ -160,7 +160,7 @@ export default {
     ]),
   },
   watch: {
-    buildAutomatically: "saveSettings",
+    generateAutomatically: "saveSettings",
     profile: "saveSettings",
     tools: "saveSettings",
     sources: {

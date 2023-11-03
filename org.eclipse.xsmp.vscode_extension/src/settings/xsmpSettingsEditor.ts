@@ -88,7 +88,7 @@ export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvid
 			<head>
 			    <meta charset="UTF-8">
 			    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-			    <title>XSMP-SDK Project</title>
+			    <title>XSMP Project</title>
 			    <script type="module" crossorigin src="${scriptPath}"></script>
 			</head>
 			<body>

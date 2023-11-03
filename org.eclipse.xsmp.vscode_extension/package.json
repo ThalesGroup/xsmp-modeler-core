@@ -23,7 +23,7 @@
 	"activationEvents": [
 		"onStartupFinished",
 		"onLanguage:xsmpcat",
-		"onCommand:xsmp.wizard.xsmp-sdk"
+		"onCommand:xsmp.wizard"
 	],
 	"main": "target/extension",
 	"contributes": {
@@ -65,29 +65,14 @@
 				"title": "Convert smpcat file to xsmpcat"
 			},
 			{
-				"command": "xsmp.generator.smp.proxy",
+				"command": "xsmp.generate.proxy",
 				"category": "Xsmp",
-				"title": "Generate SMP models."
+				"title": "Generate source files"
 			},
 			{
-				"command": "xsmp.generator.python.proxy",
+				"command": "xsmp.wizard",
 				"category": "Xsmp",
-				"title": "Generate python files."
-			},
-			{
-				"command": "xsmp.generator.xsmp-sdk.proxy",
-				"category": "Xsmp",
-				"title": "Generate xsmp-sdk C++ files."
-			},
-			{
-				"command": "xsmp.generator.esa-cdk.proxy",
-				"category": "Xsmp",
-				"title": "Generate esa-cdk C++ files."
-			},
-			{
-				"command": "xsmp.wizard.xsmp-sdk",
-				"category": "Xsmp",
-				"title": "Create new xsmp-sdk project"
+				"title": "Create new project"
 			},
 			{
 				"category": "Xsmp",
@@ -128,51 +113,6 @@
 						"type": "string",
 						"scope": "machine",
 						"description": "Java executable path."
-					},
-					"xsmp.build.automatically": {
-						"type": "boolean",
-						"default": "true",
-						"description": "Build automatically."
-					},
-					"xsmp.profile": {
-						"type": "string",
-						"scope": "resource",
-						"enum": [
-							"esa-cdk",
-							"xsmp-sdk"
-						],
-						"default": "xsmp-sdk",
-						"description": "Select the Profile:"
-					},
-					"xsmp.tool.smp": {
-						"type": "boolean",
-						"scope": "resource",
-						"default": true,
-						"description": "Enable/Disable SMP model generator."
-					},
-					"xsmp.tool.python": {
-						"type": "boolean",
-						"scope": "resource",
-						"default": false,
-						"description": "Enable/Disable Python generator."
-					},
-					"xsmp.dependencies": {
-						"type": "array",
-						"scope": "resource",
-						"item": "string",
-						"default": [
-							"ecss_smp"
-						],
-						"description": "Project dependencies:"
-					},
-					"xsmp.source.folders": {
-						"type": "array",
-						"scope": "resource",
-						"item": "string",
-						"default": [
-							"smdl"
-						],
-						"description": "Project relative source folders:"
 					}
 				}
 			}

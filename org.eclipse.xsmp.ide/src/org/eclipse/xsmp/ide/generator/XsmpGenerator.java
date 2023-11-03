@@ -22,7 +22,9 @@ import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpGenerator extends AbstractGenerator
 {
   private final IGenerator2 smpGenerator;

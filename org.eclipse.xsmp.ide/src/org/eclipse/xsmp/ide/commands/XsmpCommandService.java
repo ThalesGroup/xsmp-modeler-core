@@ -10,87 +10,101 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.commands;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
-import org.eclipse.xsmp.XsmpcatStandaloneSetupGenerated;
-import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
-import org.eclipse.xsmp.tool.python.PythonStandaloneSetup;
-import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
+import org.eclipse.xsmp.ide.generator.XsmpGenerator;
+import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
+import org.eclipse.xsmp.ide.generator.XsmpURIBasedFileSystemAccess;
+import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorContext;
-import org.eclipse.xtext.generator.IGenerator2;
+import org.eclipse.xtext.generator.IFilePostProcessor;
 import org.eclipse.xtext.generator.IGeneratorContext;
-import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
+import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.trace.TraceFileNameProvider;
+import org.eclipse.xtext.generator.trace.TraceRegionSerializer;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
+import org.eclipse.xtext.parser.IEncodingProvider;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 
 public class XsmpCommandService implements IExecutableCommandService
 {
-  private static final String GENERATE_SMP_CMD = "xsmp.generator.smp";
-
-  private static final String GENERATE_PYTHON_CMD = "xsmp.generator.python";
-
-  private static final String GENERATE_ESA_CDK_CMD = "xsmp.generator.esa-cdk";
-
-  private static final String GENERATE_XSMP_SDK_CMD = "xsmp.generator.xsmp-sdk";
+  private static final String GENERATE_CMD = "xsmp.generate";
 
   @SuppressWarnings("unused")
   private static final String IMPORT_SMPCAT_CMD = "xsmp.import.smpcat";
 
-  protected static class Command
+  @Inject
+  XsmpGenerator generator;
+
+  @Inject
+  XsmpOutputConfigurationProvider outputConfigurationProvider;
+
+  @Inject
+  private XsmpProjectConfigProvider projectConfigProvider;
+
+  @Inject
+  private IFilePostProcessor postProcessor;
+
+  @Inject(optional = true)
+  private IEncodingProvider encodingProvider;
+
+  @Inject
+  private TraceFileNameProvider traceFileNameProvider;
+
+  @Inject
+  private TraceRegionSerializer traceRegionSerializer;
+
+  public XsmpURIBasedFileSystemAccess newFileSystemAccess(Resource resource)
   {
-    public Command(XsmpcatStandaloneSetupGenerated setup)
+    final var uriBasedFileSystemAccess = new XsmpURIBasedFileSystemAccess();
+    uriBasedFileSystemAccess.setOutputConfigurations(
+            IterableExtensions.toMap(outputConfigurationProvider.getOutputConfigurations(resource),
+                    OutputConfiguration::getName));
+    uriBasedFileSystemAccess.setPostProcessor(postProcessor);
+    if (encodingProvider != null)
     {
-      final var injector = setup.createInjector();
-      generator = injector.getInstance(IGenerator2.class);
-      fileAccess = injector.getInstance(JavaIoFileSystemAccess.class);
-      final var outputConfigurationProvider = injector
-              .getInstance(IOutputConfigurationProvider.class);
-      outputConfigurationProvider.getOutputConfigurations()
-              .forEach(o -> fileAccess.getOutputConfigurations().put(o.getName(), o));
-
+      uriBasedFileSystemAccess.setEncodingProvider(encodingProvider);
     }
+    uriBasedFileSystemAccess.setTraceFileNameProvider(traceFileNameProvider);
+    uriBasedFileSystemAccess.setTraceRegionSerializer(traceRegionSerializer);
+    uriBasedFileSystemAccess.setGenerateTraces(true);
 
-    public void execute(Resource resource, IGeneratorContext context)
+    final var projectConfig = projectConfigProvider.getProjectConfig(resource.getResourceSet());
+    if (projectConfig != null)
     {
-      generator.doGenerate(resource, fileAccess, context);
+      uriBasedFileSystemAccess.setBaseDir(projectConfig.getPath());
+      final var sourceFolder = projectConfig.findSourceFolderContaining(resource.getURI());
+      if (sourceFolder != null)
+      {
+        uriBasedFileSystemAccess.setCurrentSource(sourceFolder.getName());
+      }
     }
-
-    private final IGenerator2 generator;
-
-    private final JavaIoFileSystemAccess fileAccess;
-
+    uriBasedFileSystemAccess.setConverter(resource.getResourceSet().getURIConverter());
+    return uriBasedFileSystemAccess;
   }
 
-  protected Map<String, Command> commands = new HashMap<>();
-
-  protected XsmpCommandService()
+  public void execute(Resource resource, IGeneratorContext context)
   {
+    final var fileAccess = newFileSystemAccess(resource);
 
-    commands.put(GENERATE_SMP_CMD, new Command(new SmpStandaloneSetup()));
-    commands.put(GENERATE_PYTHON_CMD, new Command(new PythonStandaloneSetup()));
-    commands.put(GENERATE_ESA_CDK_CMD, new Command(new EsaCdkStandaloneSetup()));
-    commands.put(GENERATE_XSMP_SDK_CMD, new Command(new XsmpSdkStandaloneSetup()));
-
+    generator.doGenerate(resource, fileAccess, context);
   }
 
   @Override
   public List<String> initialize()
   {
-    return Lists.newArrayList(GENERATE_SMP_CMD, GENERATE_PYTHON_CMD, GENERATE_ESA_CDK_CMD,
-            GENERATE_XSMP_SDK_CMD);
+    return Lists.newArrayList(GENERATE_CMD);
   }
 
   @Override
@@ -121,19 +135,11 @@ public class XsmpCommandService implements IExecutableCommandService
               .showMessage(new MessageParams(MessageType.Error, "The fileUri cannot be null"));
       return false;
     }
-
-    final var command = commands.get(params.getCommand());
-    if (command == null)
-    {
-      access.getLanguageClient().showMessage(
-              new MessageParams(MessageType.Error, "Unknown command: " + params.getCommand()));
-      return false;
-    }
-
+    access.getLanguageClient().workspaceFolders();
     try
     {
       access.doRead(uri, (var it) -> {
-        command.execute(it.getResource(), context);
+        execute(it.getResource(), context);
         return true;
       }).get();
     }

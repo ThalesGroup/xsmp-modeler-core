@@ -20,7 +20,7 @@ try {
 
 export default createStore({
     state: {
-        buildAutomatically: true,
+        generateAutomatically: true,
         profile: "",
         sources: [],
         dependencies: [],
@@ -28,8 +28,8 @@ export default createStore({
         availableDependencies: [],
     },
     mutations: {
-        setBuildAutomatically(state, buildAutomatically) {
-            state.buildAutomatically = buildAutomatically;
+        setGenerateAutomatically(state, generateAutomatically) {
+            state.generateAutomatically = generateAutomatically;
         },
         setProfile(state, profile) {
             state.profile = profile;
@@ -73,7 +73,7 @@ export default createStore({
     actions: {
         saveSettings({ state }) {
             const settings = {
-                build_automatically: state.buildAutomatically,
+                generate_automatically: state.generateAutomatically,
                 profile: state.profile,
                 sources: state.sources,
                 dependencies: state.dependencies,
@@ -86,7 +86,7 @@ export default createStore({
             });
         },
         updateSettings({ commit }, settings) {
-            commit('setBuildAutomatically', settings.build_automatically);
+            commit('setGenerateAutomatically', settings.generate_automatically);
             commit('setProfile', settings.profile);
             commit('setSources', settings.sources);
             commit('setDependencies', settings.dependencies);

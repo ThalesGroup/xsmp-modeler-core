@@ -35,7 +35,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
 
   private final List<String> tools = new ArrayList<>();
 
-  private boolean isBuildAutomatically = defaultIsBuildAutomatically;
+  private boolean isGenerateAutomatically = defaultIsBuildAutomatically;
 
   public static final URI configUri = URI.createURI(".xsmp").appendSegment("settings.json");
 
@@ -54,7 +54,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
   @Override
   public boolean shouldGenerate()
   {
-    return isBuildAutomatically;
+    return isGenerateAutomatically;
   }
 
   @Override
@@ -83,9 +83,9 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
       {
         profile = root.get("profile").getAsString();
       }
-      if (root.has("build_automatically"))
+      if (root.has("generate_automatically"))
       {
-        isBuildAutomatically = root.get("build_automatically").getAsBoolean();
+        isGenerateAutomatically = root.get("generate_automatically").getAsBoolean();
       }
 
       if (root.has("sources") && !root.get("sources").getAsJsonArray().isEmpty())

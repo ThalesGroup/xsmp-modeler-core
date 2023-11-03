@@ -23,7 +23,9 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpOutputConfigurationProvider
         extends org.eclipse.xtext.generator.OutputConfigurationProvider
 {

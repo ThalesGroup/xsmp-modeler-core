@@ -43,7 +43,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class XsmpProjectManager // extends ProjectManager
+public class XsmpProjectManager
 {
 
   @Inject
@@ -194,8 +194,6 @@ public class XsmpProjectManager // extends ProjectManager
 
   /**
    * Create and configure a new live resource set for this project.
-   *
-   * @since 2.27
    */
   public XtextResourceSet createLiveScopeResourceSet()
   {
@@ -268,10 +266,6 @@ public class XsmpProjectManager // extends ProjectManager
   {
     return projectConfig;
   }
-
-  /**
-   * @since 2.21
-   */
 
   public void aboutToRemoveFromWorkspace()
   {

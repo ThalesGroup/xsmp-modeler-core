@@ -1,6 +1,5 @@
 const path = require("path");
 const TSLintPlugin = require("tslint-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 
 const webViewConfig = {
@@ -8,14 +7,12 @@ const webViewConfig = {
 		newProject: path.resolve(
 			__dirname,
 			"src",
-			"views",
-			"new-project",
+			"wizard",
 			"main.js"
 		),
 		settings: path.resolve(
 			__dirname,
 			"src",
-			"views",
 			"settings",
 			"main.js"
 		),
