@@ -98,7 +98,7 @@ final class EsaCdkProject {
                     LIBRARIES
                         esa.ecss.smp.cdk
                 )
-                target_include_directories(«name» PRIVATE include include-gen)
+                target_include_directories(«name» PUBLIC src src-gen)
             ''')
 
             addFile("README.md", '''

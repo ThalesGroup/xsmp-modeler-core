@@ -23,17 +23,17 @@ jobs:
       -  name: Build with Maven
          run: mvn -B package --file pom.xml
 
+
       -  name: Install npm dependencies
          working-directory: org.eclipse.xsmp.vscode_extension
-         run: |
-            npm install
-            npm install -g @vscode/vsce
+         run: npm install -g @vscode/vsce
 
       -  name: Package VS Code Extension
          working-directory: org.eclipse.xsmp.vscode_extension
          run: |
+            npm version ${{ github.ref_name }} --allow-same-version
+            npm install
             vsce package --out "target/xsmp-modeler.vsix"
-            ls -l target
 
       -  name: Create release
          id: create_release
@@ -45,14 +45,13 @@ jobs:
             release_name: Release ${{ github.ref }}
             body: |
                This release contains XSMP modeler ${{ github.ref_name }}
-
-
+               
                To install XSMP Modeler in Eclipse, add or update the XSMP [software site](https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-127.htm) with URL:
-
                `jar:https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip!/`
-
-               To use XSMP Modeler in Visual Studio Code, please install this [extension](https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/xsmp-modeler-${{ github.ref_name }}.vsix).
-
+               
+               To install XSMP in Visual Studio Code, download this [extension](https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/xsmp-modeler-${{ github.ref_name }}.vsix) and follow these [instructions](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix).
+               
+               You can find additional Command Line utilities in the Assets.
             draft: true
             prerelease: false
       -  name: Upload P2 repository
@@ -64,7 +63,6 @@ jobs:
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
             asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
             asset_content_type: application/zip
-            
       -  name: Upload VSCode extension
          uses: actions/upload-release-asset@v1
          env:
@@ -74,7 +72,6 @@ jobs:
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix
             asset_name: xsmp-modeler-${{ github.ref_name }}.vsix
             asset_content_type: application/zip
-            
       -  name: Upload SMP Tools CLI
          uses: actions/upload-release-asset@v1
          env:
@@ -84,7 +81,6 @@ jobs:
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli.jar
             asset_name: org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
             asset_content_type: application/java-archive
-            
       -  name: Upload XSMP SDK Profile CLI
          uses: actions/upload-release-asset@v1
          env:
@@ -94,7 +90,6 @@ jobs:
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli.jar
             asset_name: org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
             asset_content_type: application/java-archive
-            
       -  name: Upload ESA CDK Profile CLI
          uses: actions/upload-release-asset@v1
          env:
@@ -104,7 +99,6 @@ jobs:
             asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli.jar
             asset_name: org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
             asset_content_type: application/java-archive
-            
       -  name: Publish release
          uses: StuYarrow/publish-release@v1.1.2
          env:

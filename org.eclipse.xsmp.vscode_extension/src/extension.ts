@@ -11,45 +11,168 @@
 'use strict';
 
 import * as path from 'path';
-
+import * as net from 'net';
 import { Trace } from 'vscode-jsonrpc';
-import { commands, window, Uri, workspace, ExtensionContext, Disposable } from 'vscode';
-import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient/node';
+import { commands, window, Uri, workspace, ExtensionContext, languages, CancellationToken, ProgressLocation, Progress } from 'vscode';
+import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
+import * as fs from 'fs';
+
+import { XsmpSettingsEditorProvider } from './settings/xsmpSettingsEditor';
+import { NewProjectPanel } from './wizard/newProjectPanel';
 
 let lc: LanguageClient;
+
+async function isValidXsmpcatCommand(): Promise<boolean> {
+    const activeEditor = window.activeTextEditor;
+
+    if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
+        const diagnostics = languages.getDiagnostics(activeEditor.document.uri);
+
+        if (diagnostics.length === 0) {
+            return true;
+        } else {
+            const userResponse = await window.showInformationMessage(
+                'The document contains issues. Do you want to continue the generation?',
+                'Yes', 'No'
+            );
+
+            if (userResponse === 'Yes') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    return false;
+}
+
+async function openSettingsEditor() {
+    // Get the currently opened workspaceFolder (if any)
+    const activeEditor = window.activeTextEditor;
+    if (!activeEditor) {
+        window.showErrorMessage("No project files open, project context unknown.");
+        return;
+    }
+
+    const documentUri = activeEditor.document.uri;
+    if (!documentUri) {
+        window.showErrorMessage("No document is open.");
+        return;
+    }
+
+    const activeWorkspaceFolder = workspace.getWorkspaceFolder(documentUri);
+    if (!activeWorkspaceFolder) {
+        window.showErrorMessage("No workspace folder is open.");
+        return;
+    }
+
+    // Build the full path to the .xsmp/settings.json file
+    const xsmpFolderPath = Uri.joinPath(activeWorkspaceFolder.uri, '.xsmp');
+    const settingsPath = Uri.joinPath(activeWorkspaceFolder.uri, '.xsmp', 'settings.json');
+
+    // Ensure that the .xsmp directory exists
+    try {
+        await fs.promises.mkdir(xsmpFolderPath.fsPath, { recursive: true });
+    } catch (err) {
+        window.showErrorMessage(`Error creating .xsmp directory: ${err.message}`);
+        return;
+    }
+
+    try {
+        await fs.promises.access(settingsPath.fsPath, fs.constants.F_OK);
+    } catch (err) {
+        // If the file doesn't exist, create it with default content
+        const defaultSettings = {
+            generate_automatically: true,
+            profile: "",
+            sources: [],
+            dependencies: [],
+            tools: []
+        };
+        await fs.promises.writeFile(settingsPath.fsPath, JSON.stringify(defaultSettings, null, 2), 'utf-8');
+    }
+
+    // Open the settings file
+    commands.executeCommand('vscode.openWith', settingsPath, 'xsmp.settingsEditor');
+}
 
 export function activate(context: ExtensionContext) {
     let launcher = 'org.eclipse.xsmp.ide-lsp.jar';
     let script = context.asAbsolutePath(path.join('target', 'language-server', launcher));
     let defaultJavaPath = process.platform === 'win32' ? 'java.exe' : 'java';
 
-
     const startServer = () => {
-        const javaPath = workspace.getConfiguration('xsmp').get<string>('javaPath') || defaultJavaPath;
 
-        const serverOptions: ServerOptions = {
-            run: { command: javaPath, args: ['-jar', script] },
-            debug: { command: javaPath, args: ['-jar', script], options: { env: createDebugEnv() } },
-        };
-
+        let serverOptions: ServerOptions;
+        const remoteServer = false;
+        if (remoteServer) {
+            let connectionInfo = {
+                port: 5007
+            };
+            serverOptions = () => {
+                // Connect to language server via socket
+                let socket = net.connect(connectionInfo);
+                let result: StreamInfo = {
+                    writer: socket,
+                    reader: socket
+                };
+                return Promise.resolve(result);
+            };
+        }
+        else {
+            const javaPath = workspace.getConfiguration('xsmp').get<string>('javaPath') || defaultJavaPath;
+            serverOptions = {
+                run: { command: javaPath, args: ['-jar', script,/* '-log', '-trace'*/], },
+                debug: { command: javaPath, args: ['-jar', script, '-log', '-trace'], options: { env: createDebugEnv() } },
+            };
+        }
         const clientOptions: LanguageClientOptions = {
-            documentSelector: ['xsmpcat'],
+            documentSelector: [{ language: 'xsmpcat' }],
             synchronize: {
-                fileEvents: workspace.createFileSystemWatcher('**/*.*'),
+                fileEvents: workspace.createFileSystemWatcher('**/*.xsmpcat'),
             },
         };
         // Create the language client and start the client.
         lc = new LanguageClient('Xsmp Server', serverOptions, clientOptions);
 
+
         // Enable tracing (.Off, .Messages, Verbose)
-        lc.setTrace(Trace.Off);
+        lc.setTrace(Trace.Verbose);
         lc.start();
 
     };
 
-    // Watch for changes in the 'xsmp.javaPath' setting
-    const disposables: Disposable[] = [];
-    disposables.push(
+    context.subscriptions.push(XsmpSettingsEditorProvider.register(context));
+
+    context.subscriptions.push(
+        commands.registerCommand('xsmp.openSettingsEditor', openSettingsEditor)
+    );
+
+    // New project Wizard
+    context.subscriptions.push(
+        commands.registerCommand('xsmp.wizard', () => {
+            window.withProgress(
+                {
+                    cancellable: false,
+                    location: ProgressLocation.Notification,
+                    title: "XSMP: New Project"
+                },
+                async (
+                    progress: Progress<{ increment: number; message: string }>,
+                    cancelToken: CancellationToken
+                ) => {
+                    try {
+                        NewProjectPanel.createOrShow(context.extensionPath);
+                    } catch (error) {
+                        window.showErrorMessage("Error: " + error.message);
+                    }
+                }
+            )
+        })
+    );
+
+    context.subscriptions.push(
         workspace.onDidChangeConfiguration((event) => {
             if (event.affectsConfiguration('xsmp.javaPath')) {
                 // The 'xsmp.javaPath' setting has changed, so stop the existing server and start a new one.
@@ -59,50 +182,41 @@ export function activate(context: ExtensionContext) {
                     });
                 }
             }
+
         })
     );
-    disposables.push(
-        commands.registerCommand("xsmp.python.proxy", async () => {
-            let activeEditor = window.activeTextEditor;
-            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
-                commands.executeCommand("xsmp.python", activeEditor.document.uri.toString());
-            }
-        }));
-    disposables.push(
-        commands.registerCommand("xsmp.smdl.proxy", async () => {
-            let activeEditor = window.activeTextEditor;
-            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
-                commands.executeCommand("xsmp.smdl", activeEditor.document.uri.toString());
-            }
-        }));
-    disposables.push(
-        commands.registerCommand("xsmp.xsmp_sdk.proxy", async () => {
-            let activeEditor = window.activeTextEditor;
-            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
-                commands.executeCommand("xsmp.xsmp_sdk", activeEditor.document.uri.toString());
-            }
-        }));
-    disposables.push(
-        commands.registerCommand("xsmp.esa_cdk.proxy", async () => {
-            let activeEditor = window.activeTextEditor;
-            if (activeEditor?.document?.languageId === 'xsmpcat' && activeEditor.document.uri instanceof Uri) {
-                commands.executeCommand("xsmp.esa_cdk", activeEditor.document.uri.toString());
-            }
-        }));
-    disposables.push(commands.registerCommand('xsmp.createNewProject', () => {
-        // Prompt the user for a folder to create the files
-        window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false }).then((uri) => {
-            if (!uri || uri.length === 0) {
-                window.showErrorMessage('No folder selected. Aborting file creation.');
-                return;
-            }
+    context.subscriptions.push(
+        workspace.createFileSystemWatcher('**/.xsmp/settings.json').onDidChange(() => {
+            lc.sendNotification(`workspace/didChangeConfiguration`, undefined)
+        })
+    );
 
-            window.showInformationMessage('Not implemented yet.');
-        });
-    }));
+    context.subscriptions.push(
+        commands.registerCommand("xsmp.generate.proxy", async () => {
+            if (await isValidXsmpcatCommand()) {
+                commands.executeCommand("xsmp.generate", window.activeTextEditor.document.uri.toString());
+            }
+        }));
 
-    context.subscriptions.push(...disposables);
+    context.subscriptions.push(
+        commands.registerCommand("xsmp.import.smpcat.proxy", async () => {
+            // Get the active text editor
+            let activeEditor = window.activeTextEditor;
 
+            // Check if the active editor has the languageId "xsmpcat" and a valid URI
+            if (activeEditor?.document?.uri instanceof Uri) {
+                // Check if the file extension is ".smpcat"
+                const filePath = activeEditor.document.uri.fsPath;
+                if (filePath.endsWith(".smpcat")) {
+                    // Execute the "xsmp.smp.import" command with the document's URI
+                    commands.executeCommand("xsmp.import.smpcat", activeEditor.document.uri.toString());
+                } else {
+                    // Show a message that the command can only be executed for files with the ".smpcat" extension
+                    window.showInformationMessage("This command can only be executed for files with the '.smpcat' extension.");
+                }
+            }
+        })
+    );
 
     // Start the server when the extension activates
     startServer();

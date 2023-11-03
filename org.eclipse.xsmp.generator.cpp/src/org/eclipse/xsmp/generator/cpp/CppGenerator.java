@@ -143,8 +143,8 @@ public class CppGenerator extends AbstractGenerator
     final var useGenerationGapPattern = fsa.isFile(includePath,
             CppOutputConfigurationProvider.INCLUDE) || useGenerationGapPattern(type);
 
-    // generate header in include directory if file does not exist
-    if (useGenerationGapPattern && !fsa.isFile(includePath, CppOutputConfigurationProvider.INCLUDE))
+    // generate header in include directory
+    if (useGenerationGapPattern)
     {
       generateFile(fsa, includePath, CppOutputConfigurationProvider.INCLUDE,
               typeGenerator.generateHeader(type, cat));
@@ -152,11 +152,9 @@ public class CppGenerator extends AbstractGenerator
 
     // generate source in src directory if file does not exist
     final var sourcePath = ext.fqn(type).toString("/") + ".cpp";
-    if (!fsa.isFile(sourcePath, CppOutputConfigurationProvider.SRC))
-    {
-      generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
-              typeGenerator.generateSource(type, useGenerationGapPattern, cat));
-    }
+
+    generateFile(fsa, sourcePath, CppOutputConfigurationProvider.SRC,
+            typeGenerator.generateSource(type, useGenerationGapPattern, cat));
 
     // generate header in include-gen directory
     generateFile(fsa, useGenerationGapPattern ? ext.fqnGen(type).toString("/") + ".h" : includePath,

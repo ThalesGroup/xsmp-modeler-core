@@ -8,15 +8,22 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ide.server;
+package org.eclipse.xsmp.ide.build;
 
-import org.eclipse.xtext.ide.server.ServerLauncher;
+import org.eclipse.xtext.build.BuildRequest;
 
-public class XsmpcatServerLauncher extends ServerLauncher
+public class XsmpBuildRequest extends BuildRequest
 {
+  private boolean shouldGenerate;
 
-  public static void main(String[] args)
+  public boolean shouldGenerate()
   {
-    ServerLauncher.launch(XsmpcatServerLauncher.class.getName(), args, new XsmpcatServerModule());
+    return shouldGenerate;
   }
+
+  public void setShouldGenerate(boolean shouldGenerate)
+  {
+    this.shouldGenerate = shouldGenerate;
+  }
+
 }

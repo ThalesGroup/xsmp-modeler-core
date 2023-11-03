@@ -29,7 +29,9 @@ class XsmpcatKeywordHovers {
 			 - [ expr1 ... expr2 ] : expr1 to expr2
 		'''
 	}
-
+    def visibility() {
+        '''[<strong><span style="color: #7f0055;">public</span></strong>|<strong><span style="color: #7f0055;">protected</span></strong>|<strong><span style="color: #7f0055;">private</span></strong>]'''
+    }
 	def hoverText(Keyword k) {
 		val result = switch (k) {
 			case ga.catalogueAccess.catalogueKeyword_1: '''
@@ -49,7 +51,7 @@ class XsmpcatKeywordHovers {
 				<br />All sub-elements of a namespace (namespaces and types) must have unique names.</p>
 			'''
 			case ga.namespaceMemberAccess.structKeyword_3_1_2: '''
-				<p><code><strong><span style="color: #7f0055;">struct</span></strong> <em>name</em> { } </code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">struct</span></strong> <em>name</em> { } </code></p>
 				<br/>
 				A <b>Structure</b> type collects an arbitrary number of <b>Fields</b> representing the state of the structure.
 				<p>Within a structure, each field needs to be given a unique name.
@@ -57,7 +59,7 @@ class XsmpcatKeywordHovers {
 				<br />A structure can also serve as a namespace to define an arbitrary number of <b>Constants</b>.</p>
 			'''
 			case ga.namespaceMemberAccess.classKeyword_3_2_2: '''
-				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">class</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
+				<p><code>«visibility()» [<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">class</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
 				<br/>
 				<p>The <b>Class</b> metaclass is derived from <b>Structure</b>. 
 				<br />A <b>class</b> may be abstract (attribute <b>Abstract</b>), and it may <b>extend</b> from a single base class (implementation inheritance), which is represented by the Base link.
@@ -65,14 +67,14 @@ class XsmpcatKeywordHovers {
 				<br />Further, it can have arbitrary numbers of properties (Property elements), operations (<b>Operation</b> elements), and associations (<b>Association</b> elements).</p>
 			'''
 			case ga.namespaceMemberAccess.exceptionKeyword_3_3_2: '''
-				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">exception</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
+				<p><code>«visibility()» [<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">exception</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] { } </code></p>
 				<br/>
 				<p>An <b>Exception</b> represents a non-recoverable error that can occur when calling into an <b>Operation</b> or <b>Property</b> getter/setter (within an <b>Operation</b> this is represented by the <b>RaisedException</b> links and within a <b>Property</b> this is represented by the <b>GetRaises</b> and <b>SetRaises</b> links, respectively).
 				<br />An Exception can contain constants and fields (from <b>Structure</b>) as well as operations, properties and associations (from <b>Class</b>). The fields represent the state variables of the exception which carry additional information when the exception is raised.
 				<br />Furthermore, an <b>Exception</b> may be <b>Abstract</b> (from <b>Class</b>), and it may inherit from a single base exception (implementation inheritance), which is represented by the Base link (from <b>Class</b>).</p>
 			'''
 			case ga.namespaceMemberAccess.interfaceKeyword_3_4_2: '''
-				<p><code><strong><span style="color: #7f0055;">interface</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">interface</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>An <b>Interface</b> is a reference type that serves as a contract in a loosely coupled architecture. It has the ability to contain constants, properties and operations (from ReferenceType). 
 				<br />An <b>Interface</b> may inherit from other interfaces (interface inheritance), which is represented via the Base links. 
@@ -84,7 +86,7 @@ class XsmpcatKeywordHovers {
 				  </xhtml:p></p>
 			'''
 			case ga.namespaceMemberAccess.modelKeyword_3_5_2: '''
-				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">model</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
+				<p><code>«visibility()» [<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">model</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>The <b>Model</b> metaclass is a component and hence inherits all component mechanisms.
 				<br />These mechanisms allow using various different modelling approaches.
@@ -98,7 +100,7 @@ class XsmpcatKeywordHovers {
 				<br />In addition, a <b>Model</b> may have <b>Association</b> elements to express associations to other models or fields of other models.</p>
 			'''
 			case ga.namespaceMemberAccess.serviceKeyword_3_6_2: '''
-				<p><code>[<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">service</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
+				<p><code>«visibility()» [<strong><span style="color: #7f0055;">abstract</span></strong>] <strong><span style="color: #7f0055;">service</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>base</em>] [<strong><span style="color: #7f0055;">implements</span></strong> <em>interface1, ..., interfaceN</em>] { } </code></p>
 				<br/>
 				<p>The Service metaclass is a component and hence inherits all component mechanisms. 
 				<br />A Service can reference one or more interfaces via the <b>Interface</b> links (inherited from Component), where at least one of them must be derived from Smp::IService, which qualifies it as a service interface.</p>
@@ -106,7 +108,7 @@ class XsmpcatKeywordHovers {
 			// Array
 			case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0_0,
 			case ga.namespaceMemberAccess.usingKeyword_3_7_2_0_1: '''
-				<p><code><strong><span style="color: #7f0055;">array</span></strong> <em>name</em> = <em>type</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">array</span></strong> <em>name</em> = <em>type</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
 				<br/>
 				<p>An <b>Array</b> type defines a fixed-size array of identically typed elements, where ItemType defines the type of the array items, and Size defines the number of array items.
 				<br />Multi-dimensional arrays are defined when ItemType is an <b>Array</b> type as well.
@@ -120,19 +122,19 @@ class XsmpcatKeywordHovers {
 			'''
 			// ValueReference
 			case ga.namespaceMemberAccess.usingKeyword_3_8_2: '''
-				<p><code><strong><span style="color: #7f0055;">using</span></strong> <em>name</em> = <em>type</em> *</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">using</span></strong> <em>name</em> = <em>type</em> *</code></p>
 				<br/>
 				<p>A <b>ValueReference</b> is a type that references a specific value type. It is the "missing link" between value types and reference types.</p>
 			'''
 			case ga.namespaceMemberAccess.integerKeyword_3_9_2: '''
-				<p><code><strong><span style="color: #7f0055;">integer</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Int8|Int16|Int32|Int64|UInt8|UInt16|UInt32|UInt64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|integralExpression) ... (*|integralExpression)</em>]</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">integer</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Int8|Int16|Int32|Int64|UInt8|UInt16|UInt32|UInt64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|integralExpression) ... (*|integralExpression)</em>]</code></p>
 				<br/>
 				<p>An <b>Integer</b> type represents integer values with a given range of valid values (via the Minimum and Maximum attributes). 
 				<br />The Unit element can hold a physical unit that can be used by applications to ensure physical unit integrity across models.
 				<br />Optionally, the <b>PrimitiveType</b> used to encode the integer value may be specified (one of <b>Int8</b>, <b>Int16</b>, <b>Int32</b>, <b>Int64</b>, <b>UIn8</b>, <b>UInt16</b>, <b>UInt32</b>, <b>UInt64</b>, where the default is <b>Int32</b>).</p>
 			'''
 			case ga.namespaceMemberAccess.floatKeyword_3_10_2: '''
-				<p><code><strong><span style="color: #7f0055;">float</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Float32|Float64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|decimalExpression) ... (*|decimalExpression)</em>]</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">float</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>(Float32|Float64)</em>] [<strong><span style="color: #7f0055;">in</span></strong> <em>(*|decimalExpression) ... (*|decimalExpression)</em>]</code></p>
 				<br/>
 				<p>A <b>Float</b> type represents floating-point values with a given range of valid values (via the Minimum and Maximum attributes). 
 				<br />The MinInclusive and MaxInclusive attributes determine whether the boundaries are included in the range or not. 
@@ -140,13 +142,13 @@ class XsmpcatKeywordHovers {
 				<br />Optionally, the <b>PrimitiveType</b> used to encode the floating-point value may be specified (one of <b>Float32</b> or <b>Float64</b>, where the default is <b>Float64</b>).</p>
 			'''
 			case ga.namespaceMemberAccess.eventKeyword_3_11_2: '''
-				<p><code><strong><span style="color: #7f0055;">event</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>simpleType</em>]</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">event</span></strong> <em>name</em> [<strong><span style="color: #7f0055;">extends</span></strong> <em>simpleType</em>]</code></p>
 				<br/>
 				<p>An <b>Event</b> Type is used to specify the type of an event. 
 				<br />This can be used not only to give a meaningful name to an event type, but also to link it to an existing simple type (via the EventArgs attribute) that is passed as an argument with every invocation of the event.</p>
 			'''
 			case ga.namespaceMemberAccess.stringKeyword_3_12_2: '''
-				<p><code><strong><span style="color: #7f0055;">string</span></strong> <em>name</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">string</span></strong> <em>name</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
 				<br/>
 				<p>A <b>String</b> type represents fixed Length string values base on <b>Char8</b>.
 				<br />The <b>String</b> language element defines an <b>Array</b> of <b>Char8</b> values, but allows a more natural handling of it, e.g. by storing a string value as one string, not as an array of individual characters.
@@ -172,7 +174,7 @@ class XsmpcatKeywordHovers {
 				<br />An attribute type always references a value type, and specifies a Default value.</p>
 			'''
 			case ga.namespaceMemberAccess.enumKeyword_3_16_2: '''
-				<p><code><strong><span style="color: #7f0055;">enum</span></strong> <em>name</em> { }</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">enum</span></strong> <em>name</em> { }</code></p>
 				<br/>
 				An <b>Enumeration</b> type represents one of a number of pre-defined enumeration literals. 
 				<p>The Enumeration language element can be used to create user-defined enumeration types. 
@@ -180,7 +182,7 @@ class XsmpcatKeywordHovers {
 				<br />All enumeration literals of an enumeration type must have unique names and values, respectively.</p>
 			'''
 			case ga.fieldDeclarationAccess.fieldKeyword_1: '''
-				<p><code>[<strong><span style="color: #7f0055;">input</span></strong>] [<strong><span style="color: #7f0055;">output</span></strong>] [<strong><span style="color: #7f0055;">transient</span></strong>] <strong><span style="color: #7f0055;">field</span></strong> <em>type name</em> [ = defaultValueExpression]</code></p>
+				<p><code>«visibility()» [<strong><span style="color: #7f0055;">input</span></strong>] [<strong><span style="color: #7f0055;">output</span></strong>] [<strong><span style="color: #7f0055;">transient</span></strong>] <strong><span style="color: #7f0055;">field</span></strong> <em>type name</em> [ = defaultValueExpression]</code></p>
 				<br/>
 				A <b>Field</b> is a feature that is typed by any value type but String8, and that may have a Default value.
 				<p>The transient attribute defines how the field is published to the simulation environment. 
@@ -191,18 +193,18 @@ class XsmpcatKeywordHovers {
 				<br />These flags default to false, but can be changed from their default value to support dataflow-based design.</p>
 			'''
 			case ga.constantDeclarationAccess.constantKeyword_1: '''
-				<p><code><strong><span style="color: #7f0055;">constant</span></strong> <em>type name</em>  = valueExpression</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">constant</span></strong> <em>type name</em>  = valueExpression</code></p>
 				<br/>
 				A <b>Constant</b> is a feature that is typed by a simple type and that must have a Value.
 			'''
 			case ga.associationDeclarationAccess.associationKeyword_1: '''
-				<p><code><strong><span style="color: #7f0055;">association</span></strong> <em>type name</em></code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">association</span></strong> <em>type name</em></code></p>
 				<br/>
 				An <b>Association</b> is a feature that is typed by a language type (Type link). An association always expresses a reference to an instance of the referenced language type. 
 				<p><br />This reference is either another model (if the Type link refers to a <b>Model</b> or <b>Interface</b>), or it is a field contained in another model (if the Type link refers to a ValueType).</p>
 			'''
 			case ga.propertyDeclarationAccess.propertyKeyword_1: '''
-				<p><code>[(<strong><span style="color: #7f0055;">readOnly</span></strong>|<strong><span style="color: #7f0055;">writeOnly</span></strong>|<strong><span style="color: #7f0055;">readWrite</span></strong>)]<strong><span style="color: #7f0055;">property</span></strong> <em>type name</em> [<strong><span style="color: #7f0055;">get throws</span></strong> exception1, ..., exceptionN] [<strong><span style="color: #7f0055;">set throws</span></strong> exception1, ..., exceptionN] [ -> <em>attachedField</em>]</code></p>
+				<p><code>«visibility()» [(<strong><span style="color: #7f0055;">readOnly</span></strong>|<strong><span style="color: #7f0055;">writeOnly</span></strong>|<strong><span style="color: #7f0055;">readWrite</span></strong>)]<strong><span style="color: #7f0055;">property</span></strong> <em>type name</em> [<strong><span style="color: #7f0055;">get throws</span></strong> exception1, ..., exceptionN] [<strong><span style="color: #7f0055;">set throws</span></strong> exception1, ..., exceptionN] [ -> <em>attachedField</em>]</code></p>
 				<br/>
 				A <b>Property</b> has a similar syntax as a Field: It is a feature that references a language type. 
 				<p>However, the semantics is different in that a property does not represent a state and that it can be assigned an Access attribute to specify how the property can be accessed (either readWrite, readOnly, or writeOnly, see <b>AccessKind</b>).
@@ -267,7 +269,7 @@ class XsmpcatKeywordHovers {
 				  </xhtml:p></p>
 			'''
 			case ga.operationDeclarationAccess.defKeyword_1: '''
-				<p><code><strong><span style="color: #7f0055;">def</span></strong> (<em>returnType</em>|<strong><span style="color: #7f0055;">void</span></strong>) <em>name</em> <strong>(</strong><em>p1, ..., pN</em><strong>)</strong> [<strong><span style="color: #7f0055;">throws</span></strong> exception1, ..., exceptionN]</code></p>
+				<p><code>«visibility()» <strong><span style="color: #7f0055;">def</span></strong> (<em>returnType</em>|<strong><span style="color: #7f0055;">void</span></strong>) <em>name</em> <strong>(</strong><em>p1, ..., pN</em><strong>)</strong> [<strong><span style="color: #7f0055;">throws</span></strong> exception1, ..., exceptionN]</code></p>
 				<p><code>p*: [(<strong><span style="color: #7f0055;">in</span></strong>|<strong><span style="color: #7f0055;">out</span></strong>|<strong><span style="color: #7f0055;">inout</span></strong>)] <em>type name</em> [ = defaultValueExpression]</code></p>
 				<br/>
 				An <b>Operation</b> may have an arbitrary number of parameters, where at most one of the parameters may be of <b>Direction = ParameterDirectionKind.return</b>. 

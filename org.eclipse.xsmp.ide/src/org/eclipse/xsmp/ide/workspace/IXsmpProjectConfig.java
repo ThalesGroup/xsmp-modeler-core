@@ -8,18 +8,21 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ide.server;
+package org.eclipse.xsmp.ide.workspace;
 
-import org.eclipse.xtext.ide.server.ProjectManager;
-import org.eclipse.xtext.ide.server.ServerModule;
+import java.util.List;
 
-public class XsmpcatServerModule extends ServerModule
+import org.eclipse.xtext.workspace.IProjectConfig;
+
+public interface IXsmpProjectConfig extends IProjectConfig
 {
+  List<String> getDependencies();
 
-  @Override
-  protected void configure()
-  {
-    super.configure();
-    bind(ProjectManager.class).to(XsmpcatProjectManager.class);
-  }
+  String getProfile();
+
+  List<String> getTools();
+
+  void refresh();
+
+  boolean shouldGenerate();
 }

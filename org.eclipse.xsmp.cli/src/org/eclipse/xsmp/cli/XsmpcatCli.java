@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.cli;
 
+import static com.google.common.collect.Maps.uniqueIndex;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.nio.file.FileVisitResult;
@@ -37,6 +39,7 @@ import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
+import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -44,6 +47,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -217,8 +221,9 @@ public class XsmpcatCli
     }
 
     // Configure output configurations
-    outputConfigurationProvider.getOutputConfigurations()
-            .forEach(o -> fileAccess.getOutputConfigurations().put(o.getName(), o));
+    fileAccess.setOutputConfigurations(
+            uniqueIndex(outputConfigurationProvider.getOutputConfigurations(),
+                    (Function<OutputConfiguration, String>) from -> from.getName()));
 
     final var smdlDir = cmd.getOptionValue(SMDL_DIR_OPTION, "./smdl");
 

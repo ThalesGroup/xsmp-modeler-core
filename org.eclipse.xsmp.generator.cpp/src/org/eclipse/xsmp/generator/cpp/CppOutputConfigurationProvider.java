@@ -10,7 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp;
 
-import java.util.HashSet;
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.util.Set;
 
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -32,7 +33,6 @@ public class CppOutputConfigurationProvider extends OutputConfigurationProvider
   @Override
   public Set<OutputConfiguration> getOutputConfigurations()
   {
-    final var outputs = new HashSet<OutputConfiguration>();
 
     final var srcOutput = new OutputConfiguration(SRC);
     srcOutput.setDescription("Source Folder");
@@ -72,11 +72,7 @@ public class CppOutputConfigurationProvider extends OutputConfigurationProvider
     includeGenOutput.setKeepLocalHistory(true);
     includeGenOutput.setCanClearOutputDirectory(true);
 
-    outputs.add(srcOutput);
-    outputs.add(srcGenOutput);
-    outputs.add(includeOutput);
-    outputs.add(includeGenOutput);
+    return newHashSet(srcGenOutput, srcOutput, includeGenOutput, includeOutput);
 
-    return outputs;
   }
 }

@@ -4,7 +4,7 @@ xtend-gen
 emf-gen
 target
 bin
-workspace
+#workspace
 /build
 
 # Jupyter Notebooks
@@ -21,7 +21,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
+#build/
 develop-eggs/
 dist/
 downloads/

@@ -8,8 +8,8 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<xtextVersion>2.30.0</xtextVersion>
-		<mwe2Version>2.14.0</mwe2Version>
+		<xtextVersion>2.32.0</xtextVersion>
+		<mwe2Version>2.15.0</mwe2Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>

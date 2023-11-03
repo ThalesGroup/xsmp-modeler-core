@@ -16,10 +16,19 @@ Require-Bundle: org.eclipse.xsmp,
  org.eclipse.xsmp.profile.esa_cdk;bundle-version="1.1.0",
  org.eclipse.xsmp.profile.xsmp_sdk;bundle-version="1.1.0",
  org.eclipse.xsmp.tool.python;bundle-version="1.1.0",
- org.eclipse.xsmp.tool.smp;bundle-version="1.1.0"
+ org.eclipse.xsmp.tool.smp;bundle-version="1.1.0",
+ org.eclipse.lsp4j.jsonrpc,
+ org.eclipse.xsmp.lib;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ide,
+ org.eclipse.xsmp.ide.build,
+ org.eclipse.xsmp.ide.commands,
  org.eclipse.xsmp.ide.contentassist,
  org.eclipse.xsmp.ide.contentassist.antlr,
  org.eclipse.xsmp.ide.contentassist.antlr.internal,
- org.eclipse.xsmp.ide.hover
+ org.eclipse.xsmp.ide.generator,
+ org.eclipse.xsmp.ide.hover,
+ org.eclipse.xsmp.ide.quickfix,
+ org.eclipse.xsmp.ide.server,
+ org.eclipse.xsmp.ide.server.symbol,
+ org.eclipse.xsmp.ide.workspace
