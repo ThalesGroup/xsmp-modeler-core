@@ -44,18 +44,19 @@ export class XsmpSettingsEditorProvider implements vscode.CustomTextEditorProvid
 
         webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
-        // Load available dependencies
-        webviewPanel.webview.postMessage({
-            command: "setAvailableDependencies",
-            dependencies: this.getWorkspaceFolderNames(),
-        })
+        const updateWebview = () => {
+            // Load available dependencies
+            webviewPanel.webview.postMessage({
+                command: "setAvailableDependencies",
+                dependencies: this.getWorkspaceFolderNames(),
+            });
 
-        function updateWebview() {
+            // Load values from JSON
             webviewPanel.webview.postMessage({
                 command: 'update',
                 settings: document.getText(),
             });
-        }
+        };
 
         // Receive message from the webview.
         webviewPanel.webview.onDidReceiveMessage(e => {
