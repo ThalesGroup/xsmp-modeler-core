@@ -76,7 +76,7 @@ export default {
   },
   data() {
     return {
-      availableProfile: ["xsmp-sdk", "esa-cdk"],
+      availableProfile: ["<no-profile>", "xsmp-sdk", "esa-cdk"],
       availableTools: ["smp", "python"],
     };
   },

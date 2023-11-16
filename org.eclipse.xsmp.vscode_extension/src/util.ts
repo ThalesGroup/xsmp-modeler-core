@@ -128,7 +128,7 @@ target_include_directories(cdk PUBLIC src src-gen)
     const settingsContent = JSON.stringify({
         generate_automatically: true,
         profile,
-        sources: [],
+        sources: ["smdl"],
         dependencies: [],
         tools
     }, null, 2);

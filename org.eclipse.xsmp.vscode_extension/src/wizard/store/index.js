@@ -50,7 +50,7 @@ export default createStore({
                 command: "createProject",
                 projectName: state.projectName,
                 containerFolder: state.containerDirectory,
-                profile: state.profile,
+                profile: state.profile === "<no-profile>" ? "" : state.profile,
                 tools: JSON.stringify(state.tools)
             })
         },
