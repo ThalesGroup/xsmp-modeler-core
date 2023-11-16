@@ -27,9 +27,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
 {
   private static final boolean defaultIsBuildAutomatically = true;
 
-  private static final String defaultProfile = "xsmp-sdk";
-
-  private String profile = defaultProfile;
+  private String profile = "";
 
   private final List<String> dependencies = new ArrayList<>();
 
@@ -98,7 +96,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
       }
       else
       {
-        addSourceFolder("smdl");
+        addSourceFolder(".");
       }
       if (root.has("dependencies"))
       {
@@ -124,7 +122,7 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
     }
     catch (final FileNotFoundException e)
     {
-      addSourceFolder("smdl");
+      addSourceFolder(".");
       e.printStackTrace();
     }
     catch (final JsonIOException | JsonSyntaxException e)

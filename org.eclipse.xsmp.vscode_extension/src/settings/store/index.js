@@ -74,7 +74,7 @@ export default createStore({
         saveSettings({ state }) {
             const settings = {
                 generate_automatically: state.generateAutomatically,
-                profile: state.profile,
+                profile: state.profile === "<no-profile>" ? "" : state.profile,
                 sources: state.sources,
                 dependencies: state.dependencies,
                 tools: state.tools
@@ -87,7 +87,7 @@ export default createStore({
         },
         updateSettings({ commit }, settings) {
             commit('setGenerateAutomatically', settings.generate_automatically);
-            commit('setProfile', settings.profile);
+            commit('setProfile', settings.profile === "" ? "<no-profile>" : settings.profile);
             commit('setSources', settings.sources);
             commit('setDependencies', settings.dependencies);
             commit('setTools', settings.tools);

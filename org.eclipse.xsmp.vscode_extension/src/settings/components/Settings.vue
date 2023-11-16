@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="tags mt-4">
-            <span class="tag is-link" v-if="sources.length === 0">smdl</span>
+            <span class="tag is-link" v-if="sources.length === 0">.</span>
             <span v-for="(folder, index) in sources" :key="index" class="tag is-link">
               {{ folder }}
               <button class="delete is-small" @click="removeSourceFolder(index)"></button>
@@ -101,7 +101,7 @@ import {mapActions, mapMutations} from "vuex";
 export default {
   data() {
     return {
-      availableProfile: ["xsmp-sdk", "esa-cdk"],
+      availableProfile: ["<no-profile>", "xsmp-sdk", "esa-cdk"],
       availableTools: ["smp", "python"],
       selectedDependency: '',
       newSourceFolder: ''
