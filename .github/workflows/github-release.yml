@@ -9,6 +9,7 @@ on:
 
 jobs:
    build:
+      permissions: write-all
       runs-on: ubuntu-latest
 
       steps:
@@ -35,14 +36,21 @@ jobs:
             npm install
             vsce package --out "target/xsmp-modeler.vsix"
 
-      -  name: Create release
-         id: create_release
-         uses: actions/create-release@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      -  name: Rename output file
+         run: |
+            mv ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
+            mv ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler-${{ github.ref_name }}.vsix
+            mv ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
+            mv ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
+            mv ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
+
+      -  name: Release
+         uses: softprops/action-gh-release@v1
+         if: startsWith(github.ref, 'refs/tags/')
          with:
-            tag_name: ${{ github.ref }}
-            release_name: Release ${{ github.ref }}
+            name: Release ${{ github.ref_name }}
+            draft: true
+            prerelease: false
             body: |
                This release contains XSMP modeler ${{ github.ref_name }}
                
@@ -52,56 +60,9 @@ jobs:
                To install XSMP in Visual Studio Code, download this [extension](https://github.com/ThalesGroup/xsmp-modeler-core/releases/download/${{ github.ref_name }}/xsmp-modeler-${{ github.ref_name }}.vsix) and follow these [instructions](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix).
                
                You can find additional Command Line utilities in the Assets.
-            draft: true
-            prerelease: false
-      -  name: Upload P2 repository
-         uses: actions/upload-release-asset@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip
-            asset_name: org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
-            asset_content_type: application/zip
-      -  name: Upload VSCode extension
-         uses: actions/upload-release-asset@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix
-            asset_name: xsmp-modeler-${{ github.ref_name }}.vsix
-            asset_content_type: application/zip
-      -  name: Upload SMP Tools CLI
-         uses: actions/upload-release-asset@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli.jar
-            asset_name: org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
-            asset_content_type: application/java-archive
-      -  name: Upload XSMP SDK Profile CLI
-         uses: actions/upload-release-asset@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli.jar
-            asset_name: org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
-            asset_content_type: application/java-archive
-      -  name: Upload ESA CDK Profile CLI
-         uses: actions/upload-release-asset@v1
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli.jar
-            asset_name: org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
-            asset_content_type: application/java-archive
-      -  name: Publish release
-         uses: StuYarrow/publish-release@v1.1.2
-         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         with:
-            id: ${{ steps.create_release.outputs.id }}
+            files: |
+               ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
+               ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler-${{ github.ref_name }}.vsix
+               ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
