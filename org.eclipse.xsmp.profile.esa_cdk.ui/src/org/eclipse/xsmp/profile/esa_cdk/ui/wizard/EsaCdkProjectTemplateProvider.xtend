@@ -40,7 +40,7 @@ final class EsaCdkProject {
 
     override protected updateVariables() {
         if (name.value == cName)
-            name.value = projectInfo.projectName.split("\\.").last
+            name.value = projectInfo.projectName.replaceAll("\\.","_")
         super.updateVariables()
     }
 

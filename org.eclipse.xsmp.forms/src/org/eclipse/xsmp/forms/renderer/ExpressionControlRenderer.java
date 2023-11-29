@@ -13,7 +13,7 @@ package org.eclipse.xsmp.forms.renderer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.ecore.EObject;

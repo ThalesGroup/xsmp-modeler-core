@@ -12,7 +12,7 @@ package org.eclipse.xsmp.forms.renderer;
 
 import java.util.UUID;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import org.eclipse.emf.ecp.view.spi.context.ViewModelContext;
 import org.eclipse.emf.ecp.view.spi.core.swt.renderer.TextControlSWTRenderer;

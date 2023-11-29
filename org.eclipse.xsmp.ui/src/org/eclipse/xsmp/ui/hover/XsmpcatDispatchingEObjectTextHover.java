@@ -26,59 +26,54 @@ import org.eclipse.xtext.util.Tuples;
 
 import com.google.inject.Inject;
 
-public class XsmpcatDispatchingEObjectTextHover extends DispatchingEObjectTextHover
-{
+/**
+ * Dispatcher to provide hover documentation on keywords
+ */
+public class XsmpcatDispatchingEObjectTextHover extends DispatchingEObjectTextHover {
 
-  @Inject
-  private IEObjectHoverProvider hoverProvider;
+	@Inject
+	private IEObjectHoverProvider hoverProvider;
 
-  @Inject
-  private XsmpcatKeywordAtOffsetHelper keywordAtOffsetHelper;
+	@Inject
+	private XsmpcatKeywordAtOffsetHelper keywordAtOffsetHelper;
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IInformationControlCreator getHoverControlCreator()
-  {
-    return lastCreatorProvider == null ? super.getHoverControlCreator()
-            : lastCreatorProvider.getHoverControlCreator();
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IInformationControlCreator getHoverControlCreator() {
+		return lastCreatorProvider == null ? super.getHoverControlCreator()
+				: lastCreatorProvider.getHoverControlCreator();
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object getHoverInfo(EObject first, ITextViewer textViewer, IRegion hoverRegion)
-  {
-    if (first instanceof Keyword || first instanceof BuiltInExpression)
-    {
-      lastCreatorProvider = hoverProvider.getHoverInfo(first, textViewer, hoverRegion);
-      return lastCreatorProvider == null ? null : lastCreatorProvider.getInfo();
-    }
-    lastCreatorProvider = null;
-    return super.getHoverInfo(first, textViewer, hoverRegion);
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object getHoverInfo(EObject first, ITextViewer textViewer, IRegion hoverRegion) {
+		if (first instanceof Keyword || first instanceof BuiltInExpression) {
+			lastCreatorProvider = hoverProvider.getHoverInfo(first, textViewer, hoverRegion);
+			return lastCreatorProvider == null ? null : lastCreatorProvider.getInfo();
+		}
+		lastCreatorProvider = null;
+		return super.getHoverInfo(first, textViewer, hoverRegion);
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected Pair<EObject, IRegion> getXtextElementAt(XtextResource resource, final int offset)
-  {
-    final var result = super.getXtextElementAt(resource, offset);
-    if (result == null)
-    {
-      final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
-      if (tmp == null)
-      {
-        return null;
-      }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Pair<EObject, IRegion> getXtextElementAt(XtextResource resource, final int offset) {
+		final var result = super.getXtextElementAt(resource, offset);
+		if (result == null) {
+			final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
+			if (tmp == null) {
+				return null;
+			}
 
-      final var textRegion = tmp.getSecond();
-      return Tuples.create(tmp.getFirst(),
-              (IRegion) new Region(textRegion.getOffset(), textRegion.getLength()));
-    }
-    return result;
-  }
+			final var textRegion = tmp.getSecond();
+			return Tuples.create(tmp.getFirst(), (IRegion) new Region(textRegion.getOffset(), textRegion.getLength()));
+		}
+		return result;
+	}
 }

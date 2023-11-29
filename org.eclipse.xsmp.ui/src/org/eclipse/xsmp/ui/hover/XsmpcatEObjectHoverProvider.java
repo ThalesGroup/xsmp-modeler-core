@@ -15,48 +15,45 @@ import org.eclipse.xsmp.ui.cdt.SourceHovers;
 import org.eclipse.xsmp.xcatalogue.Expression;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xtext.Keyword;
+import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 
 import com.google.inject.Inject;
 
-public class XsmpcatEObjectHoverProvider
-        extends org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider
-{
+/**
+ * returns documentation specific to xsmpcat
+ */
+public class XsmpcatEObjectHoverProvider extends DefaultEObjectHoverProvider {
 
-  /** Utility mapping keywords and hovertext. */
-  @Inject
-  private XsmpcatKeywordHovers keywordHovers;
+	/** Utility mapping keywords and hovertext. */
+	@Inject
+	private XsmpcatKeywordHovers keywordHovers;
 
-  @Inject
-  private SourceHovers sourceHovers;
+	@Inject
+	private SourceHovers sourceHovers;
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected String getHoverInfoAsHtml(EObject o)
-  {
-    if (o instanceof Keyword)
-    {
-      return keywordHovers.hoverText((Keyword) o);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getHoverInfoAsHtml(EObject o) {
+		if (o instanceof final Keyword kw) {
+			return keywordHovers.hoverText(kw);
+		}
 
-    final var hover = super.getHoverInfoAsHtml(o);
+		final var hover = super.getHoverInfoAsHtml(o);
 
-    if (o instanceof NamedElement)
-    {
-      final var sourceHover = sourceHovers.hoverText((NamedElement) o);
+		if (o instanceof final NamedElement elem) {
+			final var sourceHover = sourceHovers.hoverText(elem);
 
-      if (sourceHover != null)
-      {
-        return hover + "<br><br>" + sourceHover;
-      }
-    }
-    return hover;
-  }
+			if (sourceHover != null) {
+				return hover + "<br><br>" + sourceHover;
+			}
+		}
+		return hover;
+	}
 
-  @Override
-  protected boolean hasHover(EObject o)
-  {
-    return super.hasHover(o) || o instanceof Expression;
-  }
+	@Override
+	protected boolean hasHover(EObject o) {
+		return super.hasHover(o) || o instanceof Expression;
+	}
 }

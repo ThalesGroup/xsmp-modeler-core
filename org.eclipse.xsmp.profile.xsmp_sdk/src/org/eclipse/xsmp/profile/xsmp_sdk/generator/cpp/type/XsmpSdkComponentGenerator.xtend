@@ -315,7 +315,7 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
 
         '''
             if (handlers.find("«o.name»") == handlers.end()) {
-                handlers["«o.name»"] = [](«container.name(useGenPattern)»* cmp, ::Smp::IRequest* req) {
+                handlers["«o.name»"] = [](«container.name(useGenPattern)»* cmp, ::Smp::IRequest *«IF !o.parameter.empty || o.returnParameter !== null»req«ENDIF») {
                 «FOR p : o.parameter»
                     «p.initParameter(container)»
                 «ENDFOR»

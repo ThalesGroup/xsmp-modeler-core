@@ -25,10 +25,10 @@ import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ExceptionGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.EsaCdkGenerator;
-import org.eclipse.xsmp.profile.esa_cdk.generator.EsaCdkGeneratorExtension;
 import org.eclipse.xsmp.profile.esa_cdk.generator.EsaCdkOutputConfigurationProvider;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.EsaCdkCatalogueGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.EsaCdkCopyrightProvider;
+import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.EsaCdkGeneratorExtension;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member.EsaCdkConstantGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member.EsaCdkContainerGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member.EsaCdkEntryPointGenerator;
@@ -45,93 +45,76 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension
- * registry.
+ * Use this class to register components to be used at runtime / without the
+ * Equinox extension registry.
  */
-public class EsaCdkRuntimeModule extends XsmpcatRuntimeModule
-{
+public class EsaCdkRuntimeModule extends XsmpcatRuntimeModule {
 
-  @Override
-  public Class< ? extends IGenerator2> bindIGenerator2()
-  {
-    return EsaCdkGenerator.class;
-  }
+	@Override
+	public Class<? extends IGenerator2> bindIGenerator2() {
+		return EsaCdkGenerator.class;
+	}
 
-  @SingletonBinding(eager = true)
-  public Class< ? extends EsaCdkValidator> bindEsaCdkValidator()
-  {
-    return EsaCdkValidator.class;
-  }
+	@SingletonBinding(eager = true)
+	public Class<? extends EsaCdkValidator> bindEsaCdkValidator() {
+		return EsaCdkValidator.class;
+	}
 
-  @Override
-  public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
-  {
-    return EsaCdkOutputConfigurationProvider.class;
-  }
+	@Override
+	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
+		return EsaCdkOutputConfigurationProvider.class;
+	}
 
-  public Class< ? extends EntryPointGenerator> bindEntryPointGenerator()
-  {
-    return EsaCdkEntryPointGenerator.class;
-  }
+	public Class<? extends EntryPointGenerator> bindEntryPointGenerator() {
+		return EsaCdkEntryPointGenerator.class;
+	}
 
-  public Class< ? extends EventSinkGenerator> bindEventSinkGenerator()
-  {
-    return EsaCdkEventSinkGenerator.class;
-  }
+	public Class<? extends EventSinkGenerator> bindEventSinkGenerator() {
+		return EsaCdkEventSinkGenerator.class;
+	}
 
-  public Class< ? extends EventSourceGenerator> bindEventSourceGenerator()
-  {
-    return EsaCdkEventSourceGenerator.class;
-  }
+	public Class<? extends EventSourceGenerator> bindEventSourceGenerator() {
+		return EsaCdkEventSourceGenerator.class;
+	}
 
-  public Class< ? extends ReferenceGenerator> bindReferenceGenerator()
-  {
-    return EsaCdkReferenceGenerator.class;
-  }
+	public Class<? extends ReferenceGenerator> bindReferenceGenerator() {
+		return EsaCdkReferenceGenerator.class;
+	}
 
-  public Class< ? extends ContainerGenerator> bindConatinerGenerator()
-  {
-    return EsaCdkContainerGenerator.class;
-  }
+	public Class<? extends ContainerGenerator> bindConatinerGenerator() {
+		return EsaCdkContainerGenerator.class;
+	}
 
-  public Class< ? extends ComponentGenerator> bindComponentGenerator()
-  {
-    return EsaCdkComponentGenerator.class;
-  }
+	public Class<? extends ComponentGenerator> bindComponentGenerator() {
+		return EsaCdkComponentGenerator.class;
+	}
 
-  public Class< ? extends CatalogueGenerator> bindCatalogueGenerator()
-  {
-    return EsaCdkCatalogueGenerator.class;
-  }
+	public Class<? extends CatalogueGenerator> bindCatalogueGenerator() {
+		return EsaCdkCatalogueGenerator.class;
+	}
 
-  public Class< ? extends ArrayGenerator> bindArrayGenerator()
-  {
-    return EsaCdkArrayGenerator.class;
-  }
+	public Class<? extends ArrayGenerator> bindArrayGenerator() {
+		return EsaCdkArrayGenerator.class;
+	}
 
-  public Class< ? extends StringGenerator> bindStringGenerator()
-  {
-    return EsaCdkStringGenerator.class;
-  }
+	public Class<? extends StringGenerator> bindStringGenerator() {
+		return EsaCdkStringGenerator.class;
+	}
 
-  public Class< ? extends ExceptionGenerator> bindExceptionGenerator()
-  {
-    return EsaCdkExceptionGenerator.class;
-  }
+	public Class<? extends ExceptionGenerator> bindExceptionGenerator() {
+		return EsaCdkExceptionGenerator.class;
+	}
 
-  public Class< ? extends ConstantGenerator> bindConstantGenerator()
-  {
-    return EsaCdkConstantGenerator.class;
-  }
+	public Class<? extends ConstantGenerator> bindConstantGenerator() {
+		return EsaCdkConstantGenerator.class;
+	}
 
-  public Class< ? extends GeneratorUtil> bindGeneratorExtension()
-  {
-    return EsaCdkGeneratorExtension.class;
-  }
+	public Class<? extends GeneratorUtil> bindGeneratorExtension() {
+		return EsaCdkGeneratorExtension.class;
+	}
 
-  public Class< ? extends CppCopyrightNoticeProvider> bindCopyrightProvider()
-  {
-    return EsaCdkCopyrightProvider.class;
-  }
+	public Class<? extends CppCopyrightNoticeProvider> bindCopyrightProvider() {
+		return EsaCdkCopyrightProvider.class;
+	}
 
 }

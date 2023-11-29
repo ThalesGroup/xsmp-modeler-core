@@ -366,7 +366,7 @@ class EsaCdkComponentGenerator extends ComponentGenerator {
                 typedef ::esa::ecss::smp::cdk::RequestContainer<_Type> Help;
                 
                 // ---- Operations ----
-                «FOR op : t.member.filter(Operation).filter[it.isInvokable && it.attributeValue(QualifiedNames.Attributes_View) !== null && !it.parameter.exists[!(it.type instanceof SimpleType) || (it.type instanceof String)]]»
+                «FOR op : t.member.filter(Operation).filter[it.isInvokable]»
                     «t.generatePopulateRqHandler(op, useGenPattern)»
                 «ENDFOR»
                 

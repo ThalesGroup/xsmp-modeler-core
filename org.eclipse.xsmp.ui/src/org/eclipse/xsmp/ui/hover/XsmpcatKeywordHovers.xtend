@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.ui.hover
 
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess
-import javax.inject.Inject
+import com.google.inject.Inject
 import org.eclipse.xtext.Keyword
 
 class XsmpcatKeywordHovers {
