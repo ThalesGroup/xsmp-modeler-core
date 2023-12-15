@@ -1,12 +1,13 @@
 .. container::
 
    .. raw:: html
-
-       <div align='center'>
-       <br />
-       <img src='https://raw.githubusercontent.com/ThalesGroup/xsmp-modeler-core/main/logo/xsmp.svg' alt='xsmp logo' width='200'>
-       <h2>XSMP Modeler Core</h2>
-       </div>
+       <p align="center">
+           <picture>
+             <source media="(prefers-color-scheme: dark)" width="200" srcset="https://github.com/ThalesGroup/xsmp-modeler-core/raw/main/docs/images/xsmp_logo_dark.svg">
+             <source media="(prefers-color-scheme: light)" width="200" srcset="https://github.com/ThalesGroup/xsmp-modeler-core/raw/main/docs/images/xsmp_logo_light.svg">
+             <img alt="XSMP logo" width="200" src="https://github.com/ThalesGroup/xsmp-modeler-core/raw/main/docs/images/xsmp_logo_light.svg">
+           </picture>
+       </p>
 
    .. container::
       :name: badges

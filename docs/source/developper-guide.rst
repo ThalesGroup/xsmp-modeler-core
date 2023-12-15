@@ -1,8 +1,8 @@
 Requirements
 ============
 
-It is hightly recommanded to use the Eclipse framework to develop on the
-xsmp modeler.
+It is highly recommended to use the Eclipse framework to develop on the
+XSMP modeler.
 
 The **Eclipse IDE for Java and DSL Developers** package can be
 downloaded from `here <https://www.eclipse.org/downloads/packages/>`__.
@@ -11,7 +11,7 @@ Import XSMP projects into your workspace
 ========================================
 
 **File** → **Imports…** → **Projects from Git (with smart import)** →
-**Clone URI** and specifie the URI of this repository. All XSMP projects
+**Clone URI** and specify the URI of this repository. All XSMP projects
 should be imported in your workspace.
 
 Configure the Target platform
