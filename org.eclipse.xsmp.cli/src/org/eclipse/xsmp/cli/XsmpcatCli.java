@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -64,6 +64,17 @@ public class XsmpcatCli
   public static final String CONTEXT_OPTION = "context";
 
   public static final String HELP_OPTION = "help";
+
+  public static final int SUCCESS_EXIT = 0;
+
+  public static final int FAILURE_EXIT = 1;
+
+  private int exitStatus = SUCCESS_EXIT;
+
+  protected void setExitStatus(int status)
+  {
+    exitStatus = status;
+  }
 
   static
   {
@@ -149,6 +160,7 @@ public class XsmpcatCli
     catch (final IOException e)
     {
       LOG.fatal("Unable to load ecss.smp.xsmpcat", e);
+      setExitStatus(FAILURE_EXIT);
     }
 
   }
@@ -160,35 +172,44 @@ public class XsmpcatCli
             "Xsmpcat generator/validator Command Line Interface", options, null, true);
   }
 
-  protected void execute(String[] args) throws ParseException
+  protected final void execute(String[] args) throws ParseException
   {
     final var ns = System.nanoTime();
     final var options = getOptions();
-
-    // Create a parser
-    final CommandLineParser parser = new DefaultParser();
-
-    // parse the options passed as command line arguments
-    final CommandLine cmd;
     try
     {
-      cmd = parser.parse(options, args);
+      // Create a parser
+      final CommandLineParser parser = new DefaultParser();
+
+      // parse the options passed as command line arguments
+      final var cmd = parser.parse(options, args);
+
+      if (cmd.hasOption("h"))
+      {
+        printHelp(options);
+        return;
+      }
+
+      doExecute(cmd);
     }
     catch (final ParseException e)
     {
       printHelp(options);
-      LOG.fatal("Invalid argument", e);
-      throw e;
+      LOG.fatal(e.getLocalizedMessage());
+      setExitStatus(FAILURE_EXIT);
     }
-    if (cmd.hasOption("h"))
+    catch (final Exception e)
     {
-      printHelp(options);
-      return;
+      LOG.fatal("Unexpected error", e);
+      setExitStatus(FAILURE_EXIT);
     }
-    doExecute(cmd);
-    final var df = new DecimalFormat("##.##");
-    df.setRoundingMode(RoundingMode.DOWN);
-    LOG.info("Executed in " + df.format((System.nanoTime() - ns) / 1000000000.) + " s");
+    finally
+    {
+      final var df = new DecimalFormat("##.##");
+      df.setRoundingMode(RoundingMode.DOWN);
+      LOG.info("Executed in " + df.format((System.nanoTime() - ns) / 1000000000.) + " s");
+      System.exit(exitStatus);
+    }
   }
 
   protected ResourceSet createResourceSet(CommandLine cmd)
@@ -216,6 +237,7 @@ public class XsmpcatCli
         catch (final IOException e)
         {
           LOG.error("Invalid context:" + e.getLocalizedMessage());
+          setExitStatus(FAILURE_EXIT);
         }
       }
     }
@@ -223,7 +245,7 @@ public class XsmpcatCli
     // Configure output configurations
     fileAccess.setOutputConfigurations(
             uniqueIndex(outputConfigurationProvider.getOutputConfigurations(),
-                    (Function<OutputConfiguration, String>) from -> from.getName()));
+                    (Function<OutputConfiguration, String>) OutputConfiguration::getName));
 
     final var smdlDir = cmd.getOptionValue(SMDL_DIR_OPTION, "./smdl");
 
@@ -238,6 +260,7 @@ public class XsmpcatCli
     catch (final IOException e)
     {
       LOG.fatal(e);
+      setExitStatus(FAILURE_EXIT);
     }
 
   }
@@ -279,6 +302,7 @@ public class XsmpcatCli
     if (hasError)
     {
       LOG.error("Failed.");
+      setExitStatus(FAILURE_EXIT);
     }
     else
     {
@@ -307,6 +331,7 @@ public class XsmpcatCli
     catch (final Exception e)
     {
       LOG.error("Failed: " + e.getMessage());
+      setExitStatus(FAILURE_EXIT);
     }
   }
 
