@@ -53,6 +53,10 @@
 		<module>org.eclipse.xsmp.profile.esa-cdk.feature</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ide</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ui</module>
+        <module>org.eclipse.xsmp.tool.adoc</module>
+        <module>org.eclipse.xsmp.tool.adoc.feature</module>
+        <module>org.eclipse.xsmp.tool.adoc.ui</module>
+        <module>org.eclipse.xsmp.tool.adoc.ide</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
