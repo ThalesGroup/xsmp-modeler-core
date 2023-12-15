@@ -116,26 +116,6 @@
                             implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
                         </transformer>
                     </transformers>
-                    <artifactSet>
-                        <excludes><!-- avoid duplicate inclusion due to addjars
-                            plugin -->
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.lsp4j*</exclude>
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.xtext.xbase.lib*</exclude>
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-org.eclipse.xtend.lib*</exclude>
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-com.google.guava*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-asm*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-log4j*</exclude>
-                            <exclude>*:org.eclipse.xsmp.tool.smp.cli-reload4j*</exclude>
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-org.objectweb.asm*</exclude>
-                            <exclude>
-                                *:org.eclipse.xsmp.tool.smp.cli-org.apache.log4j*</exclude>
-                        </excludes>
-                    </artifactSet>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
@@ -160,7 +140,8 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <outputFile>${project.build.directory}/org.eclipse.xsmp.tool.smp.cli.jar</outputFile>
+                    <outputFile>
+                        ${project.build.directory}/org.eclipse.xsmp.tool.smp.cli.jar</outputFile>
                     <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
@@ -168,6 +149,29 @@
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>
+                            ${project.build.directory}/org.eclipse.xsmp.tool.smp.cli.jar</argument>
+                        <argument>--help</argument>
+                    </arguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>

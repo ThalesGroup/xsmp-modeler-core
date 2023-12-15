@@ -29,7 +29,6 @@
 		<module>org.eclipse.xsmp</module>
 		<module>org.eclipse.xsmp.tests</module>
 		<module>org.eclipse.xsmp.cli</module>
-		<module>org.eclipse.xsmp.cli.tests</module>
 		<module>org.eclipse.xsmp.generator.cpp</module>
 		<module>org.eclipse.xsmp.lib</module>
 		<module>org.eclipse.xsmp.forms</module>
