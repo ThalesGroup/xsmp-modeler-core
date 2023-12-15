@@ -997,7 +997,7 @@ public class XsmpUtil
     return type;
   }
 
-  public Type getType(EObject e)
+  private Type getType(EObject e)
   {
     if (e != null)
     {
