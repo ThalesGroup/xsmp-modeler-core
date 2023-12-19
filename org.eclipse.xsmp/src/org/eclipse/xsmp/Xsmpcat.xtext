@@ -27,29 +27,26 @@ ImportDeclaration:
     'import' (importedType=[LanguageType|QualifiedName]
     | 'namespace' importedNamespace=[Namespace|QualifiedName]);
 
+NestedNamespace returns Namespace:
+    {Namespace} '::' name=ValidID?
+    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
 
 Namespace returns ecore::EObject:
     {Metadatum}
     documentation=ML_DOCUMENTATION?
     metadata+=Attribute*
     {Namespace.metadatum=current} 'namespace' name=ValidID?
-    '{'
-    member+=NamespaceMember*
-    '}';
+    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
 
 enum RangeKind:
     Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
-
-
 
 NamespaceMember returns ecore::EObject:
     {Metadatum}
     documentation=ML_DOCUMENTATION?
     metadata+=Attribute*
     ({Namespace.metadatum=current} 'namespace' name=ValidID?
-    '{'
-    member+=NamespaceMember*
-    '}'
+    (member+=NestedNamespace | '{' member+=NamespaceMember* '}')
     |
     {Structure.metadatum=current} modifiers+=VisibilityModifiers*
     'struct' name=ValidID?
@@ -282,11 +279,10 @@ Parameter:
 enum ParameterDirectionKind:
     in='in' | out='out' | inout='inout';
 
-@Override 
+@Override
 ValidID:
     ID | 'extends' | 'implements' | 'in' | 'out' | 'inout' | 'exception' | 'model' | 'service' | 'interface' | 'string'
     | 'native' | 'primitive' | 'attribute' | 'integer' | 'catalogue' | 'entrypoint' | 'field' | 'container' |
     'reference' | 'eventsink' | 'eventsource' | 'property' | 'association' | 'constant' | 'input' | 'output' |
     'transient' | 'event' | 'def' | 'abstract' | 'get' | 'set' | 'readWrite' | 'readOnly' | 'writeOnly' |
     'import' | 'array';
-

@@ -20,73 +20,79 @@ import Smp.Duration
  */
 namespace ns1
 {
-	/**
-	 * Model
-	 * 
-	 * @uuid 425d5361-34c3-4ccc-bc2b-56ba42d78ec1
-	 */
-	public model name
-	/*
-	 * 	bloc of
-	 *         commented code
-	 * 	
-	 * 	
-	 test*/
-	// single line comment     f't    
-	// single line comment     that should wrap on the lext line aaa aaaa aaaa aaaa aaaa aaaa aaaa aaa aaaa aaaa aaa aaaa aaaa aaaa aaa aaaa aaa aaaa aaaa aaaa aaaa
+	namespace ns2
 	{
-		public constant Smp.Int32 num = 1 + 5
+		namespace ns3
+		{
+			/**
+			 * Model
+			 * 
+			 * @uuid 425d5361-34c3-4ccc-bc2b-56ba42d78ec1
+			 */
+			public model name
+			/*
+			 * 	bloc of
+			 *         commented code
+			 * 	
+			 * 	
+			 test*/
+			// single line comment     f't    
+			// single line comment     that should wrap on the lext line aaa aaaa aaaa aaaa aaaa aaaa aaaa aaa aaaa aaaa aaa aaaa aaaa aaaa aaa aaaa aaa aaaa aaaa aaaa aaaa
+			{
+				public constant Smp.Int32 num = 1 + 5
 
 
-		/**
-		 * a
-		 * documentation
-		 * with empty
-		 * lines
-		 */
-		constant Int32 num2 = 2 + (-3)
+				/**
+				 * a
+				 * documentation
+				 * with empty
+				 * lines
+				 */
+				constant Int32 num2 = 2 + (-3)
+			}
+
+			/** @uuid 5ee769ff-23d4-4cc8-9dbf-c3e2a7b03314 */
+			public using arraytest = Int16[4]
+
+			/** @uuid 3c6c0da4-46c8-4504-ac33-157824ef340d */
+			private struct mystruct
+			{
+			}
+
+
+			/** @uuid 11bceb41-86d0-4b81-8207-752c43be3871 */
+			class MYCLASS extends CannotDelete
+			{
+				association DateTime sqdd
+				field Float32 fielddd
+
+
+				public property Smp.DateTime gdfgg
+				public constant Smp.Float64 cste = 4.6000000
+
+
+				public association Float32 qsdq
+			}
+
+			/** @uuid fe9c66f2-bda3-4922-9100-da0efa69dedb */
+			public class helloworld
+			{
+			}
+
+			/** @uuid 34d64d4a-d808-4b1c-af5c-31dea6aadd8a */
+			interface testinterface
+			{
+			}
+
+			/** @uuid 4028143f-ea06-43fb-8325-7678f681aa8a */
+			public exception myexception
+			{
+			}
+
+			/** @uuid dd5a7374-e88f-4c3d-a61b-04cb3a4793b4 */
+			public attribute Int16 attr = 6
+		}
 	}
-
-	/** @uuid 5ee769ff-23d4-4cc8-9dbf-c3e2a7b03314 */
-	public using arraytest = Int16[4]
-
-	/** @uuid 3c6c0da4-46c8-4504-ac33-157824ef340d */
-	private struct mystruct
-	{
-	}
-
-
-	/** @uuid 11bceb41-86d0-4b81-8207-752c43be3871 */
-	class MYCLASS extends CannotDelete
-	{
-		association DateTime sqdd
-		field Float32 fielddd
-
-
-		public property Smp.DateTime gdfgg
-		public constant Smp.Float64 cste = 4.6000000
-
-
-		public association Float32 qsdq
-	}
-
-	/** @uuid fe9c66f2-bda3-4922-9100-da0efa69dedb */
-	public class helloworld
-	{
-	}
-
-	/** @uuid 34d64d4a-d808-4b1c-af5c-31dea6aadd8a */
-	interface testinterface
-	{
-	}
-
-	/** @uuid 4028143f-ea06-43fb-8325-7678f681aa8a */
-	public exception myexception
-	{
-	}
-
-	/** @uuid dd5a7374-e88f-4c3d-a61b-04cb3a4793b4 */
-	public attribute Int16 attr = 6
 }
 
 

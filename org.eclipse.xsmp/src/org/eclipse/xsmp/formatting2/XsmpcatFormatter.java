@@ -230,10 +230,13 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
 
     format(parent.getMetadatum(), doc, false);
     final var parentRegion = regionFor(parent);
+    doc.append(parentRegion.keyword(ga.getNamespaceAccess().getNamespaceKeyword_4()),
+            this::oneSpace);
     doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getNamespaceKeyword_3_0_1()),
             this::oneSpace);
-    doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
-    doc.append(parentRegion.feature(NAMED_ELEMENT__NAME), this::newLine);
+
+    doc.surround(parentRegion.keyword(ga.getNestedNamespaceAccess().getColonColonKeyword_1()),
+            this::noSpace);
 
     formatBody(parent, doc);
   }
