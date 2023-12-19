@@ -287,18 +287,18 @@ class GeneratorUtil extends XsmpUtil {
     .put(QualifiedNames.Smp_EventSinkCollection, "Smp/IEventSink") // EventSinkCollection
     .build()
 
-    def dispatch String include(NamedElement type) {
+    def String include(NamedElement type) {
 
         val fqn = type.fqn
         var include = includes.get(fqn)
         if (include === null)
             include = fqn.toString("/")
 
-        '''#include "«include».h"'''
+        '''«include».h'''.include()
     }
 
-    def dispatch String include(Document type) {
-        '''#include "«type.fqn.toString("/")».h"'''
+    def String include(CharSequence header) {
+        '''#include <«header»>'''
     }
 
     def CharSequence viewKind(NamedElement t, CharSequence defaultView) {

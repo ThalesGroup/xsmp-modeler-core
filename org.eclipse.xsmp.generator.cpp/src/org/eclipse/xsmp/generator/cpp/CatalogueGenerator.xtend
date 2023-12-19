@@ -80,8 +80,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             // -------------------------------------------------------------------------------
             // --------------------------------- Includes ----------------------------------
             // -------------------------------------------------------------------------------
-            #include "«name()».h"
-            #include "Smp/Publication/ITypeRegistry.h"
+            «(name()+".h").include()»
+            «"Smp/Publication/ITypeRegistry.h".include()»
                             
             #ifdef  WIN32
             #define DLL_EXPORT __declspec(dllexport) // %RELAX<mconst> Visual Studio requires a define
