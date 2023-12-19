@@ -38,7 +38,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.XsmpUIPlugin;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
 import org.eclipse.xsmp.ui.labeling.XsmpcatLabelProvider;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
@@ -326,7 +326,7 @@ public class GenericItemProvider extends ItemProviderAdapter implements IItemLab
   @Override
   public final ResourceLocator getResourceLocator()
   {
-    return XsmpcatUIPlugin.getInstance();
+    return XsmpUIPlugin.getInstance();
   }
 
   @Override

@@ -128,8 +128,8 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
 
   public void configureExtensionName(Binder binder)
   {
-    binder.bind(String.class).annotatedWith(Names.named(XsmpcatConstants.EXTENSION_NAME))
-            .toInstance(XsmpcatConstants.DEFAULT_PROFILE_NAME);
+    binder.bind(String.class).annotatedWith(Names.named(XsmpConstants.EXTENSION_NAME))
+            .toInstance(XsmpConstants.DEFAULT_PROFILE_NAME);
   }
 
   @Override

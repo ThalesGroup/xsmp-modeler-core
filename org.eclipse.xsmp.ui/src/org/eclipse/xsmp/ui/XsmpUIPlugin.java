@@ -15,13 +15,13 @@ import org.osgi.framework.BundleContext;
 /**
  * This is the central singleton for the Xsmpcat UI plugin.
  */
-public final class XsmpcatUIPlugin extends AbstractXsmpcatUIPlugin
+public final class XsmpUIPlugin extends AbstractXsmpUIPlugin
 {
-  private static XsmpcatUIPlugin instance;
+  private static XsmpUIPlugin instance;
 
-  private static void setInstance(XsmpcatUIPlugin instance)
+  private static void setInstance(XsmpUIPlugin instance)
   {
-    XsmpcatUIPlugin.instance = instance;
+    XsmpUIPlugin.instance = instance;
   }
 
   @Override
@@ -38,7 +38,7 @@ public final class XsmpcatUIPlugin extends AbstractXsmpcatUIPlugin
     super.stop(context);
   }
 
-  public static XsmpcatUIPlugin getInstance()
+  public static XsmpUIPlugin getInstance()
   {
     return instance;
   }

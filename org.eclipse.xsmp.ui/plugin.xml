@@ -4,7 +4,7 @@
 	<extension
 		point="org.eclipse.ui.editors">
 		<editor
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatEditor"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
 			extensions="xsmpcat"
@@ -15,7 +15,7 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
 			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
 			<activeWhen>
 				<reference
@@ -24,7 +24,7 @@
 			</activeWhen>
 		</handler>
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
 			commandId="org.eclipse.xsmp.Xsmpcat.validate">
 			<activeWhen>
 				<reference
@@ -34,14 +34,14 @@
 		</handler>
 		<!-- copy qualified name -->
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
 			<activeWhen>
 				<reference definitionId="org.eclipse.xsmp.Xsmpcat.Editor.opened" />
 			</activeWhen>
 		</handler>
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
 			<activeWhen>
 				<and>
@@ -78,28 +78,28 @@
 	<extension
 			point="org.eclipse.ui.preferencePages">
 		<page
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
 			id="org.eclipse.xsmp"
 			name="Xsmp">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
 		</page>
 		<page
 		category="org.eclipse.xsmp"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
 			id="org.eclipse.xsmp.default"
 			name="Default">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
 		</page>
 		<page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
 			id="org.eclipse.xsmp.coloring"
 			name="Syntax Coloring">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
 		</page>
 	    <page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
 			id="org.eclipse.xsmp.templates"
 			name="Templates">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -109,7 +109,7 @@
 	<extension
 			point="org.eclipse.ui.propertyPages">
 		<page
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.preferences.XsmpPropertyPage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.preferences.XsmpPropertyPage"
 			id="org.eclipse.xsmp"
 			name="Xsmp">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -203,7 +203,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
 			commandId="org.eclipse.xtext.ui.editor.FindReferences">
 			<activeWhen>
 				<reference
@@ -225,13 +225,13 @@
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
 			type="xsmpcat">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
 			uriExtension="xsmpcat">
 		</resourceServiceProvider>
 	</extension>
@@ -260,7 +260,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
 			id="org.eclipse.xsmp.Xsmpcat.validator.preferencePage"
 			name="Errors/Warnings">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -268,13 +268,13 @@
 	</extension>
 	<!--<extension point="org.eclipse.xtext.builder.participant">
 		<participant
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="xsmpcat"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
 			id="org.eclipse.xsmp.Xsmpcat.compiler.preferencePage"
 			name="Compiler">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -284,7 +284,7 @@
 			point="org.eclipse.ui.propertyPages">
 		<page
 		    category="org.eclipse.xsmp"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
 			id="org.eclipse.xsmp.Default"
 			name="Default">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -297,7 +297,7 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
 			category="org.eclipse.xsmp.Default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
 			id="org.eclipse.xsmp.Xsmpcat.compiler.propertyPage"
 			name="Compiler">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -321,7 +321,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.cdt.OpenCppFileHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.cdt.OpenCppFileHandler"
 			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
 			<activeWhen>
 				<reference definitionId="org.eclipse.xsmp.Xsmpcat.Editor.opened" />
@@ -332,7 +332,7 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
@@ -365,7 +365,7 @@
 	<extension
 			point="org.eclipse.ui.ide.markerResolution">
 		<markerResolutionGenerator
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
 			markerType="org.eclipse.xsmp.ui.xsmpcat.check.fast">
 			<attribute
 				name="FIXABLE_KEY"
@@ -373,7 +373,7 @@
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
 			markerType="org.eclipse.xsmp.ui.xsmpcat.check.normal">
 			<attribute
 				name="FIXABLE_KEY"
@@ -381,7 +381,7 @@
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
 			markerType="org.eclipse.xsmp.ui.xsmpcat.check.expensive">
 			<attribute
 				name="FIXABLE_KEY"
@@ -392,7 +392,7 @@
 	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
@@ -417,7 +417,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
 			id="org.eclipse.xsmp.Xsmpcat.refactoring"
 			name="Refactoring">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>
@@ -425,7 +425,7 @@
 	</extension>
 	<extension point="org.eclipse.compare.contentViewers">
 		<viewer id="org.eclipse.xsmp.Xsmpcat.compare.contentViewers"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="xsmpcat">
 		</viewer>
 		<contentTypeBinding
@@ -434,7 +434,7 @@
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="org.eclipse.xsmp.Xsmpcat.compare.contentMergeViewers"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="xsmpcat" label="Xsmpcat Compare">
 		</viewer>
 		<contentTypeBinding
@@ -443,7 +443,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="org.eclipse.xsmp.Xsmpcat.editors.documentProviders"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
 			extensions="xsmpcat">
 		</provider>
 	</extension>
@@ -459,7 +459,7 @@
 		</category>
 		<wizard
 			category="org.eclipse.xsmp.ui.category"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xtext.ui.wizard.template.TemplateNewProjectWizard"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xtext.ui.wizard.template.TemplateNewProjectWizard"
 			id="org.eclipse.xsmp.ui.wizard.XsmpcatNewProjectWizard"
 			name="Xsmpcat Project"
 			icon="icons/new_Xsmpcat_proj.gif"
@@ -469,7 +469,7 @@
 	<extension
 		point="org.eclipse.xtext.ui.projectTemplate">
 		<projectTemplateProvider
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.wizard.XsmpcatProjectTemplateProvider"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.wizard.XsmpcatProjectTemplateProvider"
 			grammarName="org.eclipse.xsmp.Xsmpcat">
 		</projectTemplateProvider>
 	</extension>
@@ -485,7 +485,7 @@
 	<!-- code mining -->
 	<extension point="org.eclipse.ui.workbench.texteditor.codeMiningProviders">
 		<codeMiningProvider
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.jface.text.codemining.ICodeMiningProvider"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.jface.text.codemining.ICodeMiningProvider"
 			id="org.eclipse.xsmp.Xsmpcat.CodeMiningProvider"
 			label="Xsmpcat Codemining">
 			<enabledWhen>
@@ -509,7 +509,7 @@
     <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             uri="http://org.eclipse.xsmp/xcatalogue"
-            class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.provider.XcatalogueItemProviderAdapterFactory"
+            class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.provider.XcatalogueItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -524,15 +524,15 @@
             id="org.eclipse.xsmp.ui.editor.XsmpcatFormEditorID"
             name="Xsmpcat Form Editor"
             extensions="xsmpcat"
-            class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatFormEditor"
-            contributorClass="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatActionBarContributor">
+            class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatFormEditor"
+            contributorClass="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatActionBarContributor">
       </editor>
    </extension>
    
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			category="org.eclipse.xsmp.default"
-			class="org.eclipse.xsmp.ui.XsmpExecutableExtensionFactory:org.eclipse.xsmp.ui.preferences.SaveActionsPreferencePage"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.preferences.SaveActionsPreferencePage"
 			id="org.eclipse.xsmp.Xsmpcat.saveactions.preferencePage"
 			name="Save Actions">
 			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpcat"/>

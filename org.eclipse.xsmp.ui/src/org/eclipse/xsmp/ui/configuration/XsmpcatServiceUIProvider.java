@@ -13,7 +13,7 @@ package org.eclipse.xsmp.ui.configuration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.ui.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpConstants;
 import org.eclipse.xsmp.ui.extension.Extension;
 import org.eclipse.xsmp.ui.resource.XsmpProjectByResourceProvider;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
@@ -29,7 +29,7 @@ public class XsmpcatServiceUIProvider implements IXsmpcatServiceUIProvider
 {
 
   @Inject
-  @Named(XsmpcatConstants.EXTENSION_NAME)
+  @Named(XsmpConstants.EXTENSION_NAME)
   private String extensionName;
 
   @Inject

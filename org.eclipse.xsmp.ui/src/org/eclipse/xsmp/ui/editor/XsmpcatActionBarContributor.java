@@ -39,7 +39,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.XsmpUIPlugin;
 
 /**
  * This is the action bar contributor for the Xsmp model editor. <!-- begin-user-doc --> <!--
@@ -63,7 +63,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
    * This action opens the Properties view. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected IAction showPropertiesViewAction = new Action(
-          XsmpcatUIPlugin.getInstance().getString("_UI_ShowPropertiesView_menu_item")) {
+          XsmpUIPlugin.getInstance().getString("_UI_ShowPropertiesView_menu_item")) {
     @Override
     public void run()
     {
@@ -73,7 +73,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
       }
       catch (final PartInitException exception)
       {
-        XsmpcatUIPlugin.getInstance().getLog().error("PartInitException", exception);
+        XsmpUIPlugin.getInstance().getLog().error("PartInitException", exception);
       }
     }
   };
@@ -84,7 +84,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
    * end-user-doc -->
    */
   protected IAction refreshViewerAction = new Action(
-          XsmpcatUIPlugin.getInstance().getString("_UI_RefreshViewer_menu_item")) {
+          XsmpUIPlugin.getInstance().getString("_UI_RefreshViewer_menu_item")) {
     @Override
     public boolean isEnabled()
     {
@@ -139,7 +139,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
     super(ADDITIONS_LAST_STYLE);
     validateAction = new ValidateAction();
     liveValidationAction = new DiagnosticDecorator.LiveValidator.LiveValidationAction(
-            XsmpcatUIPlugin.getInstance().getDialogSettings());
+            XsmpUIPlugin.getInstance().getDialogSettings());
     findAction = FindAction.create();
     revertAction = new RevertAction();
   }
@@ -166,7 +166,7 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
     super.contributeToMenu(menuManager);
 
     final IMenuManager submenuManager = new MenuManager(
-            XsmpcatUIPlugin.getInstance().getString("_UI_XsmpEditor_menu"),
+            XsmpUIPlugin.getInstance().getString("_UI_XsmpEditor_menu"),
             "org.eclipse.xsmp.xsmpMenuID");
     menuManager.insertAfter("additions", submenuManager);
     submenuManager.add(new Separator("settings"));
@@ -177,13 +177,13 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
     // Prepare for CreateChild item addition or removal.
     //
     createChildMenuManager = new MenuManager(
-            XsmpcatUIPlugin.getInstance().getString("_UI_CreateChild_menu_item"));
+            XsmpUIPlugin.getInstance().getString("_UI_CreateChild_menu_item"));
     submenuManager.insertBefore("additions", createChildMenuManager);
 
     // Prepare for CreateSibling item addition or removal.
     //
     createSiblingMenuManager = new MenuManager(
-            XsmpcatUIPlugin.getInstance().getString("_UI_CreateSibling_menu_item"));
+            XsmpUIPlugin.getInstance().getString("_UI_CreateSibling_menu_item"));
     submenuManager.insertBefore("additions", createSiblingMenuManager);
 
     // Force an update because Eclipse hides empty menus now.
@@ -392,12 +392,12 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
     MenuManager submenuManager;
 
     submenuManager = new MenuManager(
-            XsmpcatUIPlugin.getInstance().getString("_UI_CreateChild_menu_item"));
+            XsmpUIPlugin.getInstance().getString("_UI_CreateChild_menu_item"));
     populateManager(submenuManager, createChildActions, null);
     menuManager.insertBefore("edit", submenuManager);
 
     submenuManager = new MenuManager(
-            XsmpcatUIPlugin.getInstance().getString("_UI_CreateSibling_menu_item"));
+            XsmpUIPlugin.getInstance().getString("_UI_CreateSibling_menu_item"));
     populateManager(submenuManager, createSiblingActions, null);
     menuManager.insertBefore("edit", submenuManager);
   }

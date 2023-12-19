@@ -10,13 +10,9 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
+
 /**
- * Helper class to get the current version of XSMP
+ * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-public interface XsmpVersion
-{
-  /**
-   * The current version of this plugin
-   */
-  String VERSION = "${qualifiedVersion}";
+public class XsmpcoreRuntimeModule extends AbstractXsmpcoreRuntimeModule {
 }

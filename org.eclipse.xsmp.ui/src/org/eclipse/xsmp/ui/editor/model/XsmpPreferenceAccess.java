@@ -10,7 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.editor.model;
 
-import org.eclipse.xsmp.ui.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpConstants;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 
@@ -45,7 +45,7 @@ public class XsmpPreferenceAccess
       store.setDefault(PREF_FORMAT, true);
       store.setDefault(PREF_UPDATE_DOCUMENT_DATE, true);
 
-      store.setDefault(PREF_PROFILE, XsmpcatConstants.DEFAULT_PROFILE_NAME);
+      store.setDefault(PREF_PROFILE, XsmpConstants.DEFAULT_PROFILE_NAME);
       store.setDefault(PREF_TOOLS, "org.eclipse.xsmp.tool.smp");
     }
 

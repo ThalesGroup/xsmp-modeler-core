@@ -10,13 +10,13 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
+
 /**
- * Helper class to get the current version of XSMP
+ * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public interface XsmpVersion
-{
-  /**
-   * The current version of this plugin
-   */
-  String VERSION = "${qualifiedVersion}";
+public class XsmpcoreStandaloneSetup extends XsmpcoreStandaloneSetupGenerated {
+
+	public static void doSetup() {
+		new XsmpcoreStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
 }

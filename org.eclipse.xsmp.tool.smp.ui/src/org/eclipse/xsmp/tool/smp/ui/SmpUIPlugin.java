@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.tool.smp.ui;
 
 import org.eclipse.xsmp.tool.smp.SmpRuntimeModule;
-import org.eclipse.xsmp.ui.AbstractXsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.AbstractXsmpUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Module;
@@ -19,7 +19,7 @@ import com.google.inject.Module;
 /**
  * This is the central singleton for the Smp Tool UI plugin.
  */
-public final class SmpUIPlugin extends AbstractXsmpcatUIPlugin
+public final class SmpUIPlugin extends AbstractXsmpUIPlugin
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.tool.smp.ui";
 
@@ -50,13 +50,13 @@ public final class SmpUIPlugin extends AbstractXsmpcatUIPlugin
   }
 
   @Override
-  protected com.google.inject.Module getRuntimeModule()
+  protected com.google.inject.Module getXsmpcatRuntimeModule()
   {
     return new SmpRuntimeModule();
   }
 
   @Override
-  protected Module getUiModule()
+  protected Module getXsmpcatUiModule()
   {
     return new SmpUIModule(this);
   }

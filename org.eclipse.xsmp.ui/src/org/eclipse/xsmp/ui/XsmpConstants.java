@@ -8,15 +8,14 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp;
+package org.eclipse.xsmp.ui;
 
-/**
- * Helper class to get the current version of XSMP
- */
-public interface XsmpVersion
+import org.eclipse.xtext.Constants;
+
+public interface XsmpConstants extends Constants
 {
-  /**
-   * The current version of this plugin
-   */
-  String VERSION = "${qualifiedVersion}";
+  String EXTENSION_NAME = "extension";
+
+  String DEFAULT_PROFILE_NAME = "org.eclipse.xsmp";
+
 }

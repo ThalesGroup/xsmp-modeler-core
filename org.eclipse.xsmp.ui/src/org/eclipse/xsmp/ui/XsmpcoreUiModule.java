@@ -8,15 +8,16 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp;
+package org.eclipse.xsmp.ui;
+
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Helper class to get the current version of XSMP
+ * Use this class to register components to be used within the Eclipse IDE.
  */
-public interface XsmpVersion
-{
-  /**
-   * The current version of this plugin
-   */
-  String VERSION = "${qualifiedVersion}";
+public class XsmpcoreUiModule extends AbstractXsmpcoreUiModule {
+
+	public XsmpcoreUiModule(AbstractUIPlugin plugin) {
+		super(plugin);
+	}
 }

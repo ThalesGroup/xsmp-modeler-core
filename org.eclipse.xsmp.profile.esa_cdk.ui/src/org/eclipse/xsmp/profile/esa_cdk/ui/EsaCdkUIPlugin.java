@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.profile.esa_cdk.ui;
 
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkRuntimeModule;
-import org.eclipse.xsmp.ui.AbstractXsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.AbstractXsmpUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the A CDK Profile UI plugin.
  */
-public final class EsaCdkUIPlugin extends AbstractXsmpcatUIPlugin
+public final class EsaCdkUIPlugin extends AbstractXsmpUIPlugin
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.profile.esa_cdk.ui";
 
@@ -48,13 +48,13 @@ public final class EsaCdkUIPlugin extends AbstractXsmpcatUIPlugin
   }
 
   @Override
-  protected com.google.inject.Module getRuntimeModule()
+  protected com.google.inject.Module getXsmpcatRuntimeModule()
   {
     return new EsaCdkRuntimeModule();
   }
 
   @Override
-  protected com.google.inject.Module getUiModule()
+  protected com.google.inject.Module getXsmpcatUiModule()
   {
     return new EsaCdkUiModule(this);
   }

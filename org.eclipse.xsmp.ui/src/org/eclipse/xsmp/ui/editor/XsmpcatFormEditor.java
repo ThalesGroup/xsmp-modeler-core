@@ -118,7 +118,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
-import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.XsmpUIPlugin;
 import org.eclipse.xsmp.ui.configuration.IXsmpcatServiceUIProvider;
 import org.eclipse.xsmp.xcatalogue.util.XcatalogueAdapterFactory;
 import org.eclipse.xtext.resource.XtextResource;
@@ -559,7 +559,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         }
         catch (final PartInitException exception)
         {
-          XsmpcatUIPlugin.getInstance().getLog().error("", exception);
+          XsmpUIPlugin.getInstance().getLog().error("", exception);
         }
       }
 
@@ -571,7 +571,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
         }
         catch (final CoreException exception)
         {
-          XsmpcatUIPlugin.getInstance().getLog().error("", exception);
+          XsmpUIPlugin.getInstance().getLog().error("", exception);
         }
       }
     }
@@ -919,7 +919,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
                        * selectionViewer)
                        */ labelProvider,
                       new DiagnosticDecorator.Styled(editingDomain, selectionViewer,
-                              XsmpcatUIPlugin.getInstance().getDialogSettings()))));
+                              XsmpUIPlugin.getInstance().getDialogSettings()))));
 
       final var resource = editingDomain.getResourceSet().getResources().get(0);
 
@@ -1034,7 +1034,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     }
     if (key.equals(IFindReplaceTarget.class))
     {
-      return FindAndReplaceTarget.getAdapter(key, this, XsmpcatUIPlugin.getInstance());
+      return FindAndReplaceTarget.getAdapter(key, this, XsmpUIPlugin.getInstance());
     }
     return super.getAdapter(key);
   }
@@ -1067,7 +1067,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
                           new AdapterFactoryLabelProvider.StyledLabelProvider(adapterFactory,
                                   contentOutlineViewer),
                           new DiagnosticDecorator.Styled(editingDomain, contentOutlineViewer,
-                                  XsmpcatUIPlugin.getInstance().getDialogSettings()))));
+                                  XsmpUIPlugin.getInstance().getDialogSettings()))));
           contentOutlineViewer.setInput(editingDomain.getResourceSet());
 
           new ColumnViewerInformationControlToolTipSupport(contentOutlineViewer,
@@ -1288,14 +1288,14 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     {
       // Something went wrong that shouldn't.
       //
-      XsmpcatUIPlugin.getInstance().getLog().error("", exception);
+      XsmpUIPlugin.getInstance().getLog().error("", exception);
       Thread.currentThread().interrupt();
     }
     catch (final Exception exception)
     {
       // Something went wrong that shouldn't.
       //
-      XsmpcatUIPlugin.getInstance().getLog().error("", exception);
+      XsmpUIPlugin.getInstance().getLog().error("", exception);
     }
     updateProblemIndication = true;
     doUpdateProblemIndication();
@@ -1497,7 +1497,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
    */
   private static String getString(String key)
   {
-    return XsmpcatUIPlugin.getInstance().getString(key);
+    return XsmpUIPlugin.getInstance().getString(key);
   }
 
   /**
@@ -1505,7 +1505,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
    */
   private static String getString(String key, Object s1)
   {
-    return XsmpcatUIPlugin.getInstance().getString(key, new Object[]{s1 });
+    return XsmpUIPlugin.getInstance().getString(key, new Object[]{s1 });
   }
 
   /**

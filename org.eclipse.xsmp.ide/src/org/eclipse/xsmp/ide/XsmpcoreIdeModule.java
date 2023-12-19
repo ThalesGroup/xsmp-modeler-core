@@ -8,15 +8,11 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp;
+package org.eclipse.xsmp.ide;
+
 
 /**
- * Helper class to get the current version of XSMP
+ * Use this class to register ide components.
  */
-public interface XsmpVersion
-{
-  /**
-   * The current version of this plugin
-   */
-  String VERSION = "${qualifiedVersion}";
+public class XsmpcoreIdeModule extends AbstractXsmpcoreIdeModule {
 }

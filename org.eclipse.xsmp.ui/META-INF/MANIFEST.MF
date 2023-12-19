@@ -54,4 +54,4 @@ Export-Package: org.eclipse.xsmp.ui,
  org.eclipse.xsmp.ui.template,
  org.eclipse.xsmp.ui.validation,
  org.eclipse.xsmp.ui.wizard
-Bundle-Activator: org.eclipse.xsmp.ui.XsmpcatUIPlugin
+Bundle-Activator: org.eclipse.xsmp.ui.XsmpUIPlugin

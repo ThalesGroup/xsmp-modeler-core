@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.ui.XsmpcatConstants;
+import org.eclipse.xsmp.ui.XsmpConstants;
 import org.eclipse.xsmp.ui.XsmpcatUiModule;
 
 import com.google.inject.Binder;
@@ -31,7 +31,7 @@ public class XsmpSdkUiModule extends XsmpcatUiModule
   @Override
   public void configureExtensionName(Binder binder)
   {
-    binder.bind(String.class).annotatedWith(Names.named(XsmpcatConstants.EXTENSION_NAME))
+    binder.bind(String.class).annotatedWith(Names.named(XsmpConstants.EXTENSION_NAME))
             .toInstance("org.eclipse.xsmp.profile.xsmp_sdk");
   }
 }

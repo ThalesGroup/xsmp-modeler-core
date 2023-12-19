@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
 import org.eclipse.xsmp.XsmpcatRuntimeModule;
+import org.eclipse.xsmp.XsmpcoreRuntimeModule;
 import org.eclipse.xsmp.ui.internal.XsmpActivator;
 import org.eclipse.xtext.ui.shared.SharedStateModule;
 import org.eclipse.xtext.util.Modules2;
@@ -29,10 +30,10 @@ import com.google.inject.Injector;
 /**
  * This is the central singleton for the Xsmpcat UI plugin.
  */
-public class AbstractXsmpcatUIPlugin extends EclipseUIPlugin
+public class AbstractXsmpUIPlugin extends EclipseUIPlugin
 {
 
-  private static final Logger logger = Logger.getLogger(AbstractXsmpcatUIPlugin.class);
+  private static final Logger logger = Logger.getLogger(AbstractXsmpUIPlugin.class);
 
   private final Map<String, Injector> injectors = Collections
           .synchronizedMap(Maps.<String, Injector> newHashMapWithExpectedSize(1));
@@ -62,16 +63,27 @@ public class AbstractXsmpcatUIPlugin extends EclipseUIPlugin
   {
     try
     {
-      if (!XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT.equals(language))
+      return switch (language)
       {
-        throw new IllegalArgumentException(language);
-      }
+        case XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT ->
+        {
+          final var runtimeModule = getXsmpcatRuntimeModule();
+          final var sharedStateModule = getSharedStateModule();
+          final var uiModule = getXsmpcatUiModule();
+          final var mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
+          yield Guice.createInjector(mergedModule);
+        }
+        case XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCORE ->
+        {
+          final var runtimeModule = getXsmpcoreRuntimeModule();
+          final var sharedStateModule = getSharedStateModule();
+          final var uiModule = getXsmpcoreUiModule();
+          final var mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
+          yield Guice.createInjector(mergedModule);
+        }
 
-      final var runtimeModule = getRuntimeModule();
-      final var sharedStateModule = getSharedStateModule();
-      final var uiModule = getUiModule();
-      final var mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
-      return Guice.createInjector(mergedModule);
+        default -> throw new IllegalArgumentException(language);
+      };
     }
     catch (final Exception e)
     {
@@ -81,14 +93,24 @@ public class AbstractXsmpcatUIPlugin extends EclipseUIPlugin
     }
   }
 
-  protected com.google.inject.Module getRuntimeModule()
+  protected com.google.inject.Module getXsmpcatRuntimeModule()
   {
     return new XsmpcatRuntimeModule();
   }
 
-  protected com.google.inject.Module getUiModule()
+  protected com.google.inject.Module getXsmpcatUiModule()
   {
     return new XsmpcatUiModule(this);
+  }
+
+  protected com.google.inject.Module getXsmpcoreRuntimeModule()
+  {
+    return new XsmpcoreRuntimeModule();
+  }
+
+  protected com.google.inject.Module getXsmpcoreUiModule()
+  {
+    return new XsmpcoreUiModule(this);
   }
 
   private com.google.inject.Module getSharedStateModule()
@@ -100,9 +122,9 @@ public class AbstractXsmpcatUIPlugin extends EclipseUIPlugin
   protected Object doGetImage(String key) throws IOException
   {
     var image = super.doGetImage(key);
-    if (image == null && !this.equals(XsmpcatUIPlugin.getInstance()))
+    if (image == null && !this.equals(XsmpUIPlugin.getInstance()))
     {
-      image = XsmpcatUIPlugin.getInstance().getImage(key);
+      image = XsmpUIPlugin.getInstance().getImage(key);
     }
     return image;
   }

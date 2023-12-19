@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.xsmp.ui.XsmpcatConstants;
-import org.eclipse.xsmp.ui.XsmpcatUIPlugin;
+import org.eclipse.xsmp.ui.XsmpConstants;
+import org.eclipse.xsmp.ui.XsmpUIPlugin;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.internal.XsmpActivator;
 
@@ -101,9 +101,9 @@ public class Extension
   static
   {
     // add default profile
-    profiles.put(XsmpcatConstants.DEFAULT_PROFILE_NAME, new Extension(
-            XsmpcatConstants.DEFAULT_PROFILE_NAME, "Default", "",
-            XsmpcatUIPlugin.getInstance().getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT)));
+    profiles.put(XsmpConstants.DEFAULT_PROFILE_NAME, new Extension(
+            XsmpConstants.DEFAULT_PROFILE_NAME, "Default", "",
+            XsmpUIPlugin.getInstance().getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT)));
 
     for (final IConfigurationElement cfg : Platform.getExtensionRegistry()
             .getConfigurationElementsFor("org.eclipse.xsmp.ui.profile"))

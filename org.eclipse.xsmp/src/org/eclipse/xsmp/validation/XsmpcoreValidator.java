@@ -8,14 +8,13 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ui;
+package org.eclipse.xsmp.validation;
 
-import org.eclipse.xtext.Constants;
-
-public interface XsmpcatConstants extends Constants
+/**
+ * This class contains custom validation rules.
+ * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
+ */
+public class XsmpcoreValidator extends AbstractXsmpcoreValidator
 {
-  String EXTENSION_NAME = "extension";
-
-  String DEFAULT_PROFILE_NAME = "org.eclipse.xsmp";
 
 }
