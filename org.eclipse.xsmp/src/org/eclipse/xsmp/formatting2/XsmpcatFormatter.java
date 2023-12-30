@@ -12,8 +12,6 @@ package org.eclipse.xsmp.formatting2;
 
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.ASSOCIATION__TYPE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BINARY_OPERATION__FEATURE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BUILT_IN_EXPRESSION__NAME;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.CLASS__BASE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.COMPONENT__BASE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.COMPONENT__INTERFACE;
@@ -27,7 +25,6 @@ import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.FLOAT__PRIM
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.FLOAT__RANGE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.INTERFACE__BASE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.METADATUM__DOCUMENTATION;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MULTIPLICITY__OPTIONAL;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT__NAME;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION;
@@ -35,28 +32,18 @@ import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.PROPERTY__G
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.PROPERTY__SET_RAISES;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.PROPERTY__TYPE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.REFERENCE__INTERFACE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.UNARY_OPERATION__FEATURE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.VALUE_REFERENCE__TYPE;
 import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS;
 
-import java.util.Collection;
-
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.xcatalogue.Array;
 import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Attribute;
 import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.BinaryOperation;
-import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
-import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Class;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Constant;
 import org.eclipse.xsmp.xcatalogue.Container;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.EntryPoint;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
 import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
@@ -70,33 +57,20 @@ import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
 import org.eclipse.xsmp.xcatalogue.ImportSection;
 import org.eclipse.xsmp.xcatalogue.Integer;
 import org.eclipse.xsmp.xcatalogue.Interface;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.Model;
 import org.eclipse.xsmp.xcatalogue.Multiplicity;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
 import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
 import org.eclipse.xsmp.xcatalogue.PrimitiveType;
 import org.eclipse.xsmp.xcatalogue.Property;
 import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xsmp.xcatalogue.Service;
 import org.eclipse.xsmp.xcatalogue.String;
 import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.UnaryOperation;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xtext.Keyword;
-import org.eclipse.xtext.formatting.IIndentationInformation;
-import org.eclipse.xtext.formatting2.AbstractJavaFormatter;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
-import org.eclipse.xtext.formatting2.ITextReplacer;
-import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion;
-import org.eclipse.xtext.formatting2.regionaccess.internal.TextSegment;
-import org.eclipse.xtext.xbase.formatting2.IndentOnceAutowrapFormatter;
-import org.eclipse.xtext.xbase.formatting2.ObjectEntry;
-import org.eclipse.xtext.xbase.formatting2.SeparatorRegions;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -106,25 +80,11 @@ import com.google.inject.Inject;
  *
  * @author daveluy
  */
-@SuppressWarnings("restriction")
-public class XsmpcatFormatter extends AbstractJavaFormatter
+public class XsmpcatFormatter extends XsmpcoreFormatter
 {
-  public static class IndentationInformation implements IIndentationInformation
-  {
-    @Override
-    public java.lang.String getIndentString()
-    {
-      return "    ";
-    }
-  }
 
   @Inject
   private XsmpcatGrammarAccess ga;
-
-  public ITextReplacer createDocumentationReplacer(ISemanticRegion description)
-  {
-    return new DocumentationReplacer(description);
-  }
 
   protected void format(Catalogue catalogue, IFormattableDocument doc)
   {
@@ -181,50 +141,6 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.append(parent, this::newLine);
   }
 
-  protected void format(Metadatum parent, IFormattableDocument doc, boolean inLine)
-  {
-    final var parentRegion = regionFor(parent);
-    final var description = parentRegion.feature(METADATUM__DOCUMENTATION);
-    if (inLine)
-    {
-      doc.append(description, this::oneSpace);
-    }
-    else
-    {
-      doc.append(description, this::newLine);
-    }
-    if (description != null)
-    {
-      doc.addReplacer(createDocumentationReplacer(description));
-    }
-
-    for (final Attribute t : parent.getMetadata())
-    {
-      final var attrRegion = regionFor(t);
-      doc.append(attrRegion.keyword(ga.getAttributeDeclarationAccess().getCommercialAtKeyword_0()),
-              this::noSpace);
-
-      doc.prepend(attrRegion.feature(NAMED_ELEMENT__NAME), this::noSpace);
-      final var open = attrRegion.keyword(ga.getAttributeAccess().getLeftParenthesisKeyword_1_0());
-      doc.surround(open, this::noSpace);
-      final var close = attrRegion
-              .keyword(ga.getAttributeAccess().getRightParenthesisKeyword_1_2());
-
-      doc.prepend(close, this::noSpace);
-      doc.format(t.getValue());
-
-      if (inLine)
-      {
-        doc.append(t, this::oneSpace);
-      }
-      else
-      {
-        doc.append(t, this::newLine);
-      }
-    }
-
-  }
-
   protected void format(Namespace parent, IFormattableDocument doc)
   {
 
@@ -260,83 +176,6 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
         });
       }
     }
-  }
-
-  protected void formatBody(NamedElementWithMembers parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    final var open = parentRegion.keyword("{");
-    final var close = parentRegion.keyword("}");
-    doc.surround(open, this::newLine);
-    doc.prepend(close, this::newLine);
-
-    doc.interior(open, close, this::indent);
-    for (final EObject eObject : parent.getMember())
-    {
-      doc.format(eObject);
-
-      if (eObject != Iterables.getLast(parent.getMember()))
-      {
-        doc.append(eObject, it -> {
-          it.setNewLines(1, 2, 3);
-          it.lowPriority();
-        });
-      }
-    }
-
-  }
-
-  protected void format(CollectionLiteral parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    final var open = parentRegion
-            .keyword(ga.getCollectionLiteralAccess().getLeftCurlyBracketKeyword_1());
-    final var close = parentRegion
-            .keyword(ga.getCollectionLiteralAccess().getRightCurlyBracketKeyword_4());
-    formatCollection(parent.getElements(), open, close, doc,
-            ga.getCollectionLiteralAccess().getCommaKeyword_3_0());
-
-  }
-
-  protected void format(UnaryOperation parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    doc.append(parentRegion.feature(UNARY_OPERATION__FEATURE), this::noSpace);
-    doc.format(parent.getOperand());
-  }
-
-  protected void format(BuiltInConstant parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    doc.prepend(parentRegion.feature(BUILT_IN_EXPRESSION__NAME), this::noSpace);
-  }
-
-  protected void format(BuiltInFunction parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    doc.surround(parentRegion.feature(BUILT_IN_EXPRESSION__NAME), this::noSpace);
-
-    final var open = parentRegion
-            .keyword(ga.getBuiltInFunctionAccess().getLeftParenthesisKeyword_3());
-    final var close = parentRegion
-            .keyword(ga.getBuiltInFunctionAccess().getRightParenthesisKeyword_5());
-    doc.append(open, this::noSpace);
-
-    doc.prepend(close, this::noSpace);
-    doc.interior(open, close, this::indent);
-
-    formatCollection(parent.getParameter(), open, close, doc,
-            ga.getBuiltInFunctionAccess().getCommaKeyword_4_1_0());
-  }
-
-  protected void format(BinaryOperation parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    doc.surround(parentRegion.feature(BINARY_OPERATION__FEATURE), this::oneSpace);
-
-    doc.format(parent.getLeftOperand());
-
-    doc.format(parent.getRightOperand());
   }
 
   protected void format(Structure parent, IFormattableDocument doc)
@@ -888,117 +727,10 @@ public class XsmpcatFormatter extends AbstractJavaFormatter
     doc.format(parent.getUpper());
   }
 
-  protected void formatList(EObject isr, EReference eref, IFormattableDocument doc,
-          Keyword separator)
-  {
-    for (final var i : allRegionsFor(isr).features(eref))
-    {
-
-      final var kw = i.immediatelyFollowing().keyword(separator);
-      doc.prepend(kw, this::noSpace);
-      doc.append(kw, this::oneSpace);
-    }
-  }
-
   protected void formatModifiers(EObject parent, IFormattableDocument doc)
   {
     allRegionsFor(parent).features(VISIBILITY_ELEMENT__MODIFIERS)
             .forEach(m -> doc.append(m, this::oneSpace));
-  }
-
-  protected void format(ParenthesizedExpression parent, IFormattableDocument doc)
-  {
-    final var region = regionFor(parent);
-    doc.append(region.keyword(ga.getParenthesizedExpressionAccess().getLeftParenthesisKeyword_1()),
-            this::noSpace);
-    doc.prepend(
-            region.keyword(ga.getParenthesizedExpressionAccess().getRightParenthesisKeyword_3()),
-            this::noSpace);
-    doc.format(parent.getExpr());
-  }
-
-  protected void format(DesignatedInitializer parent, IFormattableDocument doc)
-  {
-    final var region = regionFor(parent);
-    doc.append(region.keyword(ga.getDesignatedInitializerAccess().getFullStopKeyword_1()),
-            this::noSpace);
-    doc.surround(region.keyword(ga.getDesignatedInitializerAccess().getEqualsSignKeyword_3_0()),
-            this::oneSpace);
-    doc.format(parent.getExpr());
-  }
-
-  protected void formatCollection(Collection< ? extends EObject> elements, ISemanticRegion open,
-          ISemanticRegion close, IFormattableDocument doc, Keyword separator)
-  {
-    if (close == null || open == null)
-    {
-      // broken, do nothing
-    }
-    else if (elements.isEmpty())
-    {
-      doc.append(open, this::noSpace);
-    }
-    else if (close.getPreviousHiddenRegion().isMultiline())
-    {
-      doc.append(open, this::newLine);
-
-      for (final EObject elem : elements)
-      {
-        doc.format(elem);
-
-        doc.prepend(immediatelyFollowing(elem).keyword(separator), this::noSpace);
-        doc.append(immediatelyFollowing(elem).keyword(separator), this::newLine);
-      }
-
-      doc.append(Iterables.getLast(elements), this::newLine);
-      doc.interior(open, close, this::indent);
-    }
-    else
-    {
-      final var indent = new IndentOnceAutowrapFormatter(close.getPreviousHiddenRegion());
-      final var region = new TextSegment(getTextRegionAccess(), open.getEndOffset(),
-              close.getOffset() - open.getEndOffset());
-      final var items = new SeparatorRegions<EObject, ISemanticRegion>(region);
-
-      for (final EObject ele : elements)
-      {
-        items.appendWithTrailingSeparator(ele, immediatelyFollowing(ele).keyword(separator));
-      }
-
-      for (final ObjectEntry<EObject, ISemanticRegion> ele : items)
-      {
-        ISemanticRegion sep = null;
-
-        if (ele.getLeadingSeparator() != null)
-        {
-          sep = ele.getLeadingSeparator().getSeparator();
-        }
-
-        if (sep == null)
-        {
-          doc.append(open, it -> {
-            it.noSpace();
-            it.autowrap(ele.getRegion().getLength());
-            it.setOnAutowrap(indent);
-          });
-        }
-        else
-        {
-          doc.append(sep, it -> {
-            it.oneSpace();
-            it.autowrap(ele.getRegion().getLength());
-            it.setOnAutowrap(indent);
-          });
-        }
-
-        doc.prepend(sep, this::noSpace);
-        doc.format(ele.getObject());
-      }
-      doc.prepend(close, it -> {
-        it.noSpace();
-        it.lowPriority();
-      });
-    }
   }
 
 }

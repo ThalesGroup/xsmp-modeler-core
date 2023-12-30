@@ -8,30 +8,28 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.service;
+package org.eclipse.xsmp.resource;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xtext.resource.IResourceFactory;
+import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
-public class DefaultXsmpcatServiceProvider implements IXsmpcatServiceProvider
+public class XsmpResourceFactory implements IResourceFactory
 {
 
   @Inject
-  Injector injector;
+  private IXsmpServiceProvider xsmpServiceProvider;
 
   @Override
-  public <T> T getInstance(URI context, Class<T> clazz)
+  public Resource createResource(URI uri)
   {
-    return injector.getInstance(clazz);
-  }
-
-  @Override
-  public boolean isEnabledFor(Resource context)
-  {
-    return true;
+    final var xtextResource = xsmpServiceProvider.getInstance(uri, XtextResource.class);
+    xtextResource.setURI(uri);
+    return xtextResource;
   }
 
 }

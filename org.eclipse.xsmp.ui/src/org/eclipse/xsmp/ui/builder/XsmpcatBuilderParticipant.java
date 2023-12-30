@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.xsmp.ui.configuration.IXsmpcatServiceUIProvider;
+import org.eclipse.xsmp.ui.configuration.IXsmpServiceUIProvider;
 import org.eclipse.xtext.builder.BuilderParticipant;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -34,7 +34,7 @@ public class XsmpcatBuilderParticipant extends BuilderParticipant
 {
 
   @Inject
-  protected IXsmpcatServiceUIProvider serviceProvider;
+  protected IXsmpServiceUIProvider serviceProvider;
 
   @Override
   protected boolean isEnabled(IBuildContext context)

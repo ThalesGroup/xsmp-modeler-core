@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -21,11 +21,11 @@ import com.google.inject.Inject;
 /**
  * @author daveluy
  */
-public class XsmpcatValueConverterService extends AbstractDeclarativeValueConverterService
+public class XsmpValueConverterService extends AbstractDeclarativeValueConverterService
 {
 
   @Inject
-  private XsmpcatQualifiedNameValueConverter qualifiedNameValueConverter;
+  private XsmpQualifiedNameValueConverter qualifiedNameValueConverter;
 
   @Inject
   private KeywordAlternativeConverter validIDConverter;
@@ -70,7 +70,7 @@ public class XsmpcatValueConverterService extends AbstractDeclarativeValueConver
   /**
    * @return the INTEGER_LITERAL value converter
    */
-  @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcat.INTEGER_LITERAL")
+  @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcore.INTEGER_LITERAL")
   public IValueConverter<String> getTerminalsIntegerLiteralConverter()
   {
     return terminalsIntegerLiteralValueConverter;
@@ -94,7 +94,7 @@ public class XsmpcatValueConverterService extends AbstractDeclarativeValueConver
   /**
    * @return the ID value converter
    */
-  @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcat.ID")
+  @ValueConverter(rule = "org.eclipse.xsmp.Xsmpcore.ID")
   public IValueConverter<String> getTerminalsIdConverter()
   {
     return terminalsIdValueConverter;

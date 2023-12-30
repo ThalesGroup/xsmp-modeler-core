@@ -119,7 +119,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.xsmp.ui.XsmpUIPlugin;
-import org.eclipse.xsmp.ui.configuration.IXsmpcatServiceUIProvider;
+import org.eclipse.xsmp.ui.configuration.IXsmpServiceUIProvider;
 import org.eclipse.xsmp.xcatalogue.util.XcatalogueAdapterFactory;
 import org.eclipse.xtext.resource.XtextResource;
 
@@ -587,7 +587,7 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   @Inject
-  private IXsmpcatServiceUIProvider configurationProvider;
+  private IXsmpServiceUIProvider configurationProvider;
 
   /**
    * This creates a model editor.

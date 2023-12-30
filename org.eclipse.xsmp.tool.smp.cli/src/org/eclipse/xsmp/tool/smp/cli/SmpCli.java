@@ -14,7 +14,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xsmp.cli.XsmpcatCli;
+import org.eclipse.xsmp.cli.XsmpCli;
 import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
 import org.eclipse.xsmp.tool.smp.importer.SmpImporter;
 import org.eclipse.xsmp.tool.smp.util.SmpResourceSet;
@@ -23,7 +23,7 @@ import org.eclipse.xsmp.validation.XsmpcatValidator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class SmpCli extends XsmpcatCli
+public class SmpCli extends XsmpCli
 {
   // inject the default validator to register it
   @Inject
@@ -64,7 +64,7 @@ public class SmpCli extends XsmpcatCli
     if (cmd.hasOption(IMPORT_OPTION))
     {
 
-      XsmpcatCli.LOG.info("Registering ECSS SMP library ... ");
+      XsmpCli.LOG.info("Registering ECSS SMP library ... ");
 
       final var rs = smpResourceSetProvider.get();
 
@@ -73,7 +73,7 @@ public class SmpCli extends XsmpcatCli
       // replace the generator with the smpcat impoter
       generator = importer;
       fileAccess.setOutputPath("smdl");
-      XsmpcatCli.LOG.info("Done.");
+      XsmpCli.LOG.info("Done.");
       return rs;
     }
     return super.createResourceSet(cmd);

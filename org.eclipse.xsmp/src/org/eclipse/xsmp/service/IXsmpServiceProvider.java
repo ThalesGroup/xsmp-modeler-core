@@ -18,8 +18,8 @@ import com.google.inject.ImplementedBy;
 /**
  * @author daveluy
  */
-@ImplementedBy(DefaultXsmpcatServiceProvider.class)
-public interface IXsmpcatServiceProvider
+@ImplementedBy(DefaultXsmpServiceProvider.class)
+public interface IXsmpServiceProvider
 {
   /**
    * Get an instance of clazz<T> from the specified context

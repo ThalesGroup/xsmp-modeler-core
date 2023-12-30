@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,13 +10,14 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
-import org.eclipse.xsmp.conversion.XsmpcatValueConverterService;
+import org.eclipse.xsmp.conversion.XsmpValueConverterService;
 import org.eclipse.xsmp.documentation.XsmpcatEObjectDocumentationProvider;
+import org.eclipse.xsmp.formatting2.XsmpcoreFormatter;
 import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
-import org.eclipse.xsmp.naming.XsmpcatQualifiedNameProvider;
+import org.eclipse.xsmp.naming.XsmpQualifiedNameProvider;
+import org.eclipse.xsmp.resource.XsmpResourceFactory;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
-import org.eclipse.xsmp.resource.XsmpcatResourceFactory;
-import org.eclipse.xsmp.scoping.XsmpcatImportedNamespaceScopeProvider;
+import org.eclipse.xsmp.scoping.XsmpImportedNamespaceScopeProvider;
 import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
 import org.eclipse.xtext.conversion.IValueConverterService;
@@ -46,18 +47,18 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
   {
     binder.bind(IScopeProvider.class)
             .annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
-            .to(XsmpcatImportedNamespaceScopeProvider.class);
+            .to(XsmpImportedNamespaceScopeProvider.class);
   }
 
   @Override
   public Class< ? extends IValueConverterService> bindIValueConverterService()
   {
-    return XsmpcatValueConverterService.class;
+    return XsmpValueConverterService.class;
   }
 
   public Class< ? extends IIndentationInformation> bindIIndentationInformation()
   {
-    return org.eclipse.xsmp.formatting2.XsmpcatFormatter.IndentationInformation.class;
+    return XsmpcoreFormatter.IndentationInformation.class;
   }
 
   /**
@@ -71,7 +72,7 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
   @Override
   public Class< ? extends IQualifiedNameProvider> bindIQualifiedNameProvider()
   {
-    return XsmpcatQualifiedNameProvider.class;
+    return XsmpQualifiedNameProvider.class;
   }
 
   /**
@@ -98,7 +99,7 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
   @Override
   public Class< ? extends IResourceFactory> bindIResourceFactory()
   {
-    return XsmpcatResourceFactory.class;
+    return XsmpResourceFactory.class;
   }
 
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()

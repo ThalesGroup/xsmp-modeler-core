@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -106,7 +106,7 @@ final class XsmpProject {
                 )
                 
                 FetchContent_MakeAvailable(xsmp-sdk)
-                set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${xsmp-sdk_SOURCE_DIR}/cmake)
+                list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
                 
                 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
                 
@@ -120,7 +120,7 @@ final class XsmpProject {
                 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
                     include(CTest)
                     include(Pytest)
-                    pytest_discover_tests(«name»Test)
+                    pytest_discover_tests()
                 endif()
                 
                 
@@ -137,7 +137,7 @@ final class XsmpProject {
                 import xsmp
                 import «name»
                 
-                class «name»Test(xsmp.unittest.TestCase):
+                class Test«name»(xsmp.unittest.TestCase):
                     try:
                         sim: «name»._test_«name».Simulator
                     except AttributeError:
@@ -166,10 +166,7 @@ final class XsmpProject {
                 
                 ## System Requirements
                 
-                - Linux, Windows or MacOS
-                - A C++ 17 compiler: Clang 5+, GCC 7+ and MSVC 2019+ are officially supported
-                - CMake 3.14+ (3.20+ for Python tests)
-                - Python 3.7+ and pytest
+                Check [xsmp-sdk system requirements](https://thalesgroup.github.io/xsmp-sdk/requirements.html).
                 
                 ## Plugins for Eclipse integration
                 
@@ -179,11 +176,17 @@ final class XsmpProject {
                 - CMake4Eclipse
                 - PyDev
                 
-                ## How to Build with CMake
+                ## How to Build
                 
                 ```bash
                 cmake -B ./build -DCMAKE_BUILD_TYPE=Release
                 cmake --build ./build --config Release
+                ```
+                
+                ## How to Test
+                
+                ```bash
+                cd build && ctest -C Release --output-on-failure
                 ```
                 
             ''')

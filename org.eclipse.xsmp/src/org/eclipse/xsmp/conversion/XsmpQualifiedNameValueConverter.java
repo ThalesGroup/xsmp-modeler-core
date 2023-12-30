@@ -21,6 +21,6 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 @Singleton
-public class XsmpcatQualifiedNameValueConverter extends XbaseQualifiedNameValueConverter
+public class XsmpQualifiedNameValueConverter extends XbaseQualifiedNameValueConverter
 {
 }

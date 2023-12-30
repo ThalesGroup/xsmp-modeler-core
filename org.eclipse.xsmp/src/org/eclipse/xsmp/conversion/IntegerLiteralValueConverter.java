@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -56,17 +56,17 @@ public class IntegerLiteralValueConverter extends AbstractLexerBasedConverter<St
       switch (lastChar)
       {
         case 's':
-          switch (string.charAt(length - 2))
+          return switch (string.charAt(length - 2))
           {
             case 'n': // ns
-              return string.substring(0, length - 2);
+              yield string.substring(0, length - 2);
             case 'u': // us
-              return string.substring(0, length - 2) + "'000L";
+              yield string.substring(0, length - 2) + "'000L";
             case 'm': // ms
-              return string.substring(0, length - 2) + "'000'000L";
+              yield string.substring(0, length - 2) + "'000'000L";
             default: // s
-              return string.substring(0, length - 1) + "'000'000'000L";
-          }
+              yield string.substring(0, length - 1) + "'000'000'000L";
+          };
         case 'n': // 'mn'
           return new BigInteger(string.substring(0, length - 2).replace("'", "")).multiply(MN)
                   .toString() + "L";
@@ -75,16 +75,12 @@ public class IntegerLiteralValueConverter extends AbstractLexerBasedConverter<St
                   .toString() + "L";
         case 'd': // d
           final var secondChar = string.charAt(1);
-          switch (secondChar)
+          return switch (secondChar)
           {
-            // check case of hexa that can finish with a 'd' : 0xd
-            case 'x':
-            case 'X':
-              return string;
-            default:
-              return new BigInteger(string.substring(0, length - 1).replace("'", "")).multiply(DAY)
-                      .toString() + "L";
-          }
+            case 'x', 'X' -> string;
+            default -> new BigInteger(string.substring(0, length - 1).replace("'", ""))
+                    .multiply(DAY).toString() + "L";
+          };
         case 'y': // y
           return new BigInteger(string.substring(0, length - 1).replace("'", "")).multiply(YEAR)
                   .toString() + "L";
@@ -95,5 +91,4 @@ public class IntegerLiteralValueConverter extends AbstractLexerBasedConverter<St
 
     return string;
   }
-
 }

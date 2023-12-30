@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.cli;
 
 import org.apache.commons.cli.ParseException;
-import org.eclipse.xsmp.cli.XsmpcatCli;
+import org.eclipse.xsmp.cli.XsmpCli;
 import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
 
-public class XsmpSdkCli extends XsmpcatCli
+public class XsmpSdkCli extends XsmpCli
 {
 
   public static void main(String[] args) throws ParseException

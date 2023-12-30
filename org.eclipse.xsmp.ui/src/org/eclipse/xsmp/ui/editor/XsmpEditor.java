@@ -14,7 +14,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.xsmp.ui.configuration.IXsmpcatServiceUIProvider;
+import org.eclipse.xsmp.ui.configuration.IXsmpServiceUIProvider;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
 import com.google.inject.Inject;
@@ -22,10 +22,10 @@ import com.google.inject.Inject;
 /**
  * A specialized Editor that reinject members with the Profile provider if provided
  */
-public class XsmpcatEditor extends XtextEditor
+public class XsmpEditor extends XtextEditor
 {
   @Inject
-  private IXsmpcatServiceUIProvider configurationProvider;
+  private IXsmpServiceUIProvider configurationProvider;
 
   @Override
   public void init(IEditorSite site, IEditorInput input) throws PartInitException

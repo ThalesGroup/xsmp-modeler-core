@@ -12,7 +12,7 @@ package org.eclipse.xsmp.ui;
 
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
+import org.eclipse.xsmp.service.IXsmpServiceProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpcatMultiLineTerminalEditStrategy;
 import org.eclipse.xsmp.ui.builder.XsmpcatBuilderParticipant;
@@ -150,7 +150,7 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpcatOutlineTreeProvider.class;
   }
 
-  public Class< ? extends IXsmpcatServiceProvider> bindIXsmpcatServiceProvider()
+  public Class< ? extends IXsmpServiceProvider> bindIXsmpcatServiceProvider()
   {
     return XsmpcatServiceUIProvider.class;
   }

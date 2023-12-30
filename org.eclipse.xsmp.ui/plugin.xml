@@ -4,7 +4,7 @@
 	<extension
 		point="org.eclipse.ui.editors">
 		<editor
-			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpcatEditor"
+			class="org.eclipse.xsmp.ui.CustomXsmpcatExecutableExtensionFactory:org.eclipse.xsmp.ui.editor.XsmpEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
 			extensions="xsmpcat"
@@ -501,8 +501,6 @@
 		</codeMiningProvider>
 	</extension>
 	
-	
-	
     <!-- CUSTOM SECTION DO NOT REPLACE-->
      
        
@@ -542,4 +540,9 @@
 	
    <extension-point id="profile" name="Profile" schema="schema/profile.exsd"/>
    <extension-point id="tool" name="Tool" schema="schema/tool.exsd"/>
+   
+   
+   
+   
+   
 </plugin>

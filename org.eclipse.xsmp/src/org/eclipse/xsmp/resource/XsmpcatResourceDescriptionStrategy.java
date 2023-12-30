@@ -109,7 +109,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   {
 
     // save the deprecated state
-    if (eObject instanceof NamedElement && ((NamedElement) eObject).isDeprecated())
+    if (eObject instanceof final NamedElement elem && elem.isDeprecated())
     {
       builder.put("deprecated", Boolean.toString(true));
     }
@@ -120,35 +120,34 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     }
 
     // save the visibility of the VisibilityElement
-    if (eObject instanceof VisibilityElement)
+    if (eObject instanceof final VisibilityElement elem)
     {
-      final var visibility = ((VisibilityElement) eObject).getRealVisibility();
+      final var visibility = elem.getRealVisibility();
       if (visibility != VisibilityKind.PUBLIC)
       {
         builder.put("visibility", visibility.getName());
       }
     }
 
-    if (eObject instanceof Type)
+    if (eObject instanceof final Type type)
     {
-      final var uuid = ((Type) eObject).getUuid();
+      final var uuid = type.getUuid();
       // save the uuif of the Type
       if (uuid != null && !uuid.isEmpty())
       {
         builder.put("uuid", uuid.toLowerCase());
       }
-      if (eObject instanceof AttributeType)
+      if (eObject instanceof final AttributeType attribute)
       {
         // save the usage of the AttributeType
-        builder.put("usage",
-                ((AttributeType) eObject).getUsage().stream().collect(Collectors.joining(" ")));
-        builder.put("allowMultiple", Boolean.toString(((AttributeType) eObject).isAllowMultiple()));
+        builder.put("usage", attribute.getUsage().stream().collect(Collectors.joining(" ")));
+        builder.put("allowMultiple", Boolean.toString(attribute.isAllowMultiple()));
       }
     }
-    if (eObject instanceof Operation)
+    if (eObject instanceof final Operation op)
     {
       // save the signature of the Operation
-      builder.put("sig", getSignature((Operation) eObject));
+      builder.put("sig", getSignature(op));
     }
   }
 

@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.profile.esa_cdk.cli;
 
 import org.apache.commons.cli.ParseException;
-import org.eclipse.xsmp.cli.XsmpcatCli;
+import org.eclipse.xsmp.cli.XsmpCli;
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
 
-public class EsaCdkCli extends XsmpcatCli
+public class EsaCdkCli extends XsmpCli
 {
 
   public static void main(String[] args) throws ParseException

@@ -25,7 +25,7 @@ import com.google.inject.name.Named;
 /**
  * A specialization of the IConfigurationUIProvider to use in Eclipse environment
  */
-public class XsmpcatServiceUIProvider implements IXsmpcatServiceUIProvider
+public class XsmpcatServiceUIProvider implements IXsmpServiceUIProvider
 {
 
   @Inject

@@ -11,8 +11,10 @@
 package org.eclipse.xsmp.naming;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.xcatalogue.Container;
 import org.eclipse.xsmp.xcatalogue.Document;
 import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.xcatalogue.Reference;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -29,7 +31,7 @@ import com.google.inject.Singleton;
  * @author daveluy
  */
 @Singleton
-public class XsmpcatQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl
+public class XsmpQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl
 {
 
   @Inject
@@ -43,10 +45,14 @@ public class XsmpcatQualifiedNameProvider extends IQualifiedNameProvider.Abstrac
    */
   protected QualifiedName computeFullyQualifiedName(final NamedElement obj)
   {
-    final var name = obj.getName();
+    var name = obj.getName();
     if (name == null || name.isEmpty())
     {
       return QualifiedName.EMPTY;
+    }
+    if (obj instanceof Container || obj instanceof Reference)
+    {
+      name = "_" + name;
     }
     final var qualifiedNameFromConverter = converter.toQualifiedName(name);
 

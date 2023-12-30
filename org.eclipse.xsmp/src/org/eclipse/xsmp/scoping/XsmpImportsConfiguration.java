@@ -41,7 +41,7 @@ import com.google.inject.Inject;
 /**
  * Language dependent configuration for the 'import' related things.
  */
-public class XsmpcatImportsConfiguration
+public class XsmpImportsConfiguration
 {
 
   @Inject
@@ -127,9 +127,9 @@ public class XsmpcatImportsConfiguration
       for (final Iterator<EObject> i = contents.get(0).eAllContents(); i.hasNext();)
       {
         final var next = i.next();
-        if (next instanceof ImportSection)
+        if (next instanceof final ImportSection section)
         {
-          return (ImportSection) next;
+          return section;
         }
       }
     }
@@ -196,9 +196,9 @@ public class XsmpcatImportsConfiguration
   {
     ParserRule rule = null;
     EClassifier returnType;
-    if (ruleOrRuleCall instanceof ParserRule)
+    if (ruleOrRuleCall instanceof final ParserRule parserRule)
     {
-      rule = (ParserRule) ruleOrRuleCall;
+      rule = parserRule;
     }
     else
     {
@@ -211,8 +211,8 @@ public class XsmpcatImportsConfiguration
     seenRules.add(rule);
     pathToImportSection.addLast(ruleOrRuleCall);
     returnType = rule.getType().getClassifier();
-    if (returnType instanceof EClass
-            && XcataloguePackage.Literals.IMPORT_SECTION.isSuperTypeOf((EClass) returnType))
+    if (returnType instanceof final EClass eClass
+            && XcataloguePackage.Literals.IMPORT_SECTION.isSuperTypeOf(eClass))
     {
       return true;
     }

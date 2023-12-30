@@ -51,9 +51,9 @@ import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class XsmpcatCli
+public class XsmpCli
 {
-  protected static final Logger LOG = Logger.getLogger(XsmpcatCli.class);
+  protected static final Logger LOG = Logger.getLogger(XsmpCli.class);
 
   public static final String VALIDATE_OPTION = "validate";
 
@@ -88,7 +88,7 @@ public class XsmpcatCli
   public static void main(String[] args) throws ParseException
   {
     final var injector = new XsmpcatStandaloneSetup().createInjectorAndDoEMFRegistration();
-    final var main = injector.getInstance(XsmpcatCli.class);
+    final var main = injector.getInstance(XsmpCli.class);
     main.execute(args);
   }
 

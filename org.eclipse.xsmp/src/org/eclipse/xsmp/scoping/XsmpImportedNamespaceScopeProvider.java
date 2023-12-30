@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -15,12 +15,11 @@ import static java.util.Collections.singletonList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -54,26 +53,24 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- * @author Jan Koehnlein - Initial contribution and API
- * @author Sebastian Zarnekow - Improved support for nested types in connection with imports
- */
 @Singleton
-public class XsmpcatImportedNamespaceScopeProvider
-        extends AbstractGlobalScopeDelegatingScopeProvider
+public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDelegatingScopeProvider
 {
 
   @Inject
   private IResourceScopeCache cache;
 
   @Inject
-  private XsmpcatImportsConfiguration importsConfiguration;
+  private XsmpImportsConfiguration importsConfiguration;
 
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;
 
   @Inject
   private IQualifiedNameProvider qualifiedNameProvider;
+
+  @Inject
+  private XsmpUtil xsmpUtil;
 
   /**
    * Create a new {@link ImportNormalizer} for the given namespace.
@@ -166,7 +163,7 @@ public class XsmpcatImportedNamespaceScopeProvider
   protected List<ImportNormalizer> getImportedNamespaceResolvers(ImportSection importSection,
           boolean ignoreCase)
   {
-    final List<ImportDeclaration> importDeclarations = importSection.getImportDeclarations();
+    final var importDeclarations = importSection.getImportDeclarations();
     final List<ImportNormalizer> result = Lists
             .newArrayListWithExpectedSize(importDeclarations.size());
     for (final ImportDeclaration imp : importDeclarations)
@@ -198,91 +195,98 @@ public class XsmpcatImportedNamespaceScopeProvider
     return result;
   }
 
-  protected XsmpcatImportsConfiguration getImportsConfiguration()
+  protected XsmpImportsConfiguration getImportsConfiguration()
   {
     return importsConfiguration;
   }
 
-  protected Object getKey(Notifier context, EReference reference)
-  {
-    return Tuples.create(XsmpcatScopeProvider.class, context, reference);
-  }
-
-  @Inject
-  XsmpUtil xsmpUtil;
-
-  protected IScope getComponentScope(IScope parent, IScope globalScope, Component context,
-          EReference reference)
+  protected IScope getListScope(IScope parent, IScope globalScope, EObject context,
+          EReference feature, EReference reference, boolean resolve)
   {
     var result = parent;
+    final var uri = EcoreUtil.getURI(context).trimFragment();
 
     @SuppressWarnings("unchecked")
-    final var interfaces = (EObjectResolvingEList<EObject>) context
-            .eGet(XcataloguePackage.Literals.COMPONENT__INTERFACE, false);
+    final var items = (BasicEList<EObject>) context.eGet(feature, resolve);
 
-    // iterate on interfaces in reverse order
-    for (var i = interfaces.size(); i-- > 0;)
+    // iterate on items in reverse order
+    for (var i = items.size(); i-- > 0;)
     {
-      final var inter = interfaces.basicGet(i);
-      if (!inter.eIsProxy())
+      var localResolve = resolve;
+      var item = localResolve ? items.get(i) : items.basicGet(i);
+      if (!resolve && item.eIsProxy() && !uri.equals(EcoreUtil.getURI(item).trimFragment()))
       {
-        result = getLocalElementsScope(result, globalScope, inter, reference);
+        item = items.get(i);
+        localResolve = true;
+      }
+
+      if (!item.eIsProxy())
+      {
+        result = getLocalElementsScope(result, globalScope, item, reference, localResolve);
       }
     }
 
-    // take base in last
-    final var base = (EObject) context.eGet(XcataloguePackage.Literals.COMPONENT__BASE, false);
-    if (base != null && !base.eIsProxy())
-    {
-      result = getLocalElementsScope(result, globalScope, base, reference);
-    }
-
     return result;
+  }
+
+  protected IScope getScope(IScope parent, IScope globalScope, EObject context, EReference feature,
+          EReference reference, boolean resolve)
+  {
+    var result = parent;
+
+    var eObject = (EObject) context.eGet(feature, resolve);
+    if (eObject != null)
+    {
+
+      var localResolve = resolve;
+      if (!resolve && eObject.eIsProxy() && !EcoreUtil.getURI(eObject).trimFragment()
+              .equals(EcoreUtil.getURI(context).trimFragment()))
+      {
+        eObject = EcoreUtil.resolve(eObject, context);
+        localResolve = true;
+      }
+      if (!eObject.eIsProxy())
+      {
+        result = getLocalElementsScope(result, globalScope, eObject, reference, localResolve);
+      }
+    }
+    return result;
+  }
+
+  protected IScope getComponentScope(IScope parent, IScope globalScope, Component context,
+          EReference reference, boolean resolve)
+  {
+    final var result = getListScope(parent, globalScope, context,
+            XcataloguePackage.Literals.COMPONENT__INTERFACE, reference, resolve);
+
+    return getScope(result, globalScope, context, XcataloguePackage.Literals.COMPONENT__BASE,
+            reference, resolve);
   }
 
   protected IScope getInterfaceScope(IScope parent, IScope globalScope, Interface context,
-          EReference reference)
+          EReference reference, boolean resolve)
   {
-    var result = parent;
-    @SuppressWarnings("unchecked")
-    final var bases = (EObjectResolvingEList<EObject>) context
-            .eGet(XcataloguePackage.Literals.INTERFACE__BASE, false);
+    return getListScope(parent, globalScope, context, XcataloguePackage.Literals.INTERFACE__BASE,
+            reference, resolve);
 
-    // iterate on bases in reverse order
-    for (var i = bases.size(); i-- > 0;)
-    {
-      final var base = bases.basicGet(i);
-      if (!base.eIsProxy())
-      {
-        result = getLocalElementsScope(result, globalScope, base, reference);
-      }
-    }
-
-    return result;
   }
 
   protected IScope getClassScope(IScope parent, IScope globalScope,
-          org.eclipse.xsmp.xcatalogue.Class context, EReference reference)
+          org.eclipse.xsmp.xcatalogue.Class context, EReference reference, boolean resolve)
   {
-    var result = parent;
-    final var base = (EObject) context.eGet(XcataloguePackage.Literals.CLASS__BASE, false);
-    if (base != null && !base.eIsProxy())
-    {
-      result = getLocalElementsScope(result, globalScope, base, reference);
-    }
-
-    return result;
+    return getScope(parent, globalScope, context, XcataloguePackage.Literals.CLASS__BASE, reference,
+            resolve);
   }
 
-  IScope getDesignatedInitializerFieldScope(IScope globalScope, Type type)
+  IScope getDesignatedInitializerFieldScope(IScope globalScope, Type type, boolean resolve)
   {
     return cache.get(Tuples.create(type, "DesignatedInitializerFieldScope"), type.eResource(),
             () -> getLocalElementsScope(globalScope, globalScope, type,
-                    XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD));
+                    XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD, resolve));
   }
 
   protected IScope getLocalElementsScope(IScope parent, IScope globalScope, EObject context,
-          EReference reference)
+          EReference reference, boolean resolve)
   {
     var result = parent;
     final var name = getQualifiedNameOfLocalElement(context);
@@ -300,29 +304,28 @@ public class XsmpcatImportedNamespaceScopeProvider
 
     switch (context.eClass().getClassifierID())
     {
-      case XcataloguePackage.CLASS:
-      case XcataloguePackage.EXCEPTION:
-        result = getClassScope(parent, globalScope, (org.eclipse.xsmp.xcatalogue.Class) context,
-                reference);
+      case XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION:
+        result = getClassScope(result, globalScope, (org.eclipse.xsmp.xcatalogue.Class) context,
+                reference, resolve);
         break;
 
       case XcataloguePackage.INTERFACE:
-        result = getInterfaceScope(parent, globalScope, (Interface) context, reference);
+        result = getInterfaceScope(result, globalScope, (Interface) context, reference, resolve);
         break;
-      case XcataloguePackage.MODEL:
-      case XcataloguePackage.SERVICE:
-        result = getComponentScope(parent, globalScope, (Component) context, reference);
+      case XcataloguePackage.MODEL, XcataloguePackage.SERVICE:
+        result = getComponentScope(result, globalScope, (Component) context, reference, resolve);
         break;
       case XcataloguePackage.DESIGNATED_INITIALIZER:
       {
         final var container = context.eContainer();
-        if (container instanceof CollectionLiteral
+        if (container instanceof final CollectionLiteral collection
                 && reference == XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD)
         {
-          final var type = xsmpUtil.getType((CollectionLiteral) container);
+          final var type = xsmpUtil.getType(collection);
           if (type instanceof Structure)
           {
-            result = getDesignatedInitializerFieldScope(globalScope, type);
+            result = getDesignatedInitializerFieldScope(globalScope, type,
+                    resolve || type.eResource() != context.eResource());
           }
         }
         break;
@@ -359,7 +362,7 @@ public class XsmpcatImportedNamespaceScopeProvider
   }
 
   /**
-   * @return the XsmpcatQualifiedNameProvider
+   * @return the QualifiedNameProvider
    */
   public IQualifiedNameProvider getQualifiedNameProvider()
   {
@@ -455,6 +458,6 @@ public class XsmpcatImportedNamespaceScopeProvider
       result = internalGetScope(parent, globalScope, context.eContainer(), reference);
     }
 
-    return getLocalElementsScope(result, globalScope, context, reference);
+    return getLocalElementsScope(result, globalScope, context, reference, false);
   }
 }

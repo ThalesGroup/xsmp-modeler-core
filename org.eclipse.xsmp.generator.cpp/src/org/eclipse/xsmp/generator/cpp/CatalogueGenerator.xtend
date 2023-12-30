@@ -112,6 +112,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             
             extern "C" {                        
                         /// Global Finalise function of Package «name».
+                        /// @param simulator Simulator.
                         /// @return True if finalisation was successful, false otherwise.
                         DLL_EXPORT bool Finalise(::Smp::ISimulator* simulator) {
                             return Finalise_«name»(simulator);

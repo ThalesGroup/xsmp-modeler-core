@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.ui.configuration;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
+import org.eclipse.xsmp.service.IXsmpServiceProvider;
 
 import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;
 
 @ImplementedBy(XsmpcatServiceUIProvider.class)
-public interface IXsmpcatServiceUIProvider extends IXsmpcatServiceProvider
+public interface IXsmpServiceUIProvider extends IXsmpServiceProvider
 {
 
   Injector getInjector(IProject project);

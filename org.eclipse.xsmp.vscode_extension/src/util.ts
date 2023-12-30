@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -62,7 +62,7 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(xsmp-sdk)
-set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \${xsmp-sdk_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH "\${xsmp-sdk_SOURCE_DIR}/cmake")
 
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
 
@@ -76,25 +76,50 @@ target_link_libraries(${projectName} PUBLIC Xsmp::Cdk)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
     include(Pytest)
-    pytest_discover_tests(${projectName}Test)
+    pytest_discover_tests()
 endif()
 
 
 `);
+       await fs.promises.writeFile(path.join(dirPath, 'README.md'), `
+# ${projectName}
 
+Project description.
+
+## System Requirements
+
+Check [xsmp-sdk system requirements](https://thalesgroup.github.io/xsmp-sdk/requirements.html).
+
+## How to Build
+
+\`\`\`bash
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release
+cmake --build ./build --config Release
+\`\`\`
+
+## How to Test
+
+\`\`\`bash
+cd build && ctest -C Release --output-on-failure
+\`\`\`
+                
+`);
         if (tools.includes("python")) {
-            let py_path = path.join(dirPath, 'python', projectName)
+            let py_path = path.join(dirPath, 'python')
             await ensureDir(py_path, { mode: 0o775 });
             await fs.promises.writeFile(path.join(py_path, `pytest.ini`), `
 # pytest.ini
 [pytest]
 pythonpath = .`);
-            await fs.promises.writeFile(path.join(py_path, `test_${projectName}.py`), `
+
+            let py_projectPath = path.join(py_path, projectName)
+            await ensureDir(py_projectPath, { mode: 0o775 });
+            await fs.promises.writeFile(path.join(py_projectPath,`test_${projectName}.py`), `
 import ecss_smp
 import xsmp
 import ${projectName}
 
-class ${projectName}Test(xsmp.unittest.TestCase):
+class Test${projectName}(xsmp.unittest.TestCase):
     try:
         sim: ${projectName}._test_${projectName}.Simulator
     except AttributeError:

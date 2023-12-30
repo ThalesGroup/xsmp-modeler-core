@@ -10,24 +10,37 @@
 ******************************************************************************/
 package org.eclipse.xsmp.validation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.service.IXsmpcatServiceProvider;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 
 import com.google.inject.Inject;
 
 /**
- * An Xsmpcat validator that is active only when the extension is enabled
+ * An Xsmp validator that is active only when the extension is enabled
  *
  * @author yannick
  */
-public class AbstractXsmpcatContextValidator extends AbstractXsmpcatValidator
+public class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
 {
   private final String isResponsible = getClass().getCanonicalName() + ".isResponsible";
 
   @Inject
-  private IXsmpcatServiceProvider xsmpcatServiceProvider;
+  private IXsmpServiceProvider xsmpServiceProvider;
+
+  @Override
+  protected List<EPackage> getEPackages()
+  {
+    final List<EPackage> result = new ArrayList<>();
+    result.add(EPackage.Registry.INSTANCE.getEPackage("http://org.eclipse.xsmp/xcatalogue"));
+    result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/emf/2002/Ecore"));
+    return result;
+  }
 
   /**
    * Cache the result in the context map
@@ -40,7 +53,7 @@ public class AbstractXsmpcatContextValidator extends AbstractXsmpcatValidator
     if (responsible == null)
     {
       responsible = super.isResponsible(context, eObject)
-              && xsmpcatServiceProvider.isEnabledFor(eObject.eResource());
+              && xsmpServiceProvider.isEnabledFor(eObject.eResource());
 
       if (context != null)
       {
