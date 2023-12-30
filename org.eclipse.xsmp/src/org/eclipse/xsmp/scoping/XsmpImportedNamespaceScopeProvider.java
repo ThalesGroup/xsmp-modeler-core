@@ -1,4 +1,5 @@
 /*******************************************************************************
+
 * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -25,6 +26,7 @@ import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Component;
+import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
 import org.eclipse.xsmp.xcatalogue.ImportSection;
 import org.eclipse.xsmp.xcatalogue.Interface;
@@ -328,6 +330,58 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
                     resolve || type.eResource() != context.eResource());
           }
         }
+        break;
+      }
+      case XcataloguePackage.COMPONENT_INSTANCE:
+      {
+        if (XcataloguePackage.Literals.COMPONENT_INSTANCE__CATALOGUE.equals(reference))
+        {
+          result = globalScope;
+        }
+        else if (XcataloguePackage.Literals.COMPONENT_INSTANCE__COMPONENT.equals(reference))
+        {
+          final var catalogue = (EObject) resolve(context,
+                  XcataloguePackage.Literals.COMPONENT_INSTANCE__CATALOGUE, resolve);
+          if (catalogue == null || catalogue.eIsProxy())
+          {
+
+            return IScope.NULLSCOPE;
+          }
+          result = SelectableBasedScope.createScope(IScope.NULLSCOPE,
+                  getAllDescriptions(catalogue.eResource()), reference.getEReferenceType(),
+                  ignoreCase);
+
+        }
+        else
+        {
+          final var component = (Component) resolve(context,
+                  XcataloguePackage.Literals.COMPONENT_INSTANCE__COMPONENT, resolve);
+          if (component != null && !component.eIsProxy())
+          {
+            result = getLocalElementsScope(IScope.NULLSCOPE, IScope.NULLSCOPE, component, reference,
+                    true);
+          }
+        }
+        break;
+      }
+      case XcataloguePackage.FIELD_REFERENCE:
+      {
+        final var ref = (EObject) context.eGet(XcataloguePackage.Literals.FIELD_REFERENCE__FIELD,
+                false);
+        if (ref instanceof final Field field && !ref.eIsProxy())
+        {
+          resolve |= ref.eResource() != context.eResource();
+
+          final var type = (EObject) resolve(field, XcataloguePackage.Literals.FIELD__TYPE,
+                  resolve);
+
+          if (type != null && !type.eIsProxy())
+          {
+            result = getLocalElementsScope(IScope.NULLSCOPE, IScope.NULLSCOPE, field.getType(),
+                    reference, resolve);
+          }
+        }
+
         break;
       }
       default:
