@@ -42,7 +42,7 @@ final class XsmpProject {
 
     override protected updateVariables() {
         if (name.value == cName)
-            name.value = projectInfo.projectName.replaceAll("\\.","_")
+            name.value = projectInfo.projectName.replaceAll("\\.", "_")
         super.updateVariables()
     }
 
@@ -125,6 +125,12 @@ final class XsmpProject {
                 
                 
             ''')
+
+            addFile('''python/pytest.ini''', '''
+                # pytest.ini
+                [pytest]
+                pythonpath = .
+              ''')
 
             addFile('''python/«name»/test_«name».py''', '''
                 import ecss_smp

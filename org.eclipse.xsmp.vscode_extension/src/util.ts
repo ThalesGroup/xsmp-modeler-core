@@ -85,6 +85,10 @@ endif()
         if (tools.includes("python")) {
             let py_path = path.join(dirPath, 'python', projectName)
             await ensureDir(py_path, { mode: 0o775 });
+            await fs.promises.writeFile(path.join(py_path, `pytest.ini`), `
+# pytest.ini
+[pytest]
+pythonpath = .`);
             await fs.promises.writeFile(path.join(py_path, `test_${projectName}.py`), `
 import ecss_smp
 import xsmp
