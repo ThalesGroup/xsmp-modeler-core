@@ -53,7 +53,8 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import com.google.inject.Inject;
 
 /**
- * An handler that open with cdt the generated code for a given EObject (Type, Field, ...)
+ * An handler that open with cdt the generated code for a given EObject (Type,
+ * Field, ...)
  */
 @SuppressWarnings("restriction")
 public class OpenCppFileHandler extends OpenOppositeFileHandler
@@ -149,8 +150,8 @@ public class OpenCppFileHandler extends OpenOppositeFileHandler
   }
 
   /**
-   * Get the patterns to query the CDT index. Types have a special treatment because they can be
-   * defined as <type> and <type>Gen
+   * Get the patterns to query the CDT index. Types have a special treatment
+   * because they can be defined as <type> and <type>Gen
    *
    * @param target
    * @return

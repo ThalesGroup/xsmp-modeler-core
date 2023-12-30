@@ -59,7 +59,6 @@ import org.eclipse.xsmp.xcatalogue.Integer;
 import org.eclipse.xsmp.xcatalogue.Interface;
 import org.eclipse.xsmp.xcatalogue.Model;
 import org.eclipse.xsmp.xcatalogue.Multiplicity;
-import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.NativeType;
 import org.eclipse.xsmp.xcatalogue.Operation;
 import org.eclipse.xsmp.xcatalogue.Parameter;
@@ -72,7 +71,6 @@ import org.eclipse.xsmp.xcatalogue.Structure;
 import org.eclipse.xsmp.xcatalogue.ValueReference;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
 
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -139,43 +137,6 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
     doc.surround(parentRegion.keyword(importDeclarationAccess.getNamespaceKeyword_1_1_0()),
             this::oneSpace);
     doc.append(parent, this::newLine);
-  }
-
-  protected void format(Namespace parent, IFormattableDocument doc)
-  {
-
-    format(parent.getMetadatum(), doc, false);
-    final var parentRegion = regionFor(parent);
-    doc.append(parentRegion.keyword(ga.getNamespaceAccess().getNamespaceKeyword_4()),
-            this::oneSpace);
-    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getNamespaceKeyword_3_0_1()),
-            this::oneSpace);
-
-    doc.surround(parentRegion.keyword(ga.getNestedNamespaceAccess().getColonColonKeyword_1()),
-            this::noSpace);
-
-    formatBody(parent, doc);
-  }
-
-  protected void formatBody(Namespace parent, IFormattableDocument doc)
-  {
-    final var parentRegion = regionFor(parent);
-    final var open = parentRegion.keyword("{");
-    final var close = parentRegion.keyword("}");
-    doc.surround(open, this::newLine);
-    doc.prepend(close, this::newLine);
-    doc.interior(open, close, this::indent);
-    for (final EObject eObject : parent.getMember())
-    {
-      doc.format(eObject);
-      if (eObject != Iterables.getLast(parent.getMember()))
-      {
-        doc.append(eObject, it -> {
-          it.setNewLines(2, 3, 3);
-          it.lowPriority();
-        });
-      }
-    }
   }
 
   protected void format(Structure parent, IFormattableDocument doc)
@@ -538,7 +499,7 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
     final var parentRegion = regionFor(parent);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
 
-    doc.surround(parentRegion.keyword(ga.getParameterAccess().getEqualsSignKeyword_3_0()),
+    doc.surround(parentRegion.keyword(ga.getParameterAccess().getEqualsSignKeyword_4_0()),
             this::oneSpace);
 
     if (parent.getDefault() != null)

@@ -29,8 +29,7 @@ public class NamedElementReferenceItemProvider extends ExpressionItemProvider
    * This constructs an instance from a factory and a notifier.
    */
   @Inject
-  public NamedElementReferenceItemProvider(
-          XcatalogueItemProviderAdapterFactory adapterFactory)
+  public NamedElementReferenceItemProvider(XcatalogueItemProviderAdapterFactory adapterFactory)
   {
     super(adapterFactory);
   }
@@ -59,10 +58,9 @@ public class NamedElementReferenceItemProvider extends ExpressionItemProvider
             ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
             getResourceLocator(), getString("_UI_NamedElementReference_value_feature"),
             getString("_UI_PropertyDescriptor_description",
-                    "_UI_NamedElementReference_value_feature",
-                    "_UI_NamedElementReference_type"),
-            XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, true, false, true,
-            null, null, null));
+                    "_UI_NamedElementReference_value_feature", "_UI_NamedElementReference_type"),
+            XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, true, false, true, null,
+            null, null));
   }
 
   /**

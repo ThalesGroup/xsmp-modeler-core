@@ -76,13 +76,13 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="injector" type="string" use="required">
+         <attribute name="provider" type="string" use="required">
             <annotation>
                <documentation>
-                  The injector of the Tool
+                  The provider of the Tool
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":com.google.inject.Injector"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.xsmp.ui.extension.ExtensionProvider"/>
                </appInfo>
             </annotation>
          </attribute>

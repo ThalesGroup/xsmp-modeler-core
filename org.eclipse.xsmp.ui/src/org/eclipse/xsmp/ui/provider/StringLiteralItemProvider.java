@@ -98,8 +98,9 @@ public class StringLiteralItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
@@ -118,8 +119,8 @@ public class StringLiteralItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
+   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing
+   * the children that can be created under this object.
    */
   @Override
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)

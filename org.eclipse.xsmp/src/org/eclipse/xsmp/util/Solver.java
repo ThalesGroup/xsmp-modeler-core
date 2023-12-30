@@ -179,9 +179,9 @@ public class Solver
       {
         return getValue(cst.getValue(), cst.getType());
       }
-      if (value instanceof org.eclipse.xsmp.xcatalogue.EnumerationLiteral)
+      if (value instanceof final org.eclipse.xsmp.xcatalogue.EnumerationLiteral literal)
       {
-        return EnumerationLiteral.valueOf((org.eclipse.xsmp.xcatalogue.EnumerationLiteral) value);
+        return EnumerationLiteral.valueOf(literal);
       }
       throw new SolverException(e, "invalid reference type \"" + value.getClass().getSimpleName()
               + "\", only Contant and EnumerationLiteral are supported.");
@@ -252,7 +252,7 @@ public class Solver
     try
     {
       // remove quotes and escape sequences
-      final var v = xsmpUtil.translateEscapes(value.substring(1, value.length() - 1));
+      final var v = XsmpUtil.translateEscapes(value.substring(1, value.length() - 1));
       if (v.length() > 1)
       {
         throw new UnsupportedOperationException("Invalid char length.");
@@ -270,10 +270,7 @@ public class Solver
     try
     {
       // remove encoding prefix, quotes and escape sequences
-      return String8.valueOf(e.getValue().stream()
-              .map(v -> v.startsWith("u8")
-                      ? xsmpUtil.translateEscapes(v.substring(3, v.length() - 1))
-                      : xsmpUtil.translateEscapes(v.substring(1, v.length() - 1)))
+      return String8.valueOf(e.getValue().stream().map(XsmpUtil::StringLiteralToString)
               .collect(Collectors.joining()));
     }
     catch (final Exception ex)

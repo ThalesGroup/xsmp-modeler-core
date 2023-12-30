@@ -262,25 +262,23 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
   protected <R> R promote(PrimitiveType right,
           @SuppressWarnings("rawtypes") BiFunction<AbstractPrimitiveType, AbstractPrimitiveType, R> func)
   {
-    switch (right.getPrimitiveTypeKind())
+    return switch (right.getPrimitiveTypeKind())
     {
       case FLOAT64:
-        return func.apply(this.float64Value(), (Float64) right);
+        yield func.apply(this.float64Value(), (Float64) right);
       case FLOAT32:
-        return func.apply(this.float32Value(), (Float32) right);
+        yield func.apply(this.float32Value(), (Float32) right);
       case UINT64:
-        return func.apply(this.uint64Value(), (UInt64) right);
-      case DATE_TIME:
-      case DURATION:
-      case INT64:
-        return func.apply(this.int64Value(), (Int64) right);
+        yield func.apply(this.uint64Value(), (UInt64) right);
+      case DATE_TIME, DURATION, INT64:
+        yield func.apply(this.int64Value(), (Int64) right);
       case UINT32:
-        return func.apply(this.uint32Value(), (UInt32) right);
+        yield func.apply(this.uint32Value(), (UInt32) right);
       case INT32:
-        return func.apply(this.int32Value(), (Int32) right);
+        yield func.apply(this.int32Value(), (Int32) right);
       default: // promote everything else to int32
-        return func.apply(this.int32Value(), right.int32Value());
-    }
+        yield func.apply(this.int32Value(), right.int32Value());
+    };
   }
 
   @Override

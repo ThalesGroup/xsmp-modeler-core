@@ -73,13 +73,13 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="injector" type="string" use="required">
+         <attribute name="provider" type="string" use="required">
             <annotation>
                <documentation>
-                  The injector of the Profile
+                  The Provider of the Profile
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":com.google.inject.Injector"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.xsmp.ui.extension.ExtensionProvider"/>
                </appInfo>
             </annotation>
          </attribute>

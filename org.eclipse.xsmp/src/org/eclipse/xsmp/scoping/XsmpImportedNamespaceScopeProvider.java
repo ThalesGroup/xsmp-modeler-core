@@ -26,7 +26,6 @@ import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Field;
 import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
 import org.eclipse.xsmp.xcatalogue.ImportSection;
 import org.eclipse.xsmp.xcatalogue.Interface;
@@ -231,6 +230,17 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     return result;
   }
 
+  protected EObject resolve(EObject context, EReference feature, boolean resolve)
+  {
+    var eObject = (EObject) context.eGet(feature, resolve);
+    if (eObject != null && !resolve && eObject.eIsProxy() && !EcoreUtil.getURI(eObject)
+            .trimFragment().equals(EcoreUtil.getURI(context).trimFragment()))
+    {
+      eObject = EcoreUtil.resolve(eObject, context);
+    }
+    return eObject;
+  }
+
   protected IScope getScope(IScope parent, IScope globalScope, EObject context, EReference feature,
           EReference reference, boolean resolve)
   {
@@ -310,7 +320,6 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         result = getClassScope(result, globalScope, (org.eclipse.xsmp.xcatalogue.Class) context,
                 reference, resolve);
         break;
-
       case XcataloguePackage.INTERFACE:
         result = getInterfaceScope(result, globalScope, (Interface) context, reference, resolve);
         break;
@@ -332,56 +341,24 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         }
         break;
       }
-      case XcataloguePackage.COMPONENT_INSTANCE:
+      case XcataloguePackage.ARRAY:
       {
-        if (XcataloguePackage.Literals.COMPONENT_INSTANCE__CATALOGUE.equals(reference))
+        final var type = resolve(context, XcataloguePackage.Literals.ARRAY__ITEM_TYPE, resolve);
+        if (type != null && !type.eIsProxy())
         {
-          result = globalScope;
-        }
-        else if (XcataloguePackage.Literals.COMPONENT_INSTANCE__COMPONENT.equals(reference))
-        {
-          final var catalogue = (EObject) resolve(context,
-                  XcataloguePackage.Literals.COMPONENT_INSTANCE__CATALOGUE, resolve);
-          if (catalogue == null || catalogue.eIsProxy())
-          {
-
-            return IScope.NULLSCOPE;
-          }
-          result = SelectableBasedScope.createScope(IScope.NULLSCOPE,
-                  getAllDescriptions(catalogue.eResource()), reference.getEReferenceType(),
-                  ignoreCase);
-
-        }
-        else
-        {
-          final var component = (Component) resolve(context,
-                  XcataloguePackage.Literals.COMPONENT_INSTANCE__COMPONENT, resolve);
-          if (component != null && !component.eIsProxy())
-          {
-            result = getLocalElementsScope(IScope.NULLSCOPE, IScope.NULLSCOPE, component, reference,
-                    true);
-          }
+          result = getLocalElementsScope(result, globalScope, type, reference,
+                  resolve || type.eResource() != context.eResource());
         }
         break;
       }
-      case XcataloguePackage.FIELD_REFERENCE:
+      case XcataloguePackage.FIELD:
       {
-        final var ref = (EObject) context.eGet(XcataloguePackage.Literals.FIELD_REFERENCE__FIELD,
-                false);
-        if (ref instanceof final Field field && !ref.eIsProxy())
+        final var type = resolve(context, XcataloguePackage.Literals.FIELD__TYPE, resolve);
+        if (type != null && !type.eIsProxy())
         {
-          resolve |= ref.eResource() != context.eResource();
-
-          final var type = (EObject) resolve(field, XcataloguePackage.Literals.FIELD__TYPE,
-                  resolve);
-
-          if (type != null && !type.eIsProxy())
-          {
-            result = getLocalElementsScope(IScope.NULLSCOPE, IScope.NULLSCOPE, field.getType(),
-                    reference, resolve);
-          }
+          result = getLocalElementsScope(result, globalScope, type, reference,
+                  resolve || type.eResource() != context.eResource());
         }
-
         break;
       }
       default:
@@ -397,6 +374,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
 
       result = createImportScope(result, localNormalizer, resourceOnlySelectable,
               reference.getEReferenceType(), ignoreCase);
+
     }
 
     return result;
@@ -453,6 +431,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     {
       throw new IllegalArgumentException("context must be contained in a resource");
     }
+
     final var globalScope = getGlobalScope(context.eResource(), reference);
     return internalGetScope(globalScope, globalScope, context, reference);
   }
@@ -499,7 +478,9 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
       return globalScope;
     }
     IScope result;
-    if (context.eContainer() == null)
+
+    final var container = context.eContainer();
+    if (container == null)
     {
       if (parent != globalScope)
       {
@@ -509,7 +490,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     }
     else
     {
-      result = internalGetScope(parent, globalScope, context.eContainer(), reference);
+      result = internalGetScope(parent, globalScope, container, reference);
     }
 
     return getLocalElementsScope(result, globalScope, context, reference, false);

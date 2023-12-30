@@ -25,6 +25,8 @@ Workflow {
     bean = StandaloneSetup {
         platformUri = "${rootPath}"
         scanClassPath = true
+        registerGenModelFile = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
+        registerEcoreFile = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.ecore"
     }
     component = DirectoryCleaner {
         directory = "${projectPath}/emf-gen"
@@ -54,7 +56,7 @@ Workflow {
                 encoding = "UTF-8"
                 lineDelimiter = "\n"
                 fileHeader =
-                "/*******************************************************************************\n* Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.\n*\n* All rights reserved. This program and the accompanying materials\n* are made available under the terms of the Eclipse Public License 2.0\n* which accompanies this distribution, and is available at\n* https://www.eclipse.org/legal/epl-2.0/\n*\n* SPDX-License-Identifier: EPL-2.0\n******************************************************************************/\n"
+                "/*******************************************************************************\n* Copyright (C) 2020-\${year} THALES ALENIA SPACE FRANCE.\n*\n* All rights reserved. This program and the accompanying materials\n* are made available under the terms of the Eclipse Public License 2.0\n* which accompanies this distribution, and is available at\n* https://www.eclipse.org/legal/epl-2.0/\n*\n* SPDX-License-Identifier: EPL-2.0\n******************************************************************************/\n"
                 preferXtendStubs = false
             }
         }
@@ -62,16 +64,12 @@ Workflow {
         language = StandardLanguage {
             name = "org.eclipse.xsmp.Xsmpcore"
             fileExtensions = "xsmpcore"
-            referencedResource = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.ecore"
-            referencedResource = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
             serializer = {
                 generateStub = false
             }
 
-            qualifiedNamesProvider = {}
-
             scopeProvider = {
-                generateStub = false
+                generateStub = true
             }
 
             fragment = ui.codemining.CodeMiningFragment {
@@ -80,49 +78,41 @@ Workflow {
 
             formatter = {
                 generateStub = true
-                generateXtendStub = false
             }
 
             junitSupport = {
                 generateStub = false
-                generateXtendStub = false
-                junitVersion = "5"
             }
             projectWizard = {
-                pluginProject = false
                 generate = false
             }
             labelProvider = {
                 generateStub = false
-                generateXtendStub = false
             }
             outline = {
                 generateStub = false
-                generateXtendStub = false
             }
             quickFixProvider = {
                 generateStub = false
-                generateXtendStub = false
             }
             contentAssist = {
                 generateStub = false
-                generateXtendStub = false
             }
         }
 
         language = StandardLanguage {
             name = "org.eclipse.xsmp.Xsmpcat"
             fileExtensions = "xsmpcat"
-            referencedResource = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.ecore"
-            referencedResource = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
             referencedResource = "platform:/resource/${runtimeProjectName}/src/org/eclipse/xsmp/Xsmpcore.xtext"
             serializer = {
                 generateStub = false
             }
 
             qualifiedNamesProvider = {}
-
             scopeProvider = {
+                generateStub = true
+            }
+            formatter = {
                 generateStub = true
             }
 
@@ -130,16 +120,10 @@ Workflow {
                 generateStub = true
             }
 
-            formatter = {
-                generateStub = true
-                generateXtendStub = false
-            }
-
             junitSupport = {
                 junitVersion = "5"
             }
             projectWizard = {
-                pluginProject = true
                 generate = true
             }
         }

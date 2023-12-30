@@ -15,9 +15,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * Use this class to register components to be used within the Eclipse IDE.
  */
-public class XsmpcoreUiModule extends AbstractXsmpcoreUiModule {
+public class XsmpcoreUiModule extends AbstractXsmpcoreUiModule
+{
 
-	public XsmpcoreUiModule(AbstractUIPlugin plugin) {
-		super(plugin);
-	}
+  public XsmpcoreUiModule(AbstractUIPlugin plugin)
+  {
+    super(plugin);
+  }
 }

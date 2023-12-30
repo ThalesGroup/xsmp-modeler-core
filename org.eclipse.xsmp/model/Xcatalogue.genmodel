@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*******************************************************************************&#xA;* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.&#xA;*&#xA;* All rights reserved. This program and the accompanying materials&#xA;* are made available under the terms of the Eclipse Public License 2.0&#xA;* which accompanies this distribution, and is available at&#xA;* https://www.eclipse.org/legal/epl-2.0/&#xA;*&#xA;* SPDX-License-Identifier: EPL-2.0&#xA;******************************************************************************"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*******************************************************************************&#xA;* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.&#xA;*&#xA;* All rights reserved. This program and the accompanying materials&#xA;* are made available under the terms of the Eclipse Public License 2.0&#xA;* which accompanies this distribution, and is available at&#xA;* https://www.eclipse.org/legal/epl-2.0/&#xA;*&#xA;* SPDX-License-Identifier: EPL-2.0&#xA;******************************************************************************"
     modelDirectory="/org.eclipse.xsmp/emf-gen" modelPluginID="org.eclipse.xsmp" forceOverwrite="true"
     modelName="Xcatalogue" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
@@ -70,6 +70,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//NamedElement/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//NamedElement/deprecated"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="Xcatalogue.ecore#//Resolvable"/>
     <genClasses ecoreClass="Xcatalogue.ecore#//Attribute">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Attribute/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Attribute/value"/>
@@ -88,13 +89,9 @@
     </genClasses>
     <genClasses image="false" ecoreClass="Xcatalogue.ecore#//LanguageType"/>
     <genClasses ecoreClass="Xcatalogue.ecore#//NativeType">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//NativeType/platform"/>
-    </genClasses>
-    <genClasses ecoreClass="Xcatalogue.ecore#//PlatformMapping">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//PlatformMapping/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//PlatformMapping/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//PlatformMapping/namespace"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//PlatformMapping/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//NativeType/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//NativeType/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//NativeType/location"/>
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//Parameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//Parameter/type"/>
@@ -114,6 +111,10 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//VisibilityElement/useVisibility"/>
     </genClasses>
     <genClasses image="false" ecoreClass="Xcatalogue.ecore#//Expression"/>
+    <genClasses ecoreClass="Xcatalogue.ecore#//DesignatedInitializer">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//DesignatedInitializer/field"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//DesignatedInitializer/expr"/>
+    </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//CollectionLiteral">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//CollectionLiteral/elements"/>
     </genClasses>
@@ -122,11 +123,9 @@
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//IntegerLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//IntegerLiteral/text"/>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//IntegerLiteral/getValue"/>
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//FloatingLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//FloatingLiteral/text"/>
-      <genOperations ecoreOperation="Xcatalogue.ecore#//FloatingLiteral/getValue"/>
     </genClasses>
     <genClasses ecoreClass="Xcatalogue.ecore#//StringLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//StringLiteral/value"/>
@@ -260,6 +259,9 @@
     <genClasses ecoreClass="Xcatalogue.ecore#//ParenthesizedExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Xcatalogue.ecore#//ParenthesizedExpression/expr"/>
     </genClasses>
-    <genClasses ecoreClass="Xcatalogue.ecore#//NullptrExpression"/>
+    <genClasses ecoreClass="Xcatalogue.ecore#//KeywordExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Xcatalogue.ecore#//KeywordExpression/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Xcatalogue.ecore#//EmptyExpression"/>
   </genPackages>
 </genmodel:GenModel>

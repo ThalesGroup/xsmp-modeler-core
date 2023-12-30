@@ -22,8 +22,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Enumeration}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Enumeration} object.
  */
 public class EnumerationItemProvider extends SimpleTypeItemProvider
 {
@@ -37,8 +37,8 @@ public class EnumerationItemProvider extends SimpleTypeItemProvider
   }
 
   /**
-   * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate
-   * feature for an {@link org.eclipse.emf.edit.command.AddCommand},
+   * This specifies how to implement {@link #getChildren} and is used to deduce an
+   * appropriate feature for an {@link org.eclipse.emf.edit.command.AddCommand},
    * {@link org.eclipse.emf.edit.command.RemoveCommand} or
    * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
    */
@@ -54,8 +54,9 @@ public class EnumerationItemProvider extends SimpleTypeItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
@@ -74,8 +75,8 @@ public class EnumerationItemProvider extends SimpleTypeItemProvider
   }
 
   /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
+   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing
+   * the children that can be created under this object.
    */
   @Override
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)

@@ -29,6 +29,7 @@ import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
 import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
 import org.eclipse.xsmp.xcatalogue.Metadatum;
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
+import org.eclipse.xsmp.xcatalogue.Namespace;
 import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
 import org.eclipse.xsmp.xcatalogue.UnaryOperation;
 import org.eclipse.xtext.Keyword;
@@ -63,6 +64,41 @@ public class XsmpcoreFormatter extends AbstractJavaFormatter
   public ITextReplacer createDocumentationReplacer(ISemanticRegion description)
   {
     return new DocumentationReplacer(description);
+  }
+
+  protected void format(Namespace parent, IFormattableDocument doc)
+  {
+
+    format(parent.getMetadatum(), doc, false);
+    final var parentRegion = regionFor(parent);
+
+    doc.append(parentRegion.keyword("namespace"), this::oneSpace);
+
+    doc.surround(parentRegion.keyword(ga.getNestedNamespaceAccess().getColonColonKeyword_1()),
+            this::noSpace);
+
+    formatBody(parent, doc);
+  }
+
+  protected void formatBody(Namespace parent, IFormattableDocument doc)
+  {
+    final var parentRegion = regionFor(parent);
+    final var open = parentRegion.keyword("{");
+    final var close = parentRegion.keyword("}");
+    doc.surround(open, this::newLine);
+    doc.prepend(close, this::newLine);
+    doc.interior(open, close, this::indent);
+    for (final EObject eObject : parent.getMember())
+    {
+      doc.format(eObject);
+      if (eObject != Iterables.getLast(parent.getMember()))
+      {
+        doc.append(eObject, it -> {
+          it.setNewLines(2, 3, 3);
+          it.lowPriority();
+        });
+      }
+    }
   }
 
   protected void format(Metadatum parent, IFormattableDocument doc, boolean inLine)

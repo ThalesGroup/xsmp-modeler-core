@@ -64,34 +64,6 @@
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
 							<excludeTransitive>true</excludeTransitive>
-<!--							<excludeArtifactIds>
-								com.ibm.icu,
-								org.apache.ant,
-								org.apache.commons.lang,
-								org.apache.commons.logging,
-								org.eclipse.core.commands,
-								org.eclipse.core.contenttype,
-								org.eclipse.core.expressions,
-								org.eclipse.core.filesystem,
-								org.eclipse.core.jobs,
-								org.eclipse.core.resources,
-								org.eclipse.core.runtime,
-								org.eclipse.core.variables,
-								org.eclipse.debug.core,
-								org.eclipse.emf.codegen.ecore,
-								org.eclipse.emf.codegen,
-								org.eclipse.emf.mwe.core,
-								org.eclipse.emf.mwe.utils,
-								org.eclipse.emf.mwe2.lib,
-								org.eclipse.emf.mwe2.runtime,
-								org.eclipse.equinox.app,
-								org.eclipse.equinox.preferences,
-								org.eclipse.equinox.registry,
-								org.eclipse.jdt.core,
-								org.eclipse.jdt.debug,
-								org.eclipse.jdt.launching,
-								org.eclipse.text,
-							</excludeArtifactIds>-->
 						</configuration>
 					</execution>
 				</executions>
@@ -135,25 +107,6 @@
 							implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
 						</transformer>
 					</transformers>
-					<artifactSet>
-						<excludes>
-	<!--						<exclude>
-								*:org.eclipse.xsmp.ide-org.eclipse.lsp4j*</exclude>
-							<exclude>
-								*:org.eclipse.xsmp.ide-org.eclipse.xtext.xbase.lib*</exclude>
-							<exclude>
-								*:org.eclipse.xsmp.ide-org.eclipse.xtend.lib*</exclude>
-							<exclude>
-								*:org.eclipse.xsmp.ide-com.google.guava*</exclude>
-							<exclude>*:org.eclipse.xsmp.ide-asm*</exclude>
-							<exclude>*:org.eclipse.xsmp.ide-log4j*</exclude>
-							<exclude>*:org.eclipse.xsmp.ide-reload4j*</exclude>
-							<exclude>
-								*:org.eclipse.xsmp.ide-org.objectweb.asm*</exclude>
-							<exclude>
-								*:org.eclipse.xsmp.ide-org.apache.log4j*</exclude>-->
-						</excludes>
-					</artifactSet>
 					<filters>
 						<filter>
 							<artifact>*:*</artifact>

@@ -114,9 +114,28 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
       builder.put("deprecated", Boolean.toString(true));
     }
 
-    if (eObject instanceof Field && xsmpUtil.isStatic((NamedElement) eObject))
+    if (eObject instanceof final Field field)
     {
-      builder.put("static", Boolean.toString(true));
+      if (xsmpUtil.isStatic(field))
+      {
+        builder.put("static", Boolean.toString(true));
+      }
+      if (xsmpUtil.isFailure(field))
+      {
+        builder.put("failure", Boolean.toString(true));
+      }
+      if (xsmpUtil.isForcible(field))
+      {
+        builder.put("forcible", Boolean.toString(true));
+      }
+      if (field.isInput())
+      {
+        builder.put("input", Boolean.toString(field.isInput()));
+      }
+      if (field.isOutput())
+      {
+        builder.put("output", Boolean.toString(field.isOutput()));
+      }
     }
 
     // save the visibility of the VisibilityElement

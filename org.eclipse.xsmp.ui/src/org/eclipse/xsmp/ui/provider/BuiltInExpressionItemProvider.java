@@ -25,14 +25,14 @@ import com.google.inject.Inject;
 
 /**
  * This is the item provider adapter for a
- * {@link org.eclipse.xsmp.xcatalogue.BuiltInExpression} object. <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * {@link org.eclipse.xsmp.xcatalogue.BuiltInExpression} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  */
 public class BuiltInExpressionItemProvider extends ExpressionItemProvider
 {
   /**
-   * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This constructs an instance from a factory and a notifier. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   @Inject
   public BuiltInExpressionItemProvider(XcatalogueItemProviderAdapterFactory adapterFactory)
@@ -41,8 +41,8 @@ public class BuiltInExpressionItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This returns the property descriptors for the adapted class. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object)
@@ -57,8 +57,8 @@ public class BuiltInExpressionItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This adds a property descriptor for the Name feature. <!-- begin-user-doc --> <!-- end-user-doc
-   * -->
+   * This adds a property descriptor for the Name feature. <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
    */
   protected void addNamePropertyDescriptor(Object object)
   {
@@ -72,8 +72,8 @@ public class BuiltInExpressionItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This returns the label styled text for the adapted class. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This returns the label styled text for the adapted class. <!-- begin-user-doc
+   * --> <!-- end-user-doc -->
    */
   @Override
   public Object getStyledText(Object object)
@@ -95,9 +95,9 @@ public class BuiltInExpressionItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   public void notifyChanged(Notification notification)

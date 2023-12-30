@@ -27,8 +27,8 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Attribute}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Attribute} object.
  */
 public class AttributeItemProvider extends GenericItemProvider
         implements IEditingDomainItemProvider, IStructuredItemContentProvider,

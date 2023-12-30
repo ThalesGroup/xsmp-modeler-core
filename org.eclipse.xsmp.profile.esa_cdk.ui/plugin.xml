@@ -5,7 +5,7 @@
          point="org.eclipse.xsmp.ui.profile">
       <factory
             id="org.eclipse.xsmp.profile.esa_cdk"
-            injector="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExecutableExtensionFactory:com.google.inject.Injector"
+            provider="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExtension"
             name="ESA CDK Profile">
       </factory>
    </extension>

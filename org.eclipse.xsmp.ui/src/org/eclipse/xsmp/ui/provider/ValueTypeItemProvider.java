@@ -13,8 +13,8 @@ package org.eclipse.xsmp.ui.provider;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.ValueType}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.ValueType} object.
  */
 public class ValueTypeItemProvider extends LanguageTypeItemProvider
 {

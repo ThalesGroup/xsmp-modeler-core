@@ -17,14 +17,14 @@ import com.google.inject.Inject;
 
 /**
  * This is the item provider adapter for a
- * {@link org.eclipse.xsmp.xcatalogue.BuiltInConstant} object. <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * {@link org.eclipse.xsmp.xcatalogue.BuiltInConstant} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  */
 public class BuiltInConstantItemProvider extends BuiltInExpressionItemProvider
 {
   /**
-   * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This constructs an instance from a factory and a notifier. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   @Inject
   public BuiltInConstantItemProvider(XcatalogueItemProviderAdapterFactory adapterFactory)
@@ -33,8 +33,8 @@ public class BuiltInConstantItemProvider extends BuiltInExpressionItemProvider
   }
 
   /**
-   * This returns the label styled text for the adapted class. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This returns the label styled text for the adapted class. <!-- begin-user-doc
+   * --> <!-- end-user-doc -->
    */
   @Override
   public Object getStyledText(Object object)

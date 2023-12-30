@@ -31,7 +31,8 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.NamedElement} object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.NamedElement} object.
  */
 public class NamedElementItemProvider extends GenericItemProvider
         implements IEditingDomainItemProvider, IStructuredItemContentProvider,
@@ -108,8 +109,9 @@ public class NamedElementItemProvider extends GenericItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)

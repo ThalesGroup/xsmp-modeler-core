@@ -11,11 +11,12 @@
 package org.eclipse.xsmp;
 
 import org.eclipse.xsmp.conversion.XsmpValueConverterService;
-import org.eclipse.xsmp.documentation.XsmpcatEObjectDocumentationProvider;
+import org.eclipse.xsmp.documentation.XsmpEObjectDocumentationProvider;
 import org.eclipse.xsmp.formatting2.XsmpcoreFormatter;
 import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
 import org.eclipse.xsmp.naming.XsmpQualifiedNameProvider;
 import org.eclipse.xsmp.resource.XsmpResourceFactory;
+import org.eclipse.xsmp.resource.XsmpcatResource;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
 import org.eclipse.xsmp.scoping.XsmpImportedNamespaceScopeProvider;
 import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
@@ -27,6 +28,7 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IResourceFactory;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
@@ -66,7 +68,7 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
    */
   public Class< ? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProvider()
   {
-    return XsmpcatEObjectDocumentationProvider.class;
+    return XsmpEObjectDocumentationProvider.class;
   }
 
   @Override
@@ -107,4 +109,9 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
     return XsmpcatOutputConfigurationProvider.class;
   }
 
+  @Override
+  public Class< ? extends XtextResource> bindXtextResource()
+  {
+    return XsmpcatResource.class;
+  }
 }

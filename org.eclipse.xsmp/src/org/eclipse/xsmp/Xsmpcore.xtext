@@ -14,14 +14,31 @@ grammar org.eclipse.xsmp.Xsmpcore hidden(WS, ML_COMMENT, SL_COMMENT)
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 import "http://org.eclipse.xsmp/xcatalogue"
 
+@Final
+Namespace returns ecore::EObject:
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    {Namespace.metadatum=current} 'namespace' name=ValidID?
+    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
+
+@Final
+NestedNamespace returns Namespace:
+    {Namespace} '::' name=ValidID?
+    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
+
+NamespaceMember returns ecore::EObject:
+    Namespace;
+
 Expression:
     OrExpression;
 
 Attribute:
-    AttributeDeclaration (=>'(' value=Expression? ')')?;
+    AttributeDeclaration ('(' value=Expression? ')')?;
 
 fragment AttributeDeclaration returns Attribute hidden(ML_COMMENT, SL_COMMENT):
     '@' (type=[Type|QualifiedName] | WS);
+
 
 Metadatum:
     {Metadatum}

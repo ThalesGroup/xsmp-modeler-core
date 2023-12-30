@@ -19,7 +19,7 @@
         volatile="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Namespace" eSuperTypes="#//NamedElement #//NamedElementWithMembers"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//VisibilityElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//VisibilityElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="returnParameter" eType="#//Parameter"
         containment="true" resolveProxies="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" upperBound="-1"
@@ -53,6 +53,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deprecated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         volatile="true" transient="true" defaultValueLiteral="false" derived="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resolvable" abstract="true" interface="true"
+      eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EEnum" name="AccessKind">
     <eLiterals name="readWrite"/>
     <eLiterals name="readOnly" value="1"/>
@@ -275,7 +277,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//Expression"
         containment="true" resolveProxies="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="#//VisibilityElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="#//VisibilityElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="default" eType="#//Expression"
         containment="true" resolveProxies="false"/>
@@ -286,7 +288,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
         volatile="true" transient="true" defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//VisibilityElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//VisibilityElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachedField" eType="#//Field"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="getRaises" upperBound="-1"
@@ -298,21 +300,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         volatile="true" transient="true" defaultValueLiteral="Properties"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Container" eSuperTypes="#//NamedElementWithMultiplicity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"
-        resolveProxies="false"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Container" eSuperTypes="#//NamedElementWithMultiplicity #//Resolvable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="defaultComponent" eType="#//Type"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EntryPoint" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="EntryPoint" eSuperTypes="#//NamedElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" upperBound="-1"
         eType="#//Field"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="output" upperBound="-1"
         eType="#//Field"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSink" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="EventSink" eSuperTypes="#//NamedElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSource" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="EventSource" eSuperTypes="#//NamedElement #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="singlecast" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
         volatile="true" transient="true" defaultValueLiteral="false"/>
@@ -328,7 +329,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
         derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//NamedElementWithMultiplicity">
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//NamedElementWithMultiplicity #//Resolvable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="interface" lowerBound="1"
         eType="#//Type"/>
   </eClassifiers>

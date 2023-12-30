@@ -5,7 +5,7 @@
           point="org.eclipse.xsmp.ui.tool">
        <factory
              description="A tool for writing object-oriented unit tests in Python"
-             injector="org.eclipse.xsmp.tool.python.ui.PythonExecutableExtensionFactory:com.google.inject.Injector"
+             provider="org.eclipse.xsmp.tool.python.ui.PythonExtension"
              id="org.eclipse.xsmp.tool.python"
              name="Python wrapper">
        </factory>

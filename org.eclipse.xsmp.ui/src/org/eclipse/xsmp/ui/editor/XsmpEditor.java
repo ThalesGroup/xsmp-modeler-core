@@ -20,7 +20,8 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import com.google.inject.Inject;
 
 /**
- * A specialized Editor that reinject members with the Profile provider if provided
+ * A specialized Editor that reinject members with the Profile provider if
+ * provided
  */
 public class XsmpEditor extends XtextEditor
 {
@@ -30,9 +31,8 @@ public class XsmpEditor extends XtextEditor
   @Override
   public void init(IEditorSite site, IEditorInput input) throws PartInitException
   {
-    // in case of a file editor input (file inside a project), get the Profile injector and
-    // re-inject
-    // all the members to use specific content assist, quick fix, ...
+    // in case of a file editor input (file inside a project), get the Profile
+    // injector and re-inject all the members to use specific content assist, quick fix, ...
     if (input instanceof IFileEditorInput)
     {
       configurationProvider.getInjector(((IFileEditorInput) input).getFile().getProject())

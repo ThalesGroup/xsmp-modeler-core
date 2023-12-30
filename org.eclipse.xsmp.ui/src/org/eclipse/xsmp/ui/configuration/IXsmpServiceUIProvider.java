@@ -16,7 +16,7 @@ import org.eclipse.xsmp.service.IXsmpServiceProvider;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;
 
-@ImplementedBy(XsmpcatServiceUIProvider.class)
+@ImplementedBy(XsmpServiceUIProvider.class)
 public interface IXsmpServiceUIProvider extends IXsmpServiceProvider
 {
 

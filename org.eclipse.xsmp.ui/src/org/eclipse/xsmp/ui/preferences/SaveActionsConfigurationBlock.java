@@ -95,10 +95,10 @@ public class SaveActionsConfigurationBlock extends OptionsConfigurationBlock
     description.setLayoutData(
             new GridData(GridData.BEGINNING, GridData.CENTER, true, false, nColumns - 1, 1));
 
-    addCheckBox(composite, "Format source code", XsmpPreferenceAccess.PREF_FORMAT,
+    addCheckBox(composite, "Format source code", XsmpPreferenceAccess.PREF_FORMAT, BOOLEAN_VALUES,
+            0);
+    addCheckBox(composite, "Update document date", XsmpPreferenceAccess.PREF_UPDATE_DOCUMENT_DATE,
             BOOLEAN_VALUES, 0);
-    addCheckBox(composite, "Update document date",
-            XsmpPreferenceAccess.PREF_UPDATE_DOCUMENT_DATE, BOOLEAN_VALUES, 0);
     new Label(composite, SWT.NONE);
     restoreSectionExpansionStates(getDialogSettings());
     return sc1;

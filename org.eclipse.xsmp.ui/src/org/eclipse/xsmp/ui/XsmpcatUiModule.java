@@ -13,27 +13,29 @@ package org.eclipse.xsmp.ui;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xsmp.service.IXsmpServiceProvider;
-import org.eclipse.xsmp.ui.autoedit.XsmpcatAutoEditStrategyProvider;
-import org.eclipse.xsmp.ui.autoedit.XsmpcatMultiLineTerminalEditStrategy;
-import org.eclipse.xsmp.ui.builder.XsmpcatBuilderParticipant;
-import org.eclipse.xsmp.ui.configuration.XsmpcatServiceUIProvider;
+import org.eclipse.xsmp.ui.autoedit.XsmpAutoEditStrategyProvider;
+import org.eclipse.xsmp.ui.autoedit.XsmpMultiLineTerminalEditStrategy;
+import org.eclipse.xsmp.ui.builder.XsmpBuilderParticipant;
+import org.eclipse.xsmp.ui.configuration.XsmpServiceUIProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
-import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateContextType;
-import org.eclipse.xsmp.ui.contentassist.XsmpcatTemplateProposalProvider;
+import org.eclipse.xsmp.ui.contentassist.XsmpTemplateContextType;
+import org.eclipse.xsmp.ui.contentassist.XsmpTemplateProposalProvider;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
-import org.eclipse.xsmp.ui.editor.model.XsmpcatDocumentProvider;
-import org.eclipse.xsmp.ui.editor.model.XsmpcatTerminalsTokenTypeToPartitionMapper;
-import org.eclipse.xsmp.ui.folding.XsmpcatFoldingRegionProvider;
-import org.eclipse.xsmp.ui.highlighting.XsmpcatAntlrTokenToAttributeIdMapper;
-import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
-import org.eclipse.xsmp.ui.highlighting.XsmpcatSemanticHighlightingCalculator;
-import org.eclipse.xsmp.ui.hover.XsmpcatDispatchingEObjectTextHover;
-import org.eclipse.xsmp.ui.hover.XsmpcatEObjectHoverProvider;
+import org.eclipse.xsmp.ui.editor.model.XsmpTerminalsTokenTypeToPartitionMapper;
+import org.eclipse.xsmp.ui.editor.model.XsmpDocumentProvider;
+import org.eclipse.xsmp.ui.folding.XsmpFoldingRegionProvider;
+import org.eclipse.xsmp.ui.highlighting.XsmpAntlrTokenToAttributeIdMapper;
+import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
+import org.eclipse.xsmp.ui.highlighting.XsmpSemanticHighlightingCalculator;
+import org.eclipse.xsmp.ui.hover.IKeywordHovers;
+import org.eclipse.xsmp.ui.hover.XsmpDispatchingEObjectTextHover;
+import org.eclipse.xsmp.ui.hover.XsmpEObjectHoverProvider;
+import org.eclipse.xsmp.ui.hover.XsmpcatKeywordHovers;
 import org.eclipse.xsmp.ui.outline.XsmpcatOutlineTreeProvider;
-import org.eclipse.xsmp.ui.quickfix.XsmpcatTextEditComposer;
-import org.eclipse.xsmp.ui.resource.XsmpcatResourceUIServiceProvider;
+import org.eclipse.xsmp.ui.quickfix.XsmpTextEditComposer;
+import org.eclipse.xsmp.ui.resource.XsmpResourceUIServiceProvider;
 import org.eclipse.xsmp.ui.template.XsmpcatCrossReferenceTemplateVariableResolver;
-import org.eclipse.xsmp.ui.template.XsmpcatTemplateStore;
+import org.eclipse.xsmp.ui.template.XsmpTemplateStore;
 import org.eclipse.xsmp.ui.validation.XsmpValidatorConfigurationBlock;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
@@ -76,32 +78,32 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
 
   public Class< ? extends IFoldingRegionProvider> bindIFoldingRegionProvider()
   {
-    return XsmpcatFoldingRegionProvider.class;
+    return XsmpFoldingRegionProvider.class;
   }
 
   public Class< ? extends IHighlightingConfiguration> bindIHighlightingConfiguration()
   {
-    return XsmpcatHighlightingConfiguration.class;
+    return XsmpHighlightingConfiguration.class;
   }
 
   public Class< ? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator()
   {
-    return XsmpcatSemanticHighlightingCalculator.class;
+    return XsmpSemanticHighlightingCalculator.class;
   }
 
   public Class< ? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper()
   {
-    return XsmpcatAntlrTokenToAttributeIdMapper.class;
+    return XsmpAntlrTokenToAttributeIdMapper.class;
   }
 
   public Class< ? extends ITextEditComposer> bindITextEditComposer()
   {
-    return XsmpcatTextEditComposer.class;
+    return XsmpTextEditComposer.class;
   }
 
   public Class< ? extends MultiLineTerminalsEditStrategy.Factory> bindMultilineTerminalEditStrategyFactory()
   {
-    return XsmpcatMultiLineTerminalEditStrategy.Factory.class;
+    return XsmpMultiLineTerminalEditStrategy.Factory.class;
   }
 
   /**
@@ -111,7 +113,7 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
   public void configure(Binder binder)
   {
     super.configure(binder);
-    binder.bind(XtextTemplateContextType.class).to(XsmpcatTemplateContextType.class);
+    binder.bind(XtextTemplateContextType.class).to(XsmpTemplateContextType.class);
 
     binder.bind(String.class)
             .annotatedWith(
@@ -150,26 +152,31 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpcatOutlineTreeProvider.class;
   }
 
-  public Class< ? extends IXsmpServiceProvider> bindIXsmpcatServiceProvider()
+  public Class< ? extends IXsmpServiceProvider> bindIXsmpServiceProvider()
   {
-    return XsmpcatServiceUIProvider.class;
+    return XsmpServiceUIProvider.class;
   }
 
   @Override
   public Class< ? extends ITemplateProposalProvider> bindITemplateProposalProvider()
   {
-    return XsmpcatTemplateProposalProvider.class;
+    return XsmpTemplateProposalProvider.class;
   }
 
   @Override
   public Class< ? extends IEObjectHover> bindIEObjectHover()
   {
-    return XsmpcatDispatchingEObjectTextHover.class;
+    return XsmpDispatchingEObjectTextHover.class;
   }
 
   public Class< ? extends IEObjectHoverProvider> bindIEObjectHoverProvider()
   {
-    return XsmpcatEObjectHoverProvider.class;
+    return XsmpEObjectHoverProvider.class;
+  }
+
+  public Class< ? extends IKeywordHovers> bindIKeywordHovers()
+  {
+    return XsmpcatKeywordHovers.class;
   }
 
   public Class< ? extends ReferenceProposalCreator> bindReferenceProposalCreator()
@@ -184,34 +191,34 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
 
   public Class< ? extends IResourceUIServiceProvider> bindIResourceUIServiceProvider()
   {
-    return XsmpcatResourceUIServiceProvider.class;
+    return XsmpResourceUIServiceProvider.class;
   }
 
   @Override
   public Class< ? extends AbstractEditStrategyProvider> bindAbstractEditStrategyProvider()
   {
-    return XsmpcatAutoEditStrategyProvider.class;
+    return XsmpAutoEditStrategyProvider.class;
   }
 
   public Class< ? extends TerminalsTokenTypeToPartitionMapper> bindTerminalsTokenTypeToPartitionMapper()
   {
-    return XsmpcatTerminalsTokenTypeToPartitionMapper.class;
+    return XsmpTerminalsTokenTypeToPartitionMapper.class;
   }
 
   public Class< ? extends XtextDocumentProvider> bindXtextDocumentProvider()
   {
-    return XsmpcatDocumentProvider.class;
+    return XsmpDocumentProvider.class;
   }
 
   @Override
   public Class< ? extends TemplateStore> bindTemplateStore()
   {
-    return XsmpcatTemplateStore.class;
+    return XsmpTemplateStore.class;
   }
 
   @Override
   public Class< ? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant()
   {
-    return XsmpcatBuilderParticipant.class;
+    return XsmpBuilderParticipant.class;
   }
 }
