@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -24,7 +24,7 @@ class XsmpSdkContainerGenerator extends ContainerGenerator {
     override declareGen(NamedElementWithMembers parent, Container it, boolean useGenPattern) {
         '''
             «comment»
-            ::Xsmp::Container<«type.id»> *«name»;
+            ::Xsmp::Container<«type.id»> «name»;
         '''
     }
 
@@ -32,8 +32,10 @@ class XsmpSdkContainerGenerator extends ContainerGenerator {
 
         '''
             // Container: «name»
-            «name» { new ::Xsmp::Container<«type.id»>("«name»", «description()», this, «lower()», «upper()») }
+            «name» { "«name»", «description()», this, «lower()», «upper()» }
         '''
     }
 
+    override finalize(Container it) {
+    }
 }

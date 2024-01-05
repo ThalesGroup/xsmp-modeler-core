@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -25,7 +25,7 @@ class XsmpSdkEventSourceGenerator extends EventSourceGenerator {
         val arg = eventType
         '''
             «comment»
-            ::Xsmp::EventSource<«IF arg !== null»«arg.id»«ENDIF»> *«name»;
+            ::Xsmp::EventSource<«arg?.id»> «name»;
         '''
     }
 
@@ -33,7 +33,10 @@ class XsmpSdkEventSourceGenerator extends EventSourceGenerator {
         val arg = eventType
         '''
             // Event Source: «name»
-            «name» { new ::Xsmp::EventSource<«IF arg !== null»«arg.id»«ENDIF»>( "«name»", «description()», this«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF») }
+            «name» { "«name»", «description()», this«IF arg !==null», «arg.generatePrimitiveKind»«ENDIF» }
         '''
+    }
+
+    override finalize(EventSource it) {
     }
 }

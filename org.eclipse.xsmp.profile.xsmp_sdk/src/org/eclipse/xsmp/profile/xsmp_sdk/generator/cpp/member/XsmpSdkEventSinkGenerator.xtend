@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -18,23 +18,33 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 class XsmpSdkEventSinkGenerator extends EventSinkGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        super.collectIncludes(acceptor)
-        acceptor.userSource("Xsmp/EventSink.h")
+        acceptor.userHeader("Xsmp/EventSink.h")
+    }
+
+    override declareGen(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
+        val arg = eventType
+        '''
+            «comment()»
+            ::Xsmp::EventSink<«arg?.id»> «name»;
+            virtual void _«name»(«eventArgs»)«IF useGenPattern» = 0«ENDIF»;
+        '''
     }
 
     override initialize(NamedElementWithMembers parent, EventSink it, boolean useGenPattern) {
         val arg = eventType
-        
-        if (arg !==null)
-        '''
-            // Event Sink: «name»
-            «name»{new ::Xsmp::EventSink<«arg.id»>("«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1, std::placeholders::_2), «arg.generatePrimitiveKind»)}
-        '''
+
+        if (arg !== null)
+            '''
+                // Event Sink: «name»
+                «name»{"«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1, std::placeholders::_2), «arg.generatePrimitiveKind» }
+            '''
         else
-        '''
-            // Event Sink: «name»
-            «name»{new ::Xsmp::EventSink<>("«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1))}
-        '''
+            '''
+                // Event Sink: «name»
+                «name»{"«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this, std::placeholders::_1) }
+            '''
     }
 
+    override finalize(EventSink it) {
+    }
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -18,14 +18,24 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 class XsmpSdkEntryPointGenerator extends EntryPointGenerator {
 
     protected override collectIncludes(IncludeAcceptor acceptor) {
-        super.collectIncludes(acceptor)
-        acceptor.userSource("Xsmp/EntryPoint.h")
+        acceptor.userHeader("Xsmp/EntryPoint.h")
     }
 
     override initialize(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
         '''
             // EntryPoint: «name»
-            «name» { new ::Xsmp::EntryPoint( "«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this)) }
+            «name» { "«name»", «description()», this, std::bind(&«parent.name(useGenPattern)»::_«name», this) }
         '''
+    }
+
+    override declareGen(NamedElementWithMembers parent, EntryPoint it, boolean useGenPattern) {
+        '''
+            «comment»
+            ::Xsmp::EntryPoint «name»; 
+            virtual void _«name»()«IF useGenPattern» = 0«ENDIF»;
+        '''
+    }
+
+    override finalize(EntryPoint it) {
     }
 }

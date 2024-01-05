@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -24,15 +24,17 @@ class XsmpSdkReferenceGenerator extends ReferenceGenerator {
     override declareGen(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
             «comment»
-            ::Xsmp::Reference<«interface.id»> *«name»;
+            ::Xsmp::Reference<«interface.id»> «name»;
         '''
     }
 
     override initialize(NamedElementWithMembers parent, Reference it, boolean useGenPattern) {
         '''
             // Reference: «name»
-            «name» { new ::Xsmp::Reference<«interface.id»>("«name»", «description()», this, «lower()», «upper()») }
+            «name» { "«name»", «description()», this, «lower()», «upper()» }
         '''
     }
 
+    override finalize(Reference it) {
+    }
 }
