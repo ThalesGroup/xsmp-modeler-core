@@ -7,7 +7,8 @@ on:
    push:
       branches:
       - main
-
+permissions:
+   contents: write
 jobs:
    build:
       name: Build on ${{ matrix.os }}
@@ -26,3 +27,11 @@ jobs:
          uses: coactions/setup-xvfb@v1
          with:
             run: mvn -T 1C -B package --file pom.xml
+   SBOM-upload:
+      name: SBOM-upload
+      runs-on: ubuntu-latest
+      steps:
+      -  name: Setup Maven Action
+         uses: s4u/setup-maven-action@v1.11.0
+      -  name: Submit Dependency Snapshot
+         uses: advanced-security/maven-dependency-submission-action@v3
