@@ -26,18 +26,14 @@ jobs:
             language:
             - java
       steps:
-      -  name: Checkout repository
-         uses: actions/checkout@v4
+      -  name: Setup Maven Action
+         uses: s4u/setup-maven-action@v1.11.0
+
       -  name: Initialize CodeQL
          uses: github/codeql-action/init@v3
          with:
             languages: ${{ matrix.language }}
-      -  name: Set up JDK 17
-         uses: actions/setup-java@v4
-         with:
-            java-version: 17
-            distribution: temurin
-            cache: maven
+
       -  name: Autobuild
          uses: github/codeql-action/autobuild@v3
       -  name: Perform CodeQL Analysis
