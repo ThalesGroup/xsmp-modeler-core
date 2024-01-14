@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.ui.wizard
 
 import java.time.Instant
-import java.time.Year
 import java.time.temporal.ChronoUnit
 import java.util.Random
 import org.eclipse.core.runtime.Status
@@ -69,10 +68,11 @@ final class XsmpProject {
             defaultOutput = "_build/smdl"
 
             addFile('''smdl/«name».xsmpcat''', '''
-                // Copyright «Year.now.value» YOUR ORGANIZATION. All rights reserved.
+                // Copyright ${year} ${user}. All rights reserved.
                 //
                 // YOUR NOTICE
-                // 
+                //
+                // Generation date:  ${date} ${time}
                 
                 /**
                  * Catalogue «name»

@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.profile.esa_cdk.ui.wizard
 
 import java.time.Instant
-import java.time.Year
 import java.time.temporal.ChronoUnit
 import org.eclipse.core.runtime.Status
 import org.eclipse.xsmp.ui.wizard.XsmpcatProjectFactory
@@ -69,10 +68,11 @@ final class EsaCdkProject {
   
 
             addFile('''smdl/«name».xsmpcat''', '''
-                // Copyright «Year.now.value» YOUR ORGANIZATION. All rights reserved.
+                // Copyright ${year} ${user}. All rights reserved.
                 //
                 // YOUR NOTICE
-                // 
+                //
+                // Generation date:  ${date} ${time}
                 
                 /**
                  * Catalogue «name»

@@ -25,7 +25,13 @@ export async function createTemplateProject(projectName: string, dirPath: string
     const creator = os.userInfo().username;
     const currentDate = new Date().toISOString();
 
-    await fs.promises.writeFile(path.join(smdlPath, `${projectName}.xsmpcat`), `/**
+    await fs.promises.writeFile(path.join(smdlPath, `${projectName}.xsmpcat`), `// Copyright \${year} \${user}. All rights reserved.
+//
+// YOUR NOTICE
+//
+// Generation date:  \${date} \${time}
+                
+/**
  * Catalogue ${projectName}
  * 
  * @creator ${creator}

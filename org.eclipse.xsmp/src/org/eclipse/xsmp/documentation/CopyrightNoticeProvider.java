@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.documentation;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -96,12 +98,23 @@ public class CopyrightNoticeProvider
             comment.append(slPattern.matcher(sibling.getText()).replaceAll(""));
             sibling = sibling.getNextSibling();
           }
-          return comment.toString().trim();
+
+          return processVariables(comment.toString().trim());
         }
       }
     }
 
     return null;
+  }
+
+  String processVariables(String input)
+  {
+    final var date = new java.util.Date();
+    return input.replace("${year}", Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
+            .replace("${user}", System.getProperty("user.name"))
+            .replace("${time}", DateFormat.getTimeInstance().format(date))
+            .replace("${date}", DateFormat.getDateInstance().format(date));
+
   }
 
 }
