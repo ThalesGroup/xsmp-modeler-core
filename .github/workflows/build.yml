@@ -26,7 +26,7 @@ jobs:
       -  name: Build with Maven
          uses: coactions/setup-xvfb@v1
          with:
-            run: mvn -T 1C -B package --file pom.xml
+            run: mvn -B package --file pom.xml
    SBOM-upload:
       name: SBOM-upload
       runs-on: ubuntu-latest

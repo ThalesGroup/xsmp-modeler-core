@@ -45,34 +45,6 @@
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeTransitive>true</excludeTransitive>
-                            <excludeArtifactIds>
-                                com.ibm.icu,
-                                org.apache.ant,
-                                org.apache.commons.lang,
-                                org.apache.commons.logging,
-                                org.eclipse.core.commands,
-                                org.eclipse.core.contenttype,
-                                org.eclipse.core.expressions,
-                                org.eclipse.core.filesystem,
-                                org.eclipse.core.jobs,
-                                org.eclipse.core.resources,
-                                org.eclipse.core.runtime,
-                                org.eclipse.core.variables,
-                                org.eclipse.debug.core,
-                                org.eclipse.emf.codegen.ecore,
-                                org.eclipse.emf.codegen,
-                                org.eclipse.emf.mwe.core,
-                                org.eclipse.emf.mwe.utils,
-                                org.eclipse.emf.mwe2.lib,
-                                org.eclipse.emf.mwe2.runtime,
-                                org.eclipse.equinox.app,
-                                org.eclipse.equinox.preferences,
-                                org.eclipse.equinox.registry,
-                                org.eclipse.jdt.core,
-                                org.eclipse.jdt.debug,
-                                org.eclipse.jdt.launching,
-                                org.eclipse.text,
-                            </excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>

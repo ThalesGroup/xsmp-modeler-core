@@ -36,4 +36,4 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          with:
-            run: mvn -T 1C -P sonar -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ThalesGroup_xsmp-modeler-core
+            run: mvn -P sonar -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ThalesGroup_xsmp-modeler-core
