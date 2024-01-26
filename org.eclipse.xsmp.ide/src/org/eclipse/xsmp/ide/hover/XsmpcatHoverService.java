@@ -27,7 +27,7 @@ public class XsmpcatHoverService extends HoverService
   private XsmpcatKeywordHovers keywordHovers;
 
   @Inject
-  private XsmpcatKeywordAtOffsetHelper keywordHelper;
+  private XsmpKeywordAtOffsetHelper keywordHelper;
 
   @Override
   public String getContents(EObject element)

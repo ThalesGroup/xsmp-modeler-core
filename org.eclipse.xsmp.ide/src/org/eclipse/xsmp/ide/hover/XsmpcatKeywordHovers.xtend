@@ -48,8 +48,8 @@ class XsmpcatKeywordHovers {
                 
                 The names of these namespaces need to be unique within the catalogue.
             '''
-            case ga.namespaceMemberAccess.namespaceKeyword_3_0_1,
-            case ga.namespaceAccess.namespaceKeyword_4: '''
+            case ga.namespaceAccess.namespaceKeyword_4,
+            case ga.namespaceMemberAccess.namespaceKeyword_3_0_1: '''
                 `namespace <name> { }`
                 
                 A **Namespace** is a primary ordering mechanism.

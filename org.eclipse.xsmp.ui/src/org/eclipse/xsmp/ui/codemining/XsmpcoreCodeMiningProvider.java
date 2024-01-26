@@ -19,15 +19,20 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
 
 @SuppressWarnings("restriction")
-public class XsmpcoreCodeMiningProvider extends AbstractXtextCodeMiningProvider {
-	@Override
-	protected void createCodeMinings(IDocument document, XtextResource resource, CancelIndicator indicator,
-		IAcceptor<? super ICodeMining> acceptor) throws BadLocationException {
-		
-		// TODO: implement me
-		// use acceptor.accept(super.createNewLineHeaderCodeMining(...)) to add a new code mining to the final list
-		
-		// example:
-		// acceptor.accept(createNewLineHeaderCodeMining(1, document, "Header annotation"));
-	}
+public class XsmpcoreCodeMiningProvider extends AbstractXtextCodeMiningProvider
+{
+  @Override
+  protected void createCodeMinings(IDocument document, XtextResource resource,
+          CancelIndicator indicator, IAcceptor< ? super ICodeMining> acceptor)
+    throws BadLocationException
+  {
+
+    // TODO: implement me
+    // use acceptor.accept(super.createNewLineHeaderCodeMining(...)) to add a new
+    // code mining to the final list
+
+    // example:
+    // acceptor.accept(createNewLineHeaderCodeMining(1, document, "Header
+    // annotation"));
+  }
 }

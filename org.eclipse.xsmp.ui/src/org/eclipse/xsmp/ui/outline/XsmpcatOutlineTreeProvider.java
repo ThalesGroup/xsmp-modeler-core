@@ -10,6 +10,16 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.outline;
 
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CATALOGUE;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CLASS;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.ENUMERATION;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.EXCEPTION;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.INTERFACE;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.MODEL;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.NAMESPACE;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.SERVICE;
+import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.STRUCTURE;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.xcatalogue.Catalogue;
 import org.eclipse.xsmp.xcatalogue.Enumeration;
@@ -48,25 +58,12 @@ public class XsmpcatOutlineTreeProvider extends DefaultOutlineTreeProvider
   // feature nodes are leafs and not expandable
   protected boolean _isLeaf(NamedElement type)
   {
-
-    switch (type.eClass().getClassifierID())
+    return switch (type.eClass().getClassifierID())
     {
-
-      case XcataloguePackage.STRUCTURE:
-      case XcataloguePackage.EXCEPTION:
-      case XcataloguePackage.CLASS:
-      case XcataloguePackage.INTERFACE:
-      case XcataloguePackage.SERVICE:
-      case XcataloguePackage.NAMESPACE:
-      case XcataloguePackage.CATALOGUE:
-      case XcataloguePackage.MODEL:
-        return ((NamedElementWithMembers) type).getMember().isEmpty();
-      case XcataloguePackage.ENUMERATION:
-        return ((Enumeration) type).getLiteral().isEmpty();
-
-      default:
-        return true;
-
-    }
+      case STRUCTURE, EXCEPTION, CLASS, INTERFACE, SERVICE, NAMESPACE, CATALOGUE, MODEL -> ((NamedElementWithMembers) type)
+              .getMember().isEmpty();
+      case ENUMERATION -> ((Enumeration) type).getLiteral().isEmpty();
+      default -> true;
+    };
   }
 }

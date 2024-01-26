@@ -19,8 +19,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Interface}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Interface} object.
  */
 public class InterfaceItemProvider extends ReferenceTypeItemProvider
 {

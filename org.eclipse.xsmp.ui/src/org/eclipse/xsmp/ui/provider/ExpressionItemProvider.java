@@ -21,8 +21,8 @@ import org.eclipse.emf.edit.provider.StyledString;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Expression}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Expression} object.
  */
 public class ExpressionItemProvider extends GenericItemProvider
         implements IEditingDomainItemProvider, IStructuredItemContentProvider,

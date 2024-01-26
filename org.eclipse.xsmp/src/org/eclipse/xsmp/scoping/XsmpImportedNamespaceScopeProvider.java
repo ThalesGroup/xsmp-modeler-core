@@ -1,4 +1,5 @@
 /*******************************************************************************
+
 * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -229,6 +230,17 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     return result;
   }
 
+  protected EObject resolve(EObject context, EReference feature, boolean resolve)
+  {
+    var eObject = (EObject) context.eGet(feature, resolve);
+    if (eObject != null && !resolve && eObject.eIsProxy() && !EcoreUtil.getURI(eObject)
+            .trimFragment().equals(EcoreUtil.getURI(context).trimFragment()))
+    {
+      eObject = EcoreUtil.resolve(eObject, context);
+    }
+    return eObject;
+  }
+
   protected IScope getScope(IScope parent, IScope globalScope, EObject context, EReference feature,
           EReference reference, boolean resolve)
   {
@@ -308,7 +320,6 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         result = getClassScope(result, globalScope, (org.eclipse.xsmp.xcatalogue.Class) context,
                 reference, resolve);
         break;
-
       case XcataloguePackage.INTERFACE:
         result = getInterfaceScope(result, globalScope, (Interface) context, reference, resolve);
         break;
@@ -330,6 +341,26 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         }
         break;
       }
+      case XcataloguePackage.ARRAY:
+      {
+        final var type = resolve(context, XcataloguePackage.Literals.ARRAY__ITEM_TYPE, resolve);
+        if (type != null && !type.eIsProxy())
+        {
+          result = getLocalElementsScope(result, globalScope, type, reference,
+                  resolve || type.eResource() != context.eResource());
+        }
+        break;
+      }
+      case XcataloguePackage.FIELD:
+      {
+        final var type = resolve(context, XcataloguePackage.Literals.FIELD__TYPE, resolve);
+        if (type != null && !type.eIsProxy())
+        {
+          result = getLocalElementsScope(result, globalScope, type, reference,
+                  resolve || type.eResource() != context.eResource());
+        }
+        break;
+      }
       default:
         break;
     }
@@ -343,6 +374,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
 
       result = createImportScope(result, localNormalizer, resourceOnlySelectable,
               reference.getEReferenceType(), ignoreCase);
+
     }
 
     return result;
@@ -399,6 +431,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     {
       throw new IllegalArgumentException("context must be contained in a resource");
     }
+
     final var globalScope = getGlobalScope(context.eResource(), reference);
     return internalGetScope(globalScope, globalScope, context, reference);
   }
@@ -445,7 +478,9 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
       return globalScope;
     }
     IScope result;
-    if (context.eContainer() == null)
+
+    final var container = context.eContainer();
+    if (container == null)
     {
       if (parent != globalScope)
       {
@@ -455,7 +490,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     }
     else
     {
-      result = internalGetScope(parent, globalScope, context.eContainer(), reference);
+      result = internalGetScope(parent, globalScope, container, reference);
     }
 
     return getLocalElementsScope(result, globalScope, context, reference, false);

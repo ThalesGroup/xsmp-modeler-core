@@ -51,6 +51,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.extension.Extension;
+import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.builder.preferences.Messages;
 import org.eclipse.xtext.ui.editor.preferences.PreferenceStoreAccessImpl;
@@ -65,11 +66,11 @@ public class XsmpPropertyPage extends PropertyPage
 
   private IProject project;
 
-  private final List<Extension> availableExtensions = Extension.getTools();
+  private final List<Extension> availableExtensions = ExtensionManager.getTools();
 
-  private final List<Extension> availableProfiles = Extension.getProfiles();
+  private final List<Extension> availableProfiles = ExtensionManager.getProfiles();
 
-  private List<Extension> extensions;
+  private List<Extension> extensionManagers;
 
   private Extension activeProfile;
 
@@ -96,7 +97,7 @@ public class XsmpPropertyPage extends PropertyPage
 
   private List<Extension> getExtensions()
   {
-    return getExtensions(Extension.getToolsIds(getPreferenceStore()));
+    return getExtensions(ExtensionManager.getToolsIds(getPreferenceStore()));
   }
 
   private List<Extension> getExtensions(Collection<String> ids)
@@ -110,7 +111,7 @@ public class XsmpPropertyPage extends PropertyPage
               .orElse(null);
       if (ext == null)
       {
-        ext = new Extension(id, unknownId(id), null, null);
+        ext = new Extension(id, unknownId(id), null);
         availableExtensions.add(ext);
       }
       result.add(ext);
@@ -120,7 +121,7 @@ public class XsmpPropertyPage extends PropertyPage
 
   private Extension getProfile()
   {
-    final var id = Extension.getProfileId(getPreferenceStore());
+    final var id = ExtensionManager.getProfileId(getPreferenceStore());
 
     return getProfile(id);
   }
@@ -131,7 +132,7 @@ public class XsmpPropertyPage extends PropertyPage
             .orElse(null);
     if (profile == null)
     {
-      profile = new Extension(id, unknownId(id), null, null);
+      profile = new Extension(id, unknownId(id), null);
       availableProfiles.add(profile);
     }
     return profile;
@@ -139,7 +140,7 @@ public class XsmpPropertyPage extends PropertyPage
 
   private List<Extension> getDefaultExtensions()
   {
-    return getExtensions(Extension.getDefaultToolsIds(getPreferenceStore()));
+    return getExtensions(ExtensionManager.getDefaultToolsIds(getPreferenceStore()));
   }
 
   private Extension getDefaultProfile()
@@ -175,10 +176,10 @@ public class XsmpPropertyPage extends PropertyPage
     profileLabel.setLayoutData(new GridData());
 
     profileCombo = new Combo(headerComposite, SWT.READ_ONLY);
-    profileCombo.setItems(availableProfiles.stream().map(Extension::getName)
-            .collect(Collectors.toList()).toArray(new String[0]));
-    profileCombo.setData(availableProfiles.stream().map(Extension::getId)
-            .collect(Collectors.toList()).toArray(new String[0]));
+    profileCombo.setItems(
+            availableProfiles.stream().map(Extension::getName).toList().toArray(new String[0]));
+    profileCombo.setData(
+            availableProfiles.stream().map(Extension::getId).toList().toArray(new String[0]));
 
     profileCombo.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -205,9 +206,9 @@ public class XsmpPropertyPage extends PropertyPage
     extensionsList.setLabelProvider(new ExtensionLabelProvider());
     extensionsList.setContentProvider(ArrayContentProvider.getInstance());
 
-    extensions = getExtensions();
+    extensionManagers = getExtensions();
 
-    extensionsList.setInput(extensions);
+    extensionsList.setInput(extensionManagers);
 
     final var buttonComposite = new Composite(extensionsComposite, SWT.NONE);
     buttonComposite.setLayout(GridLayoutFactory.swtDefaults().margins(0, 0).create());
@@ -225,9 +226,9 @@ public class XsmpPropertyPage extends PropertyPage
         selectionDialog.setMessage("Select a tool to add to the Project");
         selectionDialog.setTitle("Select Tool");
         final List<Extension> filteredContributors = new ArrayList<>();
-        for (final Extension contributor : Extension.getTools())
+        for (final Extension contributor : ExtensionManager.getTools())
         {
-          if (!extensions.contains(contributor))
+          if (!extensionManagers.contains(contributor))
           {
             filteredContributors.add(contributor);
           }
@@ -238,7 +239,7 @@ public class XsmpPropertyPage extends PropertyPage
           for (final Object item : selectionDialog.getResult())
           {
             final var contributor = (Extension) item;
-            extensions.add(contributor);
+            extensionManagers.add(contributor);
           }
           extensionsList.refresh();
         }
@@ -255,7 +256,7 @@ public class XsmpPropertyPage extends PropertyPage
         final var selection = extensionsList.getStructuredSelection();
         for (final Object item : selection)
         {
-          extensions.remove(item);
+          extensionManagers.remove(item);
         }
         extensionsList.refresh();
       }
@@ -287,9 +288,9 @@ public class XsmpPropertyPage extends PropertyPage
     IStatus error;
 
     final var target = e.getTargetException();
-    if (target instanceof CoreException)
+    if (target instanceof final CoreException core)
     {
-      error = ((CoreException) target).getStatus();
+      error = core.getStatus();
     }
     else
     {
@@ -332,9 +333,9 @@ public class XsmpPropertyPage extends PropertyPage
   @Override
   protected void performDefaults()
   {
-    // reset extensions
-    extensions = getDefaultExtensions();
-    extensionsList.setInput(extensions);
+    // reset extensionManagers
+    extensionManagers = getDefaultExtensions();
+    extensionsList.setInput(extensionManagers);
 
     // reset profile
     activeProfile = getDefaultProfile();
@@ -349,7 +350,7 @@ public class XsmpPropertyPage extends PropertyPage
     final var originalExtensions = getExtensions();
     final var originalProfile = getProfile();
 
-    final var extensionsChanged = !extensions.equals(originalExtensions);
+    final var extensionsChanged = !extensionManagers.equals(originalExtensions);
     final var profileChanged = activeProfile != originalProfile;
     if (extensionsChanged || profileChanged)
     {
@@ -388,14 +389,14 @@ public class XsmpPropertyPage extends PropertyPage
     final var preferenceStore = getPreferenceStore();
     if (contributorsChanged)
     {
-      if (extensions.equals(getDefaultExtensions()))
+      if (extensionManagers.equals(getDefaultExtensions()))
       {
         preferenceStore.setToDefault(XsmpPreferenceAccess.PREF_TOOLS);
       }
       else
       {
         preferenceStore.putValue(XsmpPreferenceAccess.PREF_TOOLS,
-                extensions.stream().map(Extension::getId).collect(Collectors.joining(", ")));
+                extensionManagers.stream().map(Extension::getId).collect(Collectors.joining(", ")));
       }
     }
 
@@ -417,9 +418,9 @@ public class XsmpPropertyPage extends PropertyPage
     }
     try
     {
-      if (preferenceStore instanceof IPersistentPreferenceStore)
+      if (preferenceStore instanceof final IPersistentPreferenceStore store)
       {
-        ((IPersistentPreferenceStore) preferenceStore).save();
+        store.save();
       }
     }
     catch (final IOException e)

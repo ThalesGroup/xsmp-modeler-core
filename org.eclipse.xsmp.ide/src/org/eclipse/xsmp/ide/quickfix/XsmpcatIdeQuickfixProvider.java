@@ -43,7 +43,7 @@ public class XsmpcatIdeQuickfixProvider extends AbstractDeclarativeIdeQuickfixPr
       }
     });
   }
-  
+
   @QuickFix(XsmpcatIssueCodesProvider.HIDDEN_ELEMENT)
   public void changeVisibility(DiagnosticResolutionAcceptor acceptor)
   {

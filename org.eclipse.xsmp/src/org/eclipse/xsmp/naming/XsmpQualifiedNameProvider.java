@@ -52,19 +52,28 @@ public class XsmpQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
     }
     if (obj instanceof Container || obj instanceof Reference)
     {
-      name = "_" + name;
+      name = "$" + name;
     }
-    final var qualifiedNameFromConverter = converter.toQualifiedName(name);
 
     final var parent = EcoreUtil2.getContainerOfType(obj.eContainer(), NamedElement.class);
 
     if (parent instanceof Document || parent == null)
     {
-      return qualifiedNameFromConverter;
+      return converter.toQualifiedName(name);
     }
 
-    return getFullyQualifiedName(parent).append(qualifiedNameFromConverter);
+    return getFullyQualifiedName(parent).append(name);
 
+  }
+
+  protected QualifiedName computeFullyQualifiedName(final EObject obj)
+  {
+    if (obj instanceof final NamedElement elem)
+    {
+      return computeFullyQualifiedName(elem);
+    }
+
+    return null;
   }
 
   /**
@@ -74,12 +83,13 @@ public class XsmpQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
   @Override
   public QualifiedName getFullyQualifiedName(final EObject obj)
   {
-    if (!(obj instanceof NamedElement))
+    if (obj != null)
     {
-      return null;
+      return cache.get(Tuples.pair(obj, "fqn"), obj.eResource(),
+              () -> computeFullyQualifiedName(obj));
     }
-    return cache.get(Tuples.pair(obj, "fqn"), obj.eResource(),
-            () -> computeFullyQualifiedName((NamedElement) obj));
+
+    return null;
   }
 
 }

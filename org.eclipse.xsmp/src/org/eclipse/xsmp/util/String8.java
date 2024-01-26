@@ -70,9 +70,9 @@ public final class String8 extends AbstractPrimitiveType<String8>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof String8)
+    if (obj instanceof final String8 str)
     {
-      return Strings.equal(value, ((String8) obj).value);
+      return Strings.equal(value, str.value);
     }
     return false;
   }
@@ -108,7 +108,8 @@ public final class String8 extends AbstractPrimitiveType<String8>
     }
     catch (final Exception e)
     {
-      throw new UnsupportedOperationException("Could not convert \"" + value + "\" to a DateTime.");
+      throw new UnsupportedOperationException("Could not convert \"" + value
+              + "\" to a DateTime. Expecting format is 'YYYY-MM-ddThh:mm:ssZ'such as '2011-12-03T10:15:30Z'");
     }
   }
 

@@ -81,7 +81,6 @@ public class AbstractXsmpUIPlugin extends EclipseUIPlugin
           final var mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
           yield Guice.createInjector(mergedModule);
         }
-
         default -> throw new IllegalArgumentException(language);
       };
     }
@@ -122,7 +121,7 @@ public class AbstractXsmpUIPlugin extends EclipseUIPlugin
   protected Object doGetImage(String key) throws IOException
   {
     var image = super.doGetImage(key);
-    if (image == null && !this.equals(XsmpUIPlugin.getInstance()))
+    if (image == null && !equals(XsmpUIPlugin.getInstance()))
     {
       image = XsmpUIPlugin.getInstance().getImage(key);
     }

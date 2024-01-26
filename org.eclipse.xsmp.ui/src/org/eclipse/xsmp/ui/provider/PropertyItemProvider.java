@@ -23,8 +23,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Property}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Property} object.
  */
 public class PropertyItemProvider extends VisibilityElementItemProvider
 {
@@ -139,8 +139,9 @@ public class PropertyItemProvider extends VisibilityElementItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)

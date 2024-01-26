@@ -10,9 +10,10 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
-
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use this class to register components to be used at runtime / without the Equinox extension
+ * registry.
  */
-public class XsmpcoreRuntimeModule extends AbstractXsmpcoreRuntimeModule {
+public class XsmpcoreRuntimeModule extends AbstractXsmpcoreRuntimeModule
+{
 }

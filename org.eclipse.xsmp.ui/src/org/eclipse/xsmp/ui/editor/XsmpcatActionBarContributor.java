@@ -42,25 +42,27 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.xsmp.ui.XsmpUIPlugin;
 
 /**
- * This is the action bar contributor for the Xsmp model editor. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the action bar contributor for the Xsmp model editor. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  */
 public class XsmpcatActionBarContributor extends EditingDomainActionBarContributor
         implements ISelectionChangedListener
 {
   /**
-   * This keeps track of the active editor. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This keeps track of the active editor. <!-- begin-user-doc --> <!--
+   * end-user-doc -->
    */
   protected IEditorPart activeEditorPart;
 
   /**
-   * This keeps track of the current selection provider. <!-- begin-user-doc --> <!-- end-user-doc
-   * -->
+   * This keeps track of the current selection provider. <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
    */
   protected ISelectionProvider selectionProvider;
 
   /**
-   * This action opens the Properties view. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This action opens the Properties view. <!-- begin-user-doc --> <!--
+   * end-user-doc -->
    */
   protected IAction showPropertiesViewAction = new Action(
           XsmpUIPlugin.getInstance().getString("_UI_ShowPropertiesView_menu_item")) {
@@ -79,9 +81,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   };
 
   /**
-   * This action refreshes the viewer of the current editor if the editor implements
-   * {@link org.eclipse.emf.common.ui.viewer.IViewerProvider}. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This action refreshes the viewer of the current editor if the editor
+   * implements {@link org.eclipse.emf.common.ui.viewer.IViewerProvider}. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   protected IAction refreshViewerAction = new Action(
           XsmpUIPlugin.getInstance().getString("_UI_RefreshViewer_menu_item")) {
@@ -106,33 +108,36 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   };
 
   /**
-   * This will contain one {@link org.eclipse.emf.edit.ui.action.CreateChildAction} corresponding to
-   * each descriptor generated for the current selection by the item provider. <!-- begin-user-doc
-   * --> <!-- end-user-doc -->
+   * This will contain one
+   * {@link org.eclipse.emf.edit.ui.action.CreateChildAction} corresponding to
+   * each descriptor generated for the current selection by the item provider.
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected Collection<IAction> createChildActions;
 
   /**
-   * This is the menu manager into which menu contribution items should be added for CreateChild
-   * actions. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This is the menu manager into which menu contribution items should be added
+   * for CreateChild actions. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected IMenuManager createChildMenuManager;
 
   /**
-   * This will contain one {@link org.eclipse.emf.edit.ui.action.CreateSiblingAction} corresponding
-   * to each descriptor generated for the current selection by the item provider. <!--
-   * begin-user-doc --> <!-- end-user-doc -->
+   * This will contain one
+   * {@link org.eclipse.emf.edit.ui.action.CreateSiblingAction} corresponding to
+   * each descriptor generated for the current selection by the item provider.
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected Collection<IAction> createSiblingActions;
 
   /**
-   * This is the menu manager into which menu contribution items should be added for CreateSibling
-   * actions. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This is the menu manager into which menu contribution items should be added
+   * for CreateSibling actions. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected IMenuManager createSiblingMenuManager;
 
   /**
-   * This creates an instance of the contributor. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This creates an instance of the contributor. <!-- begin-user-doc --> <!--
+   * end-user-doc -->
    */
   public XsmpcatActionBarContributor()
   {
@@ -145,8 +150,8 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This adds Separators for editor additions to the tool bar. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This adds Separators for editor additions to the tool bar. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   public void contributeToToolBar(IToolBarManager toolBarManager)
@@ -157,8 +162,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This adds to the menu bar a menu and some separators for editor additions, as well as the
-   * sub-menus for object creation items. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This adds to the menu bar a menu and some separators for editor additions, as
+   * well as the sub-menus for object creation items. <!-- begin-user-doc --> <!--
+   * end-user-doc -->
    */
   @Override
   public void contributeToMenu(IMenuManager menuManager)
@@ -194,8 +200,8 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * When the active editor changes, this remembers the change and registers with it as a selection
-   * provider. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * When the active editor changes, this remembers the change and registers with
+   * it as a selection provider. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   public void setActiveEditor(IEditorPart part)
@@ -229,10 +235,10 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This implements {@link org.eclipse.jface.viewers.ISelectionChangedListener}, handling
-   * {@link org.eclipse.jface.viewers.SelectionChangedEvent}s by querying for the children and
-   * siblings that can be added to the selected object and updating the menus accordingly. <!--
-   * begin-user-doc --> <!-- end-user-doc -->
+   * This implements {@link org.eclipse.jface.viewers.ISelectionChangedListener},
+   * handling {@link org.eclipse.jface.viewers.SelectionChangedEvent}s by querying
+   * for the children and siblings that can be added to the selected object and
+   * updating the menus accordingly. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   public void selectionChanged(SelectionChangedEvent event)
@@ -282,9 +288,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This generates a {@link org.eclipse.emf.edit.ui.action.CreateChildAction} for each object in
-   * <code>descriptors</code>, and returns the collection of these actions. <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * This generates a {@link org.eclipse.emf.edit.ui.action.CreateChildAction} for
+   * each object in <code>descriptors</code>, and returns the collection of these
+   * actions. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected Collection<IAction> generateCreateChildActions(Collection< ? > descriptors,
           ISelection selection)
@@ -301,9 +307,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This generates a {@link org.eclipse.emf.edit.ui.action.CreateSiblingAction} for each object in
-   * <code>descriptors</code>, and returns the collection of these actions. <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * This generates a {@link org.eclipse.emf.edit.ui.action.CreateSiblingAction}
+   * for each object in <code>descriptors</code>, and returns the collection of
+   * these actions. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   protected Collection<IAction> generateCreateSiblingActions(Collection< ? > descriptors,
           ISelection selection)
@@ -322,10 +328,11 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   /**
    * This populates the specified <code>manager</code> with
    * {@link org.eclipse.jface.action.ActionContributionItem}s based on the
-   * {@link org.eclipse.jface.action.IAction}s contained in the <code>actions</code> collection, by
-   * inserting them before the specified contribution item <code>contributionID</code>. If
-   * <code>contributionID</code> is <code>null</code>, they are simply added. <!-- begin-user-doc
-   * --> <!-- end-user-doc -->
+   * {@link org.eclipse.jface.action.IAction}s contained in the
+   * <code>actions</code> collection, by inserting them before the specified
+   * contribution item <code>contributionID</code>. If <code>contributionID</code>
+   * is <code>null</code>, they are simply added. <!-- begin-user-doc --> <!--
+   * end-user-doc -->
    */
   protected void populateManager(IContributionManager manager,
           Collection< ? extends IAction> actions, String contributionID)
@@ -349,8 +356,9 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   /**
    * This removes from the specified <code>manager</code> all
    * {@link org.eclipse.jface.action.ActionContributionItem}s based on the
-   * {@link org.eclipse.jface.action.IAction}s contained in the <code>actions</code> collection.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * {@link org.eclipse.jface.action.IAction}s contained in the
+   * <code>actions</code> collection. <!-- begin-user-doc --> <!-- end-user-doc
+   * -->
    */
   protected void depopulateManager(IContributionManager manager,
           Collection< ? extends IAction> actions)
@@ -383,7 +391,8 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This populates the pop-up menu before it appears. <!-- begin-user-doc --> <!-- end-user-doc -->
+   * This populates the pop-up menu before it appears. <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
    */
   @Override
   public void menuAboutToShow(IMenuManager menuManager)
@@ -403,8 +412,8 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This inserts global actions before the "additions-end" separator. <!-- begin-user-doc --> <!--
-   * end-user-doc -->
+   * This inserts global actions before the "additions-end" separator. <!--
+   * begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   protected void addGlobalActions(IMenuManager menuManager)
@@ -419,8 +428,8 @@ public class XsmpcatActionBarContributor extends EditingDomainActionBarContribut
   }
 
   /**
-   * This ensures that a delete action will clean up all references to deleted objects. <!--
-   * begin-user-doc --> <!-- end-user-doc -->
+   * This ensures that a delete action will clean up all references to deleted
+   * objects. <!-- begin-user-doc --> <!-- end-user-doc -->
    */
   @Override
   protected boolean removeAllReferencesOnDelete()

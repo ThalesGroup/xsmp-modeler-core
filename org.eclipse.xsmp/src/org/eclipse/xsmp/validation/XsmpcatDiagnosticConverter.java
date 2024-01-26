@@ -85,9 +85,8 @@ public class XsmpcatDiagnosticConverter extends DiagnosticConverterImpl
       return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf("transient"));
     }
-    if (obj instanceof NamedElement && structuralFeature != null)
+    if (obj instanceof final NamedElement elem && structuralFeature != null)
     {
-      final var elem = (NamedElement) obj;
       for (final INode node : NodeModelUtils.findNodesForFeature(elem.getMetadatum(),
               XcataloguePackage.Literals.METADATUM__DOCUMENTATION))
       {

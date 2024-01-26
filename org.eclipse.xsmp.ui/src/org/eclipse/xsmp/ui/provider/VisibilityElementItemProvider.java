@@ -25,8 +25,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.VisibilityElement}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.VisibilityElement} object.
  */
 public class VisibilityElementItemProvider extends NamedElementItemProvider
 {
@@ -87,8 +87,9 @@ public class VisibilityElementItemProvider extends NamedElementItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
@@ -107,8 +108,8 @@ public class VisibilityElementItemProvider extends NamedElementItemProvider
   }
 
   /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
+   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing
+   * the children that can be created under this object.
    */
   @Override
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)

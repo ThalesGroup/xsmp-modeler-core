@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.xsmp.tool.smp/src" modelPluginID="org.eclipse.xsmp.tool.smp"
+    modelName="Test" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.xsd.ecore.importer" complianceLevel="17.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>Assembly.xsd</foreignModel>
+  <foreignModel>LinkBase.xsd</foreignModel>
+  <foreignModel>Schedule.xsd</foreignModel>
+  <genPackages prefix="Assembly" resource="XML" disposableProviderFactory="true" ecorePackage="Assembly.ecore#/">
+    <genDataTypes ecoreDataType="Assembly.ecore#//Name"/>
+    <genDataTypes ecoreDataType="Assembly.ecore#//UuidOrTypeName"/>
+    <genClasses ecoreClass="Assembly.ecore#//Assembly">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//Assembly/componentConfiguration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//Assembly/parameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//Assembly/model"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//AssemblyDocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//AssemblyDocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//AssemblyDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//AssemblyDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//AssemblyDocumentRoot/assembly"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//AssemblyInstance">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//AssemblyInstance/assembly"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//AssemblyInstance/argument"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//AssemblyInstance/modelConfiguration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//AssemblyInstance/configuration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//AssemblyInstance/container"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//ComponentConfiguration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ComponentConfiguration/fieldValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//ComponentConfiguration/invocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//ComponentConfiguration/globalEventHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ComponentConfiguration/instancePath"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//GlobalEventHandler">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//GlobalEventHandler/entryPointName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//GlobalEventHandler/globalEventName"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//Int32Argument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//Int32Argument/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Assembly.ecore#//Invocation"/>
+    <genClasses ecoreClass="Assembly.ecore#//ModelInstance">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Assembly.ecore#//ModelInstance/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//ModelInstance/assembly"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//ModelInstance/model"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//ModelInstance/link"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ModelInstance/fieldValue"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//ModelInstance/invocation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Assembly.ecore#//ModelInstance/globalEventHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ModelInstance/implementation"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Assembly.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//NamedElement/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//OperationCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Assembly.ecore#//OperationCall/parameter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//OperationCall/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//ParameterValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ParameterValue/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//ParameterValue/parameter"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//PropertyValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//PropertyValue/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//PropertyValue/property"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//StringArgument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//StringArgument/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Assembly.ecore#//SubModelInstance">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Assembly.ecore#//SubModelInstance/container"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Assembly.ecore#//TemplateArgument"/>
+  </genPackages>
+  <genPackages prefix="LinkBase" resource="XML" disposableProviderFactory="true" ecorePackage="LinkBase.ecore#/">
+    <genDataTypes ecoreDataType="LinkBase.ecore#//Path"/>
+    <genClasses ecoreClass="LinkBase.ecore#//ComponentLinkBase">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference LinkBase.ecore#//ComponentLinkBase/link"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference LinkBase.ecore#//ComponentLinkBase/component"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//ComponentLinkBase/path"/>
+    </genClasses>
+    <genClasses ecoreClass="LinkBase.ecore#//EventLink"/>
+    <genClasses ecoreClass="LinkBase.ecore#//FieldLink"/>
+    <genClasses ecoreClass="LinkBase.ecore#//InterfaceLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//InterfaceLink/reference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//InterfaceLink/backReference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="LinkBase.ecore#//Link">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//Link/ownerPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//Link/clientPath"/>
+    </genClasses>
+    <genClasses ecoreClass="LinkBase.ecore#//LinkBase">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference LinkBase.ecore#//LinkBase/component"/>
+    </genClasses>
+    <genClasses ecoreClass="LinkBase.ecore#//LinkBaseDocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//LinkBaseDocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference LinkBase.ecore#//LinkBaseDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference LinkBase.ecore#//LinkBaseDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference LinkBase.ecore#//LinkBaseDocumentRoot/linkBase"/>
+    </genClasses>
+    <genClasses ecoreClass="LinkBase.ecore#//PortLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute LinkBase.ecore#//PortLink/bidirectional"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Schedule" resource="XML" disposableProviderFactory="true" ecorePackage="Schedule.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schedule.ecore#//TimeKind">
+      <genEnumLiterals ecoreEnumLiteral="Schedule.ecore#//TimeKind/SimulationTime"/>
+      <genEnumLiterals ecoreEnumLiteral="Schedule.ecore#//TimeKind/EpochTime"/>
+      <genEnumLiterals ecoreEnumLiteral="Schedule.ecore#//TimeKind/ZuluTime"/>
+      <genEnumLiterals ecoreEnumLiteral="Schedule.ecore#//TimeKind/MissionTime"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="Schedule.ecore#//TimeKindObject"/>
+    <genClasses image="false" ecoreClass="Schedule.ecore#//Activity"/>
+    <genClasses ecoreClass="Schedule.ecore#//CallOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//CallOperation/operationPath"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//CallOperation/parameter"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//EmitGlobalEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//EmitGlobalEvent/eventName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//EmitGlobalEvent/synchronous"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//EpochEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//EpochEvent/epochTime"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Schedule.ecore#//Event">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//Event/task"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//ExecuteTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//ExecuteTask/task"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//ExecuteTask/argument"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//ExecuteTask/root"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//GlobalEventTriggeredEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//GlobalEventTriggeredEvent/delay"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//GlobalEventTriggeredEvent/startEvent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//GlobalEventTriggeredEvent/stopEvent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//GlobalEventTriggeredEvent/timeKind"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//MissionEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//MissionEvent/missionTime"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//ParameterValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//ParameterValue/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//ParameterValue/parameter"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//Push">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Push/dataFlowFieldPath"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//RelativeZuluEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//RelativeZuluEvent/zuluDelta"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//Schedule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Schedule/epochTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Schedule/missionStart"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//Schedule/task"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//Schedule/event"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//ScheduleDocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//ScheduleDocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schedule.ecore#//ScheduleDocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schedule.ecore#//ScheduleDocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//ScheduleDocumentRoot/schedule"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//SetProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//SetProperty/propertyPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//SetProperty/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//SimulationEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//SimulationEvent/simulationTime"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//Task">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schedule.ecore#//Task/activity"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//TaskOfEvent">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schedule.ecore#//TaskOfEvent/task"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//TaskOfEvent/taskName"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//TaskOfExecuteTask">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schedule.ecore#//TaskOfExecuteTask/task"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//TaskOfExecuteTask/taskName"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//Transfer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Transfer/outputFieldPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Transfer/inputFieldPath"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//Trigger">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//Trigger/entryPoint"/>
+    </genClasses>
+    <genClasses ecoreClass="Schedule.ecore#//ZuluEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schedule.ecore#//ZuluEvent/zuluTime"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

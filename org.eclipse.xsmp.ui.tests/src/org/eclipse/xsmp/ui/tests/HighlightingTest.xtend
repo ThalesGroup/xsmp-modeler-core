@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.ui.tests
 
 import com.google.inject.Inject
-import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.ui.testing.AbstractHighlightingTest
@@ -20,12 +19,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 
 import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createJavaProject
+import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration
 
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpUiInjectorProvider)
 class HighlightingTest extends AbstractHighlightingTest {
 
-    @Inject extension XsmpcatHighlightingConfiguration
+    @Inject extension XsmpHighlightingConfiguration
 
     @BeforeEach override void setUp() throws Exception {
         super.setUp

@@ -130,8 +130,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
 {
 
   /**
-   * This keeps track of the editing domain that is used to track all changes to the model. <!--
-   * begin-user-doc -->
+   * This keeps track of the editing domain that is used to track all changes to
+   * the model. <!-- begin-user-doc -->
    */
   protected XtextAdapterFactoryEditingDomain editingDomain;
 
@@ -161,14 +161,14 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   protected EMFFormsPropertySheetPage propertySheetPage;
 
   /**
-   * This is the viewer that shadows the selection in the content outline. The parent relation must
-   * be correctly defined for this to work.
+   * This is the viewer that shadows the selection in the content outline. The
+   * parent relation must be correctly defined for this to work.
    */
   protected TreeViewer selectionViewer;
 
   /**
-   * This keeps track of the active content viewer, which may be either one of the viewers in the
-   * pages or the content outline viewer.
+   * This keeps track of the active content viewer, which may be either one of the
+   * viewers in the pages or the content outline viewer.
    */
   protected Viewer currentViewer;
 
@@ -178,8 +178,9 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   protected ISelectionChangedListener selectionChangedListener;
 
   /**
-   * This keeps track of all the {@link org.eclipse.jface.viewers.ISelectionChangedListener}s that
-   * are listening to this editor.
+   * This keeps track of all the
+   * {@link org.eclipse.jface.viewers.ISelectionChangedListener}s that are
+   * listening to this editor.
    */
   protected Collection<ISelectionChangedListener> selectionChangedListeners = new ArrayList<>();
 
@@ -189,8 +190,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   protected ISelection editorSelection = StructuredSelection.EMPTY;
 
   /**
-   * The MarkerHelper is responsible for creating workspace resource markers presented in Eclipse's
-   * Problems View.
+   * The MarkerHelper is responsible for creating workspace resource markers
+   * presented in Eclipse's Problems View.
    */
   protected MarkerHelper markerHelper = new EditUIMarkerHelper();
 
@@ -275,8 +276,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   protected boolean updateProblemIndication = true;
 
   /**
-   * Adapter used to update the problem indication when resources are demanded loaded. <!--
-   * begin-user-doc -->
+   * Adapter used to update the problem indication when resources are demanded
+   * loaded. <!-- begin-user-doc -->
    */
   protected EContentAdapter problemIndicationAdapter = new EContentAdapter() {
     protected boolean dispatching;
@@ -519,7 +520,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * Updates the problems indication with the information described in the specified diagnostic.
+   * Updates the problems indication with the information described in the
+   * specified diagnostic.
    */
   protected void doUpdateProblemIndication()
   {
@@ -603,13 +605,15 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
     adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
     adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
-    // Create the command stack that will notify this editor as commands are executed.
+    // Create the command stack that will notify this editor as commands are
+    // executed.
     //
     final BasicCommandStack commandStack = new BasicCommandStack() {
       @Override
       public void execute(Command command)
       {
-        // Cancel live validation before executing a command that will trigger a new round of
+        // Cancel live validation before executing a command that will trigger a new
+        // round of
         // validation.
         //
         if (!(command instanceof AbstractCommand.NonDirtying))
@@ -620,7 +624,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
       }
     };
 
-    // Add a listener to set the most recent command's affected objects to be the selection of the
+    // Add a listener to set the most recent command's affected objects to be the
+    // selection of the
     // viewer with focus.
     //
     commandStack.addCommandStackListener(event -> getContainer().getDisplay().asyncExec(() -> {
@@ -677,9 +682,10 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This returns the editing domain as required by the {@link IEditingDomainProvider} interface.
-   * This is important for implementing the static methods of {@link AdapterFactoryEditingDomain}
-   * and for supporting {@link org.eclipse.emf.edit.ui.action.CommandAction}.
+   * This returns the editing domain as required by the
+   * {@link IEditingDomainProvider} interface. This is important for implementing
+   * the static methods of {@link AdapterFactoryEditingDomain} and for supporting
+   * {@link org.eclipse.emf.edit.ui.action.CommandAction}.
    */
   @Override
   public EditingDomain getEditingDomain()
@@ -740,8 +746,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This makes sure that one content viewer, either for the current page or the outline view, if it
-   * has focus, is the current one.
+   * This makes sure that one content viewer, either for the current page or the
+   * outline view, if it has focus, is the current one.
    */
   public void setCurrentViewer(Viewer viewer)
   {
@@ -783,8 +789,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This returns the viewer as required by the {@link IViewerProvider} interface. <!--
-   * begin-user-doc -->
+   * This returns the viewer as required by the {@link IViewerProvider} interface.
+   * <!-- begin-user-doc -->
    */
   @Override
   public Viewer getViewer()
@@ -793,8 +799,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This creates a context menu for the viewer and adds a listener as well registering the menu for
-   * extension.
+   * This creates a context menu for the viewer and adds a listener as well
+   * registering the menu for extension.
    */
   protected void createContextMenuFor(StructuredViewer viewer)
   {
@@ -829,8 +835,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This is the method called to load a resource into the editing domain's resource set based on
-   * the editor's input.
+   * This is the method called to load a resource into the editing domain's
+   * resource set based on the editor's input.
    */
   public void createModel()
   {
@@ -861,8 +867,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * Returns a diagnostic describing the errors and warnings listed in the resource and the
-   * specified exception (if any).
+   * Returns a diagnostic describing the errors and warnings listed in the
+   * resource and the specified exception (if any).
    */
   public Diagnostic analyzeResourceProblems(Resource resource, Exception exception)
   {
@@ -917,9 +923,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
                       /*
                        * new AdapterFactoryLabelProvider.StyledLabelProvider(adapterFactory,
                        * selectionViewer)
-                       */ labelProvider,
-                      new DiagnosticDecorator.Styled(editingDomain, selectionViewer,
-                              XsmpUIPlugin.getInstance().getDialogSettings()))));
+                       */ labelProvider, new DiagnosticDecorator.Styled(editingDomain,
+                              selectionViewer, XsmpUIPlugin.getInstance().getDialogSettings()))));
 
       final var resource = editingDomain.getResourceSet().getResources().get(0);
 
@@ -965,8 +970,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * If there is just one page in the multi-page editor part, this hides the single tab at the
-   * bottom.
+   * If there is just one page in the multi-page editor part, this hides the
+   * single tab at the bottom.
    */
   protected void hideTabs()
   {
@@ -983,8 +988,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * If there is more than one page in the multi-page editor part, this shows the tabs at the
-   * bottom.
+   * If there is more than one page in the multi-page editor part, this shows the
+   * tabs at the bottom.
    */
   protected void showTabs()
   {
@@ -1134,8 +1139,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This deals with how we want selection in the outliner to affect the other views. <!--
-   * begin-user-doc -->
+   * This deals with how we want selection in the outliner to affect the other
+   * views. <!-- begin-user-doc -->
    */
   public void handleContentOutlineSelection(ISelection selection)
   {
@@ -1164,8 +1169,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This is for implementing {@link IEditorPart} and simply tests the command stack. <!--
-   * begin-user-doc -->
+   * This is for implementing {@link IEditorPart} and simply tests the command
+   * stack. <!-- begin-user-doc -->
    */
   @Override
   public boolean isDirty()
@@ -1223,8 +1228,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This is for implementing {@link IEditorPart} and simply saves the model file. <!--
-   * begin-user-doc -->
+   * This is for implementing {@link IEditorPart} and simply saves the model file.
+   * <!-- begin-user-doc -->
    */
   @Override
   public void doSave(IProgressMonitor progressMonitor)
@@ -1236,7 +1241,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
             Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
     saveOptions.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
 
-    // Do the work within an operation because this is a long running activity that modifies the
+    // Do the work within an operation because this is a long running activity that
+    // modifies the
     // workbench.
     //
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
@@ -1302,9 +1308,9 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This returns whether something has been persisted to the URI of the specified resource. The
-   * implementation uses the URI converter from the editor's resource set to try to open an input
-   * stream.
+   * This returns whether something has been persisted to the URI of the specified
+   * resource. The implementation uses the URI converter from the editor's
+   * resource set to try to open an input stream.
    */
   protected boolean isPersisted(Resource resource)
   {
@@ -1424,8 +1430,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to return this editor's
-   * overall selection.
+   * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to
+   * return this editor's overall selection.
    */
   @Override
   public ISelection getSelection()
@@ -1434,8 +1440,9 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to set this editor's
-   * overall selection. Calling this result will notify the listeners.
+   * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to set
+   * this editor's overall selection. Calling this result will notify the
+   * listeners.
    */
   @Override
   public void setSelection(ISelection selection)
@@ -1509,8 +1516,8 @@ public class XsmpcatFormEditor extends MultiPageEditorPart implements IEditingDo
   }
 
   /**
-   * This implements {@link org.eclipse.jface.action.IMenuListener} to help fill the context menus
-   * with contributions from the Edit menu.
+   * This implements {@link org.eclipse.jface.action.IMenuListener} to help fill
+   * the context menus with contributions from the Edit menu.
    */
   @Override
   public void menuAboutToShow(IMenuManager menuManager)

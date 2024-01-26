@@ -20,8 +20,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.EventSource}
- * object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.EventSource} object.
  */
 public class EventSourceItemProvider extends NamedElementItemProvider
 {

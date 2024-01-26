@@ -44,7 +44,7 @@
           point="org.eclipse.xsmp.ui.tool">
        <factory
              description="A Tool that convert xsmpcat files to smpcat/smppkg"
-             injector="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:com.google.inject.Injector"
+             provider="org.eclipse.xsmp.tool.smp.ui.SmpExtension"
              id="org.eclipse.xsmp.tool.smp"
              name="SMP model generator">
        </factory>

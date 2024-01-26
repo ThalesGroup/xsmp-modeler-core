@@ -34,7 +34,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import com.google.inject.Inject;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.xsmp.xcatalogue.Component} object.
+ * This is the item provider adapter for a
+ * {@link org.eclipse.xsmp.xcatalogue.Component} object.
  */
 public class ComponentItemProvider extends ReferenceTypeItemProvider
 {
@@ -105,8 +106,8 @@ public class ComponentItemProvider extends ReferenceTypeItemProvider
   }
 
   /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
+   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing
+   * the children that can be created under this object.
    */
   @Override
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)

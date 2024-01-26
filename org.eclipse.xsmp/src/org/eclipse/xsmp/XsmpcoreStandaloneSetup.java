@@ -10,13 +10,14 @@
 ******************************************************************************/
 package org.eclipse.xsmp;
 
-
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public class XsmpcoreStandaloneSetup extends XsmpcoreStandaloneSetupGenerated {
+public class XsmpcoreStandaloneSetup extends XsmpcoreStandaloneSetupGenerated
+{
 
-	public static void doSetup() {
-		new XsmpcoreStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+  public static void doSetup()
+  {
+    new XsmpcoreStandaloneSetup().createInjectorAndDoEMFRegistration();
+  }
 }

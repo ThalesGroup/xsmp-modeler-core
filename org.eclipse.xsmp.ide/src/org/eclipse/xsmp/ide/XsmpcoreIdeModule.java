@@ -10,9 +10,9 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide;
 
-
 /**
  * Use this class to register ide components.
  */
-public class XsmpcoreIdeModule extends AbstractXsmpcoreIdeModule {
+public class XsmpcoreIdeModule extends AbstractXsmpcoreIdeModule
+{
 }

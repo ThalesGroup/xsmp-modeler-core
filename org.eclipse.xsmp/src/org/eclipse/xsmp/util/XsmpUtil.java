@@ -256,9 +256,9 @@ public class XsmpUtil
 
   public VisibilityKind getVisibility(EObject t)
   {
-    if (t instanceof VisibilityElement)
+    if (t instanceof final VisibilityElement elem)
     {
-      return ((VisibilityElement) t).getRealVisibility();
+      return elem.getRealVisibility();
     }
     // by default other objects are public
     return VisibilityKind.PUBLIC;
@@ -272,9 +272,9 @@ public class XsmpUtil
     {
       return Boolean.parseBoolean(o.getUserData("deprecated"));
     }
-    if (obj instanceof NamedElement)
+    if (obj instanceof final NamedElement elem)
     {
-      return ((NamedElement) obj).isDeprecated();
+      return elem.isDeprecated();
     }
     return false;
   }
@@ -383,9 +383,9 @@ public class XsmpUtil
       return min;
     }
 
-    if (container instanceof ItemWithBase)
+    if (container instanceof final ItemWithBase item)
     {
-      final var base = ((ItemWithBase) container).getBase();
+      final var base = item.getBase();
       if (base != null)
       {
         return getMinVisibility(fieldOrConstant, base, VisibilityKind.PROTECTED);
@@ -410,13 +410,13 @@ public class XsmpUtil
     final var obj = p.getEObjectOrProxy();
     if (!obj.eIsProxy())
     {
-      if (obj instanceof Type)
+      if (obj instanceof final Type type)
       {
-        return isVisibleFrom((Type) obj, from);
+        return isVisibleFrom(type, from);
       }
-      if (obj instanceof VisibilityElement)
+      if (obj instanceof final VisibilityElement elem)
       {
-        return isVisibleFrom((VisibilityElement) obj, from);
+        return isVisibleFrom(elem, from);
       }
       if (obj instanceof EnumerationLiteral)
       {
@@ -445,7 +445,7 @@ public class XsmpUtil
             .replace("\f", "\\f").replace("\'", "\\'").replace("\"", "\\\"");
   }
 
-  public String translateEscapes(String s) throws IllegalArgumentException
+  public static String translateEscapes(String s) throws IllegalArgumentException
   {
     if (s.isEmpty())
     {
@@ -485,22 +485,13 @@ public class XsmpUtil
           case 'v':
             ch = 0x0b;
             break;
-          case '\'':
-          case '\"':
-          case '\\':
+          case '\'', '\"', '\\':
             // as is
             break;
           case '?':
             ch = 0x3f;
             break;
-          case '0':
-          case '1':
-          case '2':
-          case '3':
-          case '4':
-          case '5':
-          case '6':
-          case '7':
+          case '0', '1', '2', '3', '4', '5', '6', '7':
             final var limit = Integer.min(from + (ch <= '3' ? 2 : 1), length);
             var code = ch - '0';
             while (from < limit)
@@ -539,23 +530,21 @@ public class XsmpUtil
     final var dependencies = new HashSet<Catalogue>();
     // collect all referenced Catalogue of interest
     t.eAllContents().forEachRemaining(it -> {
-      if (it instanceof Field)
+      if (it instanceof final Field field)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(((Field) it).getType(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(field.getType(), Catalogue.class));
       }
-      else if (it instanceof Property)
+      else if (it instanceof final Property property)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(((Property) it).getType(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(property.getType(), Catalogue.class));
       }
-      else if (it instanceof ItemWithBase)
+      else if (it instanceof final ItemWithBase item)
       {
-        dependencies
-                .add(EcoreUtil2.getContainerOfType(((ItemWithBase) it).getBase(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(item.getBase(), Catalogue.class));
       }
-      else if (it instanceof Array)
+      else if (it instanceof final Array array)
       {
-        dependencies
-                .add(EcoreUtil2.getContainerOfType(((Array) it).getItemType(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(array.getItemType(), Catalogue.class));
       }
 
     });
@@ -564,7 +553,7 @@ public class XsmpUtil
     final Comparator<String> c = Comparator.nullsFirst(String::compareTo);
     // Remove ecss_smp_smp and sort dependencies by name
     return dependencies.stream().filter(it -> it != null && !"ecss_smp_smp".equals(it.getName()))
-            .sorted((a, b) -> c.compare(a.getName(), b.getName())).collect(Collectors.toList());
+            .sorted((a, b) -> c.compare(a.getName(), b.getName())).toList();
   }
 
   public int year(Document doc)
@@ -626,9 +615,9 @@ public class XsmpUtil
     {
       return Boolean.parseBoolean(o.getUserData("static"));
     }
-    if (obj instanceof NamedElement)
+    if (obj instanceof final NamedElement elem)
     {
-      return isStatic((NamedElement) obj);
+      return isStatic(elem);
     }
     return false;
   }
@@ -818,9 +807,9 @@ public class XsmpUtil
       if (structure instanceof final org.eclipse.xsmp.xcatalogue.Class clazz)
       {
         final var base = clazz.getBase();
-        if (base instanceof Structure && !isBaseOf(base, clazz))
+        if (base instanceof final Structure struct && !isBaseOf(base, clazz))
         {
-          fields.addAll(0, getAssignableFields((Structure) base));
+          fields.addAll(0, getAssignableFields(struct));
         }
       }
       return fields;
@@ -838,9 +827,9 @@ public class XsmpUtil
     if (structure instanceof final org.eclipse.xsmp.xcatalogue.Class clazz)
     {
       final var base = clazz.getBase();
-      if (base instanceof Structure && !isBaseOf(base, clazz))
+      if (base instanceof final Structure struct && !isBaseOf(base, clazz))
       {
-        return Iterables.concat(getFields((Structure) base), fields);
+        return Iterables.concat(getFields(struct), fields);
       }
     }
     return fields;
@@ -864,13 +853,13 @@ public class XsmpUtil
       return true;
     }
 
-    if (visited instanceof Array)
+    if (visited instanceof final Array array)
     {
-      return isRecursiveType(type, ((Array) visited).getItemType());
+      return isRecursiveType(type, array.getItemType());
     }
-    if (visited instanceof Structure)
+    if (visited instanceof final Structure struct)
     {
-      for (final var field : getFields((Structure) visited))
+      for (final var field : getFields(struct))
       {
         if (isRecursiveType(type, field.getType()))
         {
@@ -958,7 +947,7 @@ public class XsmpUtil
       case XcataloguePackage.ATTRIBUTE ->
       {
         final var type = ((Attribute) parent).getType();
-        yield type instanceof AttributeType ? ((AttributeType) type).getType() : type;
+        yield type instanceof final AttributeType attr ? attr.getType() : type;
       }
       case XcataloguePackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
       case XcataloguePackage.COLLECTION_LITERAL ->
@@ -966,7 +955,7 @@ public class XsmpUtil
         final var collection = (CollectionLiteral) parent;
         yield getType(collection);
       }
-      default -> parent instanceof Expression ? getType((Expression) parent) : null;
+      default -> parent instanceof final Expression e ? getType(e) : null;
     };
   }
 
@@ -976,14 +965,13 @@ public class XsmpUtil
 
     final var type = getType(parent);
 
-    if (parent instanceof CollectionLiteral)
+    if (parent instanceof final CollectionLiteral collection)
     {
-      if (type instanceof Array)
+      if (type instanceof final Array array)
       {
 
-        final var collection = (CollectionLiteral) parent;
         final var index = collection.getElements().indexOf(e);
-        final var array = (Array) type;
+
         final var size = getInt64(array.getSize());
 
         if (size > index)
@@ -992,10 +980,9 @@ public class XsmpUtil
         }
         return null;
       }
-      if (type instanceof Structure)
+      if (type instanceof final Structure struct)
       {
-        final var collection = (CollectionLiteral) parent;
-        final var fields = getAssignableFields((Structure) type);
+        final var fields = getAssignableFields(struct);
         final var index = collection.getElements().indexOf(e);
         if (index >= 0 && index < fields.size())
         {
@@ -1052,9 +1039,9 @@ public class XsmpUtil
         final var collection = (CollectionLiteral) parent;
         final var type = getType(collection);
 
-        if (type instanceof Structure)
+        if (type instanceof final Structure struct)
         {
-          final var fields = getAssignableFields((Structure) type);
+          final var fields = getAssignableFields(struct);
           final var index = collection.getElements().indexOf(e);
           if (index >= 0 && index < fields.size())
           {
@@ -1081,10 +1068,10 @@ public class XsmpUtil
     {
       if (n instanceof CompositeNodeWithSemanticElement)
       {
-        final var elem = ((CompositeNodeWithSemanticElement) n).getSemanticElement();
-        if (elem instanceof Expression)
+        final var elem = n.getSemanticElement();
+        if (elem instanceof final Expression e)
         {
-          last = (Expression) elem;
+          last = e;
         }
       }
       if (node == n && last != null)
@@ -1104,10 +1091,10 @@ public class XsmpUtil
     {
       if (n instanceof CompositeNodeWithSemanticElement)
       {
-        final var elem = ((CompositeNodeWithSemanticElement) n).getSemanticElement();
-        if (elem instanceof Expression)
+        final var elem = n.getSemanticElement();
+        if (elem instanceof final Expression e)
         {
-          last = (Expression) elem;
+          last = e;
         }
       }
 
@@ -1127,9 +1114,9 @@ public class XsmpUtil
   public EnumerationLiteral getEnumerationLiteral(Expression e)
   {
     final var type = getType(e);
-    if (type instanceof Enumeration)
+    if (type instanceof final Enumeration enumeration)
     {
-      return solver.getValue(e, (Enumeration) type).getValue();
+      return solver.getValue(e, enumeration).getValue();
     }
     return null;
   }
@@ -1212,5 +1199,11 @@ public class XsmpUtil
   public org.eclipse.xsmp.util.PrimitiveType getValue(Expression e)
   {
     return solver.getValue(e);
+  }
+
+  public static String StringLiteralToString(String literal)
+  {
+    return literal.startsWith("u8") ? translateEscapes(literal.substring(3, literal.length() - 1))
+            : translateEscapes(literal.substring(1, literal.length() - 1));
   }
 }

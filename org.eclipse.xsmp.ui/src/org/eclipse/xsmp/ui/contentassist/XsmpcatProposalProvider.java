@@ -15,7 +15,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -23,7 +22,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
-import org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingConfiguration;
+import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
 import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -65,8 +64,9 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
- * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist on how to
- * customize the content assistant.
+ * See
+ * https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
+ * on how to customize the content assistant.
  */
 public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
 {
@@ -78,12 +78,12 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       final var cst = XcatalogueFactory.eINSTANCE.createBuiltInConstant();
       cst.setName(s);
       return cst;
-    }).collect(Collectors.toList());
+    }).toList();
     builtInFunctions = xsmpUtil.getSolver().functionMappings.keySet().stream().map(s -> {
       final var cst = XcatalogueFactory.eINSTANCE.createBuiltInFunction();
       cst.setName(s);
       return cst;
-    }).collect(Collectors.toList());
+    }).toList();
   }
 
   protected final List<BuiltInConstant> builtInConstants;
@@ -97,11 +97,11 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   protected StylerFactory stylerFactory;
 
   @Inject
-  protected XsmpcatHighlightingConfiguration highlightingConfiguration;
+  protected XsmpHighlightingConfiguration highlightingConfiguration;
 
   protected XsmpUtil xsmpUtil;
 
-  protected static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$", "@",
+  protected static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$",
           "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
           "class", "exception", "public", "private", "protected", "field", "constant", "def",
           "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
@@ -117,8 +117,8 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
     final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-    if (cur instanceof Class && !((Class) cur).isAbstract()
-            || cur instanceof Component && !((Component) cur).isAbstract())
+    if (cur instanceof final Class cls && !cls.isAbstract()
+            || cur instanceof final Component cmp && !cmp.isAbstract())
     {
       acceptor.accept(createKeywordCompletionProposal("abstract", context));
     }
@@ -157,7 +157,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext context, ICompletionProposalAcceptor acceptor)
   {
     final var cur = NodeModelUtils.findActualSemanticObjectFor(context.getCurrentNode());
-    if (cur instanceof Property && !((Property) cur).isSetAccess())
+    if (cur instanceof final Property p && !p.isSetAccess())
     {
       acceptor.accept(createKeywordCompletionProposal("readOnly", context));
       acceptor.accept(createKeywordCompletionProposal("writeOnly", context));
@@ -205,9 +205,9 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
             getKeywordDisplayString(keyword), getImage(keyword), contentAssistContext);
     getPriorityHelper().adjustKeywordPriority(proposal, contentAssistContext.getPrefix());
 
-    if (proposal instanceof ConfigurableCompletionProposal)
+    if (proposal instanceof final ConfigurableCompletionProposal p)
     {
-      ((ConfigurableCompletionProposal) proposal).setAdditionalProposalInfo(keyword);
+      p.setAdditionalProposalInfo(keyword);
     }
     acceptor.accept(proposal);
   }
@@ -330,9 +330,9 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
 
     final var elem = context.getCurrentNode().getSemanticElement();
     final var gr = context.getCurrentNode().getGrammarElement();
-    if (gr instanceof RuleCall)
+    if (gr instanceof final RuleCall r)
     {
-      final var rule = ((RuleCall) gr).getRule();
+      final var rule = r.getRule();
 
       if (elem instanceof Metadatum && rule == grammarAccess.getML_DOCUMENTATIONRule())
       {
@@ -416,9 +416,9 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
     final var p = createCompletionProposal(proposal, contentAssistContext);
 
-    if (p instanceof ConfigurableCompletionProposal)
+    if (p instanceof final ConfigurableCompletionProposal cfg)
     {
-      ((ConfigurableCompletionProposal) p).setAdditionalProposalInfo(obj);
+      cfg.setAdditionalProposalInfo(obj);
 
       if (obj instanceof BuiltInConstant)
       {
@@ -435,8 +435,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
     switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
-      case FLOAT32:
-      case FLOAT64:
+      case FLOAT32, FLOAT64:
         builtInConstants.forEach(cst -> acceptor
                 .accept(createCompletionProposal("$" + cst.getName(), context, cst)));
         break;
@@ -459,8 +458,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
     switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
-      case FLOAT32:
-      case FLOAT64:
+      case FLOAT32, FLOAT64:
         builtInFunctions.forEach(cst -> acceptor
                 .accept(createCompletionProposal("$" + cst.getName(), context, cst)));
         break;
@@ -494,9 +492,9 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
       filter = d -> {
         final var obj = EcoreUtil.resolve(d.getEObjectOrProxy(), model);
         final Type type;
-        if (obj instanceof Constant && xsmpUtil.isVisibleFrom(d, model))
+        if (obj instanceof final Constant cst && xsmpUtil.isVisibleFrom(d, model))
         {
-          type = ((Constant) obj).getType();
+          type = cst.getType();
         }
         else if (obj instanceof EnumerationLiteral)
         {
@@ -519,19 +517,13 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
 
     switch (xsmpUtil.getPrimitiveTypeKind(xsmpUtil.getType(context.getCurrentNode(), model)))
     {
-      case INT8:
-      case INT16:
-      case INT32:
+      case INT8, INT16, INT32:
         acceptor.accept(createCompletionProposal("0", context));
         break;
-      case INT64:
-      case DATE_TIME:
-      case DURATION:
+      case INT64, DATE_TIME, DURATION:
         acceptor.accept(createCompletionProposal("0L", context));
         break;
-      case UINT8:
-      case UINT16:
-      case UINT32:
+      case UINT8, UINT16, UINT32:
         acceptor.accept(createCompletionProposal("0U", context));
         break;
       case UINT64:
@@ -609,12 +601,12 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
 
     final var object = description.getEObjectOrProxy();
-    if (object.eIsProxy() && object instanceof NamedElement)
+    if (object.eIsProxy() && object instanceof final NamedElement elem)
     {
-      ((NamedElement) object).setDeprecated(xsmpUtil.isDeprecated(description));
-      if (object instanceof VisibilityElement)
+      elem.setDeprecated(xsmpUtil.isDeprecated(description));
+      if (object instanceof final VisibilityElement v)
       {
-        ((VisibilityElement) object).setVisibility(xsmpUtil.getVisibility(description));
+        v.setVisibility(xsmpUtil.getVisibility(description));
       }
     }
     return getImage(object);

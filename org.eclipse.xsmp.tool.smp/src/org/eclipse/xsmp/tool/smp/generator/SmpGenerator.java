@@ -239,9 +239,9 @@ public class SmpGenerator extends AbstractModelConverter
     final Map<EObject, String> eObjectToIdMap = new HashMap<>();
     resource.getAllContents().forEachRemaining(e -> {
 
-      if (e instanceof NamedElement && !eObjectToIdMap.containsKey(e))
+      if (e instanceof final NamedElement elem && !eObjectToIdMap.containsKey(e))
       {
-        final var idTag = ((NamedElement) e).getMetadatum().getXsmpcatdoc().tags().stream()
+        final var idTag = elem.getMetadatum().getXsmpcatdoc().tags().stream()
                 .filter(t -> "@id".equals(t.getTagName())).findFirst();
 
         String id;
@@ -853,9 +853,7 @@ public class SmpGenerator extends AbstractModelConverter
           {
             case XcataloguePackage.ARRAY:
               return convert((CollectionLiteral) value, (Array) type);
-            case XcataloguePackage.STRUCTURE:
-            case XcataloguePackage.CLASS:
-            case XcataloguePackage.EXCEPTION:
+            case XcataloguePackage.STRUCTURE, XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION:
               return convert((CollectionLiteral) value);
             default:
               break;

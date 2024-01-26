@@ -10,23 +10,20 @@
  ******************************************************************************/
 package org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type
 
+import java.util.List
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator
 import org.eclipse.xsmp.xcatalogue.Component
+import org.eclipse.xsmp.xcatalogue.Container
+import org.eclipse.xsmp.xcatalogue.EntryPoint
+import org.eclipse.xsmp.xcatalogue.EventSink
+import org.eclipse.xsmp.xcatalogue.EventSource
 import org.eclipse.xsmp.xcatalogue.NamedElement
 import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
 import org.eclipse.xsmp.xcatalogue.Operation
 import org.eclipse.xsmp.xcatalogue.Parameter
-import java.util.List
-import org.eclipse.xsmp.xcatalogue.Container
 import org.eclipse.xsmp.xcatalogue.Reference
-import org.eclipse.xsmp.xcatalogue.EventSource
-import org.eclipse.xsmp.xcatalogue.EventSink
-import org.eclipse.xsmp.xcatalogue.EntryPoint
 import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.util.QualifiedNames
-import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.xcatalogue.String
 
 class EsaCdkComponentGenerator extends ComponentGenerator {
 

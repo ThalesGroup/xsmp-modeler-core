@@ -27,20 +27,10 @@ ImportDeclaration:
     'import' (importedType=[LanguageType|QualifiedName]
     | 'namespace' importedNamespace=[Namespace|QualifiedName]);
 
-NestedNamespace returns Namespace:
-    {Namespace} '::' name=ValidID?
-    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
-
-Namespace returns ecore::EObject:
-    {Metadatum}
-    documentation=ML_DOCUMENTATION?
-    metadata+=Attribute*
-    {Namespace.metadatum=current} 'namespace' name=ValidID?
-    (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
-
 enum RangeKind:
     Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
 
+@Override
 NamespaceMember returns ecore::EObject:
     {Metadatum}
     documentation=ML_DOCUMENTATION?
@@ -89,34 +79,34 @@ NamespaceMember returns ecore::EObject:
     {Array.metadatum=current} modifiers+=VisibilityModifiers*
     // using keywork is deprecated and will be removed in a future release
     (('array' | 'using') name=ValidID? '='
-    (itemType=[Type|QualifiedName] | 'typename') '[') size=Expression? ']'
+    itemType=[Type|QualifiedName] '[') size=Expression? ']'
     |
     {ValueReference.metadatum=current} modifiers+=VisibilityModifiers*
-    'using' name=ValidID? '=' (type=[Type|QualifiedName] '*' | 'typename')
+    'using' name=ValidID? '=' type=[Type|QualifiedName] '*'
     |
     {Integer.metadatum=current} modifiers+=VisibilityModifiers*
-    'integer' (name=ValidID | 'default') ('extends' primitiveType=[Type|QualifiedName])? ('in' (minimum=Expression |
+    'integer' name=ValidID ('extends' primitiveType=[Type|QualifiedName])? ('in' (minimum=Expression |
     '*') '...'
     (maximum=Expression | '*'))?
     |
     {Float.metadatum=current} modifiers+=VisibilityModifiers*
-    'float' (name=ValidID | 'default') ('extends' primitiveType=[Type|QualifiedName])? ('in' (minimum=Expression | '*')
+    'float' name=ValidID ('extends' primitiveType=[Type|QualifiedName])? ('in' (minimum=Expression | '*')
     range=RangeKind (maximum=Expression | '*'))?
     |
     {EventType.metadatum=current} modifiers+=VisibilityModifiers*
-    'event' (name=ValidID | 'default') ('extends' eventArgs=[Type|QualifiedName])?
+    'event' name=ValidID ('extends' eventArgs=[Type|QualifiedName])?
     |
     {String.metadatum=current} modifiers+=VisibilityModifiers*
-    'string' (name=ValidID | 'default') ('[' length=Expression? ']')?
+    'string' name=ValidID ('[' length=Expression? ']')?
     |
     {PrimitiveType.metadatum=current} modifiers+=VisibilityModifiers*
-    'primitive' (name=ValidID | 'default')
+    'primitive' name=ValidID
     |
     {NativeType.metadatum=current} modifiers+=VisibilityModifiers*
-    'native' (name=ValidID | 'default')
+    'native' name=ValidID
     |
     {AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
-    'attribute' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default') ('=' default=Expression)?
+    'attribute' type=[Type|QualifiedName] name=ValidID ('=' default=Expression)?
     |
     {Enumeration.metadatum=current} modifiers+=VisibilityModifiers*
     'enum' name=ValidID?
@@ -135,7 +125,7 @@ NamespaceMember returns ecore::EObject:
 
 fragment PropertyDeclaration *:
     modifiers+=PropertyModifiers*
-    'property' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default')
+    'property' type=[Type|QualifiedName] name=ValidID
     ('get' 'throws' getRaises+=[Type|QualifiedName] (',' getRaises+=[Type|QualifiedName])*)?
     ('set' 'throws' setRaises+=[Type|QualifiedName] (',' setRaises+=[Type|QualifiedName])*)?
     ('->' attachedField=[Field|QualifiedName])?;
@@ -144,7 +134,7 @@ fragment OperationDeclaration *:
     modifiers+=VisibilityModifiers*
     'def'
     (returnParameter=ReturnParameter | 'void')
-    (name=ValidID | 'default')
+    name=ValidID
     '(' (parameter+=Parameter (',' parameter+=Parameter)*)? ')'
     ('throws' raisedException+=[Type|QualifiedName] (',' raisedException+=[Type|QualifiedName])*)?;
 
@@ -160,11 +150,11 @@ InterfaceMember returns ecore::EObject:
 
 fragment ConstantDeclaration *:
     modifiers+=VisibilityModifiers*
-    'constant' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default') ('=' value=Expression)?;
+    'constant' type=[Type|QualifiedName] name=ValidID ('=' value=Expression)?;
 
 fragment FieldDeclaration *:
     modifiers+=FieldModifiers*
-    'field' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default') ('=' default=Expression)?;
+    'field' type=[Type|QualifiedName] name=ValidID ('=' default=Expression)?;
 
 StructMember returns ecore::EObject:
     {Metadatum}
@@ -176,7 +166,7 @@ StructMember returns ecore::EObject:
 
 fragment AssociationDeclaration *:
     modifiers+=VisibilityModifiers*
-    'association' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default') ('=' default=Expression)?;
+    'association' type=[Type|QualifiedName] name=ValidID ('=' default=Expression)?;
 
 ClassMember returns ecore::EObject:
     {Metadatum}
@@ -193,23 +183,23 @@ ClassMember returns ecore::EObject:
     {Association.metadatum=current} AssociationDeclaration);
 
 fragment ContainerDeclaration *:
-    'container' (type=[Type|QualifiedName] | 'typename') MultiplicityDeclaration (name=ValidID | 'default') ('='
+    'container' type=[Type|QualifiedName] MultiplicityDeclaration name=ValidID ('='
     defaultComponent=[Type|QualifiedName])?;
 
 fragment ReferenceDeclaration *:
-    'reference' (interface=[Type|QualifiedName] | 'typename') MultiplicityDeclaration (name=ValidID | 'default');
+    'reference' interface=[Type|QualifiedName] MultiplicityDeclaration name=ValidID;
 
 fragment EntryPointDeclaration *:
-    'entrypoint' (name=ValidID | 'default')
+    'entrypoint' name=ValidID
     ('{'
     ('in' input+=[Field|QualifiedName] | 'out' output+=[Field|QualifiedName])*
     '}')?;
 
 fragment EventSinkDeclaration *:
-    'eventsink' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default');
+    'eventsink' type=[Type|QualifiedName] name=ValidID;
 
 fragment EventSourceDeclaration *:
-    'eventsource' (type=[Type|QualifiedName] | 'typename') (name=ValidID | 'default');
+    'eventsource' type=[Type|QualifiedName] name=ValidID;
 
 ComponentMember returns ecore::EObject:
     {Metadatum}
@@ -268,12 +258,11 @@ ParameterMetadatum returns Metadatum:
 
 ReturnParameter returns Parameter:
     metadatum=ParameterMetadatum
-    (type=[Type|QualifiedName] | 'typename') name=ValidID?;
+    type=[Type|QualifiedName] name=ValidID?;
 
 Parameter:
     metadatum=ParameterMetadatum
-    (=>direction=ParameterDirectionKind (type=[Type|QualifiedName] | 'typename') | (type=[Type|QualifiedName] |
-    'typename')) (name=ValidID | 'default') ('='
+    direction=ParameterDirectionKind? type=[Type|QualifiedName] name=ValidID ('='
     default=Expression)?;
 
 enum ParameterDirectionKind:

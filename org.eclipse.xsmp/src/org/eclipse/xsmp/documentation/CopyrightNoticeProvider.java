@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
+import org.eclipse.xsmp.services.XsmpcoreGrammarAccess;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -34,7 +34,7 @@ public class CopyrightNoticeProvider
   private IResourceScopeCache cache;
 
   @Inject
-  private XsmpcatGrammarAccess grammar;
+  private XsmpcoreGrammarAccess grammar;
 
   public String getCopyrightNotice(final Resource resource)
   {
@@ -84,8 +84,9 @@ public class CopyrightNoticeProvider
         if (grammar.getML_COMMENTRule().equals(leafNode.getGrammarElement()))
         {
           final var comment = leafNode.getText();
-          return mlMiddlePattern.matcher(mlEndsPattern.matcher(comment).replaceAll(""))
-                  .replaceAll(System.lineSeparator()).strip();
+          return processVariables(
+                  mlMiddlePattern.matcher(mlEndsPattern.matcher(comment).replaceAll(""))
+                          .replaceAll(System.lineSeparator()).strip());
         }
         if (grammar.getSL_COMMENTRule().equals(leafNode.getGrammarElement()))
         {

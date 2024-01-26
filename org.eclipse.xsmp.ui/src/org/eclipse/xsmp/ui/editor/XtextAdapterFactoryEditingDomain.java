@@ -228,9 +228,9 @@ class XtextAdapterFactoryEditingDomain extends AdapterFactoryEditingDomain
   }
 
   /**
-   * Checks whether syntax validation should be disabled for {@code uri}.
-   * This is called when creating a resource for {@code uri}.
-   * e.g. when we're creating a resource for an external file
+   * Checks whether syntax validation should be disabled for {@code uri}. This is
+   * called when creating a resource for {@code uri}. e.g. when we're creating a
+   * resource for an external file
    *
    * @param uri
    *          the URI to the file we want to check

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EClass;
@@ -141,10 +140,10 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
             if (elem != null
                     && isValidTypeReference(model, XcataloguePackage.Literals.ATTRIBUTE__TYPE, p))
             {
-              final List<String> elemUsages = Stream
+              final var elemUsages = Stream
                       .concat(Stream.of(elem.eClass().getName()),
                               elem.eClass().getEAllSuperTypes().stream().map(EClass::getName))
-                      .collect(Collectors.toList());
+                      .toList();
 
               // filter allow multiple
               if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream().anyMatch(a -> {
@@ -186,13 +185,13 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   {
     final var obj = d.getEObjectOrProxy();
 
-    if (obj instanceof AttributeType)
+    if (obj instanceof final AttributeType attr)
     {
       if (obj.eIsProxy())
       {
         return Arrays.stream(d.getUserData("usage").split(" "));
       }
-      return ((AttributeType) obj).getUsage().stream();
+      return attr.getUsage().stream();
     }
     return Stream.of();
 
@@ -207,13 +206,13 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   {
     final var obj = d.getEObjectOrProxy();
 
-    if (obj instanceof AttributeType)
+    if (obj instanceof final AttributeType attr)
     {
       if (obj.eIsProxy())
       {
         return Boolean.parseBoolean(d.getUserData("allowMultiple"));
       }
-      return ((AttributeType) obj).isAllowMultiple();
+      return attr.isAllowMultiple();
     }
     return false;
   }

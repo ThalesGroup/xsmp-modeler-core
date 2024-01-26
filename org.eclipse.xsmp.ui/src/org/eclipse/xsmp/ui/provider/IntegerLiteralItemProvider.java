@@ -60,7 +60,8 @@ public class IntegerLiteralItemProvider extends ExpressionItemProvider
   // itemPropertyDescriptors.add(createItemPropertyDescriptor(
   // ((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
   // getResourceLocator(), getString("_UI_IntegerLiteral_value_feature"),
-  // getString("_UI_PropertyDescriptor_description", "_UI_IntegerLiteral_value_feature",
+  // getString("_UI_PropertyDescriptor_description",
+  // "_UI_IntegerLiteral_value_feature",
   // "_UI_IntegerLiteral_type"),
   // XcataloguePackage.Literals.INTEGER_LITERAL__VALUE, true, false, false,
   // ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
@@ -96,8 +97,9 @@ public class IntegerLiteralItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This handles model notifications by calling {@link #updateChildren} to update any cached
-   * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+   * This handles model notifications by calling {@link #updateChildren} to update
+   * any cached children and by creating a viewer notification, which it passes to
+   * {@link #fireNotifyChanged}.
    */
   @Override
   public void notifyChanged(Notification notification)
@@ -117,8 +119,8 @@ public class IntegerLiteralItemProvider extends ExpressionItemProvider
   }
 
   /**
-   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that
-   * can be created under this object.
+   * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing
+   * the children that can be created under this object.
    */
   @Override
   protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
