@@ -21,22 +21,16 @@ jobs:
          with:
             run: mvn -B package --file pom.xml
 
-
-      -  name: Install npm dependencies
-         working-directory: org.eclipse.xsmp.vscode_extension
-         run: npm install -g @vscode/vsce
-
       -  name: Package VS Code Extension
          working-directory: org.eclipse.xsmp.vscode_extension
          run: |
             npm version ${{ github.ref_name }} --allow-same-version
             npm install
-            vsce package --out "target/xsmp-modeler.vsix"
+            node_modules/.bin/vsce package --out "target/xsmp-modeler-${{ github.ref_name }}.vsix"
 
       -  name: Rename output file
          run: |
             mv ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
-            mv ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler.vsix ${{ github.workspace }}/org.eclipse.xsmp.vscode_extension/target/xsmp-modeler-${{ github.ref_name }}.vsix
             mv ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli/target/org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
             mv ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli/target/org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
             mv ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli/target/org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar

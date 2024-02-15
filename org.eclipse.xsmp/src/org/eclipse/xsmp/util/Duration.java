@@ -63,9 +63,9 @@ public final class Duration extends Int64
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Duration)
+    if (obj instanceof final Duration duration)
     {
-      return value == ((Duration) obj).value;
+      return value == duration.value;
     }
     return false;
   }

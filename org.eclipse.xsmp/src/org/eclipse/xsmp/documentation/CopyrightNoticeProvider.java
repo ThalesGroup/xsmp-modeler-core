@@ -10,12 +10,15 @@
 ******************************************************************************/
 package org.eclipse.xsmp.documentation;
 
-import java.text.DateFormat;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.services.XsmpcoreGrammarAccess;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -81,20 +84,25 @@ public class CopyrightNoticeProvider
         {
           break;
         }
-        if (grammar.getML_COMMENTRule().equals(leafNode.getGrammarElement()))
+        if (!(leafNode.getGrammarElement() instanceof final AbstractRule rule))
+        {
+          continue;
+        }
+
+        if (grammar.getML_COMMENTRule().getName().equals(rule.getName()))
         {
           final var comment = leafNode.getText();
           return processVariables(
                   mlMiddlePattern.matcher(mlEndsPattern.matcher(comment).replaceAll(""))
                           .replaceAll(System.lineSeparator()).strip());
         }
-        if (grammar.getSL_COMMENTRule().equals(leafNode.getGrammarElement()))
+        if (grammar.getSL_COMMENTRule().getName().equals(rule.getName()))
         {
           final var comment = new StringBuilder()
                   .append(slPattern.matcher(leafNode.getText()).replaceAll(""));
 
           var sibling = leafNode.getNextSibling();
-          while (sibling != null && grammar.getSL_COMMENTRule().equals(sibling.getGrammarElement()))
+          while (sibling != null && rule.equals(sibling.getGrammarElement()))
           {
             comment.append(slPattern.matcher(sibling.getText()).replaceAll(""));
             sibling = sibling.getNextSibling();
@@ -110,12 +118,11 @@ public class CopyrightNoticeProvider
 
   String processVariables(String input)
   {
-    final var date = new java.util.Date();
-    return input.replace("${year}", Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
+    final var zdt = ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+    return input.replace("${year}", Integer.toString(zdt.getYear()))
             .replace("${user}", System.getProperty("user.name"))
-            .replace("${time}", DateFormat.getTimeInstance().format(date))
-            .replace("${date}", DateFormat.getDateInstance().format(date));
-
+            .replace("${time}", zdt.toLocalTime().truncatedTo(ChronoUnit.SECONDS).toString())
+            .replace("${date}", zdt.toLocalDate().toString());
   }
 
 }

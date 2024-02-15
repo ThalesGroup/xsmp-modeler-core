@@ -123,7 +123,6 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
     catch (final FileNotFoundException e)
     {
       addSourceFolder(".");
-      e.printStackTrace();
     }
     catch (final JsonIOException | JsonSyntaxException e)
     {
