@@ -141,7 +141,7 @@
 		"fs-extra": "^11.2.0",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
-		"vscode-languageclient": "^8.1.0",
+		"vscode-languageclient": "^9.0.1",
 		"vue": "^3.3.4",
 		"vue-loader": "^17.4.2",
 		"vue-style-loader": "^4.1.3",
