@@ -122,7 +122,7 @@
 		"@iconify/vue": "^4.1.1",
 		"@types/fs-extra": "^11.0.4",
 		"@types/node": "^20.11.20",
-		"@types/vscode": "^1.67.0",
+		"@types/vscode": "^1.87.0",
 		"@vscode/test-electron": "^2.3.9",
 		"@vscode/vsce": "^2.24.0",
 		"bulma": "^0.9.4",
