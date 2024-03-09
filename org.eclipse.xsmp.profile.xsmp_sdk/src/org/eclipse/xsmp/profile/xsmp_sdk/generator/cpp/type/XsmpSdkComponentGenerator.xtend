@@ -100,6 +100,38 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
         '''
     }
 
+    override CharSequence constructorDeclaration(Component it, boolean useGenPattern) {
+        val name = name(useGenPattern)
+        '''
+            // ------------------------------------------------------------------------------------
+            // -------------------------- Constructors/Destructor --------------------------
+            // ------------------------------------------------------------------------------------
+            
+            
+            /// Constructor setting name, description, parent and simulator.
+            /// @param name Name of new model instance.
+            /// @param description Description of new model instance.
+            /// @param parent Parent of new model instance.
+            /// @param simulator The simulator instance.
+            «name»(
+                    ::Smp::String8 name,
+                    ::Smp::String8 description,
+                    ::Smp::IComposite* parent,
+                    ::Smp::ISimulator* simulator);
+            /// deleted copy constructor
+            «name»(const «name»&) = delete;
+            /// deleted move constructor
+            «name»(«name»&&) = delete;
+            /// deleted copy assignment
+            «name»& operator=(const «name»&) = delete;
+            /// deleted move assignment
+            «name»& operator=(«name»&&) = delete;
+            
+            /// Virtual destructor to release memory.
+            ~«name»() override = default;
+        '''
+    }
+
     override protected generateHeaderGenBody(Component it, boolean useGenPattern) {
         '''
             «IF useGenPattern»
@@ -171,18 +203,11 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
             «name(useGenPattern)»::«name(useGenPattern)»(
                 ::Smp::String8 name,
                 ::Smp::String8 description,
-                ::Smp::IObject* parent,
+                ::Smp::IComposite* parent,
                 ::Smp::ISimulator* simulator) «FOR i : initializerList(useGenPattern) BEFORE ": \n" SEPARATOR ", "»«i»«ENDFOR»
             {
                 «FOR f : member»
                     «construct(f, useGenPattern)»
-                «ENDFOR»
-            }
-            
-            /// Virtual destructor that is called by inherited classes as well.
-            «name(useGenPattern)»::~«name(useGenPattern)»() {
-                «FOR f : member»
-                    «f.finalize»
                 «ENDFOR»
             }
             
