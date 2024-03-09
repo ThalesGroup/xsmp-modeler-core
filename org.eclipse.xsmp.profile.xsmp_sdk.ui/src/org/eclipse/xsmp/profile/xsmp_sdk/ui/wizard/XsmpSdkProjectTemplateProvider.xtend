@@ -98,15 +98,18 @@ final class XsmpProject {
                 #   HOMEPAGE_URL ""
                     LANGUAGES CXX)
                 
-                include(FetchContent)
-                FetchContent_Declare(
-                    xsmp-sdk
-                    GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
-                    GIT_TAG        main # replace with a specific tag
-                )
-                
-                FetchContent_MakeAvailable(xsmp-sdk)
-                list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
+                find_package(xsmp-sdk QUIET)
+                if(NOT xsmp-sdk_FOUND ) 
+                    message(STATUS "xsmp-sdk is not installed, downloading it.")
+                    include(FetchContent)
+                    FetchContent_Declare(
+                        xsmp-sdk
+                        GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
+                        GIT_TAG        main # replace with a specific tag
+                    )
+                    FetchContent_MakeAvailable(xsmp-sdk)
+                    list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
+                endif()
                 
                 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
                 
