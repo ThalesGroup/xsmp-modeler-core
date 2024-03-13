@@ -23,13 +23,13 @@ public class SmpExecutableExtensionFactory extends AbstractGuiceAwareExecutableE
   @Override
   protected Bundle getBundle()
   {
-    return FrameworkUtil.getBundle(SmpUIPlugin.class);
+    return FrameworkUtil.getBundle(SmpActivator.class);
   }
 
   @Override
   protected Injector getInjector()
   {
-    final var activator = SmpUIPlugin.getInstance();
+    final var activator = SmpActivator.getInstance();
     return activator != null ? activator.getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT) : null;
   }
 

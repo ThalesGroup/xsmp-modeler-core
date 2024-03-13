@@ -20,7 +20,7 @@ public class EsaCdkExtension implements ExtensionProvider
   @Override
   public Injector getInjector(String languageName)
   {
-    final var activator = EsaCdkUIPlugin.getInstance();
+    final var activator = EsaCdkActivator.getInstance();
     return activator != null ? activator.getInjector(languageName) : null;
   }
 }

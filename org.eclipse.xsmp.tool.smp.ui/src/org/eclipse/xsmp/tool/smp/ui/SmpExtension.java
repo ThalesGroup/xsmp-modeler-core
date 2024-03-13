@@ -20,7 +20,7 @@ public class SmpExtension implements ExtensionProvider
   @Override
   public Injector getInjector(String languageName)
   {
-    final var activator = SmpUIPlugin.getInstance();
+    final var activator = SmpActivator.getInstance();
     return activator != null ? activator.getInjector(languageName) : null;
   }
 }

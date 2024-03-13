@@ -20,7 +20,7 @@ public class XsmpSdkExtension implements ExtensionProvider
   @Override
   public Injector getInjector(String languageName)
   {
-    final var activator = XsmpSdkUIPlugin.getInstance();
+    final var activator = XsmpSdkActivator.getInstance();
     return activator != null ? activator.getInjector(languageName) : null;
   }
 }

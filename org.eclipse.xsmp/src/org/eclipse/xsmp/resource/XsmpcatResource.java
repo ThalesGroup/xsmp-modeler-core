@@ -27,7 +27,7 @@ public class XsmpcatResource extends LazyLinkingResource
   protected boolean isUnresolveableProxyCacheable(Triple<EObject, EReference, INode> triple)
   {
     // do not cache unresolveable proxy
-    return false;
+    return true;
   }
 
 }

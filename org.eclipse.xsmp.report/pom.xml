@@ -30,19 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.forms</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xsmp</groupId>
 			<artifactId>org.eclipse.xsmp.generator.cpp</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.design</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

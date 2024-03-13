@@ -23,13 +23,13 @@ public class EsaCdkExecutableExtensionFactory extends AbstractGuiceAwareExecutab
   @Override
   protected Bundle getBundle()
   {
-    return FrameworkUtil.getBundle(EsaCdkUIPlugin.class);
+    return FrameworkUtil.getBundle(EsaCdkActivator.class);
   }
 
   @Override
   protected Injector getInjector()
   {
-    final var activator = EsaCdkUIPlugin.getInstance();
+    final var activator = EsaCdkActivator.getInstance();
     return activator != null ? activator.getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT) : null;
   }
 

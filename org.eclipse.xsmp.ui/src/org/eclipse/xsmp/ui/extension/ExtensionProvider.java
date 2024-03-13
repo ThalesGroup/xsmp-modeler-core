@@ -15,8 +15,11 @@ import com.google.inject.Injector;
 public interface ExtensionProvider
 {
   /**
+   * Get the injector associated to a language
+   *
    * @param languageName
-   * @return the injector
+   *          the language name
+   * @return the injector associated to the language
    */
   Injector getInjector(String languageName);
 }

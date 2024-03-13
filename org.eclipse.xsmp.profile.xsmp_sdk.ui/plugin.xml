@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension
-         point="org.eclipse.xsmp.ui.profile">
-      <factory
+    <extension
+        point="org.eclipse.xsmp.ui.profile">
+        <factory
             id="org.eclipse.xsmp.profile.xsmp_sdk"
             provider="org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkExtension"
             name="Xsmp SDK Profile">
-      </factory>
-   </extension>
-    <extension point="org.eclipse.xtext.builder.participant">
-		<participant
-			class="org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="xsmpcat"/>
-	</extension>
-		<extension
-		point="org.eclipse.xtext.ui.projectTemplate">
-		<projectTemplateProvider
-			class="org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkExecutableExtensionFactory:org.eclipse.xsmp.profile.xsmp_sdk.ui.wizard.XsmpSdkProjectTemplateProvider"
-			grammarName="org.eclipse.xsmp.Xsmpcat">
-		</projectTemplateProvider>
-	</extension>
+        </factory>
+    </extension>
+    <extension
+        point="org.eclipse.xtext.ui.projectTemplate">
+        <projectTemplateProvider
+            class="org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkExecutableExtensionFactory:org.eclipse.xsmp.profile.xsmp_sdk.ui.wizard.XsmpSdkProjectTemplateProvider"
+            grammarName="org.eclipse.xsmp.Xsmpcat">
+        </projectTemplateProvider>
+    </extension>
 </plugin>

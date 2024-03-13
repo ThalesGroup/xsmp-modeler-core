@@ -49,9 +49,4 @@
              name="SMP model generator">
        </factory>
     </extension>
-    <extension point="org.eclipse.xtext.builder.participant">
-		<participant
-			class="org.eclipse.xsmp.tool.smp.ui.SmpExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="xsmpcat"/>
-	</extension>
 </plugin>

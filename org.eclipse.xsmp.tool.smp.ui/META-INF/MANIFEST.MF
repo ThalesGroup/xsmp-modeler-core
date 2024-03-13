@@ -6,7 +6,7 @@ Bundle-Vendor: Thales Alenia Space
 Bundle-Version: 1.1.0.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.tool.smp.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.xsmp.tool.smp.ui.SmpUIPlugin
+Bundle-Activator: org.eclipse.xsmp.tool.smp.ui.SmpActivator
 Require-Bundle: org.eclipse.xsmp.tool.smp;visibility:=reexport,
  org.eclipse.xsmp.ui,
  org.eclipse.xtext.builder,

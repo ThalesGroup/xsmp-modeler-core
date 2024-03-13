@@ -13,7 +13,7 @@ package org.eclipse.xsmp.ui.extension;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
-import org.eclipse.xsmp.ui.XsmpUIPlugin;
+import org.eclipse.xsmp.ui.internal.XsmpActivator;
 
 import com.google.inject.Injector;
 
@@ -44,7 +44,7 @@ public final class Extension
   public Extension(String id, String name, String description)
   {
     this(id, name, description, languageName -> {
-      final var activator = XsmpUIPlugin.getInstance();
+      final var activator = XsmpActivator.getInstance();
       return activator != null ? activator.getInjector(languageName) : null;
     });
   }

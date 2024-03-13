@@ -23,13 +23,13 @@ public class PythonExecutableExtensionFactory extends AbstractGuiceAwareExecutab
   @Override
   protected Bundle getBundle()
   {
-    return FrameworkUtil.getBundle(PythonUIPlugin.class);
+    return FrameworkUtil.getBundle(PythonActivator.class);
   }
 
   @Override
   protected Injector getInjector()
   {
-    final var activator = PythonUIPlugin.getInstance();
+    final var activator = PythonActivator.getInstance();
     return activator != null ? activator.getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT) : null;
   }
 

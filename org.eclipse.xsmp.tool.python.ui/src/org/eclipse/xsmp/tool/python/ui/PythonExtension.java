@@ -20,7 +20,7 @@ public class PythonExtension implements ExtensionProvider
   @Override
   public Injector getInjector(String languageName)
   {
-    final var activator = PythonUIPlugin.getInstance();
+    final var activator = PythonActivator.getInstance();
     return activator != null ? activator.getInjector(languageName) : null;
   }
 }

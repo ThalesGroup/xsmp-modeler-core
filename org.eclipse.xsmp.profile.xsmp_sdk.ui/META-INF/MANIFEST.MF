@@ -27,4 +27,4 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.ui.codemining;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.profile.xsmp_sdk.ui
-Bundle-Activator: org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkUIPlugin
+Bundle-Activator: org.eclipse.xsmp.profile.xsmp_sdk.ui.XsmpSdkActivator

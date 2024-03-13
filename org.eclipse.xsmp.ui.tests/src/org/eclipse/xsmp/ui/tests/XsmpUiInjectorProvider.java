@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.tests;
 
-import org.eclipse.xsmp.ui.XsmpUIPlugin;
 import org.eclipse.xsmp.ui.internal.XsmpActivator;
 import org.eclipse.xtext.testing.IInjectorProvider;
 
@@ -22,7 +21,7 @@ public class XsmpUiInjectorProvider implements IInjectorProvider
   @Override
   public Injector getInjector()
   {
-    return XsmpUIPlugin.getInstance().getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT);
+    return XsmpActivator.getInstance().getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT);
   }
 
 }

@@ -23,13 +23,13 @@ public class XsmpSdkExecutableExtensionFactory extends AbstractGuiceAwareExecuta
   @Override
   protected Bundle getBundle()
   {
-    return FrameworkUtil.getBundle(XsmpSdkUIPlugin.class);
+    return FrameworkUtil.getBundle(XsmpSdkActivator.class);
   }
 
   @Override
   protected Injector getInjector()
   {
-    final var activator = XsmpSdkUIPlugin.getInstance();
+    final var activator = XsmpSdkActivator.getInstance();
     return activator != null ? activator.getInjector(XsmpActivator.ORG_ECLIPSE_XSMP_XSMPCAT) : null;
   }
 
