@@ -132,10 +132,13 @@ export function activate(context: ExtensionContext) {
             synchronize: {
                 fileEvents: workspace.createFileSystemWatcher('**/*.xsmpcat'),
             },
+            markdown: {
+                isTrusted: true, supportHtml: true
+            }
         };
+        
         // Create the language client and start the client.
         lc = new LanguageClient('Xsmp Server', serverOptions, clientOptions);
-
 
         // Enable tracing (.Off, .Messages, Verbose)
         lc.setTrace(Trace.Verbose);

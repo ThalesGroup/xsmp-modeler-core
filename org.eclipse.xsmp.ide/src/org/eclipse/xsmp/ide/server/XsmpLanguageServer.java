@@ -116,7 +116,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.NotebookDocumentService;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
-import org.eclipse.xsmp.ide.hover.XsmpcatHoverService;
+import org.eclipse.xsmp.ide.hover.XsmpHoverService;
 import org.eclipse.xsmp.ide.server.XsmpBuildManager.Buildable;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -811,7 +811,7 @@ public class XsmpLanguageServer
   protected Hover hover(HoverParams params, CancelIndicator cancelIndicator)
   {
     final var uri = getURI(params);
-    final var hoverService = getService(uri, XsmpcatHoverService.class);
+    final var hoverService = getService(uri, XsmpHoverService.class);
     if (hoverService == null)
     {
       return IHoverService.EMPTY_HOVER;

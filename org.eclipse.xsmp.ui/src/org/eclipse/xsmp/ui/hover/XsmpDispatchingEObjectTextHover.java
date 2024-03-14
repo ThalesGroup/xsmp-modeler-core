@@ -73,14 +73,12 @@ public class XsmpDispatchingEObjectTextHover extends DispatchingEObjectTextHover
     if (result == null)
     {
       final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
-      if (tmp == null)
+      if (tmp != null)
       {
-        return null;
+        final var textRegion = tmp.getSecond();
+        return Tuples.create(tmp.getFirst(),
+                new Region(textRegion.getOffset(), textRegion.getLength()));
       }
-
-      final var textRegion = tmp.getSecond();
-      return Tuples.create(tmp.getFirst(),
-              (IRegion) new Region(textRegion.getOffset(), textRegion.getLength()));
     }
     return result;
   }

@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.ide.hover;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
@@ -21,13 +22,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class XsmpcatHoverService extends HoverService
+public class XsmpHoverService extends HoverService
 {
   @Inject
-  private XsmpcatKeywordHovers keywordHovers;
+  private XsmpKeywordAtOffsetHelper keywordHelper;
 
   @Inject
-  private XsmpKeywordAtOffsetHelper keywordHelper;
+  private IKeywordHovers keywordHovers;
 
   @Override
   public String getContents(EObject element)
@@ -36,7 +37,23 @@ public class XsmpcatHoverService extends HoverService
     {
       return keywordHovers.hoverText(keyword);
     }
-    return super.getContents(element).replace("\n", "\n\n");
+
+    final var documentation = super.getContents(element);
+
+    if (element instanceof final NamedElement namedElement)
+    {
+      final var buffer = new StringBuilder();
+      buffer.append(element.eClass().getName());
+      final var label = namedElement.getName();
+      if (label != null)
+      {
+        buffer.append(" <b>").append(label).append("</b><br />");
+      }
+      buffer.append(documentation);
+      return buffer.toString();
+    }
+
+    return documentation;
   }
 
   @Override

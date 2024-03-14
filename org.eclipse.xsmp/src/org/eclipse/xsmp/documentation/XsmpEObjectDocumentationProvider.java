@@ -33,6 +33,29 @@ public class XsmpEObjectDocumentationProvider extends MultiLineCommentDocumentat
   @Inject
   private XsmpUtil xsmpUtil;
 
+  private String cleanHtml(String content)
+  {
+    // if the format is html, extract text between body tags
+    while (true)
+    {
+      var start = content.indexOf("<html>");
+      var end = content.indexOf("<body>");
+      if (start == -1 || end == -1)
+      {
+        break;
+      }
+      content = content.replace(content.substring(start, end + 6), "");
+      start = content.indexOf("</body>");
+      end = content.indexOf("</html>");
+      if (start != -1 && end != -1)
+      {
+        content = content.replace(content.substring(start, end + 7), "");
+      }
+    }
+
+    return content;
+  }
+
   /**
    * Return the description in case of a NamedElement or a BuiltIn
    */
@@ -41,11 +64,11 @@ public class XsmpEObjectDocumentationProvider extends MultiLineCommentDocumentat
   {
     if (o instanceof final Parameter parameter)
     {
-      return parameter.getDescription();
+      return cleanHtml(parameter.getDescription());
     }
     if (o instanceof final NamedElement elem)
     {
-      return XsmpdocContentAccess.getHTMLContent(elem);
+      return cleanHtml(XsmpdocContentAccess.getHTMLContent(elem));
     }
     if (o instanceof final BuiltInConstant cst)
     {

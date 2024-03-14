@@ -19,6 +19,8 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
   void testHover_1()
   {
     testHover((HoverTestConfiguration it) -> {
+      // Include ECSS-SMP library
+      TestUtils.loadEcssSmpLibrary(it);
       final var model = """
               catalogue Catalogue1
 
@@ -30,15 +32,12 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
       final var expectedHover = """
               [[2, 0] .. [2, 9]]
               kind: markdown
-              value: `namespace <name> { }`
-
-              A **Namespace** is a primary ordering mechanism.
-
-              A **namespace** may contain other namespaces (nested namespaces), and does typically contain types.
-
-              In SMDL, namespaces are contained within a **Catalogue** (either directly, or within another namespace in a catalogue).
-
-              All sub-elements of a namespace (namespaces and types) must have unique names.
+              value: <p><code><strong><span style="color: #7f0055;">namespace</span></strong> <em>name</em> { } </code></p>
+              <br/>
+              A <b>Namespace</b> is a primary ordering mechanism. <br />
+              <p>A <b>namespace</b> may contain other namespaces (nested namespaces), and does typically contain types.
+              <br />In SMDL, namespaces are contained within a <b>Catalogue</b> (either directly, or within another namespace in a catalogue).
+              <br />All sub-elements of a namespace (namespaces and types) must have unique names.</p>
               """;
       it.setExpectedHover(expectedHover);
     });
@@ -70,7 +69,7 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
       final var expectedHover = """
               [[7, 14] .. [7, 18]]
               kind: markdown
-              value: boolean with true or false<dl><dt>@id</dt><dd>Smp.Bool</dd></dl>
+              value: PrimitiveType <b>Bool</b><br />boolean with true or false
                             """;
       it.setExpectedHover(expectedHover);
     });
@@ -106,7 +105,7 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
       final var expectedHover = """
               [[14, 14] .. [14, 25]]
               kind: markdown
-              value: Description of my integer<dl></dl>
+              value: Integer <b>TestInteger</b><br />Description of my integer
               """;
       it.setExpectedHover(expectedHover);
     });

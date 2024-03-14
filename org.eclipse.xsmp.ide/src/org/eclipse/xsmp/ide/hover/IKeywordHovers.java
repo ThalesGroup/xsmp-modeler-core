@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -8,11 +8,11 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ui.hover;
+package org.eclipse.xsmp.ide.hover;
 
 import org.eclipse.xtext.Keyword;
 
 public interface IKeywordHovers
 {
-  String hoverText(Keyword keyword);
+  String hoverText(Keyword k);
 }

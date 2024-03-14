@@ -28,9 +28,9 @@ public class XsmpdocContentAccess
 
   private static final String BLOCK_TAG_END = "</dl>"; //$NON-NLS-1$
 
-  private static final String BLOCK_TAG_TITLE_START = "<dt>"; //$NON-NLS-1$
+  private static final String BLOCK_TAG_TITLE_START = "<dt><strong>"; //$NON-NLS-1$
 
-  private static final String BLOCK_TAG_TITLE_END = "</dt>"; //$NON-NLS-1$
+  private static final String BLOCK_TAG_TITLE_END = "</strong></dt>"; //$NON-NLS-1$
 
   private static final String BLOCK_TAG_ENTRY_START = "<dd>"; //$NON-NLS-1$
 
@@ -47,28 +47,19 @@ public class XsmpdocContentAccess
 
   private final Documentation xsmpcatdoc;
 
-  private StringBuilder fBuf;
-
-  private int fLiteralContent;
+  private final StringBuilder fBuf = new StringBuilder();
 
   private XsmpdocContentAccess(NamedElement element)
   {
-
     fElement = element;
-
     xsmpcatdoc = element.getMetadatum().getXsmpcatdoc();
   }
 
   private String toHTML()
   {
-    fBuf = new StringBuilder();
-    fLiteralContent = 0;
-
     elementToHTML();
 
-    final var result = fBuf.toString();
-    fBuf = null;
-    return result;
+    return fBuf.toString();
   }
 
   private void elementToHTML()
@@ -78,17 +69,17 @@ public class XsmpdocContentAccess
     TagElement returnTag = null;
     TagElement start = null;
 
-    final List<TagElement> usages = new ArrayList<>();
-    final List<TagElement> versions = new ArrayList<>(1);
-    final List<TagElement> creator = new ArrayList<>(0);
-    final List<TagElement> singlecast = new ArrayList<>(1);
-    final List<TagElement> date = new ArrayList<>(1);
-    final List<TagElement> unit = new ArrayList<>(1);
-    final List<TagElement> category = new ArrayList<>();
-    final List<TagElement> title = new ArrayList<>(1);
-    final List<TagElement> param = new ArrayList<>();
-    final List<TagElement> throwsTag = new ArrayList<>();
-    final List<TagElement> rest = new ArrayList<>();
+    final var usages = new ArrayList<TagElement>();
+    final var versions = new ArrayList<TagElement>(1);
+    final var creator = new ArrayList<TagElement>(0);
+    final var singlecast = new ArrayList<TagElement>(1);
+    final var date = new ArrayList<TagElement>(1);
+    final var unit = new ArrayList<TagElement>(1);
+    final var category = new ArrayList<TagElement>();
+    final var title = new ArrayList<TagElement>(1);
+    final var param = new ArrayList<TagElement>();
+    final var throwsTag = new ArrayList<TagElement>();
+    final var rest = new ArrayList<TagElement>();
 
     final var tags = xsmpcatdoc.tags();
     for (final TagElement tag : tags)
@@ -97,7 +88,6 @@ public class XsmpdocContentAccess
       if (tagName == null)
       {
         start = tag;
-
       }
       else
       {
@@ -148,6 +138,9 @@ public class XsmpdocContentAccess
           case "@category":
             category.add(tag);
             break;
+          case "@id":
+            // ignore id tags
+            break;
           default:
             rest.add(tag);
             break;
@@ -167,7 +160,7 @@ public class XsmpdocContentAccess
 
     String[] exceptionDescriptions = null;
 
-    if (fElement instanceof Operation fMethod)
+    if (fElement instanceof final Operation fMethod)
     {
       exceptionNames = new String[fMethod.getRaisedException().size()];
       exceptionDescriptions = new String[exceptionNames.length];
@@ -180,9 +173,9 @@ public class XsmpdocContentAccess
     }
 
     if (exceptionNames != null || !versions.isEmpty() || !param.isEmpty() || returnTag != null
-            || throwsTag != null || !creator.isEmpty() || !date.isEmpty() || !singlecast.isEmpty()
-            || !category.isEmpty() || !title.isEmpty() || !usages.isEmpty() || !unit.isEmpty()
-            || !rest.isEmpty() || fBuf.length() > 0)
+            || !throwsTag.isEmpty() || !creator.isEmpty() || !date.isEmpty()
+            || !singlecast.isEmpty() || !category.isEmpty() || !title.isEmpty() || !usages.isEmpty()
+            || !unit.isEmpty() || !rest.isEmpty())
     {
       fBuf.append(BLOCK_TAG_START);
       handleParameterTags(param);
@@ -265,16 +258,10 @@ public class XsmpdocContentAccess
 
   private void handleText(String text)
   {
-    if (fLiteralContent == 0)
-    {
-      fBuf.append(text);
-    }
-    else
-    {
-      appendEscaped(fBuf, text);
-    }
+    fBuf.append(text);
   }
 
+  @SuppressWarnings("unused")
   private static void appendEscaped(StringBuilder buf, String text)
   {
     var nextToCopy = 0;

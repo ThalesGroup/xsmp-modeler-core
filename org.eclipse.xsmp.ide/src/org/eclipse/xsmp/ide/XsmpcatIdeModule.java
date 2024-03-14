@@ -15,7 +15,9 @@ import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
 import org.eclipse.xsmp.ide.generator.XsmpGenerator;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ide.generator.XsmpShouldGenerate;
-import org.eclipse.xsmp.ide.hover.XsmpcatHoverService;
+import org.eclipse.xsmp.ide.hover.IKeywordHovers;
+import org.eclipse.xsmp.ide.hover.XsmpHoverService;
+import org.eclipse.xsmp.ide.hover.XsmpcatKeywordHovers;
 import org.eclipse.xsmp.ide.quickfix.XsmpcatIdeQuickfixProvider;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.IGenerator2;
@@ -65,7 +67,7 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
 
   public Class< ? extends IHoverService> bindIHoverService()
   {
-    return XsmpcatHoverService.class;
+    return XsmpHoverService.class;
   }
 
   public Class< ? extends IGenerator2> bindIGenerator2()
@@ -87,5 +89,10 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends IShouldGenerate> bindIShouldGenerate()
   {
     return XsmpShouldGenerate.class;
+  }
+
+  public Class< ? extends IKeywordHovers> bindIKeywordHovers()
+  {
+    return XsmpcatKeywordHovers.class;
   }
 }
