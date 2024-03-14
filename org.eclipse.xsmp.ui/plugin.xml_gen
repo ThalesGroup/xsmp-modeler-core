@@ -880,4 +880,472 @@
 			</enabledWhen>
 		</codeMiningProvider>
 	</extension>
+	<extension
+		point="org.eclipse.ui.editors">
+		<editor
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="xsmpasb"
+			id="org.eclipse.xsmp.Xsmpasb"
+			name="Xsmpasb Editor">
+		</editor>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
+			<activeWhen>
+				<reference
+					definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			commandId="org.eclipse.xsmp.Xsmpasb.validate">
+			<activeWhen>
+				<reference
+					definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<!-- copy qualified name -->
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
+			<activeWhen>
+				<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened" />
+			</activeWhen>
+		</handler>
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
+			<activeWhen>
+				<and>
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.XtextEditor.opened" />
+					<iterate>
+						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+					</iterate>
+				</and>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+			<and>
+				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="org.eclipse.xsmp.Xsmpasb"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+		<definition id="org.eclipse.xsmp.Xsmpasb.XtextEditor.opened">
+			<and>
+				<reference definitionId="isXtextEditorActive"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="org.eclipse.xsmp.Xsmpasb"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+	</extension>
+	<extension
+			point="org.eclipse.ui.preferencePages">
+		<page
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb"
+			name="Xsmpasb">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+		</page>
+		<page
+			category="org.eclipse.xsmp.Xsmpasb"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb.coloring"
+			name="Syntax Coloring">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+		</page>
+		<page
+			category="org.eclipse.xsmp.Xsmpasb"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb.templates"
+			name="Templates">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+		</page>
+	</extension>
+	<extension
+			point="org.eclipse.ui.propertyPages">
+		<page
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb"
+			name="Xsmpasb">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension
+		point="org.eclipse.ui.keywords">
+		<keyword
+			id="org.eclipse.xsmp.ui.keyword_Xsmpasb"
+			label="Xsmpasb"/>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Trigger expensive validation"
+			id="org.eclipse.xsmp.Xsmpasb.validate"
+			name="Validate">
+		</command>
+		<!-- copy qualified name -->
+		<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+		</command>
+		<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command
+				commandId="org.eclipse.xsmp.Xsmpasb.validate"
+				style="push"
+				tooltip="Trigger expensive validation">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<!-- copy qualified name -->
+		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="popup:org.eclipse.xtext.ui.outline?after=additions">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<reference definitionId="org.eclipse.xsmp.Xsmpasb.XtextEditor.opened" />
+						<iterate>
+							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+						</iterate>
+					</and>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			commandId="org.eclipse.xtext.ui.editor.FindReferences">
+			<activeWhen>
+				<reference
+					definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type
+			base-type="org.eclipse.core.runtime.text"
+			file-extensions="xsmpasb"
+			id="org.eclipse.xsmp.Xsmpasb.contenttype"
+			name="Xsmpasb File"
+			priority="normal">
+		</content-type>
+	</extension>
+	<!-- adding resource factories -->
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="xsmpasb">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+		<resourceServiceProvider
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			uriExtension="xsmpasb">
+		</resourceServiceProvider>
+	</extension>
+	<!-- marker definitions for org.eclipse.xsmp.Xsmpasb -->
+	<extension
+			id="xsmpasb.check.fast"
+			name="Xsmpasb Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.fast"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="xsmpasb.check.normal"
+			name="Xsmpasb Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.normal"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="xsmpasb.check.expensive"
+			name="Xsmpasb Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.expensive"/>
+		<persistent value="true"/>
+	</extension>
+	<extension point="org.eclipse.xtext.builder.participant">
+		<participant
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="xsmpasb"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="org.eclipse.xsmp.Xsmpasb"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb.compiler.preferencePage"
+			name="Compiler">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			category="org.eclipse.xsmp.Xsmpasb"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb.compiler.propertyPage"
+			name="Compiler">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
+			<command
+				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
+				id="org.eclipse.xsmp.Xsmpasb.OpenGeneratedCode"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
+			<activeWhen>
+				<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened" />
+			</activeWhen>
+		</handler>
+	</extension>
+	<!-- Quick Outline -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+			<activeWhen>
+				<reference
+					definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Open the quick outline."
+			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+			name="Quick Outline">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+				style="push"
+				tooltip="Open Quick Outline">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<!-- quickfix marker resolution generator for org.eclipse.xsmp.Xsmpasb -->
+	<extension
+			point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="org.eclipse.xsmp.ui.xsmpasb.check.fast">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="org.eclipse.xsmp.ui.xsmpasb.check.normal">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="org.eclipse.xsmp.ui.xsmpasb.check.expensive">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+	</extension>
+	<!-- Rename Refactoring -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
+			<activeWhen>
+				<reference
+					definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command commandId="org.eclipse.xtext.ui.refactoring.RenameElement"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.eclipse.xsmp.Xsmpasb.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="org.eclipse.xsmp.Xsmpasb"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="org.eclipse.xsmp.Xsmpasb.refactoring"
+			name="Refactoring">
+			<keywordReference id="org.eclipse.xsmp.ui.keyword_Xsmpasb"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.compare.contentViewers">
+		<viewer id="org.eclipse.xsmp.Xsmpasb.compare.contentViewers"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="xsmpasb">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="org.eclipse.xsmp.Xsmpasb.contenttype"
+			contentViewerId="org.eclipse.xsmp.Xsmpasb.compare.contentViewers" />
+	</extension>
+	<extension point="org.eclipse.compare.contentMergeViewers">
+		<viewer id="org.eclipse.xsmp.Xsmpasb.compare.contentMergeViewers"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="xsmpasb" label="Xsmpasb Compare">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="org.eclipse.xsmp.Xsmpasb.contenttype"
+			contentMergeViewerId="org.eclipse.xsmp.Xsmpasb.compare.contentMergeViewers" />
+	</extension>
+	<extension point="org.eclipse.ui.editors.documentProviders">
+		<provider id="org.eclipse.xsmp.Xsmpasb.editors.documentProviders"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+			extensions="xsmpasb">
+		</provider>
+	</extension>
+	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+			extension="xsmpasb"
+			type="text">
+		</fileTypes>
+	</extension>
+	<extension
+		point="org.eclipse.ui.newWizards">
+		<category id="org.eclipse.xsmp.ui.category" name="Xsmpasb">
+		</category>
+		<wizard
+			category="org.eclipse.xsmp.ui.category"
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xtext.ui.wizard.template.TemplateNewProjectWizard"
+			id="org.eclipse.xsmp.ui.wizard.XsmpasbNewProjectWizard"
+			name="Xsmpasb Project"
+			icon="icons/new_Xsmpasb_proj.gif"
+			project="true">
+		</wizard>
+	</extension>
+	<extension
+		point="org.eclipse.xtext.ui.projectTemplate">
+		<projectTemplateProvider
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.xsmp.ui.wizard.XsmpasbProjectTemplateProvider"
+			grammarName="org.eclipse.xsmp.Xsmpasb">
+		</projectTemplateProvider>
+	</extension>
+	<extension
+		point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
+			<newWizardShortcut id="org.eclipse.xsmp.ui.wizard.XsmpasbNewProjectWizard"/>
+		</perspectiveExtension>
+		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+			<newWizardShortcut id="org.eclipse.xsmp.ui.wizard.XsmpasbNewProjectWizard"/>
+		</perspectiveExtension>
+	</extension>
+	<!-- code mining -->
+	<extension point="org.eclipse.ui.workbench.texteditor.codeMiningProviders">
+		<codeMiningProvider
+			class="org.eclipse.xsmp.ui.XsmpasbExecutableExtensionFactory:org.eclipse.jface.text.codemining.ICodeMiningProvider"
+			id="org.eclipse.xsmp.Xsmpasb.CodeMiningProvider"
+			label="Xsmpasb Codemining">
+			<enabledWhen>
+				<with variable="editorInput">
+					<adapt type="org.eclipse.core.resources.IFile">
+						<test
+							property="org.eclipse.core.resources.contentTypeId"
+							value="org.eclipse.xsmp.Xsmpasb.contenttype">
+						</test>
+					</adapt>
+				</with>
+			</enabledWhen>
+		</codeMiningProvider>
+	</extension>
 </plugin>

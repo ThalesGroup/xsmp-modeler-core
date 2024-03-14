@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.model.xsmp.AbstractPath;
 import org.eclipse.xsmp.model.xsmp.Array;
 import org.eclipse.xsmp.model.xsmp.Association;
 import org.eclipse.xsmp.model.xsmp.Attribute;
@@ -47,6 +48,7 @@ import org.eclipse.xsmp.model.xsmp.NativeType;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
 import org.eclipse.xsmp.model.xsmp.ParameterDirectionKind;
+import org.eclipse.xsmp.model.xsmp.Path;
 import org.eclipse.xsmp.model.xsmp.PrimitiveType;
 import org.eclipse.xsmp.model.xsmp.Property;
 import org.eclipse.xsmp.model.xsmp.ReferenceType;
@@ -1202,6 +1204,21 @@ public class XsmpUtil
   public org.eclipse.xsmp.util.PrimitiveType getValue(Expression e)
   {
     return solver.getValue(e);
+  }
+
+  public static AbstractPath getLastSegment(AbstractPath path)
+  {
+    while (path instanceof final Path p)
+    {
+      if (p.getNext() == null)
+      {
+        break;
+      }
+      path = p.getNext();
+
+    }
+
+    return path;
   }
 
   public static String StringLiteralToString(String literal)
