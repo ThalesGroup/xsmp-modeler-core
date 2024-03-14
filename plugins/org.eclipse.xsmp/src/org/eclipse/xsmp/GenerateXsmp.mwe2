@@ -160,7 +160,34 @@ Workflow {
             }
         }
 
+        language = StandardLanguage {
+            name = "org.eclipse.xsmp.Xsmpasb"
+            fileExtensions = "xsmpasb"
+            referencedResource = "platform:/resource/${runtimeProjectName}/src/org/eclipse/xsmp/Xsmpcore.xtext"
+            serializer = {
+                generateStub = false
+            }
+
+            qualifiedNamesProvider = {}
+            scopeProvider = {
+                generateStub = true
+            }
+            formatter = {
+                generateStub = true
+            }
+            fragment = ui.codemining.CodeMiningFragment {
+                generateStub = true
+            }
+
+            junitSupport = {
+                junitVersion = "5"
+            }
+            projectWizard = {
+                generate = true
+            }
+        }
     }
+
     component = org.eclipse.emf.mwe2.ecore.EcoreGenerator auto-inject {
         genModel = "platform:/resource/${runtimeProjectName}/model/xsmp.genmodel"
         srcPath = "platform:/resource/${runtimeProjectName}/src"

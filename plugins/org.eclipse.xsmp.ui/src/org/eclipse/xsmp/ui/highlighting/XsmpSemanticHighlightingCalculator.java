@@ -20,6 +20,7 @@ import static org.eclipse.xsmp.model.xsmp.XsmpPackage.ENTRY_POINT;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.EVENT_SINK;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.EVENT_SOURCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.FIELD;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.INSTANCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.METADATUM;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.NAMED_ELEMENT_REFERENCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PARAMETER;
@@ -80,7 +81,7 @@ public class XsmpSemanticHighlightingCalculator extends DefaultSemanticHighlight
       case PARAMETER:
         highlightFeature(acceptor, object, NAMED_ELEMENT__NAME, PARAMETER_ID);
         break;
-      case FIELD, ASSOCIATION, CONSTANT, ENTRY_POINT, EVENT_SINK, EVENT_SOURCE, REFERENCE, CONTAINER, PROPERTY, ATTRIBUTE_TYPE:
+      case FIELD, ASSOCIATION, CONSTANT, ENTRY_POINT, EVENT_SINK, EVENT_SOURCE, REFERENCE, CONTAINER, PROPERTY, ATTRIBUTE_TYPE, INSTANCE:
         highlightFeature(acceptor, object, NAMED_ELEMENT__NAME, FIELD_ID);
         break;
       case NAMED_ELEMENT_REFERENCE:

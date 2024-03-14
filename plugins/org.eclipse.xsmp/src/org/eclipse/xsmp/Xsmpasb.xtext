@@ -1,0 +1,162 @@
+/*******************************************************************************
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+******************************************************************************/
+
+grammar org.eclipse.xsmp.Xsmpasb with org.eclipse.xsmp.Xsmpcore hidden(WS, ML_COMMENT, SL_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://org.eclipse.xsmp/xsmp"
+
+Assembly:
+    metadatum=Metadatum
+    'assembly' name=ValidID
+    (member+=Namespace)*;
+
+@Override
+NamespaceMember returns ecore::EObject:
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({Namespace.metadatum=current} 'namespace' name=ValidID?
+    (member+=NestedNamespace | '{' (member+=NamespaceMember)* '}')
+    |
+    {Simulator.metadatum=current} 'simulator' name=ValidID ('extends' base+=[Simulator|QualifiedName] (','
+    base+=[Simulator|QualifiedName])*)? (('epoch' epoch=Expression)? & ('mission' missionStart=Expression)?)
+    '{' (member+=Member)* '}'
+    |
+    {Factory.metadatum=current} 'factory' name=ValidID 'extends'
+    type=TypeReference '{' (member+=Member)* '}');
+
+TypeReference:
+    ComponentTypeReference | FactoryTypeReference | UuidTypeReference;
+
+ComponentTypeReference:
+    catalogue=[Catalogue|ValidID] '::' component=[Component|QualifiedName];
+
+FactoryTypeReference:
+    factory=[Factory|QualifiedName];
+
+UuidTypeReference:
+    uuid=STRING_LITERAL;
+
+LoadDirective:
+    'load' (catalogue=[Catalogue|ValidID] | name=STRING_LITERAL);
+
+Schedule:
+    'schedule' entryPoint=AbstractPath ('immediate' | kind=TimeKind time=Expression
+    ('cycle' cycle=Expression ('repeat' repeat=Expression)?)?);
+
+enum TimeKind:
+    Simulation='simulation' | Epoch='epoch' | Mission='mission' | Zulu='zulu';
+
+InitEntryPoint:
+    'init' entryPoint=AbstractPath;
+
+Configuration:
+    'set' field=AbstractPath '='? value=Expression;
+
+Connection:
+    'connect' from=AbstractPath '=>'? to=AbstractPath;
+
+Subscribtion:
+    'subscribe' entryPoint=AbstractPath event=STRING_LITERAL;
+
+Instance:
+    'instance' name=ValidID 'extends' type=TypeReference
+    ('{' (member+=Member)* '}')?;
+
+Member returns ecore::EObject:
+    {Metadatum}
+    documentation=ML_DOCUMENTATION?
+    metadata+=Attribute*
+    ({InstanceDeclaration.metadatum=current}
+    container=AbstractPath '+=' instance=Instance
+    |
+    {Task.metadatum=current}
+    'task' name=ValidID ('{' (member+=TaskMember)* '}')?)
+    |
+    LoadDirective | Schedule | InitEntryPoint | Configuration |
+    Connection |
+    Subscribtion;
+
+// call an operation or an entrypoint or a sub task
+Call:
+    'call' element=AbstractPath ('(' (argument+=Expression (',' argument+=Expression)*)? ')')?;
+
+Push:
+    'push' field=AbstractPath;
+
+Transfer:
+    'transfer' from=AbstractPath '=>'? to=AbstractPath;
+
+EmitGlobalEvent:
+    'emit' name=STRING_LITERAL async?='async'?;
+
+StoreRestoreAction:
+    ({StoreRestoreAction} store?='store' | 'restore') fileName=Expression;
+
+WaitAction:
+    {WaitAction} 'wait' =>duration=Expression?;
+
+HoldAction:
+    {HoldAction} 'hold' immediate?='immediate'?;
+
+ExitAction:
+    {ExitAction} 'exit';
+
+AbortAction:
+    {AbortAction} 'abort';
+
+LogAction:
+    (kind=LogMessageKind | 'log' kindName=STRING_LITERAL) message=Expression;
+
+enum LogMessageKind:
+    debug='debug' | info='info' | warning='warning' | error='error' | event='event';
+
+FailureAction:
+    ('fail' | unfail?='unfail') failure=AbstractPath;
+
+ForcibleAction:
+    'force' field=AbstractPath value=Expression
+    |
+    ('freeze' | unforce?='unforce') field=AbstractPath;
+
+TaskMember returns ecore::EObject:
+    Call | Push | Transfer | EmitGlobalEvent | Configuration | StoreRestoreAction | WaitAction | HoldAction |
+    ExitAction | AbortAction | LogAction | FailureAction | ForcibleAction;
+
+AbstractPath:
+    Path | StringPath | ThisPath;
+
+DotSeparator:
+    '.';
+
+ThisPath returns Path:
+    {Path} 'this' (DotSeparator next=(Path | StringPath))?;
+
+StringPath:
+    name=STRING_LITERAL;
+
+Path:
+    segment=[Resolvable|ResolvableID] ('[' index+=Expression ']')*
+    (DotSeparator next=(Path | StringPath))?;
+
+ContainerAndReferencePrefix:
+    '$';
+
+ResolvableID:
+    ContainerAndReferencePrefix? ValidID;
+
+@Override
+ValidID:
+    ID | 'assembly' | 'simulator' | 'factory' | 'extends' | 'load' | 'schedule' | 'simulation' | 'epoch' | 'mission' |
+    'zulu' | 'immediate' | 'cycle' | 'repeat' | 'init' | 'call' | 'subscribe' | 'connect' | 'set' | 'instance' | 'push'
+    | 'transfer' | 'emit' | 'task' | 'store' | 'restore' | 'wait' | 'hold' | 'exit' | 'abort' | 'log' | 'debug' | 'info'
+    | 'warning' | 'error' | 'event' | 'fail' | 'unfail' | 'force' | 'freeze' | 'unforce';
