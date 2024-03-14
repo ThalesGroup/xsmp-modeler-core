@@ -16,6 +16,7 @@ import org.eclipse.xsmp.model.xsmp.Document;
 import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.Path;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.validation.NamesAreUniqueValidationHelper;
@@ -58,6 +59,10 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
     else if (first instanceof Operation && second instanceof Operation)
     {
       result = description.getUserData("sig").equals(candidate.getUserData("sig"));
+    }
+    else if (first instanceof Path || second instanceof Path)
+    {
+      result = false;
     }
     // parameters inside the same operation must have different names
     else if (first instanceof Parameter && second instanceof Parameter)

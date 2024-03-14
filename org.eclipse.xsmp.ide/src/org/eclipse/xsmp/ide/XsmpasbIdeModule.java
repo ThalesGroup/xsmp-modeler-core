@@ -1,5 +1,4 @@
 /*******************************************************************************
-
 * Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -9,22 +8,18 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.resource;
+package org.eclipse.xsmp.ide;
 
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+import org.eclipse.xsmp.ide.hover.IKeywordHovers;
+import org.eclipse.xsmp.ide.hover.XsmpasbKeywordHovers;
 
 /**
- * A customized resource that do not cache unresolvable proxies
+ * Use this class to register ide components.
  */
-public class XsmpcatResource extends LazyLinkingResource
+public class XsmpasbIdeModule extends AbstractXsmpasbIdeModule
 {
-  /*
-   * @Override
-   * protected boolean isUnresolveableProxyCacheable(Triple<EObject, EReference, INode> triple)
-   * {
-   * // do not cache unresolveable proxy
-   * return true;
-   * }
-   */
-
+  public Class< ? extends IKeywordHovers> bindIKeywordHovers()
+  {
+    return XsmpasbKeywordHovers.class;
+  }
 }

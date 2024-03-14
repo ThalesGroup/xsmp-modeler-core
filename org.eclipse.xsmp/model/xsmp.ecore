@@ -379,4 +379,159 @@
   <eClassifiers xsi:type="ecore:EClass" name="IncludePath">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Assembly" eSuperTypes="#//Document #//NamedElementWithMembers"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeReference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ComponentTypeReference" eSuperTypes="#//TypeReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catalogue" eType="#//Catalogue"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Component"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FactoryTypeReference" eSuperTypes="#//TypeReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="factory" eType="#//Factory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UuidTypeReference" eSuperTypes="#//TypeReference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="uuid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractInstance" abstract="true" eSuperTypes="#//NamedElementWithMembers">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//TypeReference"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InstanceDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metadatum" eType="#//Metadatum"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="container" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Instance"
+        containment="true" resolveProxies="false" eOpposite="#//Instance/declaration"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Instance" eSuperTypes="#//AbstractInstance #//Resolvable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="declaration" lowerBound="1"
+        eType="#//InstanceDeclaration" changeable="false" transient="true" derived="true"
+        resolveProxies="false" eOpposite="#//InstanceDeclaration/instance"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Factory" eSuperTypes="#//AbstractInstance"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Simulator" eSuperTypes="#//NamedElementWithMembers">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="models" eType="#//Container"
+        changeable="false" transient="true" derived="true" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="services" eType="#//Container"
+        changeable="false" transient="true" derived="true" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="base" upperBound="-1" eType="#//Simulator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="epoch" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="missionStart" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoadDirective">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catalogue" eType="#//Catalogue"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Configuration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Connection">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractPath" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StringPath" eSuperTypes="#//AbstractPath">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Path" eSuperTypes="#//AbstractPath">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="segment" eType="#//Resolvable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="index" upperBound="-1"
+        eType="#//Expression" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Schedule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoint" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//TimeKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="time" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cycle" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="repeat" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TimeKind">
+    <eLiterals name="Simulation"/>
+    <eLiterals name="Mission" value="1"/>
+    <eLiterals name="Epoch" value="2"/>
+    <eLiterals name="Zulu" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InitEntryPoint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoint" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//NamedElementWithMembers #//Resolvable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Push">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transfer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Call">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="argument" upperBound="-1"
+        eType="#//Expression" containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LogAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//LogMessageKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kindName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="LogMessageKind">
+    <eLiterals name="debug"/>
+    <eLiterals name="info" value="1"/>
+    <eLiterals name="warning" value="2"/>
+    <eLiterals name="error" value="3"/>
+    <eLiterals name="event" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StoreRestoreAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="store" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fileName" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WaitAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HoldAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="immediate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExitAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbortAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FailureAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unfail" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="failure" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ForcibleAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Expression"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unforce" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmitGlobalEvent">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="async" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Subscribtion">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoint" eType="#//AbstractPath"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

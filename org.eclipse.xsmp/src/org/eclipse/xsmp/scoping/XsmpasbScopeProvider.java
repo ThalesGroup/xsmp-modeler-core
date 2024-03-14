@@ -1,5 +1,4 @@
 /*******************************************************************************
-
 * Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -9,22 +8,13 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.resource;
-
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+package org.eclipse.xsmp.scoping;
 
 /**
- * A customized resource that do not cache unresolvable proxies
+ * This class contains custom scoping description.
+ * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
+ * on how and when to use it.
  */
-public class XsmpcatResource extends LazyLinkingResource
+public class XsmpasbScopeProvider extends AbstractXsmpasbScopeProvider
 {
-  /*
-   * @Override
-   * protected boolean isUnresolveableProxyCacheable(Triple<EObject, EReference, INode> triple)
-   * {
-   * // do not cache unresolveable proxy
-   * return true;
-   * }
-   */
-
 }

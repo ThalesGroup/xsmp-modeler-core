@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.Member" deleted="false" description="Create a new Instance" enabled="true" name="Add Instance">${container} += ${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.kw_assembly" deleted="false" description="Create an Assembly" enabled="true" name="Assembly">/**
+ * description
+ * 
+ * @date ${gdate}
+ * @author ${user}
+ */
+assembly ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.Member" deleted="false" description="Create a Configuration" enabled="true" name="Configuration">set ${field} = ${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.Member" deleted="false" description="Create a Connection" enabled="true" name="Connection">connect ${from} =&gt; ${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.kw_factory" deleted="false" description="Create a Factory" enabled="true" name="Factory">factory ${name} extends ${cursor}
+{
+	
+} // factory ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.kw_instance" deleted="false" description="Declare an Instance" enabled="true" name="Instance">instance ${name} extends ${cursor}
+{
+	
+}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcore.Namespace" deleted="false" description="Create a Namespace" enabled="true" name="Namespace">namespace ${name}
+{
+	${cursor}
+} // namespace ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.kw_namespace" deleted="false" description="Create a nested Namespace" enabled="true" name="Namespace">namespace ${name}
+{
+	${cursor}
+} // namespace ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.kw_simulator" deleted="false" description="Create a Simulator" enabled="true" name="Simulator">simulator ${name}
+{
+	${cursor}
+} // simulator ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpasb.Member" deleted="false" description="Create a Task" enabled="true" name="Task">task ${name}
+{
+	${cursor}
+} // task ${name}</template></templates>

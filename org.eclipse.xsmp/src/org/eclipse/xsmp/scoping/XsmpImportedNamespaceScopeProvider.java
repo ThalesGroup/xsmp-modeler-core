@@ -21,11 +21,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.model.xsmp.AbstractInstance;
 import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
 import org.eclipse.xsmp.model.xsmp.Component;
 import org.eclipse.xsmp.model.xsmp.Interface;
 import org.eclipse.xsmp.model.xsmp.Structure;
 import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.TypeReference;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -37,6 +39,7 @@ import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractGlobalScopeDelegatingScopeProvider;
+import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportScope;
 import org.eclipse.xtext.scoping.impl.MultimapBasedSelectable;
@@ -243,6 +246,33 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
                     XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD, resolve));
   }
 
+  protected IScope getTypeReferenceScope(IScope parent, IScope globalScope, TypeReference context,
+          EReference reference, boolean resolve)
+  {
+    if (context != null)
+    {
+
+      final var feature = switch (context.eClass().getClassifierID())
+      {
+        case XsmpPackage.COMPONENT_TYPE_REFERENCE -> XsmpPackage.Literals.COMPONENT_TYPE_REFERENCE__COMPONENT;
+        case XsmpPackage.FACTORY_TYPE_REFERENCE -> XsmpPackage.Literals.FACTORY_TYPE_REFERENCE__FACTORY;
+        default -> null;
+      };
+
+      if (feature != null)
+      {
+        final var typeRef = resolve(context, feature, resolve);
+
+        if (typeRef != null && !typeRef.eIsProxy())
+        {
+          parent = getLocalElementsScope(parent, globalScope, typeRef, reference,
+                  resolve || typeRef.eResource() != context.eResource());
+        }
+      }
+    }
+    return parent;
+  }
+
   protected IScope getLocalElementsScope(IScope parent, IScope globalScope, EObject context,
           EReference reference, boolean resolve)
   {
@@ -278,6 +308,56 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         }
         break;
       }
+      case XsmpPackage.SIMULATOR:
+      {
+        if (reference == XsmpPackage.Literals.PATH__SEGMENT)
+        {
+          result = getListScope(IScope.NULLSCOPE, globalScope, context,
+                  XsmpPackage.Literals.SIMULATOR__BASE, reference, resolve);
+        }
+        else
+        {
+          result = getListScope(result, globalScope, context, XsmpPackage.Literals.SIMULATOR__BASE,
+                  reference, resolve);
+        }
+        break;
+      }
+      case XsmpPackage.INSTANCE, XsmpPackage.FACTORY:
+      {
+        if (reference == XsmpPackage.Literals.PATH__SEGMENT)
+        {
+          result = new FilteringScope(result, o -> o.getQualifiedName().startsWith(name)
+                  && o.getQualifiedName().getSegmentCount() > name.getSegmentCount());
+        }
+        result = getTypeReferenceScope(result, globalScope, ((AbstractInstance) context).getType(),
+                reference, resolve);
+
+        break;
+      }
+      case XsmpPackage.TASK:
+      {
+        return getLocalElementsScope(result, globalScope, context.eContainer(), reference, resolve);
+      }
+      case XsmpPackage.COMPONENT_TYPE_REFERENCE:
+      {
+        // filter the type according to the catalogue
+        if (XsmpPackage.Literals.COMPONENT_TYPE_REFERENCE__COMPONENT.equals(reference))
+        {
+          final var catalogue = resolve(context,
+                  XsmpPackage.Literals.COMPONENT_TYPE_REFERENCE__CATALOGUE, resolve);
+          if (catalogue != null)
+          {
+            if (catalogue.eIsProxy())
+            {
+              return IScope.NULLSCOPE;
+            }
+            return SelectableBasedScope.createScope(IScope.NULLSCOPE,
+                    getAllDescriptions(catalogue.eResource()), XsmpPackage.Literals.COMPONENT,
+                    ignoreCase);
+          }
+        }
+        break;
+      }
       case XsmpPackage.ARRAY:
       {
         final var type = resolve(context, XsmpPackage.Literals.ARRAY__ITEM_TYPE, resolve);
@@ -293,6 +373,19 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         final var type = resolve(context, XsmpPackage.Literals.FIELD__TYPE, resolve);
         if (type != null && !type.eIsProxy())
         {
+          result = getLocalElementsScope(result, globalScope, type, reference,
+                  resolve || type.eResource() != context.eResource());
+        }
+        break;
+      }
+      case XsmpPackage.PATH:
+      {
+        final var type = resolve(context, XsmpPackage.Literals.PATH__SEGMENT, resolve);
+        if (type != null && !type.eIsProxy())
+        {
+          result = new FilteringScope(result, o -> o.getQualifiedName().startsWith(name)
+                  && o.getQualifiedName().getSegmentCount() > name.getSegmentCount());
+
           result = getLocalElementsScope(result, globalScope, type, reference,
                   resolve || type.eResource() != context.eResource());
         }

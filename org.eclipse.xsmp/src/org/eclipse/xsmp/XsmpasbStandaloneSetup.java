@@ -1,5 +1,4 @@
 /*******************************************************************************
-
 * Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -9,22 +8,16 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.resource;
-
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+package org.eclipse.xsmp;
 
 /**
- * A customized resource that do not cache unresolvable proxies
+ * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public class XsmpcatResource extends LazyLinkingResource
+public class XsmpasbStandaloneSetup extends XsmpasbStandaloneSetupGenerated
 {
-  /*
-   * @Override
-   * protected boolean isUnresolveableProxyCacheable(Triple<EObject, EReference, INode> triple)
-   * {
-   * // do not cache unresolveable proxy
-   * return true;
-   * }
-   */
 
+  public static void doSetup()
+  {
+    new XsmpasbStandaloneSetup().createInjectorAndDoEMFRegistration();
+  }
 }

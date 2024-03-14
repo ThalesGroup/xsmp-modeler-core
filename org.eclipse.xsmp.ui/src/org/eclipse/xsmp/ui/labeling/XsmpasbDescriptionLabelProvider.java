@@ -1,5 +1,4 @@
 /*******************************************************************************
-
 * Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
@@ -9,22 +8,15 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.resource;
+package org.eclipse.xsmp.ui.labeling;
 
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
 
 /**
- * A customized resource that do not cache unresolvable proxies
+ * Provides labels for IEObjectDescriptions and IResourceDescriptions.
+ * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#label-provider
  */
-public class XsmpcatResource extends LazyLinkingResource
+public class XsmpasbDescriptionLabelProvider extends DefaultDescriptionLabelProvider
 {
-  /*
-   * @Override
-   * protected boolean isUnresolveableProxyCacheable(Triple<EObject, EReference, INode> triple)
-   * {
-   * // do not cache unresolveable proxy
-   * return true;
-   * }
-   */
 
 }
