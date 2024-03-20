@@ -10,17 +10,15 @@
 ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp;
 
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
-import org.eclipse.cdt.core.ToolFactory;
-import org.eclipse.cdt.core.formatter.CodeFormatter;
-import org.eclipse.cdt.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ClassGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
@@ -48,8 +46,6 @@ import com.google.inject.Inject;
  */
 public class CppGenerator extends AbstractGenerator
 {
-  // the C++ code formatter
-  private CodeFormatter formatter;
 
   @Inject
   protected GeneratorUtil ext;
@@ -57,23 +53,7 @@ public class CppGenerator extends AbstractGenerator
   @Override
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
-
-    // initialize the formatter
-    formatter = ToolFactory.createDefaultCodeFormatter(formatterOptions(input));
-
     generateCatalogue((Catalogue) input.getContents().get(0), fsa);
-  }
-
-  /**
-   * @param input
-   *          the input resource
-   * @return the formatter options
-   */
-  protected Map<String, String> formatterOptions(Resource input)
-  {
-    final var options = DefaultCodeFormatterOptions.getKandRSettings();
-    options.tab_char = DefaultCodeFormatterOptions.SPACE;
-    return options.getMap();
   }
 
   /**
@@ -226,38 +206,54 @@ public class CppGenerator extends AbstractGenerator
   /**
    * Format the content with the CDT formatter
    *
+   * @param fileName
+   *          the file name of the generated file
    * @param content
    *          content to format
    * @return formatted content
    */
-  protected CharSequence format(CharSequence content)
+  protected CharSequence format(String fileName, CharSequence content)
   {
-
-    final IDocument document = new Document(content.toString());
-    final var edit = formatter.format(CodeFormatter.K_TRANSLATION_UNIT, document.get(), 0,
-            document.getLength(), 0, null);
-
-    if (edit != null)
+    try
     {
-      try
+      final var pb = new ProcessBuilder("clang-format", "-style=LLVM",
+              "-assume-filename=" + fileName);
+      pb.redirectErrorStream(true);
+
+      final var process = pb.start();
+      final var reader = new BufferedReader(
+              new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+      new PrintWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8),
+              true).append(content).close();
+
+      final var result = new StringBuilder();
+      String line;
+      final var lineSeparator = System.lineSeparator();
+      while ((line = reader.readLine()) != null)
       {
-        edit.apply(document);
-        return document.get();
+        result.append(line).append(lineSeparator);
       }
-      catch (final MalformedTreeException | BadLocationException e)
+      reader.close();
+
+      final var exitCode = process.waitFor();
+      if (exitCode == 0)
       {
-        // ignore
+        return result;
       }
+    }
+    catch (IOException | InterruptedException e)
+    {
+      // ignore
     }
     return content;
   }
 
-  protected void generateFile(IFileSystemAccess2 fsa, java.lang.String fileName,
-          java.lang.String outputConfigurationName, CharSequence contents)
+  protected void generateFile(IFileSystemAccess2 fsa, String fileName,
+          String outputConfigurationName, CharSequence contents)
   {
     if (contents != null)
     {
-      fsa.generateFile(fileName, outputConfigurationName, format(contents));
+      fsa.generateFile(fileName, outputConfigurationName, format(fileName, contents));
     }
   }
 

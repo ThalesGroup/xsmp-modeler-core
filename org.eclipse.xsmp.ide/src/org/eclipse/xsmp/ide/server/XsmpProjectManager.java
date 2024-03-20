@@ -98,9 +98,13 @@ public class XsmpProjectManager
   {
 
     final List<URI> allUris = new ArrayList<>();
+
     // Include ECSS-SMP library
-    allUris.add(URI.createURI(
-            getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").toString()));
+    final var resource = getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat");
+    if (resource != null)
+    {
+      allUris.add(URI.createURI(resource.toString()));
+    }
 
     for (final ISourceFolder srcFolder : getProjectConfig().getSourceFolders())
     {
