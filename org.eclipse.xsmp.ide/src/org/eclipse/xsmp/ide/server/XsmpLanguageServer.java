@@ -713,14 +713,14 @@ public class XsmpLanguageServer
   public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
           DocumentSymbolParams params)
   {
-    return requestManager.runRead(cancelIndicator -> documentSymbol(params, cancelIndicator));
+    return requestManager.runRead(cancelIndicator -> Lists.transform(documentSymbol(params, cancelIndicator), Either::forRight));
   }
 
   /**
    * Compute the symbol information. Executed in a read request.
    */
-  protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(
-          DocumentSymbolParams params, CancelIndicator cancelIndicator)
+  protected List<DocumentSymbol> documentSymbol(DocumentSymbolParams params,
+          CancelIndicator cancelIndicator)
   {
     final var uri = getURI(params.getTextDocument());
     final var documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
@@ -728,10 +728,8 @@ public class XsmpLanguageServer
     {
       return Collections.emptyList();
     }
-    final var symbols = workspaceManager.doRead(uri, (document, resource) -> documentSymbolService
+    return workspaceManager.doRead(uri, (document, resource) -> documentSymbolService
             .getSymbols(document, resource, params, cancelIndicator));
-
-    return Lists.transform(symbols, Either::forRight);
   }
 
   protected IDocumentSymbolService getIDocumentSymbolService(
@@ -783,10 +781,8 @@ public class XsmpLanguageServer
   public CompletableFuture<Either<List< ? extends SymbolInformation>, List< ? extends WorkspaceSymbol>>> symbol(
           WorkspaceSymbolParams params)
   {
-    return requestManager.runRead(cancelIndicator -> {
-      final List< ? extends WorkspaceSymbol> symbols = symbol(params, cancelIndicator);
-      return Either.forRight(symbols);
-    });
+    return requestManager
+            .runRead(cancelIndicator -> Either.forRight(symbol(params, cancelIndicator)));
   }
 
   /**
