@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.Operation
-import org.eclipse.xsmp.xcatalogue.Parameter
-import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind
-import org.eclipse.xsmp.xcatalogue.ReferenceType
-import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.Type
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Operation
+import org.eclipse.xsmp.model.xsmp.Parameter
+import org.eclipse.xsmp.model.xsmp.ParameterDirectionKind
+import org.eclipse.xsmp.model.xsmp.ReferenceType
+import org.eclipse.xsmp.model.xsmp.Structure
+import org.eclipse.xsmp.model.xsmp.Type
 
 class OperationGenerator extends AbstractMemberGenerator<Operation> {
 

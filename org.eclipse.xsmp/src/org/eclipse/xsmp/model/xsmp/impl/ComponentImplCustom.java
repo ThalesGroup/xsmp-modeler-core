@@ -8,20 +8,19 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
  *
  * @author daveluy
  */
-public class ClassImplCustom extends ClassImpl
+public abstract class ComponentImplCustom extends ComponentImpl
 {
-
   private static final String ABSTRACT_KEYWORD = "abstract";
 
   /**
@@ -52,10 +51,9 @@ public class ClassImplCustom extends ClassImpl
 
     if (eNotificationRequired())
     {
-      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.CLASS__ABSTRACT,
+      eNotify(new ENotificationImpl(this, Notification.SET, XsmpPackage.COMPONENT__ABSTRACT,
               oldAbstract, newAbstract));
     }
 
   }
-
-} // ClassImplCustom
+} // ComponentImplCustom

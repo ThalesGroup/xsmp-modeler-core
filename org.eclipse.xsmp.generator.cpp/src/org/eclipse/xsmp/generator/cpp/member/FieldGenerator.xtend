@@ -11,14 +11,14 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Array
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral
-import org.eclipse.xsmp.xcatalogue.Expression
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.PrimitiveType
-import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.xcatalogue.Structure
+import org.eclipse.xsmp.model.xsmp.Array
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral
+import org.eclipse.xsmp.model.xsmp.Expression
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.PrimitiveType
+import org.eclipse.xsmp.model.xsmp.SimpleType
+import org.eclipse.xsmp.model.xsmp.Structure
 import org.eclipse.xtext.naming.QualifiedName
 
 class FieldGenerator extends AbstractMemberGenerator<Field> {

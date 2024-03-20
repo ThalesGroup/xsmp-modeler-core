@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp
 
 import com.google.inject.Inject
-import org.eclipse.xsmp.xcatalogue.Array
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.Type
+import org.eclipse.xsmp.model.xsmp.Array
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.Structure
+import org.eclipse.xsmp.model.xsmp.Type
 import org.eclipse.xsmp.util.XsmpUtil
 
 class FieldHelper {

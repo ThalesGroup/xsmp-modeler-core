@@ -12,8 +12,8 @@ package org.eclipse.xsmp.profile.esa_cdk.generator.cpp
 
 import org.eclipse.xsmp.generator.cpp.CatalogueGenerator
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Model
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.Model
 
 class EsaCdkCatalogueGenerator extends CatalogueGenerator {
 

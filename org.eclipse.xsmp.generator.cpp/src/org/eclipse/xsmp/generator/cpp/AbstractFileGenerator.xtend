@@ -13,9 +13,9 @@ package org.eclipse.xsmp.generator.cpp
 import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.NamedElement
-import org.eclipse.xsmp.xcatalogue.Namespace
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.NamedElement
+import org.eclipse.xsmp.model.xsmp.Namespace
 import org.eclipse.xtext.EcoreUtil2
 import com.google.inject.name.Named
 

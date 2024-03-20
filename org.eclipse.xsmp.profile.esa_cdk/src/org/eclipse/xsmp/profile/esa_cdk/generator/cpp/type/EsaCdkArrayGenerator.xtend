@@ -12,7 +12,7 @@ package org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator
-import org.eclipse.xsmp.xcatalogue.Array
+import org.eclipse.xsmp.model.xsmp.Array
 
 class EsaCdkArrayGenerator extends ArrayGenerator {
 

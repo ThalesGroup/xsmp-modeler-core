@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.validation.NamesAreUniqueValidationHelper;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
@@ -30,7 +30,7 @@ public class UuidsAreUniqueValidationHelper extends NamesAreUniqueValidationHelp
   @Override
   protected EStructuralFeature getNameFeature(EObject object)
   {
-    return XcataloguePackage.Literals.TYPE__UUID;
+    return XsmpPackage.Literals.TYPE__UUID;
   }
 
   @Override
@@ -96,6 +96,6 @@ public class UuidsAreUniqueValidationHelper extends NamesAreUniqueValidationHelp
   @Override
   protected ImmutableSet<EClass> getClusterTypes()
   {
-    return ImmutableSet.of(XcataloguePackage.Literals.TYPE);
+    return ImmutableSet.of(XsmpPackage.Literals.TYPE);
   }
 }

@@ -11,8 +11,8 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator
-import org.eclipse.xsmp.xcatalogue.Container
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Container
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkContainerGenerator extends ContainerGenerator {

@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Float
+import org.eclipse.xsmp.model.xsmp.Float
 
 class FloatGenerator extends AbstractTypeGenerator<Float> {
 

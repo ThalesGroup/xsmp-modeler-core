@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Constant
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Constant
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 
-import org.eclipse.xsmp.xcatalogue.String
+import org.eclipse.xsmp.model.xsmp.String
 
 class ConstantGenerator extends AbstractMemberGenerator<Constant> {
 

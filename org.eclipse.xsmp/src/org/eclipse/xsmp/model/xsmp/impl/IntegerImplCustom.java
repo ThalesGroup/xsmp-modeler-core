@@ -8,10 +8,10 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -27,7 +27,7 @@ public class IntegerImplCustom extends IntegerImpl
   @Override
   public String getUnit()
   {
-    return getFeature(XcataloguePackage.Literals.INTEGER__UNIT, UNIT_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.INTEGER__UNIT, UNIT_EDEFAULT);
   }
 
   /**
@@ -37,7 +37,7 @@ public class IntegerImplCustom extends IntegerImpl
   public void setUnit(String newUnit)
   {
 
-    setFeature(XcataloguePackage.Literals.INTEGER__UNIT, newUnit);
+    setFeature(XsmpPackage.Literals.INTEGER__UNIT, newUnit);
   }
 
   @Override
@@ -45,7 +45,7 @@ public class IntegerImplCustom extends IntegerImpl
   {
     if ("unit".equals(name))
     {
-      return XcataloguePackage.Literals.INTEGER__UNIT;
+      return XsmpPackage.Literals.INTEGER__UNIT;
     }
     return super.getFeature(name);
   }

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.xsmp.tests
 
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
+import org.eclipse.xsmp.model.xsmp.XsmpFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class PropertyTest {
     @Test
     def void checkUnit() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createProperty
+        var elem = XsmpFactory.eINSTANCE.createProperty
 
         elem.category = "test"
         assertEquals("test", elem.category)

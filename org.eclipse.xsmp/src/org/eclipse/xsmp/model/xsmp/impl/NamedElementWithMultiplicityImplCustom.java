@@ -10,11 +10,11 @@
  * * SPDX-License-Identifier: EPL-2.0
  * ******************************************************************************
  */
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.XsmpFactory;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
@@ -34,10 +34,8 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
   {
     final var resource = eResource();
 
-    if (resource instanceof XtextResource)
+    if (resource instanceof final XtextResource xtextResource)
     {
-      final var xtextResource = (XtextResource) resource;
-
       final var xsmpUtil = xtextResource.getResourceServiceProvider().get(XsmpUtil.class);
 
       return xsmpUtil.getInt64(e);
@@ -101,15 +99,15 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     else if (lower == upper)
     {
       setOptional(false);
-      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
-      final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      setMultiplicity(XsmpFactory.eINSTANCE.createMultiplicity());
+      final var l = XsmpFactory.eINSTANCE.createIntegerLiteral();
       l.setText(Long.toString(lower));
       multiplicity.setLower(l);
     }
     else if (upper < 0)
     {
       setOptional(false);
-      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
+      setMultiplicity(XsmpFactory.eINSTANCE.createMultiplicity());
       if (lower == 0)
       {
 
@@ -122,7 +120,7 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
       else
       {
         multiplicity.setAux(true);
-        final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+        final var l = XsmpFactory.eINSTANCE.createIntegerLiteral();
         l.setText(Long.toString(lower));
         multiplicity.setLower(l);
       }
@@ -130,11 +128,11 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
     else
     {
       setOptional(false);
-      setMultiplicity(XcatalogueFactory.eINSTANCE.createMultiplicity());
-      final var l = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      setMultiplicity(XsmpFactory.eINSTANCE.createMultiplicity());
+      final var l = XsmpFactory.eINSTANCE.createIntegerLiteral();
       l.setText(Long.toString(lower));
       multiplicity.setLower(l);
-      final var u = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+      final var u = XsmpFactory.eINSTANCE.createIntegerLiteral();
       u.setText(Long.toString(upper));
       multiplicity.setUpper(u);
     }

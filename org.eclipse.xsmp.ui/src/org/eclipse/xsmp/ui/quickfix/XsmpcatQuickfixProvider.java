@@ -13,10 +13,10 @@ package org.eclipse.xsmp.ui.quickfix;
 import java.util.UUID;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.VisibilityKind;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;

@@ -8,10 +8,10 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -28,7 +28,7 @@ public abstract class TypeImplCustom extends TypeImpl
   public String getUuid()
   {
 
-    return getFeature(XcataloguePackage.Literals.TYPE__UUID, UUID_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.TYPE__UUID, UUID_EDEFAULT);
   }
 
   /**
@@ -37,7 +37,7 @@ public abstract class TypeImplCustom extends TypeImpl
   @Override
   public void setUuid(String newUuid)
   {
-    setFeature(XcataloguePackage.Literals.TYPE__UUID, newUuid);
+    setFeature(XsmpPackage.Literals.TYPE__UUID, newUuid);
 
   }
 
@@ -46,7 +46,7 @@ public abstract class TypeImplCustom extends TypeImpl
   {
     if ("uuid".equals(name))
     {
-      return XcataloguePackage.Literals.TYPE__UUID;
+      return XsmpPackage.Literals.TYPE__UUID;
     }
     return super.getFeature(name);
   }

@@ -13,7 +13,7 @@ package org.eclipse.xsmp.tests
 import com.google.inject.Inject
 import com.google.inject.Provider
 import org.eclipse.emf.common.util.URI
-import org.eclipse.xsmp.xcatalogue.Catalogue
+import org.eclipse.xsmp.model.xsmp.Catalogue
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 
 import static org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider.*
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.*
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.*
 import static org.junit.jupiter.api.Assertions.*
 
 @ExtendWith(InjectionExtension)

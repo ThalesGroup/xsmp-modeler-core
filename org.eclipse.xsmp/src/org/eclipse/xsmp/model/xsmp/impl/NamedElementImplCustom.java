@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,10 +33,10 @@ import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.documentation.TagElement;
 import org.eclipse.xsmp.documentation.TextElement;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.XsmpFactory;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.CheckType;
@@ -78,7 +78,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     public XsmpcatdocEList(InternalEObject owner, EStructuralFeature eStructuralFeature)
     {
       super(owner, eStructuralFeature);
-      this.tagName = "@" + eStructuralFeature.getName();
+      tagName = "@" + eStructuralFeature.getName();
     }
 
     @Override
@@ -210,7 +210,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   @Override
   public boolean eIsSet(int featureID)
   {
-    return featureID == XcataloguePackage.NAMED_ELEMENT__METADATUM || super.eIsSet(featureID);
+    return featureID == XsmpPackage.NAMED_ELEMENT__METADATUM || super.eIsSet(featureID);
   }
 
   /**
@@ -219,7 +219,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   @Override
   public String getDescription()
   {
-    return getFeature(XcataloguePackage.Literals.NAMED_ELEMENT__DESCRIPTION, DESCRIPTION_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION, DESCRIPTION_EDEFAULT);
   }
 
   @SuppressWarnings("unchecked")
@@ -233,7 +233,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
   protected EStructuralFeature getFeature(String name)
   {
-    return "deprecated".equals(name) ? XcataloguePackage.Literals.NAMED_ELEMENT__DEPRECATED : null;
+    return "deprecated".equals(name) ? XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED : null;
   }
 
   @SuppressWarnings("unchecked")
@@ -268,7 +268,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     {
       final var deliver = eDeliver();
       eSetDeliver(false);
-      setMetadatum(XcatalogueFactory.eINSTANCE.createMetadatum());
+      setMetadatum(XsmpFactory.eINSTANCE.createMetadatum());
       eSetDeliver(deliver);
     }
 
@@ -303,8 +303,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     {
       if (tag.getTagName() == null)
       {
-        values.put(XcataloguePackage.Literals.NAMED_ELEMENT__DESCRIPTION,
-                printFragment(tag.fragments()));
+        values.put(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION, printFragment(tag.fragments()));
       }
       else
       {
@@ -345,7 +344,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     }
     var nodeOffset = 0;
     for (final INode node : NodeModelUtils.findNodesForFeature(getMetadatum(),
-            XcataloguePackage.Literals.METADATUM__DOCUMENTATION))
+            XsmpPackage.Literals.METADATUM__DOCUMENTATION))
     {
       nodeOffset = node.getTotalOffset();
     }
@@ -356,7 +355,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     {
       if (tag.getTagName() == null)
       {
-        features.add(XcataloguePackage.Literals.NAMED_ELEMENT__DESCRIPTION);
+        features.add(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION);
       }
       else
       {
@@ -470,12 +469,12 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   @Override
   public void setDescription(String newDescription)
   {
-    final var oldValue = getFeatureMap().put(XcataloguePackage.Literals.NAMED_ELEMENT__DESCRIPTION,
+    final var oldValue = getFeatureMap().put(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION,
             newDescription);
     if (eNotificationRequired())
     {
       eNotify(new ENotificationImpl(this, Notification.SET,
-              XcataloguePackage.Literals.NAMED_ELEMENT__DESCRIPTION.getFeatureID(), oldValue,
+              XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION.getFeatureID(), oldValue,
               newDescription));
 
     }
@@ -609,14 +608,14 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   public boolean isDeprecated()
   {
 
-    return getFeature(XcataloguePackage.Literals.NAMED_ELEMENT__DEPRECATED, DEPRECATED_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED, DEPRECATED_EDEFAULT);
   }
 
   @Override
   public void setDeprecated(boolean newDeprecated)
   {
 
-    setFeature(XcataloguePackage.Literals.NAMED_ELEMENT__DEPRECATED, newDeprecated);
+    setFeature(XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED, newDeprecated);
   }
 
 } // NamedElementImplCustom

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp.type
 
-import org.eclipse.xsmp.xcatalogue.Type
+import org.eclipse.xsmp.model.xsmp.Type
 
 abstract class AbstractTypeGenerator<T extends Type> extends org.eclipse.xsmp.generator.cpp.AbstractFileGenerator<T> {
 

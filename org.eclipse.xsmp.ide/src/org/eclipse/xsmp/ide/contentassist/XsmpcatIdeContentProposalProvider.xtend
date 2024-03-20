@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage
+import org.eclipse.xsmp.model.xsmp.XsmpPackage
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor
 
@@ -27,7 +27,7 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 	
 	def protected complete_association(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			association ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.ASSOCIATION__TYPE)»|} ${2:name}
+			association ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ASSOCIATION__TYPE)»|} ${2:name}
 		''', "Create an Association", context), snippetPriority);
 	}
 
@@ -58,13 +58,13 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 
 	def protected complete_constant(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			constant ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.CONSTANT__TYPE)»|} ${2:name} = $0
+			constant ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.CONSTANT__TYPE)»|} ${2:name} = $0
 		''', "Create a Constant", context), snippetPriority);
 	}
 
 	def protected complete_container(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			container ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.CONTAINER__TYPE)»|}[*] ${2:name}
+			container ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.CONTAINER__TYPE)»|}[*] ${2:name}
 		''', "Create a Container", context), snippetPriority);
 	}
 
@@ -99,13 +99,13 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 
 	def protected complete_eventsink(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			eventsink ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.EVENT_SINK__TYPE)»|} ${2:name}
+			eventsink ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.EVENT_SINK__TYPE)»|} ${2:name}
 		''', "Create an Event Sink", context), snippetPriority);
 	}
 
 	def protected complete_eventsource(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			eventsource ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.EVENT_SOURCE__TYPE)»|} ${2:name}
+			eventsource ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.EVENT_SOURCE__TYPE)»|} ${2:name}
 		''', "Create an Event Source", context), snippetPriority);
 	}
 
@@ -121,7 +121,7 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 
 	def protected complete_field(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			field ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.FIELD__TYPE)»|} ${2:name}
+			field ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.FIELD__TYPE)»|} ${2:name}
 		''', "Create a Field", context), snippetPriority);
 	}
 
@@ -170,13 +170,13 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 
 	def protected complete_property(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			property ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.PROPERTY__TYPE)»|} ${2:name}
+			property ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.PROPERTY__TYPE)»|} ${2:name}
 		''', "Create a Property", context), snippetPriority);
 	}
 
 	def protected complete_reference(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
-			reference ${1|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.REFERENCE__INTERFACE)»|}[*] ${2:name}
+			reference ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.REFERENCE__INTERFACE)»|}[*] ${2:name}
 		''', "Create a Reference", context), snippetPriority);
 	}
 
@@ -210,14 +210,14 @@ class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvid
 	def protected complete_valueReference(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
-			using ${1:name} = ${2|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.VALUE_REFERENCE__TYPE)»|}
+			using ${1:name} = ${2|«getCrossReferences(context.currentModel, XsmpPackage.Literals.VALUE_REFERENCE__TYPE)»|}
 		''', "Create a Value Reference", context), snippetPriority);
 	}
 
 	def protected complete_array(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
-			array ${1:name} = ${2|«getCrossReferences(context.currentModel, XcataloguePackage.Literals.ARRAY__ITEM_TYPE)»|}[$0]
+			array ${1:name} = ${2|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ARRAY__ITEM_TYPE)»|}[$0]
 		''', "Create an Array Type", context), snippetPriority);
 	}
 

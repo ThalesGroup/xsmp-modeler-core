@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
+import org.eclipse.xsmp.model.xsmp.XsmpFactory;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.eclipse.xtext.ui.IImageHelper;
@@ -33,7 +33,7 @@ class LabelProviderTest
   @Inject
   private IImageHelper imageHelper;
 
-  private final XcatalogueFactory factory = XcatalogueFactory.eINSTANCE;
+  private final XsmpFactory factory = XsmpFactory.eINSTANCE;
 
   @Test
   void catalogue()

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.xsmp.tests
 
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
+import org.eclipse.xsmp.model.xsmp.XsmpFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class AttributeTypeTest {
     @Test
     def void checkAllowMultiple() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createAttributeType
+        var elem = XsmpFactory.eINSTANCE.createAttributeType
 
         elem.allowMultiple = true
         assertEquals(true, elem.allowMultiple)
@@ -38,7 +38,7 @@ class AttributeTypeTest {
     @Test
     def void checkUsage() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createAttributeType
+        var elem = XsmpFactory.eINSTANCE.createAttributeType
 
         elem.usage += "Operation"
         assertEquals(#["Operation"], elem.usage)

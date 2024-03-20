@@ -8,11 +8,11 @@ import org.eclipse.xsmp.util.Float32;
 import org.eclipse.xsmp.util.Float64;
 import org.eclipse.xsmp.util.Int32;
 import org.eclipse.xsmp.util.Int64;
+import org.eclipse.xsmp.model.xsmp.XsmpFactory;
 import org.eclipse.xsmp.util.AbstractPrimitiveType;
 import org.eclipse.xsmp.util.Solver;
 import org.eclipse.xsmp.util.UInt32;
 import org.eclipse.xsmp.util.UInt64;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class LiteralTest
 
   void checkInteger(String val, AbstractPrimitiveType< ? > expected)
   {
-    final var i = XcatalogueFactory.eINSTANCE.createIntegerLiteral();
+    final var i = XsmpFactory.eINSTANCE.createIntegerLiteral();
 
     i.setText(val);
     assertEquals(expected, solver.getValue(i));
@@ -150,7 +150,7 @@ class LiteralTest
 
   void checkFloat(String val, Object expected)
   {
-    final var i = XcatalogueFactory.eINSTANCE.createFloatingLiteral();
+    final var i = XsmpFactory.eINSTANCE.createFloatingLiteral();
 
     i.setText(val);
 

@@ -10,28 +10,28 @@
 ******************************************************************************/
 package org.eclipse.xsmp.formatting2;
 
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BINARY_OPERATION__FEATURE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BUILT_IN_EXPRESSION__NAME;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.METADATUM__DOCUMENTATION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT__NAME;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.UNARY_OPERATION__FEATURE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.BINARY_OPERATION__FEATURE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.BUILT_IN_EXPRESSION__NAME;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.METADATUM__DOCUMENTATION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.NAMED_ELEMENT__NAME;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.UNARY_OPERATION__FEATURE;
 
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xsmp.model.xsmp.Attribute;
+import org.eclipse.xsmp.model.xsmp.BinaryOperation;
+import org.eclipse.xsmp.model.xsmp.BuiltInConstant;
+import org.eclipse.xsmp.model.xsmp.BuiltInFunction;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers;
+import org.eclipse.xsmp.model.xsmp.Namespace;
+import org.eclipse.xsmp.model.xsmp.ParenthesizedExpression;
+import org.eclipse.xsmp.model.xsmp.UnaryOperation;
 import org.eclipse.xsmp.services.XsmpcoreGrammarAccess;
-import org.eclipse.xsmp.xcatalogue.Attribute;
-import org.eclipse.xsmp.xcatalogue.BinaryOperation;
-import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
-import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
-import org.eclipse.xsmp.xcatalogue.Namespace;
-import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
-import org.eclipse.xsmp.xcatalogue.UnaryOperation;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.IIndentationInformation;
 import org.eclipse.xtext.formatting2.AbstractJavaFormatter;

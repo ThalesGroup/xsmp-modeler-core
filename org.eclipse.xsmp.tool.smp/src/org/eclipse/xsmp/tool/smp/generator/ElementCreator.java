@@ -11,37 +11,37 @@
 package org.eclipse.xsmp.tool.smp.generator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Association;
+import org.eclipse.xsmp.model.xsmp.Attribute;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.Container;
+import org.eclipse.xsmp.model.xsmp.EntryPoint;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.EnumerationLiteral;
+import org.eclipse.xsmp.model.xsmp.EventSink;
+import org.eclipse.xsmp.model.xsmp.EventSource;
+import org.eclipse.xsmp.model.xsmp.EventType;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.Interface;
+import org.eclipse.xsmp.model.xsmp.Model;
+import org.eclipse.xsmp.model.xsmp.Namespace;
+import org.eclipse.xsmp.model.xsmp.NativeType;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.PrimitiveType;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.Reference;
+import org.eclipse.xsmp.model.xsmp.Service;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.ValueReference;
+import org.eclipse.xsmp.model.xsmp.util.XsmpSwitch;
 import org.eclipse.xsmp.tool.smp.core.types.TypesFactory;
 import org.eclipse.xsmp.tool.smp.smdl.catalogue.CatalogueFactory;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Attribute;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Container;
-import org.eclipse.xsmp.xcatalogue.EntryPoint;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.EventSink;
-import org.eclipse.xsmp.xcatalogue.EventSource;
-import org.eclipse.xsmp.xcatalogue.EventType;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Interface;
-import org.eclipse.xsmp.xcatalogue.Model;
-import org.eclipse.xsmp.xcatalogue.Namespace;
-import org.eclipse.xsmp.xcatalogue.NativeType;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.PrimitiveType;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Reference;
-import org.eclipse.xsmp.xcatalogue.Service;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xsmp.xcatalogue.util.XcatalogueSwitch;
 
-final class ElementCreator extends XcatalogueSwitch<EObject>
+final class ElementCreator extends XsmpSwitch<EObject>
 {
 
   @Override
@@ -75,7 +75,7 @@ final class ElementCreator extends XcatalogueSwitch<EObject>
   }
 
   @Override
-  public EObject caseClass(final org.eclipse.xsmp.xcatalogue.Class object)
+  public EObject caseClass(final org.eclipse.xsmp.model.xsmp.Class object)
   {
     return TypesFactory.eINSTANCE.createClass();
   }
@@ -99,7 +99,7 @@ final class ElementCreator extends XcatalogueSwitch<EObject>
   }
 
   @Override
-  public EObject caseException(final org.eclipse.xsmp.xcatalogue.Exception object)
+  public EObject caseException(final org.eclipse.xsmp.model.xsmp.Exception object)
   {
     return TypesFactory.eINSTANCE.createException();
   }
@@ -111,13 +111,13 @@ final class ElementCreator extends XcatalogueSwitch<EObject>
   }
 
   @Override
-  public EObject caseFloat(final org.eclipse.xsmp.xcatalogue.Float object)
+  public EObject caseFloat(final org.eclipse.xsmp.model.xsmp.Float object)
   {
     return TypesFactory.eINSTANCE.createFloat();
   }
 
   @Override
-  public EObject caseInteger(final org.eclipse.xsmp.xcatalogue.Integer object)
+  public EObject caseInteger(final org.eclipse.xsmp.model.xsmp.Integer object)
   {
     return TypesFactory.eINSTANCE.createInteger();
   }
@@ -153,7 +153,7 @@ final class ElementCreator extends XcatalogueSwitch<EObject>
   }
 
   @Override
-  public EObject caseString(final org.eclipse.xsmp.xcatalogue.String object)
+  public EObject caseString(final org.eclipse.xsmp.model.xsmp.String object)
   {
     return TypesFactory.eINSTANCE.createString();
   }

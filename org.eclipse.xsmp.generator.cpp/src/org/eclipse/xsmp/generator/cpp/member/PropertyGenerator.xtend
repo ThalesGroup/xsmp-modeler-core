@@ -11,8 +11,8 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.Property
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Property
 
 class PropertyGenerator extends AbstractMemberGenerator<Property> {
 

@@ -13,13 +13,13 @@ package org.eclipse.xsmp.ui.codemining;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.codemining.ICodeMining;
+import org.eclipse.xsmp.model.xsmp.Association;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -64,15 +64,15 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
 
       switch (obj.eClass().getClassifierID())
       {
-        case XcataloguePackage.ASSOCIATION:
+        case XsmpPackage.ASSOCIATION:
           createCodeMinings((Association) obj, acceptor);
           it.prune();
           break;
-        case XcataloguePackage.OPERATION:
+        case XsmpPackage.OPERATION:
           createCodeMinings((Operation) obj, acceptor);
           it.prune();
           break;
-        case XcataloguePackage.PROPERTY:
+        case XsmpPackage.PROPERTY:
           createCodeMinings((Property) obj, acceptor);
           it.prune();
           break;
@@ -86,7 +86,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
   protected void createCodeMinings(Association p, IAcceptor< ? super ICodeMining> acceptor)
   {
     for (final INode node : NodeModelUtils.findNodesForFeature(p,
-            XcataloguePackage.Literals.ASSOCIATION__TYPE))
+            XsmpPackage.Literals.ASSOCIATION__TYPE))
     {
       if (xsmpUtil.isByPointer(p))
       {
@@ -156,7 +156,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     if (xsmpUtil.isByPointer(o) || xsmpUtil.isByReference(o))
     {
       for (final INode n : NodeModelUtils.findNodesForFeature(o,
-              XcataloguePackage.Literals.PROPERTY__TYPE))
+              XsmpPackage.Literals.PROPERTY__TYPE))
       {
 
         if (xsmpUtil.isByPointer(o))
@@ -192,7 +192,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     if (xsmpUtil.isConst(p) || xsmpUtil.isByPointer(p) || xsmpUtil.isByReference(p))
     {
       for (final INode node : NodeModelUtils.findNodesForFeature(p,
-              XcataloguePackage.Literals.PARAMETER__TYPE))
+              XsmpPackage.Literals.PARAMETER__TYPE))
       {
         if (xsmpUtil.isConst(p))
         {

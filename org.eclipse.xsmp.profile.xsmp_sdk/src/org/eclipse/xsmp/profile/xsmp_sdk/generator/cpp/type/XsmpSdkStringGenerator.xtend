@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator
-import org.eclipse.xsmp.xcatalogue.String
+import org.eclipse.xsmp.model.xsmp.String
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkStringGenerator extends StringGenerator {

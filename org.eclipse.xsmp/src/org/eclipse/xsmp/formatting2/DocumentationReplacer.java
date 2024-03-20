@@ -13,7 +13,7 @@ package org.eclipse.xsmp.formatting2;
 import java.util.stream.Collectors;
 
 import org.eclipse.xsmp.documentation.TagElement;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
 import org.eclipse.xtext.formatting2.ITextReplacer;
 import org.eclipse.xtext.formatting2.ITextReplacerContext;
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion;

@@ -12,14 +12,14 @@ package org.eclipse.xsmp.generator.cpp.type
 
 import java.util.List
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Component
-import org.eclipse.xsmp.xcatalogue.NamedElement
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.Operation
-import org.eclipse.xsmp.xcatalogue.Parameter
-import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.xcatalogue.Property
-import org.eclipse.xsmp.xcatalogue.AccessKind
+import org.eclipse.xsmp.model.xsmp.Component
+import org.eclipse.xsmp.model.xsmp.NamedElement
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Operation
+import org.eclipse.xsmp.model.xsmp.Parameter
+import org.eclipse.xsmp.model.xsmp.VisibilityKind
+import org.eclipse.xsmp.model.xsmp.Property
+import org.eclipse.xsmp.model.xsmp.AccessKind
 
 abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Component> {
 

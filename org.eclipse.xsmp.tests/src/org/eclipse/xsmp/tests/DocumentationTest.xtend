@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.tests
 
 import org.eclipse.xsmp.documentation.Documentation
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
+import org.eclipse.xsmp.model.xsmp.XsmpFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*
 class DocumentationTest {
 
     def Documentation createDocumentation(CharSequence value) {
-        var cat = XcatalogueFactory.eINSTANCE.createMetadatum()
+        var cat = XsmpFactory.eINSTANCE.createMetadatum()
 
         cat.documentation = value.toString
         return cat.xsmpcatdoc

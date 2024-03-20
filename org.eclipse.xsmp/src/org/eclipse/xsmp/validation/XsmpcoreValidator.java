@@ -13,6 +13,18 @@ package org.eclipse.xsmp.validation;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
+import org.eclipse.xsmp.model.xsmp.EmptyExpression;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.Float;
+import org.eclipse.xsmp.model.xsmp.KeywordExpression;
+import org.eclipse.xsmp.model.xsmp.String;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.EnumerationLiteral;
 import org.eclipse.xsmp.util.Int16;
 import org.eclipse.xsmp.util.Int32;
@@ -25,18 +37,6 @@ import org.eclipse.xsmp.util.UInt32;
 import org.eclipse.xsmp.util.UInt64;
 import org.eclipse.xsmp.util.UInt8;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.EmptyExpression;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.Float;
-import org.eclipse.xsmp.xcatalogue.KeywordExpression;
-import org.eclipse.xsmp.xcatalogue.String;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 import com.google.inject.Inject;
@@ -92,27 +92,27 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     {
       switch (type.eClass().getClassifierID())
       {
-        case XcataloguePackage.ARRAY:
+        case XsmpPackage.ARRAY:
           checkExpression((Array) type, e);
           break;
-        case XcataloguePackage.ENUMERATION:
+        case XsmpPackage.ENUMERATION:
           checkExpression((Enumeration) type, e);
           break;
-        case XcataloguePackage.FLOAT:
+        case XsmpPackage.FLOAT:
           checkExpression((Float) type, e);
           break;
-        case XcataloguePackage.INTEGER:
-          checkExpression((org.eclipse.xsmp.xcatalogue.Integer) type, e);
+        case XsmpPackage.INTEGER:
+          checkExpression((org.eclipse.xsmp.model.xsmp.Integer) type, e);
           break;
-        case XcataloguePackage.PRIMITIVE_TYPE:
-          checkExpression((org.eclipse.xsmp.xcatalogue.PrimitiveType) type, e);
+        case XsmpPackage.PRIMITIVE_TYPE:
+          checkExpression((org.eclipse.xsmp.model.xsmp.PrimitiveType) type, e);
           break;
-        case XcataloguePackage.STRING:
+        case XsmpPackage.STRING:
           checkExpression((String) type, e);
           break;
-        case XcataloguePackage.STRUCTURE:
-        case XcataloguePackage.CLASS:
-        case XcataloguePackage.EXCEPTION:
+        case XsmpPackage.STRUCTURE:
+        case XsmpPackage.CLASS:
+        case XsmpPackage.EXCEPTION:
           checkExpression((Structure) type, e);
           break;
         default:
@@ -213,7 +213,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
 
   }
 
-  private PrimitiveType getMax(org.eclipse.xsmp.xcatalogue.Integer type)
+  private PrimitiveType getMax(org.eclipse.xsmp.model.xsmp.Integer type)
   {
     if (type.getMaximum() != null)
     {
@@ -235,7 +235,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     };
   }
 
-  private PrimitiveType getMin(org.eclipse.xsmp.xcatalogue.Integer type)
+  private PrimitiveType getMin(org.eclipse.xsmp.model.xsmp.Integer type)
   {
     if (type.getMinimum() != null)
     {
@@ -257,12 +257,12 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     };
   }
 
-  private void checkExpression(org.eclipse.xsmp.xcatalogue.Integer type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.model.xsmp.Integer type, Expression e)
   {
     safeExpression(e, v -> v, getMin(type), getMax(type));
   }
 
-  private void checkExpression(org.eclipse.xsmp.xcatalogue.PrimitiveType type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.model.xsmp.PrimitiveType type, Expression e)
   {
     try
     {
@@ -323,7 +323,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     }
   }
 
-  private void checkExpression(org.eclipse.xsmp.xcatalogue.Float type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.model.xsmp.Float type, Expression e)
   {
 
     final var value = safeExpression(e, type);
@@ -454,7 +454,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     return null;
   }
 
-  private void checkExpression(org.eclipse.xsmp.xcatalogue.String type, Expression e)
+  private void checkExpression(org.eclipse.xsmp.model.xsmp.String type, Expression e)
   {
 
     if (type.getLength() == null)

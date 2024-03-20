@@ -11,8 +11,8 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Association
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Association
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 
 class AssociationGenerator extends AbstractMemberGenerator<Association> {
 

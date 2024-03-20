@@ -10,12 +10,12 @@
  * * SPDX-License-Identifier: EPL-2.0
  * ******************************************************************************
  */
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.xsmp.documentation.Documentation;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 public class MetadatumImplCustom extends MetadatumImpl
 {
@@ -36,8 +36,7 @@ public class MetadatumImplCustom extends MetadatumImpl
     if (eDeliver())
     {
       eNotify(new ENotificationImpl(this, Notification.SET,
-              XcataloguePackage.Literals.METADATUM__DOCUMENTATION, oldDocumentation,
-              newDocumentation));
+              XsmpPackage.Literals.METADATUM__DOCUMENTATION, oldDocumentation, newDocumentation));
     }
   }
 

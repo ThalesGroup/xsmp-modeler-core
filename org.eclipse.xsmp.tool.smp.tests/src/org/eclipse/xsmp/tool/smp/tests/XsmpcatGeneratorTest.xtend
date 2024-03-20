@@ -16,7 +16,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import org.eclipse.emf.common.util.URI
 import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider
-import org.eclipse.xsmp.xcatalogue.Catalogue
+import org.eclipse.xsmp.model.xsmp.Catalogue
 import org.eclipse.xtext.generator.GeneratorContext
 import org.eclipse.xtext.generator.IGenerator2
 import org.eclipse.xtext.generator.InMemoryFileSystemAccess

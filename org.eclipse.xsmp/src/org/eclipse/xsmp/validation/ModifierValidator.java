@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 /**
@@ -107,15 +107,15 @@ public class ModifierValidator
   protected void error(String message, EObject source, int index,
           ValidationMessageAcceptor acceptor)
   {
-    acceptor.acceptError(message, source, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
-            index, XsmpcatIssueCodesProvider.INVALID_MODIFIER);
+    acceptor.acceptError(message, source, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS, index,
+            XsmpcatIssueCodesProvider.INVALID_MODIFIER);
   }
 
   protected void issue(String message, EObject source, int index,
           ValidationMessageAcceptor acceptor, String code, String... issueData)
   {
-    acceptor.acceptWarning(message, source,
-            XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS, index, code, issueData);
+    acceptor.acceptWarning(message, source, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+            index, code, issueData);
   }
 
 }

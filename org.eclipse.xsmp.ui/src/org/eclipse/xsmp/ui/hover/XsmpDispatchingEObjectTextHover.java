@@ -16,7 +16,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.xsmp.ide.hover.XsmpKeywordAtOffsetHelper;
-import org.eclipse.xsmp.xcatalogue.BuiltInExpression;
+import org.eclipse.xsmp.model.xsmp.BuiltInExpression;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.hover.DispatchingEObjectTextHover;

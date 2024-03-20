@@ -8,11 +8,11 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -74,8 +74,8 @@ public class FieldImplCustom extends FieldImpl
 
     if (eNotificationRequired())
     {
-      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.FIELD__INPUT,
-              oldInput, newInput));
+      eNotify(new ENotificationImpl(this, Notification.SET, XsmpPackage.FIELD__INPUT, oldInput,
+              newInput));
     }
 
   }
@@ -99,8 +99,8 @@ public class FieldImplCustom extends FieldImpl
 
     if (eNotificationRequired())
     {
-      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.FIELD__OUTPUT,
-              oldOutput, newOutput));
+      eNotify(new ENotificationImpl(this, Notification.SET, XsmpPackage.FIELD__OUTPUT, oldOutput,
+              newOutput));
     }
   }
 
@@ -123,7 +123,7 @@ public class FieldImplCustom extends FieldImpl
 
     if (eNotificationRequired())
     {
-      eNotify(new ENotificationImpl(this, Notification.SET, XcataloguePackage.FIELD__TRANSIENT,
+      eNotify(new ENotificationImpl(this, Notification.SET, XsmpPackage.FIELD__TRANSIENT,
               oldTransient, newTransient));
     }
   }

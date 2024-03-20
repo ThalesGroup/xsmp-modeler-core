@@ -12,7 +12,7 @@ package org.eclipse.xsmp.util;
 
 public final class EnumerationLiteral extends AbstractPrimitiveType<EnumerationLiteral>
 {
-  private final org.eclipse.xsmp.xcatalogue.EnumerationLiteral value;
+  private final org.eclipse.xsmp.model.xsmp.EnumerationLiteral value;
 
   @Override
   public PrimitiveTypeKind getPrimitiveTypeKind()
@@ -20,17 +20,17 @@ public final class EnumerationLiteral extends AbstractPrimitiveType<EnumerationL
     return PrimitiveTypeKind.ENUM;
   }
 
-  private EnumerationLiteral(org.eclipse.xsmp.xcatalogue.EnumerationLiteral value)
+  private EnumerationLiteral(org.eclipse.xsmp.model.xsmp.EnumerationLiteral value)
   {
     this.value = value;
   }
 
-  public static EnumerationLiteral valueOf(org.eclipse.xsmp.xcatalogue.EnumerationLiteral value)
+  public static EnumerationLiteral valueOf(org.eclipse.xsmp.model.xsmp.EnumerationLiteral value)
   {
     return new EnumerationLiteral(value);
   }
 
-  public org.eclipse.xsmp.xcatalogue.EnumerationLiteral getValue()
+  public org.eclipse.xsmp.model.xsmp.EnumerationLiteral getValue()
   {
     return value;
   }
@@ -58,7 +58,7 @@ public final class EnumerationLiteral extends AbstractPrimitiveType<EnumerationL
    * Compares this object to the specified object. The result is
    * {@code true} if and only if the argument is not
    * {@code null} and is an {@code EnumerationLiteral} object that
-   * contains the same {@code org.eclipse.xsmp.xcatalogue.EnumerationLiteral} value as this object.
+   * contains the same {@code org.eclipse.xsmp.model.xsmp.EnumerationLiteral} value as this object.
    *
    * @param obj
    *          the object to compare with.

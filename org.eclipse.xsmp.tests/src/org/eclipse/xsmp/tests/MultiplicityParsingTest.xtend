@@ -11,11 +11,11 @@
 package org.eclipse.xsmp.tests
 
 import com.google.inject.Inject
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Model
-import org.eclipse.xsmp.xcatalogue.Namespace
-import org.eclipse.xsmp.xcatalogue.Reference
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.Model
+import org.eclipse.xsmp.model.xsmp.Namespace
+import org.eclipse.xsmp.model.xsmp.Reference
+import org.eclipse.xsmp.model.xsmp.XsmpFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -104,7 +104,7 @@ class MultiplicityParsingTest {
    IResourceFactory resourceFactory;
     @Test
     def void checkSetters() {
-        var ref = XcatalogueFactory.eINSTANCE.createReference
+        var ref = XsmpFactory.eINSTANCE.createReference
         var r = resourceFactory.createResource(URI.createURI("test.xsmpcat"))
         r.contents += ref
         Assertions.assertEquals(1, ref.lower);

@@ -13,11 +13,11 @@ package org.eclipse.xsmp.tests
 import com.google.inject.Inject
 import java.math.BigInteger
 import org.eclipse.xsmp.util.XsmpUtil
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Constant
-import org.eclipse.xsmp.xcatalogue.Expression
-import org.eclipse.xsmp.xcatalogue.Interface
-import org.eclipse.xsmp.xcatalogue.Namespace
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.Constant
+import org.eclipse.xsmp.model.xsmp.Expression
+import org.eclipse.xsmp.model.xsmp.Interface
+import org.eclipse.xsmp.model.xsmp.Namespace
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper

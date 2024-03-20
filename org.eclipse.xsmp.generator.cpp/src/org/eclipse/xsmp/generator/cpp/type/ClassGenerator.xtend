@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Class
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.VisibilityKind
-import org.eclipse.xsmp.xcatalogue.Operation
+import org.eclipse.xsmp.model.xsmp.Class
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.VisibilityKind
+import org.eclipse.xsmp.model.xsmp.Operation
 
 class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
 

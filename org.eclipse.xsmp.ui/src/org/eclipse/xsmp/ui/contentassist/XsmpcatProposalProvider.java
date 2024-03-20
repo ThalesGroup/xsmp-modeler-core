@@ -21,30 +21,30 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.BuiltInConstant;
+import org.eclipse.xsmp.model.xsmp.BuiltInFunction;
+import org.eclipse.xsmp.model.xsmp.Class;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.EnumerationLiteral;
+import org.eclipse.xsmp.model.xsmp.EventSource;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NativeType;
+import org.eclipse.xsmp.model.xsmp.PrimitiveType;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.XsmpFactory;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
 import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
-import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
-import org.eclipse.xsmp.xcatalogue.Class;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Document;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.EventSource;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.NativeType;
-import org.eclipse.xsmp.xcatalogue.PrimitiveType;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.Keyword;
@@ -75,12 +75,12 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   {
     this.xsmpUtil = xsmpUtil;
     builtInConstants = xsmpUtil.getSolver().constantMappings.keySet().stream().map(s -> {
-      final var cst = XcatalogueFactory.eINSTANCE.createBuiltInConstant();
+      final var cst = XsmpFactory.eINSTANCE.createBuiltInConstant();
       cst.setName(s);
       return cst;
     }).toList();
     builtInFunctions = xsmpUtil.getSolver().functionMappings.keySet().stream().map(s -> {
-      final var cst = XcatalogueFactory.eINSTANCE.createBuiltInFunction();
+      final var cst = XsmpFactory.eINSTANCE.createBuiltInFunction();
       cst.setName(s);
       return cst;
     }).toList();
@@ -235,63 +235,63 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     if (obj instanceof Document)
     {
       final var creator = System.getProperty("user.name");
-      if (!((List< ? >) obj.eGet(XcataloguePackage.Literals.DOCUMENT__CREATOR)).contains(creator))
+      if (!((List< ? >) obj.eGet(XsmpPackage.Literals.DOCUMENT__CREATOR)).contains(creator))
       {
         acceptor.accept(createTagProposal("@creator " + creator, context));
       }
 
-      if (!obj.eIsSet(XcataloguePackage.Literals.DOCUMENT__DATE))
+      if (!obj.eIsSet(XsmpPackage.Literals.DOCUMENT__DATE))
       {
         acceptor.accept(createTagProposal("@date " + Instant.now().truncatedTo(ChronoUnit.SECONDS),
                 context));
       }
-      if (!obj.eIsSet(XcataloguePackage.Literals.DOCUMENT__TITLE))
+      if (!obj.eIsSet(XsmpPackage.Literals.DOCUMENT__TITLE))
       {
         acceptor.accept(createTagProposal(
-                "@title " + obj.eGet(XcataloguePackage.Literals.NAMED_ELEMENT__NAME), context));
+                "@title " + obj.eGet(XsmpPackage.Literals.NAMED_ELEMENT__NAME), context));
       }
 
-      if (!obj.eIsSet(XcataloguePackage.Literals.DOCUMENT__VERSION))
+      if (!obj.eIsSet(XsmpPackage.Literals.DOCUMENT__VERSION))
       {
         acceptor.accept(createTagProposal("@version 0.0.1", context));
       }
     }
     else if (obj instanceof Type)
     {
-      if (!obj.eIsSet(XcataloguePackage.Literals.TYPE__UUID))
+      if (!obj.eIsSet(XsmpPackage.Literals.TYPE__UUID))
       {
         acceptor.accept(createTagProposal("@uuid " + UUID.randomUUID().toString(), context));
       }
       if (obj instanceof AttributeType)
       {
-        if (!obj.eIsSet(XcataloguePackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE))
+        if (!obj.eIsSet(XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE))
         {
           acceptor.accept(createTagProposal("@allowMultiple", context));
         }
 
-        if (!obj.eIsSet(XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE))
+        if (!obj.eIsSet(XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE))
         {
           acceptor.accept(createTagProposal("@usage ", context));
         }
       }
-      else if (obj instanceof org.eclipse.xsmp.xcatalogue.Float
-              && !obj.eIsSet(XcataloguePackage.Literals.FLOAT__UNIT)
-              || obj instanceof org.eclipse.xsmp.xcatalogue.Integer
-                      && !obj.eIsSet(XcataloguePackage.Literals.INTEGER__UNIT))
+      else if (obj instanceof org.eclipse.xsmp.model.xsmp.Float
+              && !obj.eIsSet(XsmpPackage.Literals.FLOAT__UNIT)
+              || obj instanceof org.eclipse.xsmp.model.xsmp.Integer
+                      && !obj.eIsSet(XsmpPackage.Literals.INTEGER__UNIT))
       {
         acceptor.accept(createTagProposal("@unit ", context));
       }
       else if (obj instanceof NativeType)
       {
-        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__TYPE))
+        if (!obj.eIsSet(XsmpPackage.Literals.NATIVE_TYPE__TYPE))
         {
           acceptor.accept(createTagProposal("@type ", context));
         }
-        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__NAMESPACE))
+        if (!obj.eIsSet(XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE))
         {
           acceptor.accept(createTagProposal("@namespace ", context));
         }
-        if (!obj.eIsSet(XcataloguePackage.Literals.NATIVE_TYPE__LOCATION))
+        if (!obj.eIsSet(XsmpPackage.Literals.NATIVE_TYPE__LOCATION))
         {
           acceptor.accept(createTagProposal("@location ", context));
         }
@@ -303,14 +303,14 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }
     else if (obj instanceof Property)
     {
-      if (!obj.eIsSet(XcataloguePackage.Literals.PROPERTY__CATEGORY))
+      if (!obj.eIsSet(XsmpPackage.Literals.PROPERTY__CATEGORY))
       {
         acceptor.accept(createTagProposal("@category ", context));
       }
     }
     else if (obj instanceof EventSource)
     {
-      if (!obj.eIsSet(XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST))
+      if (!obj.eIsSet(XsmpPackage.Literals.EVENT_SOURCE__SINGLECAST))
       {
         acceptor.accept(createTagProposal("@singlecast ", context));
       }
@@ -336,8 +336,7 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
 
       if (elem instanceof Metadatum && rule == grammarAccess.getML_DOCUMENTATIONRule())
       {
-        NodeModelUtils
-                .findNodesForFeature(elem, XcataloguePackage.Literals.METADATUM__DOCUMENTATION)
+        NodeModelUtils.findNodesForFeature(elem, XsmpPackage.Literals.METADATUM__DOCUMENTATION)
                 .forEach(node -> commentProposal(elem.eContainer(), context, acceptor));
       }
     }

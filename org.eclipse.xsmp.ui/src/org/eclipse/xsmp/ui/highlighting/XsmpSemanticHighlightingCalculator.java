@@ -10,32 +10,32 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.highlighting;
 
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.ASSOCIATION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.ATTRIBUTE_TYPE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.BUILT_IN_CONSTANT;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.BUILT_IN_FUNCTION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.CONSTANT;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.CONTAINER;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.ENTRY_POINT;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.EVENT_SINK;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.EVENT_SOURCE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.FIELD;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.METADATUM;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.NAMED_ELEMENT_REFERENCE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PARAMETER;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROPERTY;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.REFERENCE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.ATTRIBUTE__TYPE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.BUILT_IN_EXPRESSION__NAME;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.METADATUM__DOCUMENTATION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.NAMED_ELEMENT__NAME;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.ANNOTATION_ID;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.BUILT_IN_ID;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.DEPRECATED_ID;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.DOCUMENTATION_TAG_ID;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.FIELD_ID;
 import static org.eclipse.xsmp.ui.highlighting.XsmpcatHighlightingStyles.PARAMETER_ID;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.ASSOCIATION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.ATTRIBUTE_TYPE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.BUILT_IN_CONSTANT;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.BUILT_IN_FUNCTION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CONSTANT;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CONTAINER;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.ENTRY_POINT;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.EVENT_SINK;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.EVENT_SOURCE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.FIELD;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.METADATUM;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.NAMED_ELEMENT_REFERENCE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.PARAMETER;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.PROPERTY;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.REFERENCE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.ATTRIBUTE__TYPE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.BUILT_IN_EXPRESSION__NAME;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.METADATUM__DOCUMENTATION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.Literals.NAMED_ELEMENT__NAME;
 import static org.eclipse.xtext.ide.editor.syntaxcoloring.HighlightingStyles.DEFAULT_ID;
 
 import java.util.List;
@@ -43,9 +43,9 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xsmp.documentation.TagElement;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator;
@@ -108,7 +108,7 @@ public class XsmpSemanticHighlightingCalculator extends DefaultSemanticHighlight
   protected void highlightCrossReference(IHighlightedPositionAcceptor acceptor, EObject object,
           EReference feature)
   {
-    if (XcataloguePackage.Literals.NAMED_ELEMENT.isSuperTypeOf(feature.getEReferenceType()))
+    if (XsmpPackage.Literals.NAMED_ELEMENT.isSuperTypeOf(feature.getEReferenceType()))
     {
       try
       {

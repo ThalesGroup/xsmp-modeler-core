@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.tool.python.generator;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;

@@ -8,13 +8,13 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.xsmp.xcatalogue.AccessKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.AccessKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -65,7 +65,7 @@ public class PropertyImplCustom extends PropertyImpl
   @Override
   public String getCategory()
   {
-    return getFeature(XcataloguePackage.Literals.PROPERTY__CATEGORY, CATEGORY_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.PROPERTY__CATEGORY, CATEGORY_EDEFAULT);
   }
 
   /**
@@ -92,8 +92,7 @@ public class PropertyImplCustom extends PropertyImpl
     if (eNotificationRequired())
     {
       eNotify(new ENotificationImpl(this, Notification.SET,
-              XcataloguePackage.VISIBILITY_ELEMENT__VISIBILITY, oldAccess, newAccess,
-              !oldAccessESet));
+              XsmpPackage.VISIBILITY_ELEMENT__VISIBILITY, oldAccess, newAccess, !oldAccessESet));
     }
 
   }
@@ -112,7 +111,7 @@ public class PropertyImplCustom extends PropertyImpl
       getModifiers().remove(oldAccess.getName());
       if (eNotificationRequired())
       {
-        eNotify(new ENotificationImpl(this, Notification.UNSET, XcataloguePackage.PROPERTY__ACCESS,
+        eNotify(new ENotificationImpl(this, Notification.UNSET, XsmpPackage.PROPERTY__ACCESS,
                 oldAccess, null, oldAccessESet));
       }
     }
@@ -125,7 +124,7 @@ public class PropertyImplCustom extends PropertyImpl
   @Override
   public void setCategory(String newCategory)
   {
-    setFeature(XcataloguePackage.Literals.PROPERTY__CATEGORY, newCategory);
+    setFeature(XsmpPackage.Literals.PROPERTY__CATEGORY, newCategory);
   }
 
   @Override
@@ -133,7 +132,7 @@ public class PropertyImplCustom extends PropertyImpl
   {
     if ("category".equals(name))
     {
-      return XcataloguePackage.Literals.PROPERTY__CATEGORY;
+      return XsmpPackage.Literals.PROPERTY__CATEGORY;
     }
     return super.getFeature(name);
   }

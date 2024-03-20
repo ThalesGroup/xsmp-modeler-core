@@ -12,18 +12,18 @@
 
 import java.util.Collections
 import java.util.List
-import org.eclipse.xsmp.xcatalogue.Array
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Component
-import org.eclipse.xsmp.xcatalogue.LanguageType
-import org.eclipse.xsmp.xcatalogue.Model
-import org.eclipse.xsmp.xcatalogue.NamedElement
-import org.eclipse.xsmp.xcatalogue.PrimitiveType
-import org.eclipse.xsmp.xcatalogue.Service
-import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.Type
-import org.eclipse.xsmp.xcatalogue.ValueReference
-import org.eclipse.xsmp.xcatalogue.ValueType
+import org.eclipse.xsmp.model.xsmp.Array
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.Component
+import org.eclipse.xsmp.model.xsmp.LanguageType
+import org.eclipse.xsmp.model.xsmp.Model
+import org.eclipse.xsmp.model.xsmp.NamedElement
+import org.eclipse.xsmp.model.xsmp.PrimitiveType
+import org.eclipse.xsmp.model.xsmp.Service
+import org.eclipse.xsmp.model.xsmp.Structure
+import org.eclipse.xsmp.model.xsmp.Type
+import org.eclipse.xsmp.model.xsmp.ValueReference
+import org.eclipse.xsmp.model.xsmp.ValueType
 
 class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
 

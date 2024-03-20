@@ -21,16 +21,16 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.VisibilityKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -51,94 +51,94 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   private final Map<EReference, Function<EObject, Predicate<IEObjectDescription>>> builders = ImmutableMap
           .<EReference, Function<EObject, Predicate<IEObjectDescription>>> builder()
           // add the entries
-          .put(XcataloguePackage.Literals.CLASS__BASE,
-                  model -> p -> isValidTypeReference(model, XcataloguePackage.Literals.CLASS__BASE,
+          .put(XsmpPackage.Literals.CLASS__BASE,
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.CLASS__BASE,
                           p) && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
-          .put(XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE,
+          .put(XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE,
                   model -> p -> floatingPointPrimitiveSet
                           .contains(xsmpUtil.getPrimitiveTypeKind(p)))
-          .put(XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE,
+          .put(XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE,
                   model -> p -> integerPrimitiveSet.contains(xsmpUtil.getPrimitiveTypeKind(p)))
-          .put(XcataloguePackage.Literals.INTERFACE__BASE,
+          .put(XsmpPackage.Literals.INTERFACE__BASE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.INTERFACE__BASE, p)
+                          XsmpPackage.Literals.INTERFACE__BASE, p)
                           && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
-          .put(XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS,
+          .put(XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS, p))
-          .put(XcataloguePackage.Literals.EVENT_SINK__TYPE,
+                          XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS, p))
+          .put(XsmpPackage.Literals.EVENT_SINK__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.EVENT_SINK__TYPE, p))
-          .put(XcataloguePackage.Literals.ARRAY__ITEM_TYPE,
+                          XsmpPackage.Literals.EVENT_SINK__TYPE, p))
+          .put(XsmpPackage.Literals.ARRAY__ITEM_TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.ARRAY__ITEM_TYPE, p))
-          .put(XcataloguePackage.Literals.EVENT_SOURCE__TYPE,
+                          XsmpPackage.Literals.ARRAY__ITEM_TYPE, p))
+          .put(XsmpPackage.Literals.EVENT_SOURCE__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.EVENT_SOURCE__TYPE, p))
-          .put(XcataloguePackage.Literals.VALUE_REFERENCE__TYPE,
+                          XsmpPackage.Literals.EVENT_SOURCE__TYPE, p))
+          .put(XsmpPackage.Literals.VALUE_REFERENCE__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.VALUE_REFERENCE__TYPE, p))
-          .put(XcataloguePackage.Literals.FIELD__TYPE,
+                          XsmpPackage.Literals.VALUE_REFERENCE__TYPE, p))
+          .put(XsmpPackage.Literals.FIELD__TYPE,
                   model -> p -> PrimitiveTypeKind.STRING8 != xsmpUtil.getPrimitiveTypeKind(p)
-                          && isValidTypeReference(model, XcataloguePackage.Literals.FIELD__TYPE, p))
-          .put(XcataloguePackage.Literals.ENTRY_POINT__INPUT,
+                          && isValidTypeReference(model, XsmpPackage.Literals.FIELD__TYPE, p))
+          .put(XsmpPackage.Literals.ENTRY_POINT__INPUT,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.ENTRY_POINT__INPUT, p)
+                          XsmpPackage.Literals.ENTRY_POINT__INPUT, p)
                           && ((Field) p.getEObjectOrProxy()).isInput())
-          .put(XcataloguePackage.Literals.ENTRY_POINT__OUTPUT,
+          .put(XsmpPackage.Literals.ENTRY_POINT__OUTPUT,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, p)
+                          XsmpPackage.Literals.ENTRY_POINT__OUTPUT, p)
                           && ((Field) p.getEObjectOrProxy()).isOutput())
-          .put(XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE,
+          .put(XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE, p))
-          .put(XcataloguePackage.Literals.CONSTANT__TYPE,
+                          XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE, p))
+          .put(XsmpPackage.Literals.CONSTANT__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.CONSTANT__TYPE, p))
-          .put(XcataloguePackage.Literals.ASSOCIATION__TYPE,
+                          XsmpPackage.Literals.CONSTANT__TYPE, p))
+          .put(XsmpPackage.Literals.ASSOCIATION__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.ASSOCIATION__TYPE, p))
-          .put(XcataloguePackage.Literals.CONTAINER__TYPE,
+                          XsmpPackage.Literals.ASSOCIATION__TYPE, p))
+          .put(XsmpPackage.Literals.CONTAINER__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.CONTAINER__TYPE, p))
-          .put(XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT,
+                          XsmpPackage.Literals.CONTAINER__TYPE, p))
+          .put(XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT, p))
-          .put(XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION,
+                          XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT, p))
+          .put(XsmpPackage.Literals.OPERATION__RAISED_EXCEPTION,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION, p))
-          .put(XcataloguePackage.Literals.PARAMETER__TYPE,
+                          XsmpPackage.Literals.OPERATION__RAISED_EXCEPTION, p))
+          .put(XsmpPackage.Literals.PARAMETER__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PARAMETER__TYPE, p))
-          .put(XcataloguePackage.Literals.PROPERTY__TYPE,
+                          XsmpPackage.Literals.PARAMETER__TYPE, p))
+          .put(XsmpPackage.Literals.PROPERTY__TYPE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PROPERTY__TYPE, p))
-          .put(XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD,
+                          XsmpPackage.Literals.PROPERTY__TYPE, p))
+          .put(XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD, p)) // TODO filter
+                          XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD, p)) // TODO filter
                                                                                    // compatible
                                                                                    // types
-          .put(XcataloguePackage.Literals.PROPERTY__GET_RAISES,
+          .put(XsmpPackage.Literals.PROPERTY__GET_RAISES,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PROPERTY__GET_RAISES, p))
-          .put(XcataloguePackage.Literals.PROPERTY__SET_RAISES,
+                          XsmpPackage.Literals.PROPERTY__GET_RAISES, p))
+          .put(XsmpPackage.Literals.PROPERTY__SET_RAISES,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.PROPERTY__SET_RAISES, p))
-          .put(XcataloguePackage.Literals.REFERENCE__INTERFACE,
+                          XsmpPackage.Literals.PROPERTY__SET_RAISES, p))
+          .put(XsmpPackage.Literals.REFERENCE__INTERFACE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.REFERENCE__INTERFACE, p))
-          .put(XcataloguePackage.Literals.COMPONENT__INTERFACE,
+                          XsmpPackage.Literals.REFERENCE__INTERFACE, p))
+          .put(XsmpPackage.Literals.COMPONENT__INTERFACE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.COMPONENT__INTERFACE, p))
-          .put(XcataloguePackage.Literals.COMPONENT__BASE,
+                          XsmpPackage.Literals.COMPONENT__INTERFACE, p))
+          .put(XsmpPackage.Literals.COMPONENT__BASE,
                   model -> p -> isValidTypeReference(model,
-                          XcataloguePackage.Literals.COMPONENT__BASE, p)
+                          XsmpPackage.Literals.COMPONENT__BASE, p)
                           && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
-          .put(XcataloguePackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
+          .put(XsmpPackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
             final var elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
 
             if (elem != null
-                    && isValidTypeReference(model, XcataloguePackage.Literals.ATTRIBUTE__TYPE, p))
+                    && isValidTypeReference(model, XsmpPackage.Literals.ATTRIBUTE__TYPE, p))
             {
               final var elemUsages = Stream
                       .concat(Stream.of(elem.eClass().getName()),
@@ -158,10 +158,10 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
             }
             return false;
           })
-          .put(XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
+          .put(XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD,
                   model -> p -> xsmpUtil.getField((Expression) model) == EcoreUtil
                           .resolve(p.getEObjectOrProxy(), model))
-          .put(XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
+          .put(XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE,
                   model -> p -> EcoreUtil2.getContainerOfType(model, NamedElement.class) != p
                           .getEObjectOrProxy())
           // build the map

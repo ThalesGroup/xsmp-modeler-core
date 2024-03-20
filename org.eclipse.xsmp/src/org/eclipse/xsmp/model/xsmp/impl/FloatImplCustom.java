@@ -8,11 +8,11 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.RangeKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.RangeKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -32,7 +32,7 @@ public class FloatImplCustom extends FloatImpl
   @Override
   public String getUnit()
   {
-    return getFeature(XcataloguePackage.Literals.FLOAT__UNIT, UNIT_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.FLOAT__UNIT, UNIT_EDEFAULT);
   }
 
   /**
@@ -79,7 +79,7 @@ public class FloatImplCustom extends FloatImpl
   @Override
   public void setUnit(String newUnit)
   {
-    setFeature(XcataloguePackage.Literals.FLOAT__UNIT, newUnit);
+    setFeature(XsmpPackage.Literals.FLOAT__UNIT, newUnit);
   }
 
   @Override
@@ -87,7 +87,7 @@ public class FloatImplCustom extends FloatImpl
   {
     if ("unit".equals(name))
     {
-      return XcataloguePackage.Literals.FLOAT__UNIT;
+      return XsmpPackage.Literals.FLOAT__UNIT;
     }
     return super.getFeature(name);
   }

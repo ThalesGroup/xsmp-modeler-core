@@ -25,18 +25,18 @@ import org.eclipse.xsmp.generator.cpp.member.FieldGenerator
 import org.eclipse.xsmp.generator.cpp.member.OperationGenerator
 import org.eclipse.xsmp.generator.cpp.member.PropertyGenerator
 import org.eclipse.xsmp.generator.cpp.member.ReferenceGenerator
-import org.eclipse.xsmp.xcatalogue.Association
-import org.eclipse.xsmp.xcatalogue.Constant
-import org.eclipse.xsmp.xcatalogue.Container
-import org.eclipse.xsmp.xcatalogue.EntryPoint
-import org.eclipse.xsmp.xcatalogue.EventSink
-import org.eclipse.xsmp.xcatalogue.EventSource
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.Operation
-import org.eclipse.xsmp.xcatalogue.Property
-import org.eclipse.xsmp.xcatalogue.Reference
-import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.model.xsmp.Association
+import org.eclipse.xsmp.model.xsmp.Constant
+import org.eclipse.xsmp.model.xsmp.Container
+import org.eclipse.xsmp.model.xsmp.EntryPoint
+import org.eclipse.xsmp.model.xsmp.EventSink
+import org.eclipse.xsmp.model.xsmp.EventSource
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Operation
+import org.eclipse.xsmp.model.xsmp.Property
+import org.eclipse.xsmp.model.xsmp.Reference
+import org.eclipse.xsmp.model.xsmp.VisibilityKind
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 
 abstract class AbstractTypeWithMembersGenerator<T extends NamedElementWithMembers> extends AbstractFileGenerator<T> {

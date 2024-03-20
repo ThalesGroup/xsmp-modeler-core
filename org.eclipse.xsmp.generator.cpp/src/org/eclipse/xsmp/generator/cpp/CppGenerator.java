@@ -30,11 +30,11 @@ import org.eclipse.xsmp.generator.cpp.type.InterfaceGenerator;
 import org.eclipse.xsmp.generator.cpp.type.NativeTypeGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.Namespace;
-import org.eclipse.xsmp.xcatalogue.ReferenceType;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Namespace;
+import org.eclipse.xsmp.model.xsmp.ReferenceType;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
@@ -188,17 +188,17 @@ public class CppGenerator extends AbstractGenerator
   {
     return switch (t.eClass().getClassifierID())
     {
-      case XcataloguePackage.ARRAY -> arrayGenerator;
-      case XcataloguePackage.ENUMERATION -> enumerationGenerator;
-      case XcataloguePackage.FLOAT -> floatGenerator;
-      case XcataloguePackage.INTEGER -> integerGenerator;
-      case XcataloguePackage.STRING -> stringGenerator;
-      case XcataloguePackage.STRUCTURE -> structureGenerator;
-      case XcataloguePackage.CLASS -> classGenerator;
-      case XcataloguePackage.EXCEPTION -> exceptionGenerator;
-      case XcataloguePackage.INTERFACE -> interfaceGenerator;
-      case XcataloguePackage.MODEL, XcataloguePackage.SERVICE -> componentGenerator;
-      case XcataloguePackage.NATIVE_TYPE -> nativeTypeGenerator;
+      case XsmpPackage.ARRAY -> arrayGenerator;
+      case XsmpPackage.ENUMERATION -> enumerationGenerator;
+      case XsmpPackage.FLOAT -> floatGenerator;
+      case XsmpPackage.INTEGER -> integerGenerator;
+      case XsmpPackage.STRING -> stringGenerator;
+      case XsmpPackage.STRUCTURE -> structureGenerator;
+      case XsmpPackage.CLASS -> classGenerator;
+      case XsmpPackage.EXCEPTION -> exceptionGenerator;
+      case XsmpPackage.INTERFACE -> interfaceGenerator;
+      case XsmpPackage.MODEL, XsmpPackage.SERVICE -> componentGenerator;
+      case XsmpPackage.NATIVE_TYPE -> nativeTypeGenerator;
       default -> null;
     };
   }

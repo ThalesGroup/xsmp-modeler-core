@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Enumeration
+import org.eclipse.xsmp.model.xsmp.Enumeration
 
 class EnumerationGenerator extends AbstractTypeGenerator<Enumeration> {
 

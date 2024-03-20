@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.validation.NamesAreUniqueValidationHelper;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
@@ -30,7 +30,7 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
   @Override
   protected EStructuralFeature getNameFeature(EObject object)
   {
-    return XcataloguePackage.Literals.NAMED_ELEMENT__NAME;
+    return XsmpPackage.Literals.NAMED_ELEMENT__NAME;
   }
 
   @Override
@@ -59,7 +59,7 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
 
     final Iterable<IEObjectDescription> sameNames = Iterables.filter(
             validationScope.getExportedObjects(),
-            o -> XcataloguePackage.Literals.SERVICE.isSuperTypeOf(o.getEClass())
+            o -> XsmpPackage.Literals.SERVICE.isSuperTypeOf(o.getEClass())
                     && name.equals(o.getName().getLastSegment()));
 
     if (sameNames instanceof Collection< ? > && ((Collection< ? >) sameNames).size() <= 1)
@@ -85,15 +85,14 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
   @Override
   protected EClass getClusterType(IEObjectDescription description)
   {
-    return description.getEClass() == XcataloguePackage.Literals.SERVICE
-            ? XcataloguePackage.Literals.SERVICE
+    return description.getEClass() == XsmpPackage.Literals.SERVICE ? XsmpPackage.Literals.SERVICE
             : null;
   }
 
   @Override
   protected ImmutableSet<EClass> getClusterTypes()
   {
-    return ImmutableSet.of(XcataloguePackage.Literals.SERVICE);
+    return ImmutableSet.of(XsmpPackage.Literals.SERVICE);
   }
 
   @Override

@@ -13,13 +13,13 @@ package org.eclipse.xsmp.ui.contentassist;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.ValueReference;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
 import com.google.inject.Inject;
@@ -38,22 +38,22 @@ public class DefaultValueProvider
 
     switch (t.eClass().getClassifierID())
     {
-      case XcataloguePackage.VALUE_REFERENCE:
+      case XsmpPackage.VALUE_REFERENCE:
         return getDefautValue(((ValueReference) t).getType());
-      case XcataloguePackage.ARRAY:
+      case XsmpPackage.ARRAY:
         return "{" + java.lang.String.join(", ",
                 Collections.nCopies(xsmpUtil.getInt32(((Array) t).getSize()),
                         getDefautValue(((Array) t).getItemType())))
                 + "}";
-      case XcataloguePackage.ENUMERATION:
+      case XsmpPackage.ENUMERATION:
         return ((Enumeration) t).getLiteral().stream()
                 .map(l -> qualifiedNameProvider.getFullyQualifiedName(l).toString()).findFirst()
                 .orElse(null);
 
-      case XcataloguePackage.FLOAT:
-      case XcataloguePackage.INTEGER:
-      case XcataloguePackage.STRING:
-      case XcataloguePackage.PRIMITIVE_TYPE:
+      case XsmpPackage.FLOAT:
+      case XsmpPackage.INTEGER:
+      case XsmpPackage.STRING:
+      case XsmpPackage.PRIMITIVE_TYPE:
         switch (xsmpUtil.getPrimitiveTypeKind(t))
         {
           case BOOL:
@@ -84,7 +84,7 @@ public class DefaultValueProvider
             break;
         }
         break;
-      case XcataloguePackage.STRUCTURE:
+      case XsmpPackage.STRUCTURE:
         final var fields = xsmpUtil.getAssignableFields((Structure) t);
 
         return "{" + java.lang.String.join(", ",

@@ -22,10 +22,10 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.model.xsmp.ImportDeclaration;
+import org.eclipse.xsmp.model.xsmp.ImportSection;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.QualifiedNames;
-import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
-import org.eclipse.xsmp.xcatalogue.ImportSection;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.ParserRule;
@@ -170,7 +170,7 @@ public class XsmpImportsConfiguration
      * from the resolved type rather than the concrete syntax.
      */
     final var list = NodeModelUtils.findNodesForFeature(importDeclaration,
-            XcataloguePackage.Literals.IMPORT_DECLARATION__IMPORTED_TYPE);
+            XsmpPackage.Literals.IMPORT_DECLARATION__IMPORTED_TYPE);
     if (list.isEmpty())
     {
       return null;
@@ -212,7 +212,7 @@ public class XsmpImportsConfiguration
     pathToImportSection.addLast(ruleOrRuleCall);
     returnType = rule.getType().getClassifier();
     if (returnType instanceof final EClass eClass
-            && XcataloguePackage.Literals.IMPORT_SECTION.isSuperTypeOf(eClass))
+            && XsmpPackage.Literals.IMPORT_SECTION.isSuperTypeOf(eClass))
     {
       return true;
     }

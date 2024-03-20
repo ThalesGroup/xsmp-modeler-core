@@ -10,23 +10,23 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.outline;
 
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CATALOGUE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.CLASS;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.ENUMERATION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.EXCEPTION;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.INTERFACE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.MODEL;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.NAMESPACE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.SERVICE;
-import static org.eclipse.xsmp.xcatalogue.XcataloguePackage.STRUCTURE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.CATALOGUE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.CLASS;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.ENUMERATION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.EXCEPTION;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.INTERFACE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.MODEL;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.NAMESPACE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SERVICE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.STRUCTURE;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
@@ -41,7 +41,7 @@ public class XsmpcatOutlineTreeProvider extends DefaultOutlineTreeProvider
   protected void _createChildren(DocumentRootNode parentNode, Catalogue doc)
   {
 
-    createEStructuralFeatureNode(parentNode, doc, XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
+    createEStructuralFeatureNode(parentNode, doc, XsmpPackage.Literals.NAMED_ELEMENT__NAME,
             imageDispatcher.invoke(doc), textDispatcher.invoke(doc), true);
 
     for (final EObject m : doc.getMember())

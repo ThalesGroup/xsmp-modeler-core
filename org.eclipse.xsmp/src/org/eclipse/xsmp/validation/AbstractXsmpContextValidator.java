@@ -37,7 +37,7 @@ public class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
   protected List<EPackage> getEPackages()
   {
     final List<EPackage> result = new ArrayList<>();
-    result.add(EPackage.Registry.INSTANCE.getEPackage("http://org.eclipse.xsmp/xcatalogue"));
+    result.add(EPackage.Registry.INSTANCE.getEPackage("http://org.eclipse.xsmp/xsmp"));
     result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/emf/2002/Ecore"));
     return result;
   }

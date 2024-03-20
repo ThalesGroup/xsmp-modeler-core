@@ -32,6 +32,40 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.documentation.TextElement;
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Association;
+import org.eclipse.xsmp.model.xsmp.Attribute;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Class;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.Container;
+import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
+import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.EntryPoint;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.EnumerationLiteral;
+import org.eclipse.xsmp.model.xsmp.EventSink;
+import org.eclipse.xsmp.model.xsmp.EventSource;
+import org.eclipse.xsmp.model.xsmp.EventType;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.Float;
+import org.eclipse.xsmp.model.xsmp.Integer;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Namespace;
+import org.eclipse.xsmp.model.xsmp.NativeType;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.Reference;
+import org.eclipse.xsmp.model.xsmp.ReferenceType;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.ValueReference;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.tool.smp.core.elements.ElementsFactory;
 import org.eclipse.xsmp.tool.smp.core.types.AccessKind;
 import org.eclipse.xsmp.tool.smp.core.types.ArrayValue;
@@ -78,40 +112,6 @@ import org.eclipse.xsmp.tool.smp.smdl.catalogue.Interface;
 import org.eclipse.xsmp.tool.smp.smdl.package_.PackageFactory;
 import org.eclipse.xsmp.tool.smp.util.SmpURIConverter;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Attribute;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.Class;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Container;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.Document;
-import org.eclipse.xsmp.xcatalogue.EntryPoint;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.EventSink;
-import org.eclipse.xsmp.xcatalogue.EventSource;
-import org.eclipse.xsmp.xcatalogue.EventType;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Float;
-import org.eclipse.xsmp.xcatalogue.Integer;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Namespace;
-import org.eclipse.xsmp.xcatalogue.NativeType;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Reference;
-import org.eclipse.xsmp.xcatalogue.ReferenceType;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
@@ -529,7 +529,7 @@ public class SmpGenerator extends AbstractModelConverter
     }
   }
 
-  protected void copy(org.eclipse.xsmp.xcatalogue.String src,
+  protected void copy(org.eclipse.xsmp.model.xsmp.String src,
           org.eclipse.xsmp.tool.smp.core.types.String dest)
   {
     copy((Type) src, dest);
@@ -604,7 +604,7 @@ public class SmpGenerator extends AbstractModelConverter
             .add((org.eclipse.xsmp.tool.smp.smdl.catalogue.Reference) copy(a)));
   }
 
-  protected void copy(org.eclipse.xsmp.xcatalogue.Interface src, Interface dest)
+  protected void copy(org.eclipse.xsmp.model.xsmp.Interface src, Interface dest)
   {
     copy((ReferenceType) src, (org.eclipse.xsmp.tool.smp.smdl.catalogue.ReferenceType) dest);
 
@@ -691,7 +691,7 @@ public class SmpGenerator extends AbstractModelConverter
     dest.setType(getReference(src.getType(), src.eResource()));
   }
 
-  protected void copy(org.eclipse.xsmp.xcatalogue.Parameter src, Parameter dest)
+  protected void copy(org.eclipse.xsmp.model.xsmp.Parameter src, Parameter dest)
   {
     copy((NamedElement) src, (org.eclipse.xsmp.tool.smp.core.elements.NamedElement) dest);
 
@@ -851,9 +851,9 @@ public class SmpGenerator extends AbstractModelConverter
         case NONE:
           switch (type.eClass().getClassifierID())
           {
-            case XcataloguePackage.ARRAY:
+            case XsmpPackage.ARRAY:
               return convert((CollectionLiteral) value, (Array) type);
-            case XcataloguePackage.STRUCTURE, XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION:
+            case XsmpPackage.STRUCTURE, XsmpPackage.CLASS, XsmpPackage.EXCEPTION:
               return convert((CollectionLiteral) value);
             default:
               break;

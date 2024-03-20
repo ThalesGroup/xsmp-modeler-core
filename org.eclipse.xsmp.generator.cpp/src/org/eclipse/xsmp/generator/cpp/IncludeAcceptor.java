@@ -13,8 +13,8 @@ package org.eclipse.xsmp.generator.cpp;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Type;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Type;
 
 public class IncludeAcceptor
 {

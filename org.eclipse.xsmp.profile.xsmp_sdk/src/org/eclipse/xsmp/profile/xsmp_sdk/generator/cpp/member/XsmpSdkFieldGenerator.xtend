@@ -14,9 +14,9 @@ import com.google.inject.Inject
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.FieldGenerator
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.FieldHelper
-import org.eclipse.xsmp.xcatalogue.Component
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Component
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 
 class XsmpSdkFieldGenerator extends FieldGenerator {
 

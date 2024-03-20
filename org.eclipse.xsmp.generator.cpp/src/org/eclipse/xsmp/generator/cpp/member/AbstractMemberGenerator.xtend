@@ -13,7 +13,7 @@ package org.eclipse.xsmp.generator.cpp.member
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 
 abstract class AbstractMemberGenerator<T extends EObject> {

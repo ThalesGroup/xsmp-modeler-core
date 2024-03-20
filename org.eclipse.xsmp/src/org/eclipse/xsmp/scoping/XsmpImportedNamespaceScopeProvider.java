@@ -22,16 +22,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.ImportDeclaration;
+import org.eclipse.xsmp.model.xsmp.ImportSection;
+import org.eclipse.xsmp.model.xsmp.Interface;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.ImportDeclaration;
-import org.eclipse.xsmp.xcatalogue.ImportSection;
-import org.eclipse.xsmp.xcatalogue.Interface;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -269,24 +269,24 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
           EReference reference, boolean resolve)
   {
     final var result = getListScope(parent, globalScope, context,
-            XcataloguePackage.Literals.COMPONENT__INTERFACE, reference, resolve);
+            XsmpPackage.Literals.COMPONENT__INTERFACE, reference, resolve);
 
-    return getScope(result, globalScope, context, XcataloguePackage.Literals.COMPONENT__BASE,
-            reference, resolve);
+    return getScope(result, globalScope, context, XsmpPackage.Literals.COMPONENT__BASE, reference,
+            resolve);
   }
 
   protected IScope getInterfaceScope(IScope parent, IScope globalScope, Interface context,
           EReference reference, boolean resolve)
   {
-    return getListScope(parent, globalScope, context, XcataloguePackage.Literals.INTERFACE__BASE,
+    return getListScope(parent, globalScope, context, XsmpPackage.Literals.INTERFACE__BASE,
             reference, resolve);
 
   }
 
   protected IScope getClassScope(IScope parent, IScope globalScope,
-          org.eclipse.xsmp.xcatalogue.Class context, EReference reference, boolean resolve)
+          org.eclipse.xsmp.model.xsmp.Class context, EReference reference, boolean resolve)
   {
-    return getScope(parent, globalScope, context, XcataloguePackage.Literals.CLASS__BASE, reference,
+    return getScope(parent, globalScope, context, XsmpPackage.Literals.CLASS__BASE, reference,
             resolve);
   }
 
@@ -294,7 +294,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
   {
     return cache.get(Tuples.create(type, "DesignatedInitializerFieldScope"), type.eResource(),
             () -> getLocalElementsScope(globalScope, globalScope, type,
-                    XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD, resolve));
+                    XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD, resolve));
   }
 
   protected IScope getLocalElementsScope(IScope parent, IScope globalScope, EObject context,
@@ -316,21 +316,21 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
 
     switch (context.eClass().getClassifierID())
     {
-      case XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION:
-        result = getClassScope(result, globalScope, (org.eclipse.xsmp.xcatalogue.Class) context,
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION:
+        result = getClassScope(result, globalScope, (org.eclipse.xsmp.model.xsmp.Class) context,
                 reference, resolve);
         break;
-      case XcataloguePackage.INTERFACE:
+      case XsmpPackage.INTERFACE:
         result = getInterfaceScope(result, globalScope, (Interface) context, reference, resolve);
         break;
-      case XcataloguePackage.MODEL, XcataloguePackage.SERVICE:
+      case XsmpPackage.MODEL, XsmpPackage.SERVICE:
         result = getComponentScope(result, globalScope, (Component) context, reference, resolve);
         break;
-      case XcataloguePackage.DESIGNATED_INITIALIZER:
+      case XsmpPackage.DESIGNATED_INITIALIZER:
       {
         final var container = context.eContainer();
         if (container instanceof final CollectionLiteral collection
-                && reference == XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD)
+                && reference == XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD)
         {
           final var type = xsmpUtil.getType(collection);
           if (type instanceof Structure)
@@ -341,9 +341,9 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         }
         break;
       }
-      case XcataloguePackage.ARRAY:
+      case XsmpPackage.ARRAY:
       {
-        final var type = resolve(context, XcataloguePackage.Literals.ARRAY__ITEM_TYPE, resolve);
+        final var type = resolve(context, XsmpPackage.Literals.ARRAY__ITEM_TYPE, resolve);
         if (type != null && !type.eIsProxy())
         {
           result = getLocalElementsScope(result, globalScope, type, reference,
@@ -351,9 +351,9 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         }
         break;
       }
-      case XcataloguePackage.FIELD:
+      case XsmpPackage.FIELD:
       {
-        final var type = resolve(context, XcataloguePackage.Literals.FIELD__TYPE, resolve);
+        final var type = resolve(context, XsmpPackage.Literals.FIELD__TYPE, resolve);
         if (type != null && !type.eIsProxy())
         {
           result = getLocalElementsScope(result, globalScope, type, reference,

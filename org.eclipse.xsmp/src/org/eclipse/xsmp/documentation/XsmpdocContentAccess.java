@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
-import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
+import org.eclipse.xsmp.model.xsmp.impl.NamedElementImplCustom;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -226,7 +226,7 @@ public class XsmpdocContentAccess
           // due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=206518 :
 
           for (final INode node : NodeModelUtils.findNodesForFeature(fElement.getMetadatum(),
-                  XcataloguePackage.Literals.METADATUM__DOCUMENTATION))
+                  XsmpPackage.Literals.METADATUM__DOCUMENTATION))
           {
             final var textWithStars = node.getText().substring(previousEnd, childStart);
             final var text = removeDocLineIntros(textWithStars);

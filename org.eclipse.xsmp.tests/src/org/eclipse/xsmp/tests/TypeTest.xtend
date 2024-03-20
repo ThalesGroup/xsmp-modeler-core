@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.xsmp.tests
 
-import org.eclipse.xsmp.xcatalogue.impl.TypeImplCustom
+import org.eclipse.xsmp.model.xsmp.impl.TypeImplCustom
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test

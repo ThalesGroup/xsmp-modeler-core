@@ -23,41 +23,41 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Attribute;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.Class;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Document;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.EnumerationLiteral;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Float;
-import org.eclipse.xsmp.xcatalogue.Interface;
-import org.eclipse.xsmp.xcatalogue.ItemWithBase;
-import org.eclipse.xsmp.xcatalogue.Model;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers;
-import org.eclipse.xsmp.xcatalogue.NativeType;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind;
-import org.eclipse.xsmp.xcatalogue.PrimitiveType;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.ReferenceType;
-import org.eclipse.xsmp.xcatalogue.Service;
-import org.eclipse.xsmp.xcatalogue.SimpleType;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.ValueType;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Association;
+import org.eclipse.xsmp.model.xsmp.Attribute;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Class;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.EnumerationLiteral;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.Float;
+import org.eclipse.xsmp.model.xsmp.Interface;
+import org.eclipse.xsmp.model.xsmp.ItemWithBase;
+import org.eclipse.xsmp.model.xsmp.Model;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers;
+import org.eclipse.xsmp.model.xsmp.NativeType;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.ParameterDirectionKind;
+import org.eclipse.xsmp.model.xsmp.PrimitiveType;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.ReferenceType;
+import org.eclipse.xsmp.model.xsmp.Service;
+import org.eclipse.xsmp.model.xsmp.SimpleType;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.ValueType;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.VisibilityKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -201,15 +201,15 @@ public class XsmpUtil
     {
       switch (type.eClass().getClassifierID())
       {
-        case XcataloguePackage.PRIMITIVE_TYPE:
+        case XsmpPackage.PRIMITIVE_TYPE:
           return getPrimitiveTypeKind((PrimitiveType) type);
-        case XcataloguePackage.FLOAT:
-          return getPrimitiveTypeKind((org.eclipse.xsmp.xcatalogue.Float) type);
-        case XcataloguePackage.INTEGER:
-          return getPrimitiveTypeKind((org.eclipse.xsmp.xcatalogue.Integer) type);
-        case XcataloguePackage.ENUMERATION:
+        case XsmpPackage.FLOAT:
+          return getPrimitiveTypeKind((org.eclipse.xsmp.model.xsmp.Float) type);
+        case XsmpPackage.INTEGER:
+          return getPrimitiveTypeKind((org.eclipse.xsmp.model.xsmp.Integer) type);
+        case XsmpPackage.ENUMERATION:
           return PrimitiveTypeKind.ENUM;
-        case XcataloguePackage.STRING:
+        case XsmpPackage.STRING:
           return PrimitiveTypeKind.STRING8;
         default:
           break;
@@ -223,7 +223,7 @@ public class XsmpUtil
     return getPrimitiveTypeKind(fqn(type));
   }
 
-  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.xcatalogue.Float type)
+  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.model.xsmp.Float type)
   {
 
     final var primitiveType = type.getPrimitiveType();
@@ -231,7 +231,7 @@ public class XsmpUtil
 
   }
 
-  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.xcatalogue.Integer type)
+  public PrimitiveTypeKind getPrimitiveTypeKind(org.eclipse.xsmp.model.xsmp.Integer type)
   {
 
     final var primitiveType = type.getPrimitiveType();
@@ -288,7 +288,7 @@ public class XsmpUtil
       if (rs != null)
       {
         final var it = resourceDescriptionProvider.getResourceDescriptions(rs)
-                .getExportedObjects(XcataloguePackage.Literals.TYPE, base, false).iterator();
+                .getExportedObjects(XsmpPackage.Literals.TYPE, base, false).iterator();
         if (it.hasNext())
         {
           return isBaseOf(it.next().getEObjectOrProxy(), derived);
@@ -302,10 +302,10 @@ public class XsmpUtil
   {
     return switch (derived.eClass().getClassifierID())
     {
-      case XcataloguePackage.INTERFACE -> isBaseOf(base, (Interface) derived);
-      case XcataloguePackage.MODEL -> isBaseOf(base, (Model) derived);
-      case XcataloguePackage.SERVICE -> isBaseOf(base, (Service) derived);
-      case XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION -> isBaseOf(base, (Class) derived);
+      case XsmpPackage.INTERFACE -> isBaseOf(base, (Interface) derived);
+      case XsmpPackage.MODEL -> isBaseOf(base, (Model) derived);
+      case XsmpPackage.SERVICE -> isBaseOf(base, (Service) derived);
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION -> isBaseOf(base, (Class) derived);
       default -> false;
     };
   }
@@ -804,7 +804,7 @@ public class XsmpUtil
               .map(Field.class::cast)
               .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
               .collect(Collectors.toList());
-      if (structure instanceof final org.eclipse.xsmp.xcatalogue.Class clazz)
+      if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
       {
         final var base = clazz.getBase();
         if (base instanceof final Structure struct && !isBaseOf(base, clazz))
@@ -824,7 +824,7 @@ public class XsmpUtil
     final var fields = Iterables.filter(Iterables.filter(structure.getMember(), Field.class),
             it -> !isStatic(it));
 
-    if (structure instanceof final org.eclipse.xsmp.xcatalogue.Class clazz)
+    if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
     {
       final var base = clazz.getBase();
       if (base instanceof final Structure struct && !isBaseOf(base, clazz))
@@ -908,8 +908,7 @@ public class XsmpUtil
       if (rs != null)
       {
         final var it = resourceDescriptionProvider.getResourceDescriptions(rs)
-                .getExportedObjects(XcataloguePackage.Literals.PRIMITIVE_TYPE, name, false)
-                .iterator();
+                .getExportedObjects(XsmpPackage.Literals.PRIMITIVE_TYPE, name, false).iterator();
         if (it.hasNext())
         {
           return (Type) it.next().getEObjectOrProxy();
@@ -925,33 +924,28 @@ public class XsmpUtil
 
     return switch (parent.eClass().getClassifierID())
     {
-      case XcataloguePackage.FIELD -> ((Field) parent).getType();
-      case XcataloguePackage.CONSTANT -> ((Constant) parent).getType();
-      case XcataloguePackage.ASSOCIATION -> ((Association) parent).getType();
-      case XcataloguePackage.PARAMETER -> ((Parameter) parent).getType();
-      case XcataloguePackage.STRING, XcataloguePackage.ARRAY, XcataloguePackage.MULTIPLICITY -> findPrimitiveType(
+      case XsmpPackage.FIELD -> ((Field) parent).getType();
+      case XsmpPackage.CONSTANT -> ((Constant) parent).getType();
+      case XsmpPackage.ASSOCIATION -> ((Association) parent).getType();
+      case XsmpPackage.PARAMETER -> ((Parameter) parent).getType();
+      case XsmpPackage.STRING, XsmpPackage.ARRAY, XsmpPackage.MULTIPLICITY -> findPrimitiveType(
               parent, QualifiedNames.Smp_Int64);
-      case XcataloguePackage.FLOAT ->
-      {
+      case XsmpPackage.FLOAT -> {
         final var type = ((Float) parent).getPrimitiveType();
         yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
-      case XcataloguePackage.INTEGER ->
-      {
-        final var type = ((org.eclipse.xsmp.xcatalogue.Integer) parent).getPrimitiveType();
+      case XsmpPackage.INTEGER -> {
+        final var type = ((org.eclipse.xsmp.model.xsmp.Integer) parent).getPrimitiveType();
         yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
-      case XcataloguePackage.ENUMERATION_LITERAL -> findPrimitiveType(parent,
-              QualifiedNames.Smp_Int32);
-      case XcataloguePackage.ENUMERATION -> (Type) parent;
-      case XcataloguePackage.ATTRIBUTE ->
-      {
+      case XsmpPackage.ENUMERATION_LITERAL -> findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+      case XsmpPackage.ENUMERATION -> (Type) parent;
+      case XsmpPackage.ATTRIBUTE -> {
         final var type = ((Attribute) parent).getType();
         yield type instanceof final AttributeType attr ? attr.getType() : type;
       }
-      case XcataloguePackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
-      case XcataloguePackage.COLLECTION_LITERAL ->
-      {
+      case XsmpPackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
+      case XsmpPackage.COLLECTION_LITERAL -> {
         final var collection = (CollectionLiteral) parent;
         yield getType(collection);
       }
@@ -1031,10 +1025,10 @@ public class XsmpUtil
     final var parent = e.eContainer();
     switch (parent.eClass().getClassifierID())
     {
-      case XcataloguePackage.FIELD:
+      case XsmpPackage.FIELD:
         return (Field) parent;
 
-      case XcataloguePackage.COLLECTION_LITERAL:
+      case XsmpPackage.COLLECTION_LITERAL:
       {
         final var collection = (CollectionLiteral) parent;
         final var type = getType(collection);

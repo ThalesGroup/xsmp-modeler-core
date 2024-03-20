@@ -11,9 +11,9 @@
 package org.eclipse.xsmp.tool.python.generator
 
 import com.google.inject.Inject
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.Component
-import org.eclipse.xsmp.xcatalogue.Namespace
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.Component
+import org.eclipse.xsmp.model.xsmp.Namespace
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.emf.ecore.resource.Resource

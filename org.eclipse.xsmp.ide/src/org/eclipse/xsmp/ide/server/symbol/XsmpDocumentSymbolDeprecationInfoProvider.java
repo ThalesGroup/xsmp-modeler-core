@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.ide.server.symbol;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDeprecationInfoProvider;
 import org.eclipse.xtext.resource.IEObjectDescription;
 

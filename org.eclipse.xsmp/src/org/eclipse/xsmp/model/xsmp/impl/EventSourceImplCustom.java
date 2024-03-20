@@ -10,10 +10,10 @@
  * * SPDX-License-Identifier: EPL-2.0
  * ******************************************************************************
  */
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Event Source</b></em>'.
@@ -22,8 +22,8 @@ import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
  * The following features are implemented:
  * </p>
  * <ul>
- * <li>{@link org.eclipse.xsmp.xcatalogue.impl.EventSourceImplCustom#getType <em>Type</em>}</li>
- * <li>{@link org.eclipse.xsmp.xcatalogue.impl.EventSourceImplCustom#isSinglecast
+ * <li>{@link org.eclipse.xsmp.model.xsmp.impl.EventSourceImplCustom#getType <em>Type</em>}</li>
+ * <li>{@link org.eclipse.xsmp.model.xsmp.impl.EventSourceImplCustom#isSinglecast
  * <em>Singlecast</em>}</li>
  * </ul>
  *
@@ -39,7 +39,7 @@ public class EventSourceImplCustom extends EventSourceImpl
   public boolean isSinglecast()
   {
 
-    return getFeature(XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST, SINGLECAST_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.EVENT_SOURCE__SINGLECAST, SINGLECAST_EDEFAULT);
   }
 
   /**
@@ -49,7 +49,7 @@ public class EventSourceImplCustom extends EventSourceImpl
   public void setSinglecast(boolean newSinglecast)
   {
 
-    setFeature(XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST, newSinglecast);
+    setFeature(XsmpPackage.Literals.EVENT_SOURCE__SINGLECAST, newSinglecast);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class EventSourceImplCustom extends EventSourceImpl
   {
     if ("singlecast".equals(name))
     {
-      return XcataloguePackage.Literals.EVENT_SOURCE__SINGLECAST;
+      return XsmpPackage.Literals.EVENT_SOURCE__SINGLECAST;
     }
     return super.getFeature(name);
 

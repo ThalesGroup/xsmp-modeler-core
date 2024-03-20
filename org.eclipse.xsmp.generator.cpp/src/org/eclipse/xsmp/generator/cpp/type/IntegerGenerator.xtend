@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Integer
+import org.eclipse.xsmp.model.xsmp.Integer
 
 class IntegerGenerator extends AbstractTypeGenerator<Integer> {
 

@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.validation;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.xcatalogue.Document;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
+import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Parameter;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.validation.NamesAreUniqueValidationHelper;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;

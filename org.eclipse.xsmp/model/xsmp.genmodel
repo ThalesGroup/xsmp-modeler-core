@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*******************************************************************************&#xA;* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.&#xA;*&#xA;* All rights reserved. This program and the accompanying materials&#xA;* are made available under the terms of the Eclipse Public License 2.0&#xA;* which accompanies this distribution, and is available at&#xA;* https://www.eclipse.org/legal/epl-2.0/&#xA;*&#xA;* SPDX-License-Identifier: EPL-2.0&#xA;******************************************************************************"
+    modelDirectory="/org.eclipse.xsmp/emf-gen" modelPluginID="org.eclipse.xsmp" forceOverwrite="true"
+    modelName="Xsmp" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    runtimeVersion="2.20">
+  <foreignModel>xsmp.ecore</foreignModel>
+  <genPackages prefix="Xsmp" basePackage="org.eclipse.xsmp.model" disposableProviderFactory="true"
+      ecorePackage="xsmp.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xsmp.ecore#//AccessKind">
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//AccessKind/readWrite"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//AccessKind/readOnly"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//AccessKind/writeOnly"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xsmp.ecore#//ParameterDirectionKind">
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//ParameterDirectionKind/in"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//ParameterDirectionKind/out"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//ParameterDirectionKind/inout"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//ParameterDirectionKind/return"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xsmp.ecore#//VisibilityKind">
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//VisibilityKind/public"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//VisibilityKind/protected"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//VisibilityKind/private"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="xsmp.ecore#//RangeKind">
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//RangeKind/Exclusive"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//RangeKind/MinInclusive"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//RangeKind/MaxInclusive"/>
+      <genEnumLiterals ecoreEnumLiteral="xsmp.ecore#//RangeKind/Inclusive"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="xsmp.ecore#//Description"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//Identifier"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//Name"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//Documentation"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//AccessKindObject"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//ParameterDirectionKindObject"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//VisibilityKindObject"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//ValidationMessageAcceptor"/>
+    <genDataTypes ecoreDataType="xsmp.ecore#//UUID"/>
+    <genClasses ecoreClass="xsmp.ecore#//Catalogue"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//NamedElementWithMembers">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//NamedElementWithMembers/member"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//ItemWithBase">
+      <genOperations ecoreOperation="xsmp.ecore#//ItemWithBase/getBase"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Metadatum">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Metadatum/metadata"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Metadatum/documentation"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Metadatum/getXsmpcatdoc"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Namespace"/>
+    <genClasses ecoreClass="xsmp.ecore#//Operation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Operation/returnParameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Operation/parameter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Operation/raisedException"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//Document">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/creator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Document/importSection"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//NamedElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//NamedElement/metadatum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElement/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElement/deprecated"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//Resolvable"/>
+    <genClasses ecoreClass="xsmp.ecore#//Attribute">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Attribute/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Attribute/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//AttributeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//AttributeType/allowMultiple"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//AttributeType/usage"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//AttributeType/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//AttributeType/default"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Enumeration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Enumeration/literal"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EnumerationLiteral">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//EnumerationLiteral/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//LanguageType"/>
+    <genClasses ecoreClass="xsmp.ecore#//NativeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NativeType/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NativeType/namespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NativeType/location"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Parameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Parameter/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Parameter/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Parameter/direction"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//PrimitiveType"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//SimpleType"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//Type">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Type/uuid"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//ValueType"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//VisibilityElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//VisibilityElement/visibility"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//VisibilityElement/modifiers"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//VisibilityElement/realVisibility"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//VisibilityElement/useVisibility"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//Expression"/>
+    <genClasses ecoreClass="xsmp.ecore#//DesignatedInitializer">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//DesignatedInitializer/field"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//DesignatedInitializer/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//CollectionLiteral">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//CollectionLiteral/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//BooleanLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//BooleanLiteral/isTrue"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//IntegerLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//IntegerLiteral/text"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//FloatingLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//FloatingLiteral/text"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//StringLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//StringLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//CharacterLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//CharacterLiteral/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ImportSection">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportSection/importDeclarations"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ImportDeclaration">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportDeclaration/importedType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportDeclaration/importedNamespace"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//BinaryOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//BinaryOperation/leftOperand"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//BinaryOperation/rightOperand"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//BinaryOperation/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//UnaryOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//UnaryOperation/operand"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//UnaryOperation/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//NamedElementReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//NamedElementReference/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Array">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Array/itemType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Array/size"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Float">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Float/primitiveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Float/minInclusive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Float/maxInclusive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Float/unit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Float/minimum"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Float/maximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Float/range"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Integer">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Integer/primitiveType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Integer/unit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Integer/minimum"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Integer/maximum"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//String">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//String/length"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ValueReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ValueReference/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EventType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//EventType/eventArgs"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Class">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Class/abstract"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Class/base"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Exception"/>
+    <genClasses ecoreClass="xsmp.ecore#//Structure"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//Component">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Component/abstract"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Component/interface"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Component/base"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Interface">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Interface/base"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Model"/>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//ReferenceType"/>
+    <genClasses ecoreClass="xsmp.ecore#//Service"/>
+    <genClasses ecoreClass="xsmp.ecore#//Association">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Association/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Association/default"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Constant">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Constant/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Constant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Field">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Field/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Field/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Field/transient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Field/input"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Field/output"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Property">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Property/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Property/attachedField"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Property/getRaises"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Property/setRaises"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Property/access"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Property/category"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Container">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Container/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Container/defaultComponent"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EntryPoint">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//EntryPoint/input"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//EntryPoint/output"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EventSink">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//EventSink/type"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EventSource">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//EventSource/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//EventSource/singlecast"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//NamedElementWithMultiplicity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElementWithMultiplicity/lower"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElementWithMultiplicity/upper"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//NamedElementWithMultiplicity/multiplicity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//NamedElementWithMultiplicity/optional"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Reference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//Reference/interface"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Multiplicity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Multiplicity/lower"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Multiplicity/upper"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Multiplicity/aux"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xsmp.ecore#//BuiltInExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//BuiltInExpression/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//BuiltInConstant"/>
+    <genClasses ecoreClass="xsmp.ecore#//BuiltInFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//BuiltInFunction/parameter"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ParenthesizedExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//ParenthesizedExpression/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//KeywordExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//KeywordExpression/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//EmptyExpression"/>
+  </genPackages>
+</genmodel:GenModel>

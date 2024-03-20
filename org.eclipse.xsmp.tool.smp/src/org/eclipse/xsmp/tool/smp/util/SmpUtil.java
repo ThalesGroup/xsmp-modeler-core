@@ -3,6 +3,7 @@ package org.eclipse.xsmp.tool.smp.util;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.tool.smp.core.elements.NamedElement;
 import org.eclipse.xsmp.tool.smp.core.types.Attribute;
 import org.eclipse.xsmp.tool.smp.core.types.BoolValue;
@@ -10,7 +11,6 @@ import org.eclipse.xsmp.tool.smp.core.types.Value;
 import org.eclipse.xsmp.tool.smp.core.types.VisibilityElement;
 import org.eclipse.xsmp.tool.smp.core.types.VisibilityKind;
 import org.eclipse.xsmp.util.QualifiedNames;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.inject.Inject;
@@ -93,8 +93,8 @@ public class SmpUtil
     {
       switch (container.eClass().getClassifierID())
       {
-        case XcataloguePackage.INTERFACE:
-        case XcataloguePackage.STRUCTURE:
+        case XsmpPackage.INTERFACE:
+        case XsmpPackage.STRUCTURE:
           return VisibilityKind.PUBLIC;
 
         default:

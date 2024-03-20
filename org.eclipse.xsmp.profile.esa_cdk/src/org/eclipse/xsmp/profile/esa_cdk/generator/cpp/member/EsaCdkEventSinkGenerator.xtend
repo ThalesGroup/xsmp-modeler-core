@@ -12,8 +12,8 @@ package org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.EventSinkGenerator
-import org.eclipse.xsmp.xcatalogue.EventSink
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.EventSink
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 
 class EsaCdkEventSinkGenerator extends EventSinkGenerator {
 

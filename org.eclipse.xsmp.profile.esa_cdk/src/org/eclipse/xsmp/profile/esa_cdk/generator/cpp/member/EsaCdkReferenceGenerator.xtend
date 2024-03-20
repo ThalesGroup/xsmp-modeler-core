@@ -12,8 +12,8 @@ package org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.ReferenceGenerator
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.Reference
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Reference
 
 class EsaCdkReferenceGenerator extends ReferenceGenerator {
 

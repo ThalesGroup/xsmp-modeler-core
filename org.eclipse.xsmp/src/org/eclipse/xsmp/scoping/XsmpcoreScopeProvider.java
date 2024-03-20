@@ -15,7 +15,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
 
@@ -30,14 +30,13 @@ public class XsmpcoreScopeProvider extends AbstractXsmpcoreScopeProvider
 {
 
   private static final Set<EClass> elementReferences = ImmutableSet.<EClass> builder()
-          .add(XcataloguePackage.Literals.CONSTANT)
-          .add(XcataloguePackage.Literals.ENUMERATION_LITERAL).build();
+          .add(XsmpPackage.Literals.CONSTANT).add(XsmpPackage.Literals.ENUMERATION_LITERAL).build();
 
   @Override
   public IScope getScope(EObject context, EReference reference)
   {
 
-    if (XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.equals(reference))
+    if (XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.equals(reference))
     {
       return new FilteringScope(super.getScope(context, reference),
               o -> elementReferences.contains(o.getEClass()));

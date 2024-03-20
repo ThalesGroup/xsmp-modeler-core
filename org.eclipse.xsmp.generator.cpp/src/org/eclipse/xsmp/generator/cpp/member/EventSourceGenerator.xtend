@@ -11,10 +11,10 @@
 package org.eclipse.xsmp.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.EventSource
-import org.eclipse.xsmp.xcatalogue.EventType
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
-import org.eclipse.xsmp.xcatalogue.SimpleType
+import org.eclipse.xsmp.model.xsmp.EventSource
+import org.eclipse.xsmp.model.xsmp.EventType
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.SimpleType
 
 class EventSourceGenerator extends AbstractMemberGenerator<EventSource> {
 

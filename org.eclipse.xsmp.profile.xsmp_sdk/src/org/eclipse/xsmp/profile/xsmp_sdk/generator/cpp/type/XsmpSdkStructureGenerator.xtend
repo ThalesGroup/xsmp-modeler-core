@@ -11,9 +11,9 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator
-import org.eclipse.xsmp.xcatalogue.Field
-import org.eclipse.xsmp.xcatalogue.Structure
-import org.eclipse.xsmp.xcatalogue.VisibilityKind
+import org.eclipse.xsmp.model.xsmp.Field
+import org.eclipse.xsmp.model.xsmp.Structure
+import org.eclipse.xsmp.model.xsmp.VisibilityKind
 
 class XsmpSdkStructureGenerator extends StructureGenerator {
 

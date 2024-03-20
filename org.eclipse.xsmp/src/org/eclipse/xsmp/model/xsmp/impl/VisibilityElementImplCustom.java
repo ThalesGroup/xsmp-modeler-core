@@ -8,12 +8,12 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.VisibilityKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -34,15 +34,11 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     final var container = eContainer();
     if (container != null)
     {
-      switch (container.eClass().getClassifierID())
+      return switch (container.eClass().getClassifierID())
       {
-        case XcataloguePackage.INTERFACE:
-        case XcataloguePackage.STRUCTURE:
-          return VisibilityKind.PUBLIC;
-
-        default:
-          return VisibilityKind.PRIVATE;
-      }
+        case XsmpPackage.INTERFACE, XsmpPackage.STRUCTURE -> VisibilityKind.PUBLIC;
+        default -> VisibilityKind.PRIVATE;
+      };
     }
 
     return VisibilityKind.PUBLIC;
@@ -57,8 +53,8 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     {
       switch (container.eClass().getClassifierID())
       {
-        case XcataloguePackage.INTERFACE:
-        case XcataloguePackage.STRUCTURE:
+        case XsmpPackage.INTERFACE:
+        case XsmpPackage.STRUCTURE:
           return false;
 
         default:
@@ -150,7 +146,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     if (eNotificationRequired())
     {
       eNotify(new ENotificationImpl(this, Notification.SET,
-              XcataloguePackage.VISIBILITY_ELEMENT__VISIBILITY, oldVisibility, newVisibility,
+              XsmpPackage.VISIBILITY_ELEMENT__VISIBILITY, oldVisibility, newVisibility,
               !oldVisibilityESet));
     }
   }
@@ -170,7 +166,7 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
       if (eNotificationRequired())
       {
         eNotify(new ENotificationImpl(this, Notification.UNSET,
-                XcataloguePackage.VISIBILITY_ELEMENT__VISIBILITY, oldVisibility, null,
+                XsmpPackage.VISIBILITY_ELEMENT__VISIBILITY, oldVisibility, null,
                 oldVisibilityESet));
       }
     }

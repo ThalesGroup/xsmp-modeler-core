@@ -11,9 +11,9 @@
 package org.eclipse.xsmp.ui.folding;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.Metadatum;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Metadatum;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.folding.DefaultFoldingRegionProvider;
@@ -62,7 +62,7 @@ public class XsmpFoldingRegionProvider extends DefaultFoldingRegionProvider
   {
 
     for (final INode node : NodeModelUtils.findNodesForFeature(metadatum,
-            XcataloguePackage.Literals.METADATUM__DOCUMENTATION))
+            XsmpPackage.Literals.METADATUM__DOCUMENTATION))
     {
 
       final var offset = node.getOffset();
@@ -102,7 +102,7 @@ public class XsmpFoldingRegionProvider extends DefaultFoldingRegionProvider
     if (region != null)
     {
       final var significant = getLocationInFileProvider().getSignificantTextRegion(element,
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME, -1);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME, -1);
       if (significant == null)
       {
         throw new NullPointerException("significant region may not be null");

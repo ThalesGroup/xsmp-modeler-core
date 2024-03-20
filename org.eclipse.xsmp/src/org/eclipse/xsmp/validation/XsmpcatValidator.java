@@ -26,46 +26,46 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Association;
+import org.eclipse.xsmp.model.xsmp.Attribute;
+import org.eclipse.xsmp.model.xsmp.AttributeType;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.Container;
+import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
+import org.eclipse.xsmp.model.xsmp.EntryPoint;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.EventSink;
+import org.eclipse.xsmp.model.xsmp.EventSource;
+import org.eclipse.xsmp.model.xsmp.EventType;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.Field;
+import org.eclipse.xsmp.model.xsmp.Interface;
+import org.eclipse.xsmp.model.xsmp.KeywordExpression;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElementReference;
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMultiplicity;
+import org.eclipse.xsmp.model.xsmp.Operation;
+import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.Reference;
+import org.eclipse.xsmp.model.xsmp.SimpleType;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.ValueReference;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.VisibilityKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
+import org.eclipse.xsmp.model.xsmp.impl.NamedElementImplCustom;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
 import org.eclipse.xsmp.util.Int64;
 import org.eclipse.xsmp.util.PrimitiveType;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
-import org.eclipse.xsmp.xcatalogue.Array;
-import org.eclipse.xsmp.xcatalogue.Association;
-import org.eclipse.xsmp.xcatalogue.Attribute;
-import org.eclipse.xsmp.xcatalogue.AttributeType;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.Container;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.EntryPoint;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.EventSink;
-import org.eclipse.xsmp.xcatalogue.EventSource;
-import org.eclipse.xsmp.xcatalogue.EventType;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.Field;
-import org.eclipse.xsmp.xcatalogue.Interface;
-import org.eclipse.xsmp.xcatalogue.KeywordExpression;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.NamedElementReference;
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMultiplicity;
-import org.eclipse.xsmp.xcatalogue.Operation;
-import org.eclipse.xsmp.xcatalogue.Parameter;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.Reference;
-import org.eclipse.xsmp.xcatalogue.SimpleType;
-import org.eclipse.xsmp.xcatalogue.Structure;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.ValueReference;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.VisibilityKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
-import org.eclipse.xsmp.xcatalogue.impl.NamedElementImplCustom;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -272,22 +272,22 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       if (elem.getSize() instanceof CollectionLiteral)
       {
-        error("Cannot use brackets for array size.", XcataloguePackage.Literals.ARRAY__SIZE);
+        error("Cannot use brackets for array size.", XsmpPackage.Literals.ARRAY__SIZE);
       }
     }
     final var type = elem.getItemType();
 
-    if (checkTypeReference(type, elem, XcataloguePackage.Literals.ARRAY__ITEM_TYPE))
+    if (checkTypeReference(type, elem, XsmpPackage.Literals.ARRAY__ITEM_TYPE))
     {
       if (xsmpUtil.isRecursiveType(elem, type))
       {
-        error("Recursive Array Type.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
+        error("Recursive Array Type.", XsmpPackage.Literals.ARRAY__ITEM_TYPE);
       }
 
       // check that for a SimpleArray the type is valid
       if (xsmpUtil.isSimpleArray(elem) && !(elem.getItemType() instanceof SimpleType))
       {
-        error("A SimpleArray requires a SimpleType.", XcataloguePackage.Literals.ARRAY__ITEM_TYPE);
+        error("A SimpleArray requires a SimpleType.", XsmpPackage.Literals.ARRAY__ITEM_TYPE);
       }
     }
     // "using" keyword is deprecated
@@ -302,19 +302,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
   }
 
-  private static Set<String> validUsages = XcataloguePackage.eINSTANCE.getEClassifiers().stream()
+  private static Set<String> validUsages = XsmpPackage.eINSTANCE.getEClassifiers().stream()
           .filter(c -> c instanceof final EClass cls
-                  && XcataloguePackage.Literals.NAMED_ELEMENT.isSuperTypeOf(cls))
+                  && XsmpPackage.Literals.NAMED_ELEMENT.isSuperTypeOf(cls))
           .map(ENamedElement::getName).collect(Collectors.toSet());
 
   @Check
   protected void checkAttributeType(AttributeType elem)
   {
-    doCheckTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE, -1);
+    doCheckTypeReference(elem.getType(), elem, XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE, -1);
 
     if (elem.getDefault() == null)
     {
-      warning("Default value is missing.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      warning("Default value is missing.", XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
     else
     {
@@ -325,11 +325,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       if (!validUsages.contains(elem.getUsage().get(i)))
       {
-        warning("Invalid usage.", XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
+        warning("Invalid usage.", XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
       }
       if (!visitedUsages.add(elem.getUsage().get(i)))
       {
-        warning("Duplicated usage.", XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
+        warning("Duplicated usage.", XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
       }
     }
     // "attribute name {}" is deprecated
@@ -348,13 +348,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkAttribute(Attribute elem)
   {
 
-    if (checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ATTRIBUTE__TYPE))
+    if (checkTypeReference(elem.getType(), elem, XsmpPackage.Literals.ATTRIBUTE__TYPE))
     {
       final var type = (AttributeType) elem.getType();
 
       if (type.getDefault() == null && elem.getValue() == null)
       {
-        error("A value is required.", XcataloguePackage.Literals.ATTRIBUTE__VALUE);
+        error("A value is required.", XsmpPackage.Literals.ATTRIBUTE__VALUE);
       }
       else
       {
@@ -365,17 +365,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   }
 
   @Check
-  protected void checkClassAndException(org.eclipse.xsmp.xcatalogue.Class elem)
+  protected void checkClassAndException(org.eclipse.xsmp.model.xsmp.Class elem)
   {
     final var base = elem.getBase();
 
     // check recursive base
-    if (checkTypeReference(base, elem, XcataloguePackage.Literals.CLASS__BASE)
+    if (checkTypeReference(base, elem, XsmpPackage.Literals.CLASS__BASE)
             && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends from a derived Type.",
-              XcataloguePackage.Literals.CLASS__BASE,
-              XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+              XsmpPackage.Literals.CLASS__BASE, XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
 
     // check members type
@@ -387,26 +386,26 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       final var member = members.get(i);
       switch (member.eClass().getClassifierID())
       {
-        case XcataloguePackage.CONSTANT:
+        case XsmpPackage.CONSTANT:
           constantElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.FIELD:
+        case XsmpPackage.FIELD:
           fieldElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.OPERATION:
+        case XsmpPackage.OPERATION:
           operationElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.PROPERTY:
+        case XsmpPackage.PROPERTY:
           propertyElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.ASSOCIATION:
+        case XsmpPackage.ASSOCIATION:
           associationElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
         default:
           error(elem.eClass().getName()
                   + " shall only contain Properties, Operations, Associations, Constants and Fields. Got  "
                   + member.eClass().getName() + ".",
-                  XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
+                  XsmpPackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
                   XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
@@ -416,7 +415,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
             .anyMatch(m -> m instanceof final NamedElement e && xsmpUtil.isAbstract(e)))
     {
       warning("The " + elem.eClass().getName() + " shall be abstract.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
 
   }
@@ -427,15 +426,15 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var base = elem.getBase();
 
     // check recursive base
-    if (checkTypeReference(base, elem, XcataloguePackage.Literals.COMPONENT__BASE)
+    if (checkTypeReference(base, elem, XsmpPackage.Literals.COMPONENT__BASE)
             && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
       error("A " + elem.eClass().getName() + " cannot extends a derived Type.",
-              XcataloguePackage.Literals.COMPONENT__BASE);
+              XsmpPackage.Literals.COMPONENT__BASE);
     }
 
     // check interfaces
-    checkNoDuplicate(elem, XcataloguePackage.Literals.COMPONENT__INTERFACE, "Interface");
+    checkNoDuplicate(elem, XsmpPackage.Literals.COMPONENT__INTERFACE, "Interface");
 
     final var members = elem.getMember();
     final var nbMembers = members.size();
@@ -445,28 +444,28 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       final var member = members.get(i);
       switch (member.eClass().getClassifierID())
       {
-        case XcataloguePackage.CONSTANT:
+        case XsmpPackage.CONSTANT:
           constantElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.FIELD:
+        case XsmpPackage.FIELD:
           fieldElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.ENTRY_POINT, XcataloguePackage.EVENT_SINK, XcataloguePackage.EVENT_SOURCE, XcataloguePackage.CONTAINER, XcataloguePackage.REFERENCE:
+        case XsmpPackage.ENTRY_POINT, XsmpPackage.EVENT_SINK, XsmpPackage.EVENT_SOURCE, XsmpPackage.CONTAINER, XsmpPackage.REFERENCE:
           break;
-        case XcataloguePackage.OPERATION:
+        case XsmpPackage.OPERATION:
           operationElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.PROPERTY:
+        case XsmpPackage.PROPERTY:
           propertyElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.ASSOCIATION:
+        case XsmpPackage.ASSOCIATION:
           associationElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
         default:
           error("A " + elem.eClass().getName()
                   + " shall only contain Constants, Properties, Association, Operations, Fields, EntryPoints, EventSink, EventSource, Container and Reference. Got  "
                   + member.eClass().getName() + ".",
-                  XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
+                  XsmpPackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
                   XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
@@ -476,19 +475,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
             .anyMatch(m -> m instanceof final NamedElement e && xsmpUtil.isAbstract(e)))
     {
       error("The " + elem.eClass().getName() + " shall be abstract.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
   }
 
   @Check
   protected void checkConstant(Constant f)
   {
-    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONSTANT__TYPE))
+    if (checkTypeReference(f.getType(), f, XsmpPackage.Literals.CONSTANT__TYPE))
     {
       if (f.getValue() == null)
       {
         error("A Constant must have an initialization value.",
-                XcataloguePackage.Literals.CONSTANT__VALUE);
+                XsmpPackage.Literals.CONSTANT__VALUE);
       }
       else
       {
@@ -501,7 +500,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Check
   protected void checkAssociation(Association elem)
   {
-    if (checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.ASSOCIATION__TYPE))
+    if (checkTypeReference(elem.getType(), elem, XsmpPackage.Literals.ASSOCIATION__TYPE))
     {
       checkExpression(elem.getType(), elem.getDefault(), xsmpUtil.isByPointer(elem));
     }
@@ -510,13 +509,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   @Check
   protected void checkContainer(Container f)
   {
-    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.CONTAINER__TYPE)
+    if (checkTypeReference(f.getType(), f, XsmpPackage.Literals.CONTAINER__TYPE)
             && checkTypeReference(f.getDefaultComponent(), f,
-                    XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT)
+                    XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT)
             && !xsmpUtil.isBaseOf(f.getType(), f.getDefaultComponent()))
     {
       error(f.getType().getName() + " is not a base of " + f.getDefaultComponent().getName(),
-              XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT);
+              XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT);
     }
   }
 
@@ -529,7 +528,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (lower < 0)
     {
       error("Lower bound shall be a positive number or 0.", element.getMultiplicity(),
-              XcataloguePackage.Literals.MULTIPLICITY__LOWER);
+              XsmpPackage.Literals.MULTIPLICITY__LOWER);
     }
     final var upper = element.getUpper();
     if (upper != -1 && upper < lower)
@@ -537,7 +536,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       error("""
               Lower bound shall be less or equal to the upper bound, if present.
               Upper bound shall be -1 or larger or equal to the lower bound.
-              """, element.getMultiplicity(), XcataloguePackage.Literals.MULTIPLICITY__LOWER);
+              """, element.getMultiplicity(), XsmpPackage.Literals.MULTIPLICITY__LOWER);
     }
 
   }
@@ -547,7 +546,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
     if (!resourceServiceprovider.canHandle(doc.eResource().getURI()))
     {
-      warning("This document is not supported.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      warning("This document is not supported.", XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
   }
 
@@ -560,20 +559,20 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       final var field = f.getInput().get(i);
 
-      checkFieldReferenceVisibility(field, f, XcataloguePackage.Literals.ENTRY_POINT__INPUT, i);
+      checkFieldReferenceVisibility(field, f, XsmpPackage.Literals.ENTRY_POINT__INPUT, i);
       if (!field.isInput())
       {
-        error("Field is not an Input.", XcataloguePackage.Literals.ENTRY_POINT__INPUT, i);
+        error("Field is not an Input.", XsmpPackage.Literals.ENTRY_POINT__INPUT, i);
       }
     }
     for (var i = 0; i < f.getOutput().size(); ++i)
     {
       final var field = f.getOutput().get(i);
 
-      checkFieldReferenceVisibility(field, f, XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, i);
+      checkFieldReferenceVisibility(field, f, XsmpPackage.Literals.ENTRY_POINT__OUTPUT, i);
       if (!field.isOutput())
       {
-        error("Field is not an Output.", XcataloguePackage.Literals.ENTRY_POINT__OUTPUT, i);
+        error("Field is not an Output.", XsmpPackage.Literals.ENTRY_POINT__OUTPUT, i);
       }
     }
 
@@ -588,7 +587,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (elem.getLiteral().isEmpty())
     {
       error("An Enumeration shall contains at least one literal.",
-              XcataloguePackage.Literals.ENUMERATION__LITERAL);
+              XsmpPackage.Literals.ENUMERATION__LITERAL);
     }
 
     for (final var l : elem.getLiteral())
@@ -597,14 +596,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (l.getValue() instanceof CollectionLiteral)
       {
         error("Cannot use brackets for enumeration literal value.", l,
-                XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE);
+                XsmpPackage.Literals.ENUMERATION_LITERAL__VALUE);
       }
       final var value = safeExpression(l.getValue(), PrimitiveType::int32Value);
 
       if (value != null && !values.add(value.int32Value().getValue()))
       {
         error("Enumeration Literal Values shall be unique within an Enumeration.", l,
-                XcataloguePackage.Literals.ENUMERATION_LITERAL__VALUE,
+                XsmpPackage.Literals.ENUMERATION_LITERAL__VALUE,
                 XsmpcatIssueCodesProvider.DUPLICATE_ENUMERATION_VALUE);
       }
 
@@ -615,26 +614,25 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkField(Field f)
   {
 
-    if (checkTypeReference(f.getType(), f, XcataloguePackage.Literals.FIELD__TYPE))
+    if (checkTypeReference(f.getType(), f, XsmpPackage.Literals.FIELD__TYPE))
     {
       // check the field value
       checkExpression(f.getType(), f.getDefault());
 
       if (QualifiedNames.Smp_String8.equals(xsmpUtil.fqn(f.getType())))
       {
-        error("The type Smp.String8 cannot be used with fields.",
-                XcataloguePackage.Literals.FIELD__TYPE);
+        error("The type Smp.String8 cannot be used with fields.", XsmpPackage.Literals.FIELD__TYPE);
       }
     }
 
   }
 
   @Check
-  protected void checkFloat(org.eclipse.xsmp.xcatalogue.Float elem)
+  protected void checkFloat(org.eclipse.xsmp.model.xsmp.Float elem)
   {
     // check type
     if (checkTypeReference(elem.getPrimitiveType(), elem,
-            XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE))
+            XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE))
     {
       final var kind = xsmpUtil.getPrimitiveTypeKind(elem);
 
@@ -648,15 +646,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
             final var cmp = min.compareTo(max);
             if (cmp >= 0 && (cmp > 0 || !elem.isMinInclusive() || !elem.isMaxInclusive()))
             {
-              error("Minimum shall be less than Maximum.",
-                      XcataloguePackage.Literals.FLOAT__MINIMUM);
+              error("Minimum shall be less than Maximum.", XsmpPackage.Literals.FLOAT__MINIMUM);
             }
 
           }
           break;
         default:
           error("Expecting a Floating Point Type, got " + kind.name() + ".",
-                  XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE);
+                  XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE);
           break;
       }
 
@@ -664,12 +661,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   }
 
   @Check
-  protected void checkInteger(org.eclipse.xsmp.xcatalogue.Integer elem)
+  protected void checkInteger(org.eclipse.xsmp.model.xsmp.Integer elem)
   {
 
     // check type
     if (checkTypeReference(elem.getPrimitiveType(), elem,
-            XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE))
+            XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE))
     {
       final var kind = xsmpUtil.getPrimitiveTypeKind(elem);
 
@@ -681,12 +678,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           if (min != null && max != null && min.compareTo(max) > 0)
           {
             error("Minimum shall be less or equal than Maximum.",
-                    XcataloguePackage.Literals.INTEGER__MINIMUM);
+                    XsmpPackage.Literals.INTEGER__MINIMUM);
           }
           break;
         default:
           error("Expecting an Integral Type, got " + kind.name() + ".",
-                  XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE);
+                  XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE);
       }
 
     }
@@ -702,16 +699,15 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final Set<Type> visited = new HashSet<>();
     for (var i = 0; i < nbBases; ++i)
     {
-      if (checkTypeReference(bases.get(i), elem, XcataloguePackage.Literals.INTERFACE__BASE, i)
+      if (checkTypeReference(bases.get(i), elem, XsmpPackage.Literals.INTERFACE__BASE, i)
               && xsmpUtil.isBaseOf(elem, bases.get(i)))
       {
-        error("An Interface cannot extends a derived Type.",
-                XcataloguePackage.Literals.INTERFACE__BASE, i,
-                XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
+        error("An Interface cannot extends a derived Type.", XsmpPackage.Literals.INTERFACE__BASE,
+                i, XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
       if (!visited.add(bases.get(i)))
       {
-        error("Duplicate Interface.", XcataloguePackage.Literals.INTERFACE__BASE, i,
+        error("Duplicate Interface.", XsmpPackage.Literals.INTERFACE__BASE, i,
                 XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
 
@@ -724,22 +720,22 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       final var member = members.get(i);
       switch (member.eClass().getClassifierID())
       {
-        case XcataloguePackage.CONSTANT:
+        case XsmpPackage.CONSTANT:
           constantInInterfaceOrStructureElementModifierValidator
                   .checkModifiers((VisibilityElement) member, this);
           break;
-        case XcataloguePackage.OPERATION:
+        case XsmpPackage.OPERATION:
           operationInInterfaceElementModifierValidator.checkModifiers((VisibilityElement) member,
                   this);
           break;
-        case XcataloguePackage.PROPERTY:
+        case XsmpPackage.PROPERTY:
           propertyInInterfaceElementModifierValidator.checkModifiers((VisibilityElement) member,
                   this);
           break;
         default:
           error("An Interface shall only contain Constants, Properties and Operations. Got  "
                   + member.eClass().getName() + ".",
-                  XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
+                  XsmpPackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
                   XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
           break;
       }
@@ -754,15 +750,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (elem.getName() != null && !VALID_ID_PATTERN.matcher(elem.getName()).matches())
     {
       error("An Element Name shall only contain letters, digits, and the underscore.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
-              XsmpcatIssueCodesProvider.NAME_IS_INVALID);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME, XsmpcatIssueCodesProvider.NAME_IS_INVALID);
     }
 
-    if (elem.eContainingFeature() != XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER
+    if (elem.eContainingFeature() != XsmpPackage.Literals.OPERATION__RETURN_PARAMETER
             && reservedKeywordsSet.contains(elem.getName()))
     {
       error("An Element Name shall not be an ISO/ANSI C++ keyword.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME,
               XsmpcatIssueCodesProvider.NAME_IS_RESERVED_KEYWORD);
     }
     // check the metadatum
@@ -794,7 +789,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (!type.isAllowMultiple() && !visitedTypes.add(type))
       {
         warning("Duplicate annotation of non-repeatable type. Only annotation types marked @allowMultiple can be used multiple times at one target.",
-                elem.getMetadatum(), XcataloguePackage.Literals.METADATUM__METADATA, i);
+                elem.getMetadatum(), XsmpPackage.Literals.METADATUM__METADATA, i);
       }
       var usageOk = false;
       for (final String usage : type.getUsage())
@@ -808,7 +803,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (!usageOk)
       {
         warning("This annotation is disallowed for this location.", elem.getMetadatum(),
-                XcataloguePackage.Literals.METADATUM__METADATA, i);
+                XsmpPackage.Literals.METADATUM__METADATA, i);
       }
     }
 
@@ -823,7 +818,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
             && !xsmpUtil.isConstructor(op))
     {
       error("Only a Constructor can have the name of the containing Type.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
 
     if (xsmpUtil.isConstructor(op))
@@ -831,12 +826,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (xsmpUtil.getOperatorKind(op) != OperatorKind.NONE)
       {
         error("Operator and Constructor attributes cannot be both set at the same time for a given Operation element as they are mutually exclusive.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (op.getReturnParameter() != null)
       {
         error("A Constructor cannot have a return parameter.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
 
@@ -845,22 +840,22 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (op.eContainer() instanceof Interface)
       {
         warning("An Operation of an Interface shall not be static.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isVirtual(op))
       {
         error("An Operation cannot be both Static and Virtual.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isAbstract(op))
       {
         error("An Operation cannot be both Static and Abstract.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isConst(op))
       {
         error("An Operation cannot be both Static and Const.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
     // check that default value of parameters are provided
@@ -873,14 +868,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       }
       else if (requireDefaultValue)
       {
-        error("Parameter requires a default vallue.", p,
-                XcataloguePackage.Literals.PARAMETER__DEFAULT);
+        error("Parameter requires a default vallue.", p, XsmpPackage.Literals.PARAMETER__DEFAULT);
       }
 
     }
     // check exceptions
-    checkNoDuplicate(op, XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION,
-            "Raised Exception");
+    checkNoDuplicate(op, XsmpPackage.Literals.OPERATION__RAISED_EXCEPTION, "Raised Exception");
 
   }
 
@@ -908,7 +901,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkParameter(Parameter p)
   {
 
-    if (checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PARAMETER__TYPE))
+    if (checkTypeReference(p.getType(), p, XsmpPackage.Literals.PARAMETER__TYPE))
     {
       checkExpression(p.getType(), p.getDefault(), xsmpUtil.isByPointer(p));
 
@@ -917,16 +910,16 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (xsmpUtil.isByPointer(p) && xsmpUtil.isByReference(p))
     {
       error("A Parameter cannot be both ByPointer and ByReference.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
   }
 
   @Check
-  protected void checkPrimitiveType(org.eclipse.xsmp.xcatalogue.PrimitiveType elem)
+  protected void checkPrimitiveType(org.eclipse.xsmp.model.xsmp.PrimitiveType elem)
   {
     if (xsmpUtil.getPrimitiveTypeKind(elem) == null)
     {
-      error("Unknown Primitive Type.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+      error("Unknown Primitive Type.", XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
   }
 
@@ -940,24 +933,23 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (field != null)
     {
 
-      checkFieldReferenceVisibility(field, p, XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD,
-              -1);
+      checkFieldReferenceVisibility(field, p, XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD, -1);
       if (p.getType() != field.getType())
       {
         error(p.getType().getName() + " is not a base of " + field.getType().getName(),
-                XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD);
+                XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD);
       }
 
       if (xsmpUtil.isStatic(p) && !xsmpUtil.isStatic(field))
       {
-        error("The field is not static.", XcataloguePackage.Literals.PROPERTY__ATTACHED_FIELD);
+        error("The field is not static.", XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD);
       }
     }
     // an element cannot be both byPointer and ByReference
     if (xsmpUtil.isByPointer(p) && xsmpUtil.isByReference(p))
     {
       error("A Property cannot be both ByPointer and ByReference.",
-              XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
 
     if (xsmpUtil.isStatic(p))
@@ -965,82 +957,81 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (p.eContainer() instanceof Interface)
       {
         error("A Property of an Interface shall not be static.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isVirtual(p))
       {
         error("A Property cannot be both Static and Virtual.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isAbstract(p))
       {
         error("A Property cannot be both Static and Abstract.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
       if (xsmpUtil.isConst(p))
       {
         error("A Property cannot be both Static and Const.",
-                XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
 
-    checkTypeReference(p.getType(), p, XcataloguePackage.Literals.PROPERTY__TYPE);
+    checkTypeReference(p.getType(), p, XsmpPackage.Literals.PROPERTY__TYPE);
 
     // check set exceptions
-    checkNoDuplicate(p, XcataloguePackage.Literals.PROPERTY__SET_RAISES, "Set Raised Excpetion");
+    checkNoDuplicate(p, XsmpPackage.Literals.PROPERTY__SET_RAISES, "Set Raised Excpetion");
 
     // check get exceptions
-    checkNoDuplicate(p, XcataloguePackage.Literals.PROPERTY__GET_RAISES, "Get Raised Excpetion");
+    checkNoDuplicate(p, XsmpPackage.Literals.PROPERTY__GET_RAISES, "Get Raised Excpetion");
 
   }
 
   @Check
   protected void checkReference(Reference f)
   {
-    checkTypeReference(f.getInterface(), f, XcataloguePackage.Literals.REFERENCE__INTERFACE);
+    checkTypeReference(f.getInterface(), f, XsmpPackage.Literals.REFERENCE__INTERFACE);
   }
 
   @Check
   protected void checkValueReference(ValueReference elem)
   {
-    checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.VALUE_REFERENCE__TYPE);
+    checkTypeReference(elem.getType(), elem, XsmpPackage.Literals.VALUE_REFERENCE__TYPE);
   }
 
   @Check
   protected void checkEventType(EventType elem)
   {
-    checkTypeReference(elem.getEventArgs(), elem,
-            XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS);
+    checkTypeReference(elem.getEventArgs(), elem, XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS);
   }
 
   @Check
   protected void checkEventSink(EventSink elem)
   {
-    checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.EVENT_SINK__TYPE);
+    checkTypeReference(elem.getType(), elem, XsmpPackage.Literals.EVENT_SINK__TYPE);
   }
 
   @Check
   protected void checkEventSource(EventSource elem)
   {
-    checkTypeReference(elem.getType(), elem, XcataloguePackage.Literals.EVENT_SOURCE__TYPE);
+    checkTypeReference(elem.getType(), elem, XsmpPackage.Literals.EVENT_SOURCE__TYPE);
   }
 
   @Check
-  protected void checkString(org.eclipse.xsmp.xcatalogue.String elem)
+  protected void checkString(org.eclipse.xsmp.model.xsmp.String elem)
   {
     // check size > 0
     safeExpression(elem.getLength(), v -> v, Int64.ZERO, Int64.MAX_VALUE);
 
     if (elem.getLength() instanceof CollectionLiteral)
     {
-      error("Cannot use brackets for string length.", XcataloguePackage.Literals.STRING__LENGTH);
+      error("Cannot use brackets for string length.", XsmpPackage.Literals.STRING__LENGTH);
     }
   }
 
   @Check
   protected void checkStructure(Structure elem)
   {
-    if (elem.eClass() == XcataloguePackage.Literals.STRUCTURE)
+    if (elem.eClass() == XsmpPackage.Literals.STRUCTURE)
     {
       final var members = elem.getMember();
       final var nbMembers = members.size();
@@ -1051,17 +1042,17 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         final var member = members.get(i);
         switch (member.eClass().getClassifierID())
         {
-          case XcataloguePackage.FIELD:
+          case XsmpPackage.FIELD:
             fieldInStructModifierValidator.checkModifiers((VisibilityElement) member, this);
             break;
-          case XcataloguePackage.CONSTANT:
+          case XsmpPackage.CONSTANT:
             constantInInterfaceOrStructureElementModifierValidator
                     .checkModifiers((VisibilityElement) member, this);
             break;
           default:
             error("A Structure shall only contain Constants and Fields. Got  "
                     + member.eClass().getName() + ".",
-                    XcataloguePackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
+                    XsmpPackage.Literals.NAMED_ELEMENT_WITH_MEMBERS__MEMBER, i,
                     XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
             break;
         }
@@ -1072,7 +1063,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       if (member instanceof Field && xsmpUtil.isRecursiveType(elem, member.getType()))
       {
-        error("Recursive Field Type.", member, XcataloguePackage.Literals.FIELD__TYPE);
+        error("Recursive Field Type.", member, XsmpPackage.Literals.FIELD__TYPE);
       }
     }
   }
@@ -1083,7 +1074,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     // check that the UUID is not null
     if (p.getUuid() == null)
     {
-      error("Missing Type UUID.", XcataloguePackage.Literals.NAMED_ELEMENT__NAME,
+      error("Missing Type UUID.", XsmpPackage.Literals.NAMED_ELEMENT__NAME,
               XsmpcatIssueCodesProvider.INVALID_UUID);
     }
   }
@@ -1095,14 +1086,14 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     // check that the UUID is valid
     if (p.getUuid() != null && !UUID_PATTERN.matcher(p.getUuid()).matches())
     {
-      error("The UUID is invalid.", XcataloguePackage.Literals.TYPE__UUID,
+      error("The UUID is invalid.", XsmpPackage.Literals.TYPE__UUID,
               XsmpcatIssueCodesProvider.INVALID_UUID);
     }
 
     // check type modifiers
     switch (p.eClass().getClassifierID())
     {
-      case XcataloguePackage.CLASS, XcataloguePackage.EXCEPTION, XcataloguePackage.MODEL, XcataloguePackage.SERVICE:
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION, XsmpPackage.MODEL, XsmpPackage.SERVICE:
         classModifierValidator.checkModifiers(p, this);
         break;
       default:
@@ -1119,20 +1110,19 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     {
       if (field.getRealVisibility() != VisibilityKind.PUBLIC)
       {
-        error("This field is not public.", XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD,
+        error("This field is not public.", XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD,
                 XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, field.getName(), "field",
                 VisibilityKind.PUBLIC.getName());
       }
       if (xsmpUtil.isStatic(field))
       {
-        error("Cannot assign a static field.",
-                XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD);
+        error("Cannot assign a static field.", XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD);
       }
       final var expectedField = xsmpUtil.getField(p);
       if (expectedField != field && expectedField != null)
       {
         error("Wrong field name, expecting " + expectedField.getName(),
-                XcataloguePackage.Literals.DESIGNATED_INITIALIZER__FIELD);
+                XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD);
       }
     }
   }
@@ -1142,7 +1132,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   {
 
     final EObject value = literal.getValue();
-    if (value instanceof org.eclipse.xsmp.xcatalogue.EnumerationLiteral)
+    if (value instanceof org.eclipse.xsmp.model.xsmp.EnumerationLiteral)
     {
       final var type = (Type) value.eContainer();
       final var minVisibility = xsmpUtil.getMinVisibility(type, literal);
@@ -1150,9 +1140,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       {
         error("The " + type.eClass().getName() + " "
                 + qualifiedNameProvider.getFullyQualifiedName(type) + " is not visible.", literal,
-                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
+                XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
                 XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, type.getName(),
-                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
+                XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
                 minVisibility.getName());
       }
     }
@@ -1165,9 +1155,9 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       {
         error("The " + elem.eClass().getName() + " "
                 + qualifiedNameProvider.getFullyQualifiedName(elem) + " is not visible.", literal,
-                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
+                XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE, -1,
                 XsmpcatIssueCodesProvider.HIDDEN_ELEMENT, elem.getName(),
-                XcataloguePackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
+                XsmpPackage.Literals.NAMED_ELEMENT_REFERENCE__VALUE.getName(),
                 minVisibility.getName());
       }
     }

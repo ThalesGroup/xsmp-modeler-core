@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import java.util.stream.Collectors;
 
@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsmp.documentation.TagElement;
 import org.eclipse.xsmp.documentation.TextElement;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.ParameterDirectionKind;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.ParameterDirectionKind;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -34,7 +34,7 @@ public class ParameterImplCustom extends ParameterImpl
   @Override
   public ParameterDirectionKind getDirection()
   {
-    if (eContainingFeature() == XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER)
+    if (eContainingFeature() == XsmpPackage.Literals.OPERATION__RETURN_PARAMETER)
     {
       return ParameterDirectionKind.RETURN;
     }
@@ -49,8 +49,7 @@ public class ParameterImplCustom extends ParameterImpl
   {
 
     var name = super.getName();
-    if (name == null
-            && eContainingFeature() == XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER)
+    if (name == null && eContainingFeature() == XsmpPackage.Literals.OPERATION__RETURN_PARAMETER)
     {
       name = "return";
     }
@@ -63,7 +62,7 @@ public class ParameterImplCustom extends ParameterImpl
   @Override
   public void setDirection(ParameterDirectionKind newDirection)
   {
-    if (eContainingFeature() != XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER
+    if (eContainingFeature() != XsmpPackage.Literals.OPERATION__RETURN_PARAMETER
             && ParameterDirectionKind.RETURN != newDirection)
     {
       super.setDirection(newDirection);
@@ -87,7 +86,7 @@ public class ParameterImplCustom extends ParameterImpl
   {
     final var doc = ((NamedElement) eContainer()).getMetadatum().getXsmpcatdoc();
 
-    if (eContainingFeature() == XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER)
+    if (eContainingFeature() == XsmpPackage.Literals.OPERATION__RETURN_PARAMETER)
     {
       return doc.tags().stream().filter(t -> "@return".equals(t.getTagName()))
               .map(t -> printFragment(t.fragments())).findFirst().orElse(null);
@@ -106,7 +105,7 @@ public class ParameterImplCustom extends ParameterImpl
   {
     final var doc = ((NamedElement) eContainer()).getMetadatum().getXsmpcatdoc();
 
-    if (eContainingFeature() == XcataloguePackage.Literals.OPERATION__RETURN_PARAMETER)
+    if (eContainingFeature() == XsmpPackage.Literals.OPERATION__RETURN_PARAMETER)
     {
       var tag = doc.tags().stream().filter(t -> "@return".equals(t.getTagName())).findFirst()
               .orElse(null);

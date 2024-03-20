@@ -13,11 +13,11 @@ package org.eclipse.xsmp.profile.esa_cdk.generator.cpp
 import com.google.inject.Singleton
 import org.eclipse.xsmp.generator.cpp.GeneratorUtil
 import org.eclipse.xsmp.util.QualifiedNames
-import org.eclipse.xsmp.xcatalogue.NamedElement
-import org.eclipse.xsmp.xcatalogue.Type
-import org.eclipse.xsmp.xcatalogue.Operation
-import org.eclipse.xsmp.xcatalogue.SimpleType
-import org.eclipse.xsmp.xcatalogue.String
+import org.eclipse.xsmp.model.xsmp.NamedElement
+import org.eclipse.xsmp.model.xsmp.Type
+import org.eclipse.xsmp.model.xsmp.Operation
+import org.eclipse.xsmp.model.xsmp.SimpleType
+import org.eclipse.xsmp.model.xsmp.String
 
 @Singleton
 class EsaCdkGeneratorExtension extends GeneratorUtil {

@@ -8,11 +8,11 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -28,7 +28,7 @@ public class AttributeTypeImplCustom extends AttributeTypeImpl
   @Override
   public EList<String> getUsage()
   {
-    return getFeature(XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE);
+    return getFeature(XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE);
   }
 
   /**
@@ -38,8 +38,7 @@ public class AttributeTypeImplCustom extends AttributeTypeImpl
   public boolean isAllowMultiple()
   {
 
-    return getFeature(XcataloguePackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE,
-            ALLOW_MULTIPLE_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE, ALLOW_MULTIPLE_EDEFAULT);
   }
 
   /**
@@ -49,21 +48,18 @@ public class AttributeTypeImplCustom extends AttributeTypeImpl
   public void setAllowMultiple(boolean newAllowMultiple)
   {
 
-    setFeature(XcataloguePackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE, newAllowMultiple);
+    setFeature(XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE, newAllowMultiple);
   }
 
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    return switch (name)
     {
-      case "usage":
-        return XcataloguePackage.Literals.ATTRIBUTE_TYPE__USAGE;
-      case "allowMultiple":
-        return XcataloguePackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE;
-      default:
-        return super.getFeature(name);
-    }
+      case "usage" -> XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE;
+      case "allowMultiple" -> XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE;
+      default -> super.getFeature(name);
+    };
   }
 
 } // AttributeTypeImplCustom

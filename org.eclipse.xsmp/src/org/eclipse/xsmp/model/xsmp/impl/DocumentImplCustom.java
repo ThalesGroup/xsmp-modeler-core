@@ -8,13 +8,13 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
  * Implements generated methods
@@ -30,7 +30,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public EList<String> getCreator()
   {
-    return getFeature(XcataloguePackage.Literals.DOCUMENT__CREATOR);
+    return getFeature(XsmpPackage.Literals.DOCUMENT__CREATOR);
   }
 
   /**
@@ -39,7 +39,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public Date getDate()
   {
-    return getFeature(XcataloguePackage.Literals.DOCUMENT__DATE, DATE_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.DOCUMENT__DATE, DATE_EDEFAULT);
   }
 
   /**
@@ -48,7 +48,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public String getTitle()
   {
-    return getFeature(XcataloguePackage.Literals.DOCUMENT__TITLE, TITLE_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.DOCUMENT__TITLE, TITLE_EDEFAULT);
   }
 
   /**
@@ -57,7 +57,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public String getVersion()
   {
-    return getFeature(XcataloguePackage.Literals.DOCUMENT__VERSION, VERSION_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.DOCUMENT__VERSION, VERSION_EDEFAULT);
   }
 
   /**
@@ -66,7 +66,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public void setDate(Date newDate)
   {
-    setFeature(XcataloguePackage.Literals.DOCUMENT__DATE, newDate);
+    setFeature(XsmpPackage.Literals.DOCUMENT__DATE, newDate);
   }
 
   /**
@@ -75,7 +75,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public void setTitle(String newTitle)
   {
-    setFeature(XcataloguePackage.Literals.DOCUMENT__TITLE, newTitle);
+    setFeature(XsmpPackage.Literals.DOCUMENT__TITLE, newTitle);
   }
 
   /**
@@ -84,25 +84,20 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   public void setVersion(String newVersion)
   {
-    setFeature(XcataloguePackage.Literals.DOCUMENT__VERSION, newVersion);
+    setFeature(XsmpPackage.Literals.DOCUMENT__VERSION, newVersion);
   }
 
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    return switch (name)
     {
-      case "version":
-        return XcataloguePackage.Literals.DOCUMENT__VERSION;
-      case "title":
-        return XcataloguePackage.Literals.DOCUMENT__TITLE;
-      case "date":
-        return XcataloguePackage.Literals.DOCUMENT__DATE;
-      case "creator":
-        return XcataloguePackage.Literals.DOCUMENT__CREATOR;
-      default:
-        return super.getFeature(name);
-    }
+      case "version" -> XsmpPackage.Literals.DOCUMENT__VERSION;
+      case "title" -> XsmpPackage.Literals.DOCUMENT__TITLE;
+      case "date" -> XsmpPackage.Literals.DOCUMENT__DATE;
+      case "creator" -> XsmpPackage.Literals.DOCUMENT__CREATOR;
+      default -> super.getFeature(name);
+    };
   }
 
 } // DocumentImplCustom

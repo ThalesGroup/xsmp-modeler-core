@@ -14,8 +14,8 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.xsmp.XsmpVersion
 import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
-import org.eclipse.xsmp.xcatalogue.Catalogue
-import org.eclipse.xsmp.xcatalogue.NamedElement
+import org.eclipse.xsmp.model.xsmp.Catalogue
+import org.eclipse.xsmp.model.xsmp.NamedElement
 
 /** 
  * @author daveluy

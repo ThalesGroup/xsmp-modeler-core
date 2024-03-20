@@ -25,14 +25,14 @@ Workflow {
     bean = StandaloneSetup {
         platformUri = "${rootPath}"
         scanClassPath = true
-        registerGenModelFile = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
-        registerEcoreFile = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.ecore"
+        registerGenModelFile = "platform:/resource/${runtimeProjectName}/model/xsmp.genmodel"
+        registerEcoreFile = "platform:/resource/${runtimeProjectName}/model/xsmp.ecore"
     }
     component = DirectoryCleaner {
         directory = "${projectPath}/emf-gen"
     }
     component = org.eclipse.emf.mwe2.ecore.EcoreGenerator auto-inject {
-        genModel = "platform:/resource/${runtimeProjectName}/model/Xcatalogue.genmodel"
+        genModel = "platform:/resource/${runtimeProjectName}/model/xsmp.genmodel"
         srcPath = "platform:/resource/${runtimeProjectName}/src"
     }
 

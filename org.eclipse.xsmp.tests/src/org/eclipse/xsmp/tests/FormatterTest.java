@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xsmp.xcatalogue.Catalogue;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.serializer.ISerializer;

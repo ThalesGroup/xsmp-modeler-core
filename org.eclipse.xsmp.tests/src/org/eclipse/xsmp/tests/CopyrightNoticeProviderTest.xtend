@@ -12,7 +12,7 @@ package org.eclipse.xsmp.tests
 
 import com.google.inject.Inject
 import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
-import org.eclipse.xsmp.xcatalogue.Catalogue
+import org.eclipse.xsmp.model.xsmp.Catalogue
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper

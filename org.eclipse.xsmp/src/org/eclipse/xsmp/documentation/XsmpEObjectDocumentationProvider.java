@@ -11,12 +11,12 @@
 package org.eclipse.xsmp.documentation;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsmp.model.xsmp.BuiltInConstant;
+import org.eclipse.xsmp.model.xsmp.BuiltInFunction;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Parameter;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
-import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Parameter;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 
 import com.google.inject.Inject;

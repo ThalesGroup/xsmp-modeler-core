@@ -11,8 +11,8 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member
 
 import org.eclipse.xsmp.generator.cpp.member.EventSourceGenerator
-import org.eclipse.xsmp.xcatalogue.EventSource
-import org.eclipse.xsmp.xcatalogue.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.EventSource
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 
 class XsmpSdkEventSourceGenerator extends EventSourceGenerator {

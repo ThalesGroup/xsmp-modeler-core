@@ -10,10 +10,10 @@
  * * SPDX-License-Identifier: EPL-2.0
  * ******************************************************************************
  */
-package org.eclipse.xsmp.xcatalogue.impl;
+package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 public class NativeTypeImplCustom extends NativeTypeImpl
 {
@@ -21,56 +21,52 @@ public class NativeTypeImplCustom extends NativeTypeImpl
   @Override
   public String getType()
   {
-    return getFeature(XcataloguePackage.Literals.NATIVE_TYPE__TYPE, TYPE_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.NATIVE_TYPE__TYPE, TYPE_EDEFAULT);
   }
 
   @Override
   public void setType(String newType)
   {
-    setFeature(XcataloguePackage.Literals.NATIVE_TYPE__TYPE, newType);
+    setFeature(XsmpPackage.Literals.NATIVE_TYPE__TYPE, newType);
   }
 
   @Override
   public String getNamespace()
   {
-    return getFeature(XcataloguePackage.Literals.NATIVE_TYPE__NAMESPACE, NAMESPACE_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE, NAMESPACE_EDEFAULT);
   }
 
   @Override
   public void setNamespace(String newNamespace)
   {
-    setFeature(XcataloguePackage.Literals.NATIVE_TYPE__NAMESPACE, newNamespace);
+    setFeature(XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE, newNamespace);
   }
 
   @Override
   public String getLocation()
   {
 
-    return getFeature(XcataloguePackage.Literals.NATIVE_TYPE__LOCATION, LOCATION_EDEFAULT);
+    return getFeature(XsmpPackage.Literals.NATIVE_TYPE__LOCATION, LOCATION_EDEFAULT);
   }
 
   @Override
   public void setLocation(String newLocation)
   {
 
-    setFeature(XcataloguePackage.Literals.NATIVE_TYPE__LOCATION, newLocation);
+    setFeature(XsmpPackage.Literals.NATIVE_TYPE__LOCATION, newLocation);
   }
 
   @Override
   protected EStructuralFeature getFeature(String name)
   {
 
-    switch (name)
+    return switch (name)
     {
-      case "type":
-        return XcataloguePackage.Literals.NATIVE_TYPE__TYPE;
-      case "location":
-        return XcataloguePackage.Literals.NATIVE_TYPE__LOCATION;
-      case "namespace":
-        return XcataloguePackage.Literals.NATIVE_TYPE__NAMESPACE;
-      default:
-        return super.getFeature(name);
-    }
+      case "type" -> XsmpPackage.Literals.NATIVE_TYPE__TYPE;
+      case "location" -> XsmpPackage.Literals.NATIVE_TYPE__LOCATION;
+      case "namespace" -> XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE;
+      default -> super.getFeature(name);
+    };
 
   }
 

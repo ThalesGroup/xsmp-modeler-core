@@ -12,11 +12,11 @@ package org.eclipse.xsmp.validation;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.xsmp.xcatalogue.Component;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
-import org.eclipse.xsmp.xcatalogue.Property;
-import org.eclipse.xsmp.xcatalogue.VisibilityElement;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.Component;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Property;
+import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.DiagnosticConverterImpl;
@@ -35,60 +35,60 @@ public class XsmpcatDiagnosticConverter extends DiagnosticConverterImpl
           int index)
   {
 
-    if (structuralFeature == XcataloguePackage.Literals.VISIBILITY_ELEMENT__VISIBILITY)
+    if (structuralFeature == XsmpPackage.Literals.VISIBILITY_ELEMENT__VISIBILITY)
     {
       final var elem = (VisibilityElement) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf(elem.getRealVisibility().getLiteral()));
     }
-    if (structuralFeature == XcataloguePackage.Literals.COMPONENT__BASE)
+    if (structuralFeature == XsmpPackage.Literals.COMPONENT__BASE)
     {
       final var elem = (Component) obj;
       if (elem.getBase() == null)
       {
-        return getLocationData(obj, XcataloguePackage.Literals.NAMED_ELEMENT__NAME);
+        return getLocationData(obj, XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
-    if (structuralFeature == XcataloguePackage.Literals.CLASS__ABSTRACT)
+    if (structuralFeature == XsmpPackage.Literals.CLASS__ABSTRACT)
     {
       final var elem = (VisibilityElement) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf("abstract"));
     }
-    if (structuralFeature == XcataloguePackage.Literals.PROPERTY__ACCESS)
+    if (structuralFeature == XsmpPackage.Literals.PROPERTY__ACCESS)
     {
       final var elem = (Property) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf(elem.getAccess().getLiteral()));
     }
-    if (structuralFeature == XcataloguePackage.Literals.FIELD__INPUT)
+    if (structuralFeature == XsmpPackage.Literals.FIELD__INPUT)
     {
       final var elem = (VisibilityElement) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf("input"));
     }
-    if (structuralFeature == XcataloguePackage.Literals.FIELD__OUTPUT)
+    if (structuralFeature == XsmpPackage.Literals.FIELD__OUTPUT)
     {
       final var elem = (VisibilityElement) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf("output"));
     }
-    if (structuralFeature == XcataloguePackage.Literals.FIELD__TRANSIENT)
+    if (structuralFeature == XsmpPackage.Literals.FIELD__TRANSIENT)
     {
       final var elem = (VisibilityElement) obj;
 
-      return getLocationData(obj, XcataloguePackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
+      return getLocationData(obj, XsmpPackage.Literals.VISIBILITY_ELEMENT__MODIFIERS,
               elem.getModifiers().indexOf("transient"));
     }
     if (obj instanceof final NamedElement elem && structuralFeature != null)
     {
       for (final INode node : NodeModelUtils.findNodesForFeature(elem.getMetadatum(),
-              XcataloguePackage.Literals.METADATUM__DOCUMENTATION))
+              XsmpPackage.Literals.METADATUM__DOCUMENTATION))
       {
         final var xsmpcatdoc = elem.getMetadatum().getXsmpcatdoc();
 

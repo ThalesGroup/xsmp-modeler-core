@@ -12,9 +12,9 @@ package org.eclipse.xsmp.tests
 
 import java.util.Date
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xsmp.xcatalogue.XcatalogueFactory
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage
-import org.eclipse.xsmp.xcatalogue.impl.DocumentImplCustom
+import org.eclipse.xsmp.model.xsmp.XsmpFactory
+import org.eclipse.xsmp.model.xsmp.XsmpPackage
+import org.eclipse.xsmp.model.xsmp.impl.DocumentImplCustom
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
@@ -44,12 +44,12 @@ class DocumentTest {
     @Test
     def void checkDate() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XsmpFactory.eINSTANCE.createCatalogue
 
         var date = new Date()
         elem.date = date
         assertEquals(
-            '''/** @date «EcoreUtil.convertToString(XcataloguePackage.Literals.DOCUMENT__DATE.getEAttributeType(), date)» */'''.
+            '''/** @date «EcoreUtil.convertToString(XsmpPackage.Literals.DOCUMENT__DATE.getEAttributeType(), date)» */'''.
                 toString, elem.metadatum.documentation)
 
         elem.date = null
@@ -59,7 +59,7 @@ class DocumentTest {
     @Test
     def void checkTitle() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XsmpFactory.eINSTANCE.createCatalogue
 
         elem.title = "A title"
         assertEquals("A title", elem.title)
@@ -73,7 +73,7 @@ class DocumentTest {
     @Test
     def void checkCreator() {
 
-        var elem = XcatalogueFactory.eINSTANCE.createCatalogue
+        var elem = XsmpFactory.eINSTANCE.createCatalogue
 
         elem.creator += "User1"
         assertEquals(#["User1"], elem.creator)

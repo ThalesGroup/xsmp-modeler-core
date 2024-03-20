@@ -15,27 +15,27 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.xcatalogue.BinaryOperation;
-import org.eclipse.xsmp.xcatalogue.BooleanLiteral;
-import org.eclipse.xsmp.xcatalogue.BuiltInConstant;
-import org.eclipse.xsmp.xcatalogue.BuiltInExpression;
-import org.eclipse.xsmp.xcatalogue.BuiltInFunction;
-import org.eclipse.xsmp.xcatalogue.CharacterLiteral;
-import org.eclipse.xsmp.xcatalogue.CollectionLiteral;
-import org.eclipse.xsmp.xcatalogue.Constant;
-import org.eclipse.xsmp.xcatalogue.DesignatedInitializer;
-import org.eclipse.xsmp.xcatalogue.EmptyExpression;
-import org.eclipse.xsmp.xcatalogue.Enumeration;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.FloatingLiteral;
-import org.eclipse.xsmp.xcatalogue.IntegerLiteral;
-import org.eclipse.xsmp.xcatalogue.NamedElementReference;
-import org.eclipse.xsmp.xcatalogue.ParenthesizedExpression;
-import org.eclipse.xsmp.xcatalogue.SimpleType;
-import org.eclipse.xsmp.xcatalogue.StringLiteral;
-import org.eclipse.xsmp.xcatalogue.Type;
-import org.eclipse.xsmp.xcatalogue.UnaryOperation;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.BinaryOperation;
+import org.eclipse.xsmp.model.xsmp.BooleanLiteral;
+import org.eclipse.xsmp.model.xsmp.BuiltInConstant;
+import org.eclipse.xsmp.model.xsmp.BuiltInExpression;
+import org.eclipse.xsmp.model.xsmp.BuiltInFunction;
+import org.eclipse.xsmp.model.xsmp.CharacterLiteral;
+import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
+import org.eclipse.xsmp.model.xsmp.Constant;
+import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
+import org.eclipse.xsmp.model.xsmp.EmptyExpression;
+import org.eclipse.xsmp.model.xsmp.Enumeration;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.FloatingLiteral;
+import org.eclipse.xsmp.model.xsmp.IntegerLiteral;
+import org.eclipse.xsmp.model.xsmp.NamedElementReference;
+import org.eclipse.xsmp.model.xsmp.ParenthesizedExpression;
+import org.eclipse.xsmp.model.xsmp.SimpleType;
+import org.eclipse.xsmp.model.xsmp.StringLiteral;
+import org.eclipse.xsmp.model.xsmp.Type;
+import org.eclipse.xsmp.model.xsmp.UnaryOperation;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Tuples;
 
@@ -179,7 +179,7 @@ public class Solver
       {
         return getValue(cst.getValue(), cst.getType());
       }
-      if (value instanceof final org.eclipse.xsmp.xcatalogue.EnumerationLiteral literal)
+      if (value instanceof final org.eclipse.xsmp.model.xsmp.EnumerationLiteral literal)
       {
         return EnumerationLiteral.valueOf(literal);
       }
@@ -408,35 +408,35 @@ public class Solver
     {
       switch (e.eClass().getClassifierID())
       {
-        case XcataloguePackage.BINARY_OPERATION:
+        case XsmpPackage.BINARY_OPERATION:
           return doGetValue((BinaryOperation) e);
-        case XcataloguePackage.BOOLEAN_LITERAL:
+        case XsmpPackage.BOOLEAN_LITERAL:
           return Bool.valueOf(((BooleanLiteral) e).isIsTrue());
-        case XcataloguePackage.BUILT_IN_CONSTANT:
+        case XsmpPackage.BUILT_IN_CONSTANT:
           return doGetValue((BuiltInConstant) e);
-        case XcataloguePackage.BUILT_IN_FUNCTION:
+        case XsmpPackage.BUILT_IN_FUNCTION:
           return doGetValue((BuiltInFunction) e);
-        case XcataloguePackage.CHARACTER_LITERAL:
+        case XsmpPackage.CHARACTER_LITERAL:
           return doGetValue((CharacterLiteral) e);
-        case XcataloguePackage.COLLECTION_LITERAL:
+        case XsmpPackage.COLLECTION_LITERAL:
           return doGetValue((CollectionLiteral) e);
-        case XcataloguePackage.NAMED_ELEMENT_REFERENCE:
+        case XsmpPackage.NAMED_ELEMENT_REFERENCE:
           return doGetValue((NamedElementReference) e);
-        case XcataloguePackage.FLOATING_LITERAL:
+        case XsmpPackage.FLOATING_LITERAL:
           return doGetValue((FloatingLiteral) e);
-        case XcataloguePackage.INTEGER_LITERAL:
+        case XsmpPackage.INTEGER_LITERAL:
           return doGetValue((IntegerLiteral) e);
-        case XcataloguePackage.PARENTHESIZED_EXPRESSION:
+        case XsmpPackage.PARENTHESIZED_EXPRESSION:
           return doGetValue(((ParenthesizedExpression) e).getExpr());
-        case XcataloguePackage.DESIGNATED_INITIALIZER:
+        case XsmpPackage.DESIGNATED_INITIALIZER:
           return doGetValue(((DesignatedInitializer) e).getExpr());
-        case XcataloguePackage.STRING_LITERAL:
+        case XsmpPackage.STRING_LITERAL:
           return doGetValue((StringLiteral) e);
-        case XcataloguePackage.UNARY_OPERATION:
+        case XsmpPackage.UNARY_OPERATION:
           return doGetValue((UnaryOperation) e);
-        // case XcataloguePackage.KEYWORD_EXPRESSION:
+        // case XsmpPackage.KEYWORD_EXPRESSION:
         // return e;
-        // case XcataloguePackage.EMPTY_EXPRESSION:
+        // case XsmpPackage.EMPTY_EXPRESSION:
         // return null;
         default:
           break;

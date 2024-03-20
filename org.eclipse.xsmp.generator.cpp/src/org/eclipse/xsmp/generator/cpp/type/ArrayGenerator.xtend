@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.generator.cpp.type
 
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
-import org.eclipse.xsmp.xcatalogue.Array
+import org.eclipse.xsmp.model.xsmp.Array
 
 class ArrayGenerator extends AbstractTypeGenerator<Array> {
 

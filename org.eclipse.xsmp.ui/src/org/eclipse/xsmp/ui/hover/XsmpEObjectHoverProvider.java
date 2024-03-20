@@ -12,9 +12,9 @@ package org.eclipse.xsmp.ui.hover;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
+import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.ui.cdt.SourceHovers;
-import org.eclipse.xsmp.xcatalogue.Expression;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 

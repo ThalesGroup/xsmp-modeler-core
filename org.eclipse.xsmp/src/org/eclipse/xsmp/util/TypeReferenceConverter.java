@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xsmp.xcatalogue.XcataloguePackage;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Singleton;
@@ -31,44 +31,30 @@ public class TypeReferenceConverter
   private static final Map<EReference, EClass> converters = ImmutableMap
           .<EReference, EClass> builder()
           // add the entries
-          .put(XcataloguePackage.Literals.ARRAY__ITEM_TYPE, XcataloguePackage.Literals.VALUE_TYPE)
-          .put(XcataloguePackage.Literals.ATTRIBUTE_TYPE__TYPE,
-                  XcataloguePackage.Literals.VALUE_TYPE)
-          .put(XcataloguePackage.Literals.ATTRIBUTE__TYPE,
-                  XcataloguePackage.Literals.ATTRIBUTE_TYPE)
-          .put(XcataloguePackage.Literals.CLASS__BASE, XcataloguePackage.Literals.CLASS)
-          .put(XcataloguePackage.Literals.COMPONENT__BASE, XcataloguePackage.Literals.COMPONENT)
-          .put(XcataloguePackage.Literals.COMPONENT__INTERFACE,
-                  XcataloguePackage.Literals.INTERFACE)
-          .put(XcataloguePackage.Literals.CONSTANT__TYPE, XcataloguePackage.Literals.SIMPLE_TYPE)
-          .put(XcataloguePackage.Literals.ASSOCIATION__TYPE,
-                  XcataloguePackage.Literals.LANGUAGE_TYPE)
-          .put(XcataloguePackage.Literals.CONTAINER__TYPE,
-                  XcataloguePackage.Literals.REFERENCE_TYPE)
-          .put(XcataloguePackage.Literals.CONTAINER__DEFAULT_COMPONENT,
-                  XcataloguePackage.Literals.COMPONENT)
-          .put(XcataloguePackage.Literals.FIELD__TYPE, XcataloguePackage.Literals.VALUE_TYPE)
-          .put(XcataloguePackage.Literals.FLOAT__PRIMITIVE_TYPE,
-                  XcataloguePackage.Literals.PRIMITIVE_TYPE)
-          .put(XcataloguePackage.Literals.INTEGER__PRIMITIVE_TYPE,
-                  XcataloguePackage.Literals.PRIMITIVE_TYPE)
-          .put(XcataloguePackage.Literals.INTERFACE__BASE, XcataloguePackage.Literals.INTERFACE)
-          .put(XcataloguePackage.Literals.OPERATION__RAISED_EXCEPTION,
-                  XcataloguePackage.Literals.EXCEPTION)
-          .put(XcataloguePackage.Literals.PARAMETER__TYPE, XcataloguePackage.Literals.LANGUAGE_TYPE)
-          .put(XcataloguePackage.Literals.PROPERTY__TYPE, XcataloguePackage.Literals.VALUE_TYPE)
-          .put(XcataloguePackage.Literals.PROPERTY__SET_RAISES,
-                  XcataloguePackage.Literals.EXCEPTION)
-          .put(XcataloguePackage.Literals.PROPERTY__GET_RAISES,
-                  XcataloguePackage.Literals.EXCEPTION)
-          .put(XcataloguePackage.Literals.REFERENCE__INTERFACE,
-                  XcataloguePackage.Literals.INTERFACE)
-          .put(XcataloguePackage.Literals.VALUE_REFERENCE__TYPE,
-                  XcataloguePackage.Literals.VALUE_TYPE)
-          .put(XcataloguePackage.Literals.EVENT_TYPE__EVENT_ARGS,
-                  XcataloguePackage.Literals.SIMPLE_TYPE)
-          .put(XcataloguePackage.Literals.EVENT_SINK__TYPE, XcataloguePackage.Literals.EVENT_TYPE)
-          .put(XcataloguePackage.Literals.EVENT_SOURCE__TYPE, XcataloguePackage.Literals.EVENT_TYPE)
+          .put(XsmpPackage.Literals.ARRAY__ITEM_TYPE, XsmpPackage.Literals.VALUE_TYPE)
+          .put(XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE, XsmpPackage.Literals.VALUE_TYPE)
+          .put(XsmpPackage.Literals.ATTRIBUTE__TYPE, XsmpPackage.Literals.ATTRIBUTE_TYPE)
+          .put(XsmpPackage.Literals.CLASS__BASE, XsmpPackage.Literals.CLASS)
+          .put(XsmpPackage.Literals.COMPONENT__BASE, XsmpPackage.Literals.COMPONENT)
+          .put(XsmpPackage.Literals.COMPONENT__INTERFACE, XsmpPackage.Literals.INTERFACE)
+          .put(XsmpPackage.Literals.CONSTANT__TYPE, XsmpPackage.Literals.SIMPLE_TYPE)
+          .put(XsmpPackage.Literals.ASSOCIATION__TYPE, XsmpPackage.Literals.LANGUAGE_TYPE)
+          .put(XsmpPackage.Literals.CONTAINER__TYPE, XsmpPackage.Literals.REFERENCE_TYPE)
+          .put(XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT, XsmpPackage.Literals.COMPONENT)
+          .put(XsmpPackage.Literals.FIELD__TYPE, XsmpPackage.Literals.VALUE_TYPE)
+          .put(XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE, XsmpPackage.Literals.PRIMITIVE_TYPE)
+          .put(XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE, XsmpPackage.Literals.PRIMITIVE_TYPE)
+          .put(XsmpPackage.Literals.INTERFACE__BASE, XsmpPackage.Literals.INTERFACE)
+          .put(XsmpPackage.Literals.OPERATION__RAISED_EXCEPTION, XsmpPackage.Literals.EXCEPTION)
+          .put(XsmpPackage.Literals.PARAMETER__TYPE, XsmpPackage.Literals.LANGUAGE_TYPE)
+          .put(XsmpPackage.Literals.PROPERTY__TYPE, XsmpPackage.Literals.VALUE_TYPE)
+          .put(XsmpPackage.Literals.PROPERTY__SET_RAISES, XsmpPackage.Literals.EXCEPTION)
+          .put(XsmpPackage.Literals.PROPERTY__GET_RAISES, XsmpPackage.Literals.EXCEPTION)
+          .put(XsmpPackage.Literals.REFERENCE__INTERFACE, XsmpPackage.Literals.INTERFACE)
+          .put(XsmpPackage.Literals.VALUE_REFERENCE__TYPE, XsmpPackage.Literals.VALUE_TYPE)
+          .put(XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS, XsmpPackage.Literals.SIMPLE_TYPE)
+          .put(XsmpPackage.Literals.EVENT_SINK__TYPE, XsmpPackage.Literals.EVENT_TYPE)
+          .put(XsmpPackage.Literals.EVENT_SOURCE__TYPE, XsmpPackage.Literals.EVENT_TYPE)
           // build the map
           .build();
 

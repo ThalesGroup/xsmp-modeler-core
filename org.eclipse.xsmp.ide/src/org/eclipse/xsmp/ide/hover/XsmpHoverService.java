@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.ide.hover;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsmp.xcatalogue.NamedElement;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
