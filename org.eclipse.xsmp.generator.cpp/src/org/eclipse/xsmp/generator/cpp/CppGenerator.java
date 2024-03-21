@@ -231,7 +231,6 @@ public class CppGenerator extends AbstractGenerator
     {
       final var pb = new ProcessBuilder("clang-format", "-style=LLVM",
               "-assume-filename=" + fileName);
-      pb.redirectErrorStream(true);
 
       final var process = pb.start();
       final var reader = new BufferedReader(
@@ -241,10 +240,9 @@ public class CppGenerator extends AbstractGenerator
 
       final var result = new StringBuilder();
       String line;
-      final var lineSeparator = System.lineSeparator();
       while ((line = reader.readLine()) != null)
       {
-        result.append(line).append(lineSeparator);
+        result.append(line).append(System.lineSeparator());
       }
       reader.close();
 
@@ -254,9 +252,13 @@ public class CppGenerator extends AbstractGenerator
         return result;
       }
     }
-    catch (IOException | InterruptedException e)
+    catch (final IOException e)
     {
       // ignore
+    }
+    catch (final InterruptedException e)
+    {
+      Thread.currentThread().interrupt();
     }
     return content;
   }
