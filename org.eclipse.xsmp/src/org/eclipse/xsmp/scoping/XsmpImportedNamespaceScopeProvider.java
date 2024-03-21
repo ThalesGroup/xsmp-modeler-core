@@ -316,23 +316,25 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
 
     switch (context.eClass().getClassifierID())
     {
-      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION:
+      case XsmpPackage.CLASS:
+      case XsmpPackage.EXCEPTION:
         result = getClassScope(result, globalScope, (org.eclipse.xsmp.model.xsmp.Class) context,
                 reference, resolve);
         break;
       case XsmpPackage.INTERFACE:
         result = getInterfaceScope(result, globalScope, (Interface) context, reference, resolve);
         break;
-      case XsmpPackage.MODEL, XsmpPackage.SERVICE:
+      case XsmpPackage.MODEL:
+      case XsmpPackage.SERVICE:
         result = getComponentScope(result, globalScope, (Component) context, reference, resolve);
         break;
       case XsmpPackage.DESIGNATED_INITIALIZER:
       {
         final var container = context.eContainer();
-        if (container instanceof final CollectionLiteral collection
+        if (container instanceof CollectionLiteral
                 && reference == XsmpPackage.Literals.DESIGNATED_INITIALIZER__FIELD)
         {
-          final var type = xsmpUtil.getType(collection);
+          final var type = xsmpUtil.getType((CollectionLiteral) container);
           if (type instanceof Structure)
           {
             result = getDesignatedInitializerFieldScope(globalScope, type,

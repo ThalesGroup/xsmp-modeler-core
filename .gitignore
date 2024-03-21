@@ -4,8 +4,12 @@ xtend-gen
 emf-gen
 target
 bin
-#workspace
-/build
+.antlr*.jar
+
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
 
 # Jupyter Notebooks
 .ipynb_checkpoints
@@ -111,3 +115,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 **/.DS_Store
+
+node_modules/
+/package-lock.json
+/package.json

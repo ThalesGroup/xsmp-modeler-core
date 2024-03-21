@@ -35,7 +35,9 @@ jobs:
             languages: ${{ matrix.language }}
 
       -  name: Autobuild
-         uses: github/codeql-action/autobuild@v3
+         run: |
+            mvn -B package --file pom.xml
+            ./gradlew build vscodeExtension
       -  name: Perform CodeQL Analysis
          uses: github/codeql-action/analyze@v3
          with:

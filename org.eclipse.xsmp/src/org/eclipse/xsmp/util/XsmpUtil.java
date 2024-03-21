@@ -256,9 +256,9 @@ public class XsmpUtil
 
   public VisibilityKind getVisibility(EObject t)
   {
-    if (t instanceof final VisibilityElement elem)
+    if (t instanceof VisibilityElement)
     {
-      return elem.getRealVisibility();
+      return ((VisibilityElement) t).getRealVisibility();
     }
     // by default other objects are public
     return VisibilityKind.PUBLIC;
@@ -272,9 +272,9 @@ public class XsmpUtil
     {
       return Boolean.parseBoolean(o.getUserData("deprecated"));
     }
-    if (obj instanceof final NamedElement elem)
+    if (obj instanceof NamedElement)
     {
-      return elem.isDeprecated();
+      return ((NamedElement) obj).isDeprecated();
     }
     return false;
   }
@@ -300,14 +300,20 @@ public class XsmpUtil
 
   public boolean isBaseOf(EObject base, EObject derived)
   {
-    return switch (derived.eClass().getClassifierID())
+    switch (derived.eClass().getClassifierID())
     {
-      case XsmpPackage.INTERFACE -> isBaseOf(base, (Interface) derived);
-      case XsmpPackage.MODEL -> isBaseOf(base, (Model) derived);
-      case XsmpPackage.SERVICE -> isBaseOf(base, (Service) derived);
-      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION -> isBaseOf(base, (Class) derived);
-      default -> false;
-    };
+      case XsmpPackage.INTERFACE:
+        return isBaseOf(base, (Interface) derived);
+      case XsmpPackage.MODEL:
+        return isBaseOf(base, (Model) derived);
+      case XsmpPackage.SERVICE:
+        return isBaseOf(base, (Service) derived);
+      case XsmpPackage.CLASS:
+      case XsmpPackage.EXCEPTION:
+        return isBaseOf(base, (Class) derived);
+      default:
+        return false;
+    }
   }
 
   protected boolean isBaseOf(EObject base, Interface derived)
@@ -383,9 +389,9 @@ public class XsmpUtil
       return min;
     }
 
-    if (container instanceof final ItemWithBase item)
+    if (container instanceof ItemWithBase)
     {
-      final var base = item.getBase();
+      final var base = ((ItemWithBase) container).getBase();
       if (base != null)
       {
         return getMinVisibility(fieldOrConstant, base, VisibilityKind.PROTECTED);
@@ -410,13 +416,13 @@ public class XsmpUtil
     final var obj = p.getEObjectOrProxy();
     if (!obj.eIsProxy())
     {
-      if (obj instanceof final Type type)
+      if (obj instanceof Type)
       {
-        return isVisibleFrom(type, from);
+        return isVisibleFrom((Type) obj, from);
       }
-      if (obj instanceof final VisibilityElement elem)
+      if (obj instanceof VisibilityElement)
       {
-        return isVisibleFrom(elem, from);
+        return isVisibleFrom((VisibilityElement) obj, from);
       }
       if (obj instanceof EnumerationLiteral)
       {
@@ -485,13 +491,22 @@ public class XsmpUtil
           case 'v':
             ch = 0x0b;
             break;
-          case '\'', '\"', '\\':
+          case '\'':
+          case '\"':
+          case '\\':
             // as is
             break;
           case '?':
             ch = 0x3f;
             break;
-          case '0', '1', '2', '3', '4', '5', '6', '7':
+          case '0':
+          case '1':
+          case '2':
+          case '3':
+          case '4':
+          case '5':
+          case '6':
+          case '7':
             final var limit = Integer.min(from + (ch <= '3' ? 2 : 1), length);
             var code = ch - '0';
             while (from < limit)
@@ -530,21 +545,23 @@ public class XsmpUtil
     final var dependencies = new HashSet<Catalogue>();
     // collect all referenced Catalogue of interest
     t.eAllContents().forEachRemaining(it -> {
-      if (it instanceof final Field field)
+      if (it instanceof Field)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(field.getType(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(((Field) it).getType(), Catalogue.class));
       }
-      else if (it instanceof final Property property)
+      else if (it instanceof Property)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(property.getType(), Catalogue.class));
+        dependencies.add(EcoreUtil2.getContainerOfType(((Property) it).getType(), Catalogue.class));
       }
-      else if (it instanceof final ItemWithBase item)
+      else if (it instanceof ItemWithBase)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(item.getBase(), Catalogue.class));
+        dependencies
+                .add(EcoreUtil2.getContainerOfType(((ItemWithBase) it).getBase(), Catalogue.class));
       }
-      else if (it instanceof final Array array)
+      else if (it instanceof Array)
       {
-        dependencies.add(EcoreUtil2.getContainerOfType(array.getItemType(), Catalogue.class));
+        dependencies
+                .add(EcoreUtil2.getContainerOfType(((Array) it).getItemType(), Catalogue.class));
       }
 
     });
@@ -553,7 +570,7 @@ public class XsmpUtil
     final Comparator<String> c = Comparator.nullsFirst(String::compareTo);
     // Remove ecss_smp_smp and sort dependencies by name
     return dependencies.stream().filter(it -> it != null && !"ecss_smp_smp".equals(it.getName()))
-            .sorted((a, b) -> c.compare(a.getName(), b.getName())).toList();
+            .sorted((a, b) -> c.compare(a.getName(), b.getName())).collect(Collectors.toList());
   }
 
   public int year(Document doc)
@@ -615,9 +632,9 @@ public class XsmpUtil
     {
       return Boolean.parseBoolean(o.getUserData("static"));
     }
-    if (obj instanceof final NamedElement elem)
+    if (obj instanceof NamedElement)
     {
-      return isStatic(elem);
+      return isStatic((NamedElement) obj);
     }
     return false;
   }
@@ -758,13 +775,19 @@ public class XsmpUtil
   public boolean isConst(Parameter o)
   {
     final var id = QualifiedNames.Attributes_Const;
-    return cache.get(Tuples.pair(o, id), o.eResource(),
-            () -> attributeBoolValue(o, id, () -> switch (o.getDirection())
-            {
-              case IN -> !(o.getType() instanceof ValueType);
-              case RETURN, OUT, INOUT -> false;
-              default -> false;
-            }));
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, () -> {
+      switch (o.getDirection())
+      {
+        case IN:
+          return !(o.getType() instanceof ValueType);
+        case RETURN:
+        case OUT:
+        case INOUT:
+          return false;
+        default:
+          return false;
+      }
+    }));
 
   }
 
@@ -772,20 +795,28 @@ public class XsmpUtil
   {
     if (type instanceof ReferenceType)
     {
-      return switch (direction)
+      switch (direction)
       {
-        case IN -> ArgKind.BY_REF;
-        case INOUT, OUT, RETURN -> ArgKind.BY_PTR;
-      };
+        case IN:
+          return ArgKind.BY_REF;
+        case INOUT:
+        case OUT:
+        case RETURN:
+          return ArgKind.BY_PTR;
+      }
     }
 
     if (type instanceof NativeType || type instanceof ValueType)
     {
-      return switch (direction)
+      switch (direction)
       {
-        case IN, RETURN -> ArgKind.BY_VALUE;
-        case INOUT, OUT -> ArgKind.BY_PTR;
-      };
+        case IN:
+        case RETURN:
+          return ArgKind.BY_VALUE;
+        case INOUT:
+        case OUT:
+          return ArgKind.BY_PTR;
+      }
     }
     return ArgKind.BY_VALUE;
   }
@@ -804,12 +835,13 @@ public class XsmpUtil
               .map(Field.class::cast)
               .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
               .collect(Collectors.toList());
-      if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
+      if (structure instanceof org.eclipse.xsmp.model.xsmp.Class)
       {
+        final var clazz = (org.eclipse.xsmp.model.xsmp.Class) structure;
         final var base = clazz.getBase();
-        if (base instanceof final Structure struct && !isBaseOf(base, clazz))
+        if (base instanceof Structure && !isBaseOf(base, clazz))
         {
-          fields.addAll(0, getAssignableFields(struct));
+          fields.addAll(0, getAssignableFields((Structure) base));
         }
       }
       return fields;
@@ -824,12 +856,13 @@ public class XsmpUtil
     final var fields = Iterables.filter(Iterables.filter(structure.getMember(), Field.class),
             it -> !isStatic(it));
 
-    if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
+    if (structure instanceof org.eclipse.xsmp.model.xsmp.Class)
     {
+      final var clazz = (org.eclipse.xsmp.model.xsmp.Class) structure;
       final var base = clazz.getBase();
-      if (base instanceof final Structure struct && !isBaseOf(base, clazz))
+      if (base instanceof Structure && !isBaseOf(base, clazz))
       {
-        return Iterables.concat(getFields(struct), fields);
+        return Iterables.concat(getFields((Structure) base), fields);
       }
     }
     return fields;
@@ -853,13 +886,13 @@ public class XsmpUtil
       return true;
     }
 
-    if (visited instanceof final Array array)
+    if (visited instanceof Array)
     {
-      return isRecursiveType(type, array.getItemType());
+      return isRecursiveType(type, ((Array) visited).getItemType());
     }
-    if (visited instanceof final Structure struct)
+    if (visited instanceof Structure)
     {
-      for (final var field : getFields(struct))
+      for (final var field : getFields((Structure) visited))
       {
         if (isRecursiveType(type, field.getType()))
         {
@@ -921,36 +954,49 @@ public class XsmpUtil
 
   private Type findType(EObject parent)
   {
-
-    return switch (parent.eClass().getClassifierID())
+    switch (parent.eClass().getClassifierID())
     {
-      case XsmpPackage.FIELD -> ((Field) parent).getType();
-      case XsmpPackage.CONSTANT -> ((Constant) parent).getType();
-      case XsmpPackage.ASSOCIATION -> ((Association) parent).getType();
-      case XsmpPackage.PARAMETER -> ((Parameter) parent).getType();
-      case XsmpPackage.STRING, XsmpPackage.ARRAY, XsmpPackage.MULTIPLICITY -> findPrimitiveType(
-              parent, QualifiedNames.Smp_Int64);
-      case XsmpPackage.FLOAT -> {
+      case XsmpPackage.FIELD:
+        return ((Field) parent).getType();
+      case XsmpPackage.CONSTANT:
+        return ((Constant) parent).getType();
+      case XsmpPackage.ASSOCIATION:
+        return ((Association) parent).getType();
+      case XsmpPackage.PARAMETER:
+        return ((Parameter) parent).getType();
+      case XsmpPackage.STRING:
+      case XsmpPackage.ARRAY:
+      case XsmpPackage.MULTIPLICITY:
+        return findPrimitiveType(parent, QualifiedNames.Smp_Int64);
+      case XsmpPackage.FLOAT:
+      {
         final var type = ((Float) parent).getPrimitiveType();
-        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
+        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
-      case XsmpPackage.INTEGER -> {
+      case XsmpPackage.INTEGER:
+      {
         final var type = ((org.eclipse.xsmp.model.xsmp.Integer) parent).getPrimitiveType();
-        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
-      case XsmpPackage.ENUMERATION_LITERAL -> findPrimitiveType(parent, QualifiedNames.Smp_Int32);
-      case XsmpPackage.ENUMERATION -> (Type) parent;
-      case XsmpPackage.ATTRIBUTE -> {
+      case XsmpPackage.ENUMERATION_LITERAL:
+        return findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+      case XsmpPackage.ENUMERATION:
+        return (Type) parent;
+      case XsmpPackage.ATTRIBUTE:
+      {
         final var type = ((Attribute) parent).getType();
-        yield type instanceof final AttributeType attr ? attr.getType() : type;
+        return type instanceof AttributeType ? ((AttributeType) type).getType() : type;
       }
-      case XsmpPackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
-      case XsmpPackage.COLLECTION_LITERAL -> {
+      case XsmpPackage.ATTRIBUTE_TYPE:
+        return ((AttributeType) parent).getType();
+      case XsmpPackage.COLLECTION_LITERAL:
+      {
         final var collection = (CollectionLiteral) parent;
-        yield getType(collection);
+        return getType(collection);
       }
-      default -> parent instanceof final Expression e ? getType(e) : null;
-    };
+      default:
+        return parent instanceof Expression ? getType((Expression) parent) : null;
+    }
   }
 
   private Type findType(Expression e)
@@ -959,11 +1005,12 @@ public class XsmpUtil
 
     final var type = getType(parent);
 
-    if (parent instanceof final CollectionLiteral collection)
+    if (parent instanceof CollectionLiteral)
     {
-      if (type instanceof final Array array)
+      final var collection = (CollectionLiteral) parent;
+      if (type instanceof Array)
       {
-
+        final var array = (Array) type;
         final var index = collection.getElements().indexOf(e);
 
         final var size = getInt64(array.getSize());
@@ -974,8 +1021,9 @@ public class XsmpUtil
         }
         return null;
       }
-      if (type instanceof final Structure struct)
+      if (type instanceof Structure)
       {
+        final var struct = (Structure) type;
         final var fields = getAssignableFields(struct);
         final var index = collection.getElements().indexOf(e);
         if (index >= 0 && index < fields.size())
@@ -1033,9 +1081,9 @@ public class XsmpUtil
         final var collection = (CollectionLiteral) parent;
         final var type = getType(collection);
 
-        if (type instanceof final Structure struct)
+        if (type instanceof Structure)
         {
-          final var fields = getAssignableFields(struct);
+          final var fields = getAssignableFields((Structure) type);
           final var index = collection.getElements().indexOf(e);
           if (index >= 0 && index < fields.size())
           {
@@ -1063,9 +1111,9 @@ public class XsmpUtil
       if (n instanceof CompositeNodeWithSemanticElement)
       {
         final var elem = n.getSemanticElement();
-        if (elem instanceof final Expression e)
+        if (elem instanceof Expression)
         {
-          last = e;
+          last = (Expression) elem;
         }
       }
       if (node == n && last != null)
@@ -1086,9 +1134,9 @@ public class XsmpUtil
       if (n instanceof CompositeNodeWithSemanticElement)
       {
         final var elem = n.getSemanticElement();
-        if (elem instanceof final Expression e)
+        if (elem instanceof Expression)
         {
-          last = e;
+          last = (Expression) elem;
         }
       }
 
@@ -1108,9 +1156,9 @@ public class XsmpUtil
   public EnumerationLiteral getEnumerationLiteral(Expression e)
   {
     final var type = getType(e);
-    if (type instanceof final Enumeration enumeration)
+    if (type instanceof Enumeration)
     {
-      return solver.getValue(e, enumeration).getValue();
+      return solver.getValue(e, (Enumeration) type).getValue();
     }
     return null;
   }

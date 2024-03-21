@@ -80,28 +80,47 @@ public class Solver
 
     try
     {
-      return switch (e.getFeature())
+      switch (e.getFeature())
       {
-        case "||" -> leftOperand.logicalOr(rightOperand);
-        case "&&" -> leftOperand.logicalAnd(rightOperand);
-        case "|" -> leftOperand.or(rightOperand);
-        case "&" -> leftOperand.and(rightOperand);
-        case "^" -> leftOperand.xor(rightOperand);
-        case "==" -> Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
-        case "!=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
-        case "<=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
-        case ">=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
-        case "<" -> Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
-        case ">" -> Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
-        case "+" -> leftOperand.add(rightOperand);
-        case "-" -> leftOperand.subtract(rightOperand);
-        case "/" -> leftOperand.divide(rightOperand);
-        case "*" -> leftOperand.multiply(rightOperand);
-        case "%" -> leftOperand.remainder(rightOperand);
-        case "<<" -> leftOperand.shiftLeft(rightOperand);
-        case ">>" -> leftOperand.shiftRight(rightOperand);
-        default -> throw new UnsupportedOperationException();
-      };
+        case "||":
+          return leftOperand.logicalOr(rightOperand);
+        case "&&":
+          return leftOperand.logicalAnd(rightOperand);
+        case "|":
+          return leftOperand.or(rightOperand);
+        case "&":
+          return leftOperand.and(rightOperand);
+        case "^":
+          return leftOperand.xor(rightOperand);
+        case "==":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
+        case "!=":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
+        case "<=":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
+        case ">=":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
+        case "<":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
+        case ">":
+          return Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
+        case "+":
+          return leftOperand.add(rightOperand);
+        case "-":
+          return leftOperand.subtract(rightOperand);
+        case "/":
+          return leftOperand.divide(rightOperand);
+        case "*":
+          return leftOperand.multiply(rightOperand);
+        case "%":
+          return leftOperand.remainder(rightOperand);
+        case "<<":
+          return leftOperand.shiftLeft(rightOperand);
+        case ">>":
+          return leftOperand.shiftRight(rightOperand);
+        default:
+          throw new UnsupportedOperationException();
+      }
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -145,14 +164,19 @@ public class Solver
 
     try
     {
-      return switch (e.getFeature())
+      switch (e.getFeature())
       {
-        case "!" -> value.not();
-        case "~" -> value.unaryComplement();
-        case "-" -> value.negate();
-        case "+" -> value.plus();
-        default -> throw new UnsupportedOperationException();
-      };
+        case "!":
+          return value.not();
+        case "~":
+          return value.unaryComplement();
+        case "-":
+          return value.negate();
+        case "+":
+          return value.plus();
+        default:
+          throw new UnsupportedOperationException();
+      }
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -175,13 +199,14 @@ public class Solver
       {
         throw new SolverException(e, "the value is recursive.");
       }
-      if (value instanceof final Constant cst)
+      if (value instanceof Constant)
       {
+        final var cst = (Constant) value;
         return getValue(cst.getValue(), cst.getType());
       }
-      if (value instanceof final org.eclipse.xsmp.model.xsmp.EnumerationLiteral literal)
+      if (value instanceof org.eclipse.xsmp.model.xsmp.EnumerationLiteral)
       {
-        return EnumerationLiteral.valueOf(literal);
+        return EnumerationLiteral.valueOf((org.eclipse.xsmp.model.xsmp.EnumerationLiteral) value);
       }
       throw new SolverException(e, "invalid reference type \"" + value.getClass().getSimpleName()
               + "\", only Contant and EnumerationLiteral are supported.");
@@ -529,8 +554,9 @@ public class Solver
   public EnumerationLiteral getValue(Expression e, Enumeration enumeration)
   {
     final var value = getValue(e);
-    if (value instanceof final EnumerationLiteral literal)
+    if (value instanceof EnumerationLiteral)
     {
+      final var literal = (EnumerationLiteral) value;
       if (!EcoreUtil.isAncestor(enumeration, literal.getValue()))
       {
         throw new SolverException(e, "Literal " + literal.getValue().getName() + " is not of type "

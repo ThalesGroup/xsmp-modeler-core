@@ -127,9 +127,9 @@ public class XsmpImportsConfiguration
       for (final Iterator<EObject> i = contents.get(0).eAllContents(); i.hasNext();)
       {
         final var next = i.next();
-        if (next instanceof final ImportSection section)
+        if (next instanceof ImportSection)
         {
-          return section;
+          return (ImportSection) next;
         }
       }
     }
@@ -196,9 +196,9 @@ public class XsmpImportsConfiguration
   {
     ParserRule rule = null;
     EClassifier returnType;
-    if (ruleOrRuleCall instanceof final ParserRule parserRule)
+    if (ruleOrRuleCall instanceof ParserRule)
     {
-      rule = parserRule;
+      rule = (ParserRule) ruleOrRuleCall;
     }
     else
     {
@@ -211,8 +211,8 @@ public class XsmpImportsConfiguration
     seenRules.add(rule);
     pathToImportSection.addLast(ruleOrRuleCall);
     returnType = rule.getType().getClassifier();
-    if (returnType instanceof final EClass eClass
-            && XsmpPackage.Literals.IMPORT_SECTION.isSuperTypeOf(eClass))
+    if (returnType instanceof EClass
+            && XsmpPackage.Literals.IMPORT_SECTION.isSuperTypeOf((EClass) returnType))
     {
       return true;
     }

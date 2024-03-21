@@ -34,9 +34,9 @@ public class XsmpKeywordAtOffsetHelper
       {
         leaf = NodeModelUtils.findLeafNodeAtOffset(parseResult.getRootNode(), offset - 1);
       }
-      if (leaf != null && leaf.getGrammarElement() instanceof final Keyword keyword)
+      if (leaf != null && leaf.getGrammarElement() instanceof Keyword)
       {
-        return Tuples.create((EObject) keyword,
+        return Tuples.create(leaf.getGrammarElement(),
                 (ITextRegion) new TextRegion(leaf.getOffset(), leaf.getLength()));
       }
     }

@@ -13,8 +13,6 @@ package org.eclipse.xsmp.ui.hover;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
 import org.eclipse.xsmp.model.xsmp.Expression;
-import org.eclipse.xsmp.model.xsmp.NamedElement;
-import org.eclipse.xsmp.ui.cdt.SourceHovers;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 
@@ -30,9 +28,6 @@ public class XsmpEObjectHoverProvider extends DefaultEObjectHoverProvider
   @Inject
   private IKeywordHovers keywordHovers;
 
-  @Inject
-  private SourceHovers sourceHovers;
-
   @Override
   protected String getHoverInfoAsHtml(EObject o)
   {
@@ -41,18 +36,7 @@ public class XsmpEObjectHoverProvider extends DefaultEObjectHoverProvider
       return keywordHovers.hoverText(kw);
     }
 
-    final var hover = super.getHoverInfoAsHtml(o);
-
-    if (o instanceof final NamedElement elem)
-    {
-      final var sourceHover = sourceHovers.hoverText(elem);
-
-      if (sourceHover != null)
-      {
-        return hover + "<br /><br />" + sourceHover;
-      }
-    }
-    return hover;
+    return super.getHoverInfoAsHtml(o);
   }
 
   @Override

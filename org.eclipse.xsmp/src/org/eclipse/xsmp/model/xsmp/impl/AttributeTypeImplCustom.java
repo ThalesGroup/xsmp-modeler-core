@@ -54,12 +54,15 @@ public class AttributeTypeImplCustom extends AttributeTypeImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    return switch (name)
+    switch (name)
     {
-      case "usage" -> XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE;
-      case "allowMultiple" -> XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE;
-      default -> super.getFeature(name);
-    };
+      case "usage":
+        return XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE;
+      case "allowMultiple":
+        return XsmpPackage.Literals.ATTRIBUTE_TYPE__ALLOW_MULTIPLE;
+      default:
+        return super.getFeature(name);
+    }
   }
 
 } // AttributeTypeImplCustom

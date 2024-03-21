@@ -13,8 +13,6 @@ package org.eclipse.xsmp.ui.wizard;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.cdt.core.CCProjectNature;
-import org.eclipse.cdt.core.CProjectNature;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -48,8 +46,8 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
 
   protected void addCdtNatures()
   {
-    getProjectNatures().add(CProjectNature.C_NATURE_ID);
-    getProjectNatures().add(CCProjectNature.CC_NATURE_ID);
+    getProjectNatures().add("org.eclipse.cdt.core.cnature");
+    getProjectNatures().add("org.eclipse.cdt.core.ccnature");
   }
 
   public XsmpcatProjectFactory()

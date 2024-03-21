@@ -34,11 +34,14 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     final var container = eContainer();
     if (container != null)
     {
-      return switch (container.eClass().getClassifierID())
+      switch (container.eClass().getClassifierID())
       {
-        case XsmpPackage.INTERFACE, XsmpPackage.STRUCTURE -> VisibilityKind.PUBLIC;
-        default -> VisibilityKind.PRIVATE;
-      };
+        case XsmpPackage.INTERFACE:
+        case XsmpPackage.STRUCTURE:
+          return VisibilityKind.PUBLIC;
+        default:
+          return VisibilityKind.PRIVATE;
+      }
     }
 
     return VisibilityKind.PUBLIC;

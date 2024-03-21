@@ -65,9 +65,9 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     {
       return;
     }
-    if (e instanceof final DesignatedInitializer de)
+    if (e instanceof DesignatedInitializer)
     {
-      e = de.getExpr();
+      e = ((DesignatedInitializer) e).getExpr();
     }
 
     if (byPointer)
@@ -168,8 +168,9 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
   {
     if (type.getSize() != null)
     {
-      if (e instanceof final CollectionLiteral values)
+      if (e instanceof CollectionLiteral)
       {
+        final var values = (CollectionLiteral) e;
         final var size = safeExpression(type.getSize(), PrimitiveType::int64Value, Int64.ZERO,
                 Int64.MAX_VALUE);
 
@@ -221,18 +222,27 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     }
 
     final var kind = xsmpUtil.getPrimitiveTypeKind(type);
-    return switch (kind)
+    switch (kind)
     {
-      case INT16 -> Int16.MAX_VALUE;
-      case INT32 -> Int32.MAX_VALUE;
-      case UINT64 -> UInt64.MAX_VALUE;
-      case INT64 -> Int64.MAX_VALUE;
-      case INT8 -> Int8.MAX_VALUE;
-      case UINT16 -> UInt16.MAX_VALUE;
-      case UINT32 -> UInt32.MAX_VALUE;
-      case UINT8 -> UInt8.MAX_VALUE;
-      default -> null;
-    };
+      case INT16:
+        return Int16.MAX_VALUE;
+      case INT32:
+        return Int32.MAX_VALUE;
+      case UINT64:
+        return UInt64.MAX_VALUE;
+      case INT64:
+        return Int64.MAX_VALUE;
+      case INT8:
+        return Int8.MAX_VALUE;
+      case UINT16:
+        return UInt16.MAX_VALUE;
+      case UINT32:
+        return UInt32.MAX_VALUE;
+      case UINT8:
+        return UInt8.MAX_VALUE;
+      default:
+        return null;
+    }
   }
 
   private PrimitiveType getMin(org.eclipse.xsmp.model.xsmp.Integer type)
@@ -243,18 +253,27 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     }
 
     final var kind = xsmpUtil.getPrimitiveTypeKind(type);
-    return switch (kind)
+    switch (kind)
     {
-      case INT16 -> Int16.MIN_VALUE;
-      case INT32 -> Int32.MIN_VALUE;
-      case INT64 -> Int64.MIN_VALUE;
-      case INT8 -> Int8.MIN_VALUE;
-      case UINT16 -> UInt16.MIN_VALUE;
-      case UINT32 -> UInt32.MIN_VALUE;
-      case UINT64 -> UInt64.MIN_VALUE;
-      case UINT8 -> UInt8.MIN_VALUE;
-      default -> null;
-    };
+      case INT16:
+        return Int16.MIN_VALUE;
+      case INT32:
+        return Int32.MIN_VALUE;
+      case INT64:
+        return Int64.MIN_VALUE;
+      case INT8:
+        return Int8.MIN_VALUE;
+      case UINT16:
+        return UInt16.MIN_VALUE;
+      case UINT32:
+        return UInt32.MIN_VALUE;
+      case UINT64:
+        return UInt64.MIN_VALUE;
+      case UINT8:
+        return UInt8.MIN_VALUE;
+      default:
+        return null;
+    }
   }
 
   private void checkExpression(org.eclipse.xsmp.model.xsmp.Integer type, Expression e)
@@ -281,9 +300,9 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
 
   private void checkExpression(Structure type, Expression e)
   {
-    if (e instanceof final CollectionLiteral values)
+    if (e instanceof CollectionLiteral)
     {
-
+      final var values = (CollectionLiteral) e;
       final var fields = xsmpUtil.getAssignableFields(type);
 
       final var size = values.getElements().size();

@@ -29,7 +29,6 @@
 		<module>org.eclipse.xsmp.target</module>
 		<module>org.eclipse.xsmp</module>
 		<module>org.eclipse.xsmp.tests</module>
-		<module>org.eclipse.xsmp.cli</module>
 		<module>org.eclipse.xsmp.generator.cpp</module>
 		<module>org.eclipse.xsmp.lib</module>
 		<module>org.eclipse.xsmp.ide</module>
@@ -38,21 +37,17 @@
 		<module>org.eclipse.xsmp.ui.tests</module>
 		<module>org.eclipse.xsmp.report</module>
 		<module>org.eclipse.xsmp.profile.xsmp_sdk</module>
-		<module>org.eclipse.xsmp.profile.xsmp_sdk.cli</module>
 		<module>org.eclipse.xsmp.profile.xsmp_sdk.feature</module>
 		<module>org.eclipse.xsmp.profile.xsmp_sdk.ui</module>
 		<module>org.eclipse.xsmp.tool.smp</module>
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ui</module>
-		<module>org.eclipse.xsmp.tool.smp.cli</module>
 		<module>org.eclipse.xsmp.tool.python</module>
 		<module>org.eclipse.xsmp.tool.python.feature</module>
 		<module>org.eclipse.xsmp.tool.python.ui</module>
 		<module>org.eclipse.xsmp.profile.esa_cdk</module>
-		<module>org.eclipse.xsmp.profile.esa_cdk.cli</module>
 		<module>org.eclipse.xsmp.profile.esa_cdk.feature</module>
 		<module>org.eclipse.xsmp.profile.esa_cdk.ui</module>
-		<module>org.eclipse.xsmp.vscode_extension</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -395,17 +390,7 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>exclude-under-windows</id>
-			<activation>
-				<os>
-					<family>!windows</family>
-				</os>
-			</activation>
-			<modules>
-				<module>org.eclipse.xsmp.profile.xsmp_sdk.tests</module>
-			</modules>
-		</profile>
+
 	</profiles>
 	<dependencies>
 	</dependencies>

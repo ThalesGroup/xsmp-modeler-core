@@ -109,13 +109,14 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   {
 
     // save the deprecated state
-    if (eObject instanceof final NamedElement elem && elem.isDeprecated())
+    if (eObject instanceof NamedElement && ((NamedElement) eObject).isDeprecated())
     {
       builder.put("deprecated", Boolean.toString(true));
     }
 
-    if (eObject instanceof final Field field)
+    if (eObject instanceof Field)
     {
+      final var field = (Field) eObject;
       if (xsmpUtil.isStatic(field))
       {
         builder.put("static", Boolean.toString(true));
@@ -139,34 +140,35 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     }
 
     // save the visibility of the VisibilityElement
-    if (eObject instanceof final VisibilityElement elem)
+    if (eObject instanceof VisibilityElement)
     {
-      final var visibility = elem.getRealVisibility();
+      final var visibility = ((VisibilityElement) eObject).getRealVisibility();
       if (visibility != VisibilityKind.PUBLIC)
       {
         builder.put("visibility", visibility.getName());
       }
     }
 
-    if (eObject instanceof final Type type)
+    if (eObject instanceof Type)
     {
-      final var uuid = type.getUuid();
+      final var uuid = ((Type) eObject).getUuid();
       // save the uuif of the Type
       if (uuid != null && !uuid.isEmpty())
       {
         builder.put("uuid", uuid.toLowerCase());
       }
-      if (eObject instanceof final AttributeType attribute)
+      if (eObject instanceof AttributeType)
       {
+        final var attribute = (AttributeType) eObject;
         // save the usage of the AttributeType
         builder.put("usage", attribute.getUsage().stream().collect(Collectors.joining(" ")));
         builder.put("allowMultiple", Boolean.toString(attribute.isAllowMultiple()));
       }
     }
-    if (eObject instanceof final Operation op)
+    if (eObject instanceof Operation)
     {
       // save the signature of the Operation
-      builder.put("sig", getSignature(op));
+      builder.put("sig", getSignature((Operation) eObject));
     }
   }
 

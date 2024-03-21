@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EClass;
@@ -52,29 +53,28 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
           .<EReference, Function<EObject, Predicate<IEObjectDescription>>> builder()
           // add the entries
           .put(XsmpPackage.Literals.CLASS__BASE,
-                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.CLASS__BASE,
-                          p) && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.CLASS__BASE, p)
+                          && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE,
                   model -> p -> floatingPointPrimitiveSet
                           .contains(xsmpUtil.getPrimitiveTypeKind(p)))
           .put(XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE,
                   model -> p -> integerPrimitiveSet.contains(xsmpUtil.getPrimitiveTypeKind(p)))
           .put(XsmpPackage.Literals.INTERFACE__BASE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.INTERFACE__BASE, p)
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.INTERFACE__BASE, p)
                           && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS, p))
           .put(XsmpPackage.Literals.EVENT_SINK__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.EVENT_SINK__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.EVENT_SINK__TYPE,
+                          p))
           .put(XsmpPackage.Literals.ARRAY__ITEM_TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.ARRAY__ITEM_TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.ARRAY__ITEM_TYPE,
+                          p))
           .put(XsmpPackage.Literals.EVENT_SOURCE__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.EVENT_SOURCE__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.EVENT_SOURCE__TYPE,
+                          p))
           .put(XsmpPackage.Literals.VALUE_REFERENCE__TYPE,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.VALUE_REFERENCE__TYPE, p))
@@ -82,9 +82,8 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> PrimitiveTypeKind.STRING8 != xsmpUtil.getPrimitiveTypeKind(p)
                           && isValidTypeReference(model, XsmpPackage.Literals.FIELD__TYPE, p))
           .put(XsmpPackage.Literals.ENTRY_POINT__INPUT,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.ENTRY_POINT__INPUT, p)
-                          && ((Field) p.getEObjectOrProxy()).isInput())
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.ENTRY_POINT__INPUT,
+                          p) && ((Field) p.getEObjectOrProxy()).isInput())
           .put(XsmpPackage.Literals.ENTRY_POINT__OUTPUT,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.ENTRY_POINT__OUTPUT, p)
@@ -93,14 +92,13 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE, p))
           .put(XsmpPackage.Literals.CONSTANT__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.CONSTANT__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.CONSTANT__TYPE, p))
           .put(XsmpPackage.Literals.ASSOCIATION__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.ASSOCIATION__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.ASSOCIATION__TYPE,
+                          p))
           .put(XsmpPackage.Literals.CONTAINER__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.CONTAINER__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.CONTAINER__TYPE,
+                          p))
           .put(XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.CONTAINER__DEFAULT_COMPONENT, p))
@@ -108,16 +106,15 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.OPERATION__RAISED_EXCEPTION, p))
           .put(XsmpPackage.Literals.PARAMETER__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.PARAMETER__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.PARAMETER__TYPE,
+                          p))
           .put(XsmpPackage.Literals.PROPERTY__TYPE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.PROPERTY__TYPE, p))
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.PROPERTY__TYPE, p))
           .put(XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.PROPERTY__ATTACHED_FIELD, p)) // TODO filter
-                                                                                   // compatible
-                                                                                   // types
+                                                                             // compatible
+                                                                             // types
           .put(XsmpPackage.Literals.PROPERTY__GET_RAISES,
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.PROPERTY__GET_RAISES, p))
@@ -131,8 +128,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
                   model -> p -> isValidTypeReference(model,
                           XsmpPackage.Literals.COMPONENT__INTERFACE, p))
           .put(XsmpPackage.Literals.COMPONENT__BASE,
-                  model -> p -> isValidTypeReference(model,
-                          XsmpPackage.Literals.COMPONENT__BASE, p)
+                  model -> p -> isValidTypeReference(model, XsmpPackage.Literals.COMPONENT__BASE, p)
                           && !xsmpUtil.isBaseOf(model, p.getEObjectOrProxy()))
           .put(XsmpPackage.Literals.ATTRIBUTE__TYPE, model -> p -> {
             final var elem = EcoreUtil2.getContainerOfType(model, NamedElement.class);
@@ -143,7 +139,7 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
               final var elemUsages = Stream
                       .concat(Stream.of(elem.eClass().getName()),
                               elem.eClass().getEAllSuperTypes().stream().map(EClass::getName))
-                      .toList();
+                      .collect(Collectors.toList());
 
               // filter allow multiple
               if (!allowMuliple(p) && elem.getMetadatum().getMetadata().stream().anyMatch(a -> {
@@ -185,13 +181,13 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   {
     final var obj = d.getEObjectOrProxy();
 
-    if (obj instanceof final AttributeType attr)
+    if (obj instanceof AttributeType)
     {
       if (obj.eIsProxy())
       {
         return Arrays.stream(d.getUserData("usage").split(" "));
       }
-      return attr.getUsage().stream();
+      return ((AttributeType) obj).getUsage().stream();
     }
     return Stream.of();
 
@@ -206,13 +202,13 @@ public class XsmpcatReferenceFilter implements IReferenceFilter
   {
     final var obj = d.getEObjectOrProxy();
 
-    if (obj instanceof final AttributeType attr)
+    if (obj instanceof AttributeType)
     {
       if (obj.eIsProxy())
       {
         return Boolean.parseBoolean(d.getUserData("allowMultiple"));
       }
-      return attr.isAllowMultiple();
+      return ((AttributeType) obj).isAllowMultiple();
     }
     return false;
   }

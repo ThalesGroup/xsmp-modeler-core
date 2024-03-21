@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xsmp.services.IXsmpServiceProvider;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 
 import com.google.inject.Inject;

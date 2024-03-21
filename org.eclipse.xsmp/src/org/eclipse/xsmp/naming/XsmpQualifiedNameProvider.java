@@ -68,9 +68,9 @@ public class XsmpQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 
   protected QualifiedName computeFullyQualifiedName(final EObject obj)
   {
-    if (obj instanceof final NamedElement elem)
+    if (obj instanceof NamedElement)
     {
-      return computeFullyQualifiedName(elem);
+      return computeFullyQualifiedName((NamedElement) obj);
     }
 
     return null;

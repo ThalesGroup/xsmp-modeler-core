@@ -14,7 +14,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
 import org.eclipse.xsmp.ide.hover.XsmpcatKeywordHovers;
-import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xsmp.services.IXsmpServiceProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpMultiLineTerminalEditStrategy;
 import org.eclipse.xsmp.ui.builder.XsmpBuilderParticipant;

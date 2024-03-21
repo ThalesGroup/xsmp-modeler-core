@@ -9,8 +9,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.xsmp.tool.smp.ui.SmpActivator
 Require-Bundle: org.eclipse.xsmp.tool.smp;visibility:=reexport,
  org.eclipse.xsmp.ui,
- org.eclipse.xtext.builder,
- org.eclipse.xtext.ui.shared
+ org.eclipse.xtext.builder
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.tool.smp.ui
