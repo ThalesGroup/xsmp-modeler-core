@@ -40,19 +40,28 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
 
   public String getValue()
   {
-    return switch (value)
+    switch (value)
     {
-      case 0x07 -> "\\a";
-      case 0x08 -> "\\b";
-      case 0x0c -> "\\f";
-      case 0x0b -> "\\v";
-      case '\\' -> "\\\\";
-      case '\n' -> "\\n";
-      case '\r' -> "\\r";
-      case '\t' -> "\\t";
-      default -> value >= 32 && value <= 126 ? Character.toString(value)
-              : "\\" + Integer.toOctalString(value);
-    };
+      case 0x07:
+        return "\\a";
+      case 0x08:
+        return "\\b";
+      case 0x0c:
+        return "\\f";
+      case 0x0b:
+        return "\\v";
+      case '\\':
+        return "\\\\";
+      case '\n':
+        return "\\n";
+      case '\r':
+        return "\\r";
+      case '\t':
+        return "\\t";
+      default:
+        return value >= 32 && value <= 126 ? Character.toString(value)
+                : "\\" + Integer.toOctalString(value);
+    }
   }
 
   @Override

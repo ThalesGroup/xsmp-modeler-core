@@ -34,9 +34,10 @@ public class NamedElementWithMultiplicityImplCustom extends NamedElementWithMult
   {
     final var resource = eResource();
 
-    if (resource instanceof final XtextResource xtextResource)
+    if (resource instanceof XtextResource)
     {
-      final var xsmpUtil = xtextResource.getResourceServiceProvider().get(XsmpUtil.class);
+      final var xsmpUtil = ((XtextResource) resource).getResourceServiceProvider()
+              .get(XsmpUtil.class);
 
       return xsmpUtil.getInt64(e);
     }

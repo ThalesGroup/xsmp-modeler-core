@@ -110,9 +110,9 @@ public class XsmpProjectManager
     {
       allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
     }
-    if (projectConfig instanceof final IXsmpProjectConfig c)
+    if (projectConfig instanceof IXsmpProjectConfig)
     {
-      c.refresh();
+      ((IXsmpProjectConfig) projectConfig).refresh();
     }
     return doBuild(allUris, Collections.emptyList(), Collections.emptyList(), cancelIndicator,
             true);

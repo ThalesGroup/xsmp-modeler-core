@@ -186,21 +186,34 @@ public class CppGenerator extends AbstractGenerator
   @SuppressWarnings("rawtypes")
   protected AbstractFileGenerator getGenerator(Type t)
   {
-    return switch (t.eClass().getClassifierID())
+    switch (t.eClass().getClassifierID())
     {
-      case XsmpPackage.ARRAY -> arrayGenerator;
-      case XsmpPackage.ENUMERATION -> enumerationGenerator;
-      case XsmpPackage.FLOAT -> floatGenerator;
-      case XsmpPackage.INTEGER -> integerGenerator;
-      case XsmpPackage.STRING -> stringGenerator;
-      case XsmpPackage.STRUCTURE -> structureGenerator;
-      case XsmpPackage.CLASS -> classGenerator;
-      case XsmpPackage.EXCEPTION -> exceptionGenerator;
-      case XsmpPackage.INTERFACE -> interfaceGenerator;
-      case XsmpPackage.MODEL, XsmpPackage.SERVICE -> componentGenerator;
-      case XsmpPackage.NATIVE_TYPE -> nativeTypeGenerator;
-      default -> null;
-    };
+      case XsmpPackage.ARRAY:
+        return arrayGenerator;
+      case XsmpPackage.ENUMERATION:
+        return enumerationGenerator;
+      case XsmpPackage.FLOAT:
+        return floatGenerator;
+      case XsmpPackage.INTEGER:
+        return integerGenerator;
+      case XsmpPackage.STRING:
+        return stringGenerator;
+      case XsmpPackage.STRUCTURE:
+        return structureGenerator;
+      case XsmpPackage.CLASS:
+        return classGenerator;
+      case XsmpPackage.EXCEPTION:
+        return exceptionGenerator;
+      case XsmpPackage.INTERFACE:
+        return interfaceGenerator;
+      case XsmpPackage.MODEL:
+      case XsmpPackage.SERVICE:
+        return componentGenerator;
+      case XsmpPackage.NATIVE_TYPE:
+        return nativeTypeGenerator;
+      default:
+        return null;
+    }
   }
 
   /**

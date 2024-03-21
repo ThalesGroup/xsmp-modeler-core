@@ -160,8 +160,9 @@ public class XsmpdocContentAccess
 
     String[] exceptionDescriptions = null;
 
-    if (fElement instanceof final Operation fMethod)
+    if (fElement instanceof Operation)
     {
+      final var fMethod = (Operation) fElement;
       exceptionNames = new String[fMethod.getRaisedException().size()];
       exceptionDescriptions = new String[exceptionNames.length];
       for (var i = 0; i < exceptionNames.length; ++i)

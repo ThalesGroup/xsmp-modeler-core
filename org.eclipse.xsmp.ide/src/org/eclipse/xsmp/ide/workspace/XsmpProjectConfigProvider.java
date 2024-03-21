@@ -28,9 +28,9 @@ public class XsmpProjectConfigProvider implements IProjectConfigProvider
       return null;
     }
 
-    if (config instanceof final IXsmpProjectConfig c)
+    if (config instanceof IXsmpProjectConfig)
     {
-      return c;
+      return (IXsmpProjectConfig) config;
     }
     // return a config with default values
     return null;

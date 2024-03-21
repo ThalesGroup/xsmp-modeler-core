@@ -36,16 +36,25 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   protected <R> R promote(PrimitiveType right,
           @SuppressWarnings("rawtypes") BiFunction<AbstractPrimitiveType, AbstractPrimitiveType, R> func)
   {
-    return switch (right.getPrimitiveTypeKind())
+    switch (right.getPrimitiveTypeKind())
     {
-      case FLOAT64 -> func.apply(this.float64Value(), (Float64) right);
-      case FLOAT32 -> func.apply(this.float32Value(), (Float32) right);
-      case UINT64 -> func.apply(this.uint64Value(), (UInt64) right);
-      case DATE_TIME, DURATION, INT64 -> func.apply(this.int64Value(), (Int64) right);
-      case UINT32 -> func.apply(this.uint32Value(), (UInt32) right);
-      case INT32 -> func.apply(this, (Int32) right);
-      default -> func.apply(this, right.int32Value());
-    };
+      case FLOAT64:
+        return func.apply(float64Value(), (Float64) right);
+      case FLOAT32:
+        return func.apply(float32Value(), (Float32) right);
+      case UINT64:
+        return func.apply(uint64Value(), (UInt64) right);
+      case DATE_TIME:
+      case DURATION:
+      case INT64:
+        return func.apply(int64Value(), (Int64) right);
+      case UINT32:
+        return func.apply(uint32Value(), (UInt32) right);
+      case INT32:
+        return func.apply(this, (Int32) right);
+      default:
+        return func.apply(this, right.int32Value());
+    }
   }
 
   private Int32(int value)

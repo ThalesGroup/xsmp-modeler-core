@@ -63,9 +63,9 @@ public final class DateTime extends Int64
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof final DateTime date)
+    if (obj instanceof DateTime)
     {
-      return value == date.value;
+      return value == ((DateTime) obj).value;
     }
     return false;
   }

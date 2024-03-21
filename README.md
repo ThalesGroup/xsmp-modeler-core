@@ -27,8 +27,8 @@ It comes with:
 
 ### System Requirements
 
- - Eclipse 2023-03 or newer.
- - JavaSE-17
+ - Eclipse 2024-03 or newer.
+ - JavaSE-11
 
 ### How To Install
 
@@ -36,8 +36,13 @@ Refers to instructions provided in the [releases page](https://github.com/Thales
 
 ### Debug and Build
 
-This project uses Apache maven as its build system.
-To build from a command-line, run `mvn package` in the root directory of the project source files.
+This project uses both Apache Maven and Gradle as its build system.
+
+Maven is used to build Eclipse plugins.
+
+Gradle is used to build CLI and VS Code extension.
+
+From a command-line, run `mvn package` and `./gradlew build vscodeExtension` in the root directory of the project source files.
 
 ## Documentation
 

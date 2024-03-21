@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.eclipse.xsmp
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.xsmp.tool.smp,
  org.eclipse.xsmp.tool.smp.core.elements,
  org.eclipse.xsmp.tool.smp.core.types,

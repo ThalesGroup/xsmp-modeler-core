@@ -6,15 +6,13 @@ Bundle-Vendor: Thales Alenia Space
 Bundle-Version: 1.1.0.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.profile.esa_cdk;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xsmp,
- org.eclipse.xtext,
+Require-Bundle: org.eclipse.xtext,
  org.eclipse.xsmp.generator.cpp,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.xsmp.profile.esa_cdk,
  org.eclipse.xsmp.profile.esa_cdk.generator,
  org.eclipse.xsmp.profile.esa_cdk.generator.cpp,
  org.eclipse.xsmp.profile.esa_cdk.generator.cpp.member,
  org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type,
  org.eclipse.xsmp.profile.esa_cdk.validation
-Import-Package: org.apache.log4j

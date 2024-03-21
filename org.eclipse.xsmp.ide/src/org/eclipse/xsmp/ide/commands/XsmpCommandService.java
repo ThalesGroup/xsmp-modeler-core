@@ -121,12 +121,13 @@ public class XsmpCommandService implements IExecutableCommandService
       return false;
     }
 
-    if (!(params.getArguments().get(0) instanceof final JsonPrimitive value))
+    if (!(params.getArguments().get(0) instanceof JsonPrimitive))
     {
       access.getLanguageClient().showMessage(new MessageParams(MessageType.Error,
               "Unsupported argument: " + params.getArguments().get(0)));
       return false;
     }
+    final var value = (JsonPrimitive) params.getArguments().get(0);
     final var uri = value.getAsString();
 
     if (uri == null)

@@ -6,36 +6,31 @@ Bundle-Vendor: Thales Alenia Space
 Bundle-Version: 1.1.0.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.compare;bundle-version="2.1.0",
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
  org.eclipse.jdt.core;visibility:=reexport,
  org.eclipse.pde.core,
- org.eclipse.ui;bundle-version="3.6.0",
- org.eclipse.ui.editors;bundle-version="3.14.300",
- org.eclipse.ui.forms,
  org.eclipse.ui.ide;bundle-version="3.18.500",
  org.eclipse.xtend.lib;bundle-version="2.14.0";resolution:=optional,
- org.eclipse.xtext.builder,
+ org.eclipse.xtext.builder;visibility:=reexport,
  org.eclipse.xtext.common.types.ui,
  org.eclipse.xsmp;visibility:=reexport,
  org.eclipse.xsmp.ide,
+ org.eclipse.ui.forms,
  org.eclipse.xtext.ui;visibility:=reexport,
  org.eclipse.xtext.ui.codemining,
  org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
- org.eclipse.cdt,
+ org.eclipse.ui.editors,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
  org.eclipse.cdt.core,
- org.eclipse.cdt.ui,
- org.eclipse.cdt.managedbuilder.core
+ org.eclipse.cdt.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.ui.codemining;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ui,
  org.eclipse.xsmp.ui.autoedit,
- org.eclipse.xsmp.ui.cdt,
  org.eclipse.xsmp.ui.codemining,
  org.eclipse.xsmp.ui.configuration,
  org.eclipse.xsmp.ui.contentassist,

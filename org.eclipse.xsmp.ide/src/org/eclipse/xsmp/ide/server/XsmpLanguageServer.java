@@ -596,14 +596,19 @@ public class XsmpLanguageServer
    */
   protected DiagnosticSeverity toDiagnosticSeverity(Severity severity)
   {
-    return switch (severity)
+    switch (severity)
     {
-      case ERROR -> DiagnosticSeverity.Error;
-      case IGNORE -> DiagnosticSeverity.Hint;
-      case INFO -> DiagnosticSeverity.Information;
-      case WARNING -> DiagnosticSeverity.Warning;
-      default -> DiagnosticSeverity.Hint;
-    };
+      case ERROR:
+        return DiagnosticSeverity.Error;
+      case IGNORE:
+        return DiagnosticSeverity.Hint;
+      case INFO:
+        return DiagnosticSeverity.Information;
+      case WARNING:
+        return DiagnosticSeverity.Warning;
+      default:
+        return DiagnosticSeverity.Hint;
+    }
   }
 
   @Override
@@ -713,7 +718,8 @@ public class XsmpLanguageServer
   public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
           DocumentSymbolParams params)
   {
-    return requestManager.runRead(cancelIndicator -> Lists.transform(documentSymbol(params, cancelIndicator), Either::forRight));
+    return requestManager.runRead(cancelIndicator -> Lists
+            .transform(documentSymbol(params, cancelIndicator), Either::forRight));
   }
 
   /**
@@ -929,8 +935,9 @@ public class XsmpLanguageServer
       result = URI.createURI(data.toString());
       lens.setData(null);
     }
-    else if (data instanceof final List< ? > l)
+    else if (data instanceof List< ? >)
     {
+      final var l = (List< ? >) data;
       result = URI.createURI(l.get(0).toString());
       lens.setData(l.get(1));
     }

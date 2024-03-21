@@ -1,0 +1,10 @@
+include 'org.eclipse.xsmp'
+include 'org.eclipse.xsmp.lib'
+include 'org.eclipse.xsmp.generator.cpp'
+include 'org.eclipse.xsmp.profile.xsmp_sdk'
+include 'org.eclipse.xsmp.profile.esa_cdk'
+include 'org.eclipse.xsmp.tool.python'
+include 'org.eclipse.xsmp.tool.smp'
+include 'org.eclipse.xsmp.ide'
+include 'vscode-extension'
+

@@ -90,14 +90,19 @@ public abstract class DocumentImplCustom extends DocumentImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    return switch (name)
+    switch (name)
     {
-      case "version" -> XsmpPackage.Literals.DOCUMENT__VERSION;
-      case "title" -> XsmpPackage.Literals.DOCUMENT__TITLE;
-      case "date" -> XsmpPackage.Literals.DOCUMENT__DATE;
-      case "creator" -> XsmpPackage.Literals.DOCUMENT__CREATOR;
-      default -> super.getFeature(name);
-    };
+      case "version":
+        return XsmpPackage.Literals.DOCUMENT__VERSION;
+      case "title":
+        return XsmpPackage.Literals.DOCUMENT__TITLE;
+      case "date":
+        return XsmpPackage.Literals.DOCUMENT__DATE;
+      case "creator":
+        return XsmpPackage.Literals.DOCUMENT__CREATOR;
+      default:
+        return super.getFeature(name);
+    }
   }
 
 } // DocumentImplCustom

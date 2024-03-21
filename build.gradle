@@ -1,0 +1,146 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'org.xtext:xtext-gradle-plugin:4.0.0'
+        classpath 'com.github.node-gradle:gradle-node-plugin:3.3.0'
+        classpath 'net.researchgate:gradle-release:2.8.1'
+    }
+}
+
+apply plugin: 'com.github.node-gradle.node'
+apply plugin: 'net.researchgate.release'
+node {
+    version = '16.13.2'
+    npmVersion = '8.3.0'
+    download = true
+}
+
+// Configuration for Xtext projects
+configure(subprojects.findAll { it.name.startsWith('org.eclipse.xsmp') }) {
+    ext.xtextVersion = '2.34.0'
+    repositories {
+        mavenCentral()
+    }
+    
+    apply plugin: 'java-library'
+    dependencies {
+        api platform("org.eclipse.xtext:xtext-dev-bom:${xtextVersion}")
+    }
+    apply plugin: 'org.xtext.xtend'
+    apply from: "${rootDir}/gradle/source-layout.gradle"
+    apply plugin: 'eclipse'
+    //apply plugin: 'idea'
+    
+    group = 'org.eclipse.xsmp'
+    version = '1.1.0-SNAPSHOT'
+    
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+    
+    configurations.all {
+        exclude group: 'asm'
+    }
+
+}
+
+task npmInstallVsce(type: NpmTask, dependsOn: npmSetup) {
+    ext.destPath = "$rootProject.projectDir/node_modules/vsce" 
+    outputs.dir(destPath)
+    group 'Node'
+    description 'Installs the NodeJS package "Visual Studio Code Extension Manager"'
+    args = [ 'install', 'vsce' ]
+}
+
+// Configuration for vscode projects
+configure(subprojects.findAll { it.name.equals('vscode-extension') }) {
+
+    apply plugin: 'com.github.node-gradle.node'
+    node {
+        version = '16.13.2'
+        npmVersion = '8.3.0'
+        download = true
+    }
+
+    def inputFiles = fileTree(
+        dir: projectDir, 
+        excludes: [ 'out/**', '.gitignore', '.gradle/**', 'build/**', '*.gradle' ]
+    )
+
+    npmInstall {
+        inputs.files(inputFiles)
+        outputs.dir('out')
+    }
+
+    task vscodeExtension(dependsOn: [npmInstall, npmInstallVsce], type: NodeTask) {
+        ext.destDir = new File(buildDir, 'vscode')
+        ext.archiveName = "xsmp-modeler.vsix"
+        ext.destPath = "$destDir/$archiveName"
+        inputs.with {
+            files inputFiles
+            dir npmInstallVsce.destPath
+        }
+        outputs.dir destDir
+        doFirst {
+            destDir.mkdirs()
+        }
+        script = file("$npmInstallVsce.destPath/vsce")
+        args = [ 'package', '--out', destPath ]
+        execOverrides {
+            workingDir = projectDir
+        }
+    }
+
+    task clean {
+        doLast {
+            delete vscodeExtension.destDir
+            delete 'out' // output of npmInstall - don't want to delete node_modules
+        }
+        
+    }
+
+}
+
+plugins.withType(com.github.gradle.node.NodePlugin) {
+    node {
+        workDir = file("$rootProject.buildDir/nodejs")
+        nodeModulesDir = rootProject.projectDir
+    }
+}
+
+updateVersion {
+        doLast {
+            // custom code
+            def versionPattern = /\d+.\d+(.\d+)?/
+            def encoding = 'UTF-8'
+            def filesToUpdate = [
+                new File('vscode-extension', 'package.json'),
+                new File('vscode-extension-self-contained', 'package.json'),
+            ]
+
+            // String replacements - isn't long enough to justify advanced code ;)
+            filesToUpdate.forEach { file ->
+
+                String text = file.getText(encoding)
+                text = text.replaceAll("\"version\": \"$versionPattern\",", "\"version\": \"$project.version\",")
+                file.setText(text, encoding)
+            }
+        }
+    }
+
+release {
+    tagTemplate = 'v${version}'
+    preTagCommitMessage = '[release] pre tag commit: '
+    tagCommitMessage = '[release] creating tag: '
+    newVersionCommitMessage = '[release] new version commit: '
+    failOnSnapshotDependencies = false
+}
+
+// Workaround for issue https://github.com/researchgate/gradle-release/issues/144
+task build {
+    dependsOn subprojects.findResults { it.tasks.findByName('build') }
+}

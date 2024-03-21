@@ -1,0 +1,15 @@
+.classpath
+.project
+.gitignore
+package.json
+package-lock.json
+build.properties
+
+.gitignore
+.gradle/**
+build/**
+*.gradle
+
+.settings/
+META-INF/
+target/

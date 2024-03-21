@@ -20,9 +20,9 @@ public class XsmpDocumentSymbolDeprecationInfoProvider extends DocumentSymbolDep
   @Override
   public boolean isDeprecated(EObject object)
   {
-    if (object instanceof final NamedElement namedElement)
+    if (object instanceof NamedElement)
     {
-      return namedElement.isDeprecated();
+      return ((NamedElement) object).isDeprecated();
     }
     return false;
   }

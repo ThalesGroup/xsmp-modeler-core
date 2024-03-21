@@ -41,10 +41,10 @@ public class CopyrightNoticeProvider
 
   public String getCopyrightNotice(final Resource resource)
   {
-    if (resource instanceof final XtextResource xtextResource)
+    if (resource instanceof XtextResource)
     {
       return cache.get(CopyrightNoticeProvider.class, resource,
-              () -> computeCopyrightNotice(xtextResource));
+              () -> computeCopyrightNotice((XtextResource) resource));
     }
     return null;
   }
@@ -84,10 +84,11 @@ public class CopyrightNoticeProvider
         {
           break;
         }
-        if (!(leafNode.getGrammarElement() instanceof final AbstractRule rule))
+        if (!(leafNode.getGrammarElement() instanceof AbstractRule))
         {
           continue;
         }
+        final var rule = (AbstractRule) leafNode.getGrammarElement();
 
         if (grammar.getML_COMMENTRule().getName().equals(rule.getName()))
         {

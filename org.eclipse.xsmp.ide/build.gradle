@@ -1,0 +1,34 @@
+plugins {
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+dependencies {
+	api project(':org.eclipse.xsmp')
+    api project(':org.eclipse.xsmp.tool.python')
+    api project(':org.eclipse.xsmp.tool.smp')
+    api project(':org.eclipse.xsmp.profile.xsmp_sdk')
+    api project(':org.eclipse.xsmp.profile.esa_cdk')
+	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
+	api "org.eclipse.xtext:org.eclipse.xtext.xbase.ide:${xtextVersion}"
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+application {
+	mainClass = "org.eclipse.xsmp.ide.server.XsmpServerLauncher"
+}
+
+shadowJar {
+	from(project.extensions.findByType(JavaPluginExtension.class).sourceSets.main.output)
+	configurations = [project.configurations.runtimeClasspath]
+	exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA','schema/*',
+		'.options', '.api_description', '*.profile', '*.html', 'about.*', 'about_files/*',
+		'plugin.xml', 'systembundle.properties', 'profile.list')
+	archiveClassifier = 'ls'
+	archiveVersion = ''
+	append('plugin.properties')
+	mergeServiceFiles()
+}
+//this is an eclipse plugin project
+eclipseClasspath.enabled=false
+cleanEclipseClasspath.enabled=false

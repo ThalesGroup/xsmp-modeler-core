@@ -22,9 +22,9 @@ public class XsmpProjectDescriptionFactory extends DefaultProjectDescriptionFact
   {
     final var description = super.getProjectDescription(config);
 
-    if (config instanceof final IXsmpProjectConfig c)
+    if (config instanceof IXsmpProjectConfig)
     {
-      description.setDependencies(c.getDependencies());
+      description.setDependencies(((IXsmpProjectConfig) config).getDependencies());
     }
 
     return description;

@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.ui.configuration;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xsmp.services.IXsmpServiceProvider;
 
 import com.google.inject.ImplementedBy;
 import com.google.inject.Injector;

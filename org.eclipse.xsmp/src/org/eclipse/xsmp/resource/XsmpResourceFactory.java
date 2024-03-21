@@ -12,7 +12,7 @@ package org.eclipse.xsmp.resource;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.service.IXsmpServiceProvider;
+import org.eclipse.xsmp.services.IXsmpServiceProvider;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 

@@ -1,0 +1,10 @@
+
+dependencies {
+	api project(':org.eclipse.xsmp')
+}
+
+
+
+//this is an eclipse plugin project
+eclipseClasspath.enabled=false
+cleanEclipseClasspath.enabled=false
