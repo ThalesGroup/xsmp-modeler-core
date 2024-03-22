@@ -182,9 +182,8 @@ public class SmpGenerator extends AbstractModelConverter
 
     // Add all implementations of the package
     generatedCatalogue.eAllContents().forEachRemaining(it -> {
-      if (it instanceof org.eclipse.xsmp.tool.smp.core.types.Type && !(it instanceof Interface))
+      if (it instanceof final org.eclipse.xsmp.tool.smp.core.types.Type type && !(it instanceof Interface))
       {
-        final var type = (org.eclipse.xsmp.tool.smp.core.types.Type) it;
         final var impl = PackageFactory.eINSTANCE.createImplementationOfPackage();
         impl.setType(type);
         impl.setTypeName(type.getName());
@@ -877,45 +876,27 @@ public class SmpGenerator extends AbstractModelConverter
   {
     final var itemType = type.getItemType();
 
-    switch (xsmpUtil.getPrimitiveTypeKind(itemType))
+    return switch (xsmpUtil.getPrimitiveTypeKind(itemType))
     {
-      case BOOL:
-        return boolArrayValue(value);
-      case CHAR8:
-        return char8ArrayValue(value);
-      case DATE_TIME:
-        return dateTimeArrayValue(value);
-      case DURATION:
-        return durationArrayValue(value);
-      case FLOAT32:
-        return float32ArrayValue(value);
-      case FLOAT64:
-        return float64ArrayValue(value);
-      case INT16:
-        return int16ArrayValue(value);
-      case INT32:
-        return int32ArrayValue(value);
-      case INT64:
-        return int64ArrayValue(value);
-      case INT8:
-        return int8ArrayValue(value);
-      case STRING8:
-        return string8ArrayValue(value);
-      case UINT16:
-        return uint16ArrayValue(value);
-      case UINT32:
-        return uint32ArrayValue(value);
-      case UINT64:
-        return uint64ArrayValue(value);
-      case UINT8:
-        return uint8ArrayValue(value);
-      case ENUM:
-        return enumArrayValue(value);
-      case NONE:
-        return arrayValue(value);
-      default:
-        return null;
-    }
+      case BOOL -> boolArrayValue(value);
+      case CHAR8 -> char8ArrayValue(value);
+      case DATE_TIME -> dateTimeArrayValue(value);
+      case DURATION -> durationArrayValue(value);
+      case FLOAT32 -> float32ArrayValue(value);
+      case FLOAT64 -> float64ArrayValue(value);
+      case INT16 -> int16ArrayValue(value);
+      case INT32 -> int32ArrayValue(value);
+      case INT64 -> int64ArrayValue(value);
+      case INT8 -> int8ArrayValue(value);
+      case STRING8 -> string8ArrayValue(value);
+      case UINT16 -> uint16ArrayValue(value);
+      case UINT32 -> uint32ArrayValue(value);
+      case UINT64 -> uint64ArrayValue(value);
+      case UINT8 -> uint8ArrayValue(value);
+      case ENUM -> enumArrayValue(value);
+      case NONE -> arrayValue(value);
+      default -> null;
+    };
 
   }
 
@@ -938,9 +919,8 @@ public class SmpGenerator extends AbstractModelConverter
 
   private void updateField(Value value, Expression e)
   {
-    if (e instanceof DesignatedInitializer)
+    if (e instanceof final DesignatedInitializer d)
     {
-      final var d = (DesignatedInitializer) e;
       if (d.getField() != null)
       {
         value.setField(d.getField().getName());

@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ui.configuration;
+package org.eclipse.xsmp.ui.services;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
@@ -21,12 +21,14 @@ import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
  * A specialization of the IConfigurationUIProvider to use in Eclipse
  * environment
  */
+@Singleton
 public class XsmpServiceUIProvider implements IXsmpServiceUIProvider
 {
 

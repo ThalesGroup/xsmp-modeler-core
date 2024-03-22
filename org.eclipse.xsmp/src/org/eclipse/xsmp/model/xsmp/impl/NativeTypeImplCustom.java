@@ -59,17 +59,13 @@ public class NativeTypeImplCustom extends NativeTypeImpl
   @Override
   protected EStructuralFeature getFeature(String name)
   {
-    switch (name)
+    return switch (name)
     {
-      case "type":
-        return XsmpPackage.Literals.NATIVE_TYPE__TYPE;
-      case "location":
-        return XsmpPackage.Literals.NATIVE_TYPE__LOCATION;
-      case "namespace":
-        return XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE;
-      default:
-        return super.getFeature(name);
-    }
+      case "type" -> XsmpPackage.Literals.NATIVE_TYPE__TYPE;
+      case "location" -> XsmpPackage.Literals.NATIVE_TYPE__LOCATION;
+      case "namespace" -> XsmpPackage.Literals.NATIVE_TYPE__NAMESPACE;
+      default -> super.getFeature(name);
+    };
   }
 
 } // NativeTypeImplCustom

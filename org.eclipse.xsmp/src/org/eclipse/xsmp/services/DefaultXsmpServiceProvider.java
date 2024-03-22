@@ -20,7 +20,7 @@ public class DefaultXsmpServiceProvider implements IXsmpServiceProvider
 {
 
   @Inject
-  Injector injector;
+  private Injector injector;
 
   @Override
   public <T> T getInstance(URI context, Class<T> clazz)

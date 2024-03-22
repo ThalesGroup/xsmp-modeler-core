@@ -47,7 +47,7 @@
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.cdt.feature.group" version="0.0.0"/>
-            <repository location="https://download.eclipse.org/tools/cdt/releases/11.4/"/>
+            <repository location="https://download.eclipse.org/tools/cdt/releases/11.5/"/>
         </location>
     </locations>
 </target>

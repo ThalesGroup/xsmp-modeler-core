@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ui.configuration;
+package org.eclipse.xsmp.ui.services;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.xsmp.services.IXsmpServiceProvider;
@@ -20,6 +20,13 @@ import com.google.inject.Injector;
 public interface IXsmpServiceUIProvider extends IXsmpServiceProvider
 {
 
+  /**
+   * Return the profile's injector for a project
+   *
+   * @param project
+   *          the input project
+   * @return the profile's injector
+   */
   Injector getInjector(IProject project);
 
   /**

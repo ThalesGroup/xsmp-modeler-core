@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.profile.esa_cdk.ui;
 
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkRuntimeModule;
-import org.eclipse.xsmp.ui.internal.XsmpActivator;
+import org.eclipse.xsmp.ui.AbstractXsmpActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the A CDK Profile UI plugin.
  */
-public final class EsaCdkActivator extends XsmpActivator
+public final class EsaCdkActivator extends AbstractXsmpActivator
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.profile.esa_cdk.ui";
 

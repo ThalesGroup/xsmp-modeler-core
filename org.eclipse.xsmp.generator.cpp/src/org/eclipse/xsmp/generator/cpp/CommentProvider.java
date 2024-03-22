@@ -60,9 +60,8 @@ public class CommentProvider
         sb.append("\n");
       }
     }
-    if (fElement instanceof Operation)
+    if (fElement instanceof final Operation fMethod)
     {
-      final var fMethod = (Operation) fElement;
       for (final var p : fMethod.getRaisedException())
       {
         if (newLine)

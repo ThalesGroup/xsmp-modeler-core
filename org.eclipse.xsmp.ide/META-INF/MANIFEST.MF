@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.xsmp,
  org.eclipse.lsp4j.jsonrpc,
  io.github.classgraph.classgraph,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ide,
  org.eclipse.xsmp.ide.build,
  org.eclipse.xsmp.ide.commands,

@@ -32,17 +32,13 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   protected <R> R promote(PrimitiveType right,
           @SuppressWarnings("rawtypes") BiFunction<AbstractPrimitiveType, AbstractPrimitiveType, R> func)
   {
-    switch (right.getPrimitiveTypeKind())
+    return switch (right.getPrimitiveTypeKind())
     {
-      case FLOAT64:
-        return func.apply(float64Value(), (Float64) right);
-      case FLOAT32:
-        return func.apply(float32Value(), (Float32) right);
-      case UINT64:
-        return func.apply(this, (UInt64) right);
-      default:
-        return func.apply(this, right.uint64Value());
-    }
+      case FLOAT64 -> func.apply(float64Value(), (Float64) right);
+      case FLOAT32 -> func.apply(float32Value(), (Float32) right);
+      case UINT64 -> func.apply(this, (UInt64) right);
+      default -> func.apply(this, right.uint64Value());
+    };
   }
 
   @Override

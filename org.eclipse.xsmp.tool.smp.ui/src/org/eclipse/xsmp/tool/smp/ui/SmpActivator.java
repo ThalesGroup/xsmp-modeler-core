@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.tool.smp.ui;
 
 import org.eclipse.xsmp.tool.smp.SmpRuntimeModule;
-import org.eclipse.xsmp.ui.internal.XsmpActivator;
+import org.eclipse.xsmp.ui.AbstractXsmpActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Smp Tool UI plugin.
  */
-public final class SmpActivator extends XsmpActivator
+public final class SmpActivator extends AbstractXsmpActivator
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.tool.smp.ui";
 

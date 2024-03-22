@@ -488,9 +488,8 @@ public class XsmpWorkspaceManager
     if (projectMnr != null)
     {
       final var resource = projectMnr.getResource(resourceURI);
-      if (resource instanceof XtextResource)
+      if (resource instanceof final XtextResource xtextResource)
       {
-        final var xtextResource = (XtextResource) resource;
         final var doc = getDocument(xtextResource);
         return Tuples.pair(doc, xtextResource);
       }

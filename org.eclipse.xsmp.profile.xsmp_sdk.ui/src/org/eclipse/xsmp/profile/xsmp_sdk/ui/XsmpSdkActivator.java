@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.ui;
 
 import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkRuntimeModule;
-import org.eclipse.xsmp.ui.internal.XsmpActivator;
+import org.eclipse.xsmp.ui.AbstractXsmpActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Xsmp Profile UI plugin.
  */
-public final class XsmpSdkActivator extends XsmpActivator
+public final class XsmpSdkActivator extends AbstractXsmpActivator
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.profile.xsmp_sdk.ui";
 

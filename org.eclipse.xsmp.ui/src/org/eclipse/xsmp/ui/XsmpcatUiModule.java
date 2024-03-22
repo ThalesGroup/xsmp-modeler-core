@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -17,8 +17,7 @@ import org.eclipse.xsmp.ide.hover.XsmpcatKeywordHovers;
 import org.eclipse.xsmp.services.IXsmpServiceProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpAutoEditStrategyProvider;
 import org.eclipse.xsmp.ui.autoedit.XsmpMultiLineTerminalEditStrategy;
-import org.eclipse.xsmp.ui.builder.XsmpBuilderParticipant;
-import org.eclipse.xsmp.ui.configuration.XsmpServiceUIProvider;
+import org.eclipse.xsmp.ui.builder.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpTemplateContextType;
 import org.eclipse.xsmp.ui.contentassist.XsmpTemplateProposalProvider;
 import org.eclipse.xsmp.ui.contentassist.XsmpcatReferenceProposalCreator;
@@ -26,6 +25,7 @@ import org.eclipse.xsmp.ui.editor.model.XsmpDocumentProvider;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.editor.model.XsmpTerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xsmp.ui.folding.XsmpFoldingRegionProvider;
+import org.eclipse.xsmp.ui.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ui.highlighting.XsmpAntlrTokenToAttributeIdMapper;
 import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
 import org.eclipse.xsmp.ui.highlighting.XsmpSemanticHighlightingCalculator;
@@ -34,10 +34,12 @@ import org.eclipse.xsmp.ui.hover.XsmpEObjectHoverProvider;
 import org.eclipse.xsmp.ui.outline.XsmpcatOutlineTreeProvider;
 import org.eclipse.xsmp.ui.quickfix.XsmpTextEditComposer;
 import org.eclipse.xsmp.ui.resource.XsmpResourceUIServiceProvider;
+import org.eclipse.xsmp.ui.services.XsmpServiceUIProvider;
 import org.eclipse.xsmp.ui.template.XsmpTemplateStore;
 import org.eclipse.xsmp.ui.template.XsmpcatCrossReferenceTemplateVariableResolver;
 import org.eclipse.xsmp.ui.validation.XsmpValidatorConfigurationBlock;
-import org.eclipse.xtext.builder.IXtextBuilderParticipant;
+import org.eclipse.xtext.builder.EclipseOutputConfigurationProvider;
+import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
@@ -216,9 +218,13 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpTemplateStore.class;
   }
 
-  @Override
-  public Class< ? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant()
+  public Class< ? extends GeneratorDelegate> bindGeneratorDelegate()
   {
-    return XsmpBuilderParticipant.class;
+    return XsmpGeneratorDelegate.class;
+  }
+
+  public Class< ? extends EclipseOutputConfigurationProvider> bindEclipseOutputConfigurationProvider()
+  {
+    return XsmpOutputConfigurationProvider.class;
   }
 }

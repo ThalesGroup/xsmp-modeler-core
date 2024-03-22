@@ -114,9 +114,8 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
       builder.put("deprecated", Boolean.toString(true));
     }
 
-    if (eObject instanceof Field)
+    if (eObject instanceof final Field field)
     {
-      final var field = (Field) eObject;
       if (xsmpUtil.isStatic(field))
       {
         builder.put("static", Boolean.toString(true));
@@ -157,9 +156,8 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
       {
         builder.put("uuid", uuid.toLowerCase());
       }
-      if (eObject instanceof AttributeType)
+      if (eObject instanceof final AttributeType attribute)
       {
-        final var attribute = (AttributeType) eObject;
         // save the usage of the AttributeType
         builder.put("usage", attribute.getUsage().stream().collect(Collectors.joining(" ")));
         builder.put("allowMultiple", Boolean.toString(attribute.isAllowMultiple()));

@@ -28,7 +28,7 @@ It comes with:
 ### System Requirements
 
  - Eclipse 2024-03 or newer.
- - JavaSE-11
+ - JavaSE-17
 
 ### How To Install
 

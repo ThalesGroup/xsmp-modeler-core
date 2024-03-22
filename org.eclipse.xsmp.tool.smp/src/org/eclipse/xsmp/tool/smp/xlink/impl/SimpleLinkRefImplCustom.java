@@ -99,15 +99,12 @@ public class SimpleLinkRefImplCustom extends SimpleLinkRefImpl
       }
 
       // try to deresolve using the registered URI handler (e.g. file://... -> http://...)
-      if (locResource instanceof XMLResource)
+      if (locResource instanceof final XMLResource xmlResource)
       {
-        final var xmlResource = (XMLResource) locResource;
         final var uriHandlerObj = xmlResource.getDefaultLoadOptions()
                 .get(XMLResource.OPTION_URI_HANDLER);
-        if (uriHandlerObj instanceof XMLResource.URIHandler)
+        if (uriHandlerObj instanceof final XMLResource.URIHandler uriHandler)
         {
-          final var uriHandler = (XMLResource.URIHandler) uriHandlerObj;
-
           final var deresolved = uriHandler.deresolve(uri);
           if (!uri.equals(deresolved))
           {

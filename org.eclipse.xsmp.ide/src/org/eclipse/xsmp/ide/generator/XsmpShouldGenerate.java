@@ -33,7 +33,7 @@ public class XsmpShouldGenerate extends OnlyWithoutErrors
 
     if (config != null && config.shouldGenerate())
     {
-      for (ISourceFolder sourceFolder : config.getSourceFolders())
+      for (final ISourceFolder sourceFolder : config.getSourceFolders())
       {
         if (sourceFolder.contains(resource.getURI()))
         {

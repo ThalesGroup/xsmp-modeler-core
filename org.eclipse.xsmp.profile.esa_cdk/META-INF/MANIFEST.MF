@@ -9,7 +9,7 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xsmp.generator.cpp,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.profile.esa_cdk,
  org.eclipse.xsmp.profile.esa_cdk.generator,
  org.eclipse.xsmp.profile.esa_cdk.generator.cpp,

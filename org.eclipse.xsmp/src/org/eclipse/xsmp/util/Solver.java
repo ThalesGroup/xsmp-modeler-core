@@ -80,47 +80,28 @@ public class Solver
 
     try
     {
-      switch (e.getFeature())
+      return switch (e.getFeature())
       {
-        case "||":
-          return leftOperand.logicalOr(rightOperand);
-        case "&&":
-          return leftOperand.logicalAnd(rightOperand);
-        case "|":
-          return leftOperand.or(rightOperand);
-        case "&":
-          return leftOperand.and(rightOperand);
-        case "^":
-          return leftOperand.xor(rightOperand);
-        case "==":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
-        case "!=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
-        case "<=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
-        case ">=":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
-        case "<":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
-        case ">":
-          return Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
-        case "+":
-          return leftOperand.add(rightOperand);
-        case "-":
-          return leftOperand.subtract(rightOperand);
-        case "/":
-          return leftOperand.divide(rightOperand);
-        case "*":
-          return leftOperand.multiply(rightOperand);
-        case "%":
-          return leftOperand.remainder(rightOperand);
-        case "<<":
-          return leftOperand.shiftLeft(rightOperand);
-        case ">>":
-          return leftOperand.shiftRight(rightOperand);
-        default:
-          throw new UnsupportedOperationException();
-      }
+        case "||" -> leftOperand.logicalOr(rightOperand);
+        case "&&" -> leftOperand.logicalAnd(rightOperand);
+        case "|" -> leftOperand.or(rightOperand);
+        case "&" -> leftOperand.and(rightOperand);
+        case "^" -> leftOperand.xor(rightOperand);
+        case "==" -> Bool.valueOf(leftOperand.compareTo(rightOperand) == 0);
+        case "!=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) != 0);
+        case "<=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) <= 0);
+        case ">=" -> Bool.valueOf(leftOperand.compareTo(rightOperand) >= 0);
+        case "<" -> Bool.valueOf(leftOperand.compareTo(rightOperand) < 0);
+        case ">" -> Bool.valueOf(leftOperand.compareTo(rightOperand) > 0);
+        case "+" -> leftOperand.add(rightOperand);
+        case "-" -> leftOperand.subtract(rightOperand);
+        case "/" -> leftOperand.divide(rightOperand);
+        case "*" -> leftOperand.multiply(rightOperand);
+        case "%" -> leftOperand.remainder(rightOperand);
+        case "<<" -> leftOperand.shiftLeft(rightOperand);
+        case ">>" -> leftOperand.shiftRight(rightOperand);
+        default -> throw new UnsupportedOperationException();
+      };
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -164,19 +145,14 @@ public class Solver
 
     try
     {
-      switch (e.getFeature())
+      return switch (e.getFeature())
       {
-        case "!":
-          return value.not();
-        case "~":
-          return value.unaryComplement();
-        case "-":
-          return value.negate();
-        case "+":
-          return value.plus();
-        default:
-          throw new UnsupportedOperationException();
-      }
+        case "!" -> value.not();
+        case "~" -> value.unaryComplement();
+        case "-" -> value.negate();
+        case "+" -> value.plus();
+        default -> throw new UnsupportedOperationException();
+      };
     }
     catch (final UnsupportedOperationException ex)
     {
@@ -199,9 +175,8 @@ public class Solver
       {
         throw new SolverException(e, "the value is recursive.");
       }
-      if (value instanceof Constant)
+      if (value instanceof final Constant cst)
       {
-        final var cst = (Constant) value;
         return getValue(cst.getValue(), cst.getType());
       }
       if (value instanceof org.eclipse.xsmp.model.xsmp.EnumerationLiteral)
@@ -554,9 +529,8 @@ public class Solver
   public EnumerationLiteral getValue(Expression e, Enumeration enumeration)
   {
     final var value = getValue(e);
-    if (value instanceof EnumerationLiteral)
+    if (value instanceof final EnumerationLiteral literal)
     {
-      final var literal = (EnumerationLiteral) value;
       if (!EcoreUtil.isAncestor(enumeration, literal.getValue()))
       {
         throw new SolverException(e, "Literal " + literal.getValue().getName() + " is not of type "

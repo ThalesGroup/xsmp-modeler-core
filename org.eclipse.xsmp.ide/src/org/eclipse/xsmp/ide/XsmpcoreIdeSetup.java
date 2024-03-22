@@ -10,11 +10,12 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.eclipse.xsmp.XsmpcoreRuntimeModule;
 import org.eclipse.xsmp.XsmpcoreStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * Initialization support for running Xtext languages as language servers.

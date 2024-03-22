@@ -11,13 +11,13 @@
 package org.eclipse.xsmp.tool.python.ui;
 
 import org.eclipse.xsmp.tool.python.PythonRuntimeModule;
-import org.eclipse.xsmp.ui.internal.XsmpActivator;
+import org.eclipse.xsmp.ui.AbstractXsmpActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Smp Tool UI plugin.
  */
-public final class PythonActivator extends XsmpActivator
+public final class PythonActivator extends AbstractXsmpActivator
 {
   public static final String PLUGIN_ID = "org.eclipse.xsmp.tool.python.ui";
 

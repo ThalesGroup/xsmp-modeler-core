@@ -14,7 +14,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.xsmp.ui.configuration.IXsmpServiceUIProvider;
+import org.eclipse.xsmp.ui.services.IXsmpServiceUIProvider;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
 import com.google.inject.Inject;
@@ -33,10 +33,9 @@ public class XsmpEditor extends XtextEditor
   {
     // in case of a file editor input (file inside a project), get the Profile
     // injector and re-inject all the members to use specific content assist, quick fix, ...
-    if (input instanceof IFileEditorInput)
+    if (input instanceof final IFileEditorInput fileInput)
     {
-      configurationProvider.getInjector(((IFileEditorInput) input).getFile().getProject())
-              .injectMembers(this);
+      configurationProvider.getInjector(fileInput.getFile().getProject()).injectMembers(this);
 
     }
     super.init(site, input);

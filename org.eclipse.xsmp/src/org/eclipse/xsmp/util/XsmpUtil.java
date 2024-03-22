@@ -300,20 +300,14 @@ public class XsmpUtil
 
   public boolean isBaseOf(EObject base, EObject derived)
   {
-    switch (derived.eClass().getClassifierID())
+    return switch (derived.eClass().getClassifierID())
     {
-      case XsmpPackage.INTERFACE:
-        return isBaseOf(base, (Interface) derived);
-      case XsmpPackage.MODEL:
-        return isBaseOf(base, (Model) derived);
-      case XsmpPackage.SERVICE:
-        return isBaseOf(base, (Service) derived);
-      case XsmpPackage.CLASS:
-      case XsmpPackage.EXCEPTION:
-        return isBaseOf(base, (Class) derived);
-      default:
-        return false;
-    }
+      case XsmpPackage.INTERFACE -> isBaseOf(base, (Interface) derived);
+      case XsmpPackage.MODEL -> isBaseOf(base, (Model) derived);
+      case XsmpPackage.SERVICE -> isBaseOf(base, (Service) derived);
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION -> isBaseOf(base, (Class) derived);
+      default -> false;
+    };
   }
 
   protected boolean isBaseOf(EObject base, Interface derived)
@@ -776,17 +770,12 @@ public class XsmpUtil
   {
     final var id = QualifiedNames.Attributes_Const;
     return cache.get(Tuples.pair(o, id), o.eResource(), () -> attributeBoolValue(o, id, () -> {
-      switch (o.getDirection())
+      return switch (o.getDirection())
       {
-        case IN:
-          return !(o.getType() instanceof ValueType);
-        case RETURN:
-        case OUT:
-        case INOUT:
-          return false;
-        default:
-          return false;
-      }
+        case IN -> !(o.getType() instanceof ValueType);
+        case RETURN, OUT, INOUT -> false;
+        default -> false;
+      };
     }));
 
   }
@@ -795,28 +784,20 @@ public class XsmpUtil
   {
     if (type instanceof ReferenceType)
     {
-      switch (direction)
+      return switch (direction)
       {
-        case IN:
-          return ArgKind.BY_REF;
-        case INOUT:
-        case OUT:
-        case RETURN:
-          return ArgKind.BY_PTR;
-      }
+        case IN -> ArgKind.BY_REF;
+        case INOUT, OUT, RETURN -> ArgKind.BY_PTR;
+      };
     }
 
     if (type instanceof NativeType || type instanceof ValueType)
     {
-      switch (direction)
+      return switch (direction)
       {
-        case IN:
-        case RETURN:
-          return ArgKind.BY_VALUE;
-        case INOUT:
-        case OUT:
-          return ArgKind.BY_PTR;
-      }
+        case IN, RETURN -> ArgKind.BY_VALUE;
+        case INOUT, OUT -> ArgKind.BY_PTR;
+      };
     }
     return ArgKind.BY_VALUE;
   }
@@ -835,9 +816,8 @@ public class XsmpUtil
               .map(Field.class::cast)
               .filter(it -> getVisibility(it) == VisibilityKind.PUBLIC && !isStatic(it))
               .collect(Collectors.toList());
-      if (structure instanceof org.eclipse.xsmp.model.xsmp.Class)
+      if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
       {
-        final var clazz = (org.eclipse.xsmp.model.xsmp.Class) structure;
         final var base = clazz.getBase();
         if (base instanceof Structure && !isBaseOf(base, clazz))
         {
@@ -856,9 +836,8 @@ public class XsmpUtil
     final var fields = Iterables.filter(Iterables.filter(structure.getMember(), Field.class),
             it -> !isStatic(it));
 
-    if (structure instanceof org.eclipse.xsmp.model.xsmp.Class)
+    if (structure instanceof final org.eclipse.xsmp.model.xsmp.Class clazz)
     {
-      final var clazz = (org.eclipse.xsmp.model.xsmp.Class) structure;
       final var base = clazz.getBase();
       if (base instanceof Structure && !isBaseOf(base, clazz))
       {
@@ -954,49 +933,34 @@ public class XsmpUtil
 
   private Type findType(EObject parent)
   {
-    switch (parent.eClass().getClassifierID())
+    return switch (parent.eClass().getClassifierID())
     {
-      case XsmpPackage.FIELD:
-        return ((Field) parent).getType();
-      case XsmpPackage.CONSTANT:
-        return ((Constant) parent).getType();
-      case XsmpPackage.ASSOCIATION:
-        return ((Association) parent).getType();
-      case XsmpPackage.PARAMETER:
-        return ((Parameter) parent).getType();
-      case XsmpPackage.STRING:
-      case XsmpPackage.ARRAY:
-      case XsmpPackage.MULTIPLICITY:
-        return findPrimitiveType(parent, QualifiedNames.Smp_Int64);
-      case XsmpPackage.FLOAT:
-      {
+      case XsmpPackage.FIELD -> ((Field) parent).getType();
+      case XsmpPackage.CONSTANT -> ((Constant) parent).getType();
+      case XsmpPackage.ASSOCIATION -> ((Association) parent).getType();
+      case XsmpPackage.PARAMETER -> ((Parameter) parent).getType();
+      case XsmpPackage.STRING, XsmpPackage.ARRAY, XsmpPackage.MULTIPLICITY -> findPrimitiveType(parent, QualifiedNames.Smp_Int64);
+      case XsmpPackage.FLOAT -> {
         final var type = ((Float) parent).getPrimitiveType();
-        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
+        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
-      case XsmpPackage.INTEGER:
-      {
+      case XsmpPackage.INTEGER -> {
         final var type = ((org.eclipse.xsmp.model.xsmp.Integer) parent).getPrimitiveType();
-        return type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+        yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
-      case XsmpPackage.ENUMERATION_LITERAL:
-        return findPrimitiveType(parent, QualifiedNames.Smp_Int32);
-      case XsmpPackage.ENUMERATION:
-        return (Type) parent;
-      case XsmpPackage.ATTRIBUTE:
-      {
+      case XsmpPackage.ENUMERATION_LITERAL -> findPrimitiveType(parent, QualifiedNames.Smp_Int32);
+      case XsmpPackage.ENUMERATION -> (Type) parent;
+      case XsmpPackage.ATTRIBUTE -> {
         final var type = ((Attribute) parent).getType();
-        return type instanceof AttributeType ? ((AttributeType) type).getType() : type;
+        yield type instanceof AttributeType ? ((AttributeType) type).getType() : type;
       }
-      case XsmpPackage.ATTRIBUTE_TYPE:
-        return ((AttributeType) parent).getType();
-      case XsmpPackage.COLLECTION_LITERAL:
-      {
+      case XsmpPackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
+      case XsmpPackage.COLLECTION_LITERAL -> {
         final var collection = (CollectionLiteral) parent;
-        return getType(collection);
+        yield getType(collection);
       }
-      default:
-        return parent instanceof Expression ? getType((Expression) parent) : null;
-    }
+      default -> parent instanceof Expression ? getType((Expression) parent) : null;
+    };
   }
 
   private Type findType(Expression e)
@@ -1005,12 +969,10 @@ public class XsmpUtil
 
     final var type = getType(parent);
 
-    if (parent instanceof CollectionLiteral)
+    if (parent instanceof final CollectionLiteral collection)
     {
-      final var collection = (CollectionLiteral) parent;
-      if (type instanceof Array)
+      if (type instanceof final Array array)
       {
-        final var array = (Array) type;
         final var index = collection.getElements().indexOf(e);
 
         final var size = getInt64(array.getSize());
@@ -1021,9 +983,8 @@ public class XsmpUtil
         }
         return null;
       }
-      if (type instanceof Structure)
+      if (type instanceof final Structure struct)
       {
-        final var struct = (Structure) type;
         final var fields = getAssignableFields(struct);
         final var index = collection.getElements().indexOf(e);
         if (index >= 0 && index < fields.size())

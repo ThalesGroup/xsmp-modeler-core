@@ -596,19 +596,14 @@ public class XsmpLanguageServer
    */
   protected DiagnosticSeverity toDiagnosticSeverity(Severity severity)
   {
-    switch (severity)
+    return switch (severity)
     {
-      case ERROR:
-        return DiagnosticSeverity.Error;
-      case IGNORE:
-        return DiagnosticSeverity.Hint;
-      case INFO:
-        return DiagnosticSeverity.Information;
-      case WARNING:
-        return DiagnosticSeverity.Warning;
-      default:
-        return DiagnosticSeverity.Hint;
-    }
+      case ERROR -> DiagnosticSeverity.Error;
+      case IGNORE -> DiagnosticSeverity.Hint;
+      case INFO -> DiagnosticSeverity.Information;
+      case WARNING -> DiagnosticSeverity.Warning;
+      default -> DiagnosticSeverity.Hint;
+    };
   }
 
   @Override
@@ -935,9 +930,8 @@ public class XsmpLanguageServer
       result = URI.createURI(data.toString());
       lens.setData(null);
     }
-    else if (data instanceof List< ? >)
+    else if (data instanceof final List< ? > l)
     {
-      final var l = (List< ? >) data;
       result = URI.createURI(l.get(0).toString());
       lens.setData(l.get(1));
     }
