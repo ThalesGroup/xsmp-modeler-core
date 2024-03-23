@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.builder.EclipseOutputConfigurationProvider;
+import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
@@ -33,10 +34,15 @@ public class XsmpOutputConfigurationProvider extends EclipseOutputConfigurationP
   @Named(Constants.LANGUAGE_NAME)
   private String languageName;
 
+  private final OutputConfiguration defaultOutput;
+
   @Inject
   public XsmpOutputConfigurationProvider(IOutputConfigurationProvider delegate)
   {
     super(delegate);
+    defaultOutput = new OutputConfiguration(IFileSystemAccess.DEFAULT_OUTPUT);
+    defaultOutput.setDescription("Default output");
+    defaultOutput.setOutputDirectory("./....tmp");
   }
 
   @Override
@@ -45,6 +51,7 @@ public class XsmpOutputConfigurationProvider extends EclipseOutputConfigurationP
     final var preferenceStore = getPreferenceStoreAccess().getContextPreferenceStore(project);
     final var profile = ExtensionManager.getProfile(preferenceStore);
     final Set<OutputConfiguration> outputConfigurations = new LinkedHashSet<>();
+    outputConfigurations.add(defaultOutput);
     if (profile != null)
     {
       final var injector = profile.getInjector(languageName);
