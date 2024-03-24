@@ -88,6 +88,7 @@ import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.SignatureHelpParams;
@@ -98,6 +99,7 @@ import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceFoldersOptions;
@@ -729,8 +731,12 @@ public class XsmpLanguageServer
     {
       return Collections.emptyList();
     }
-    return workspaceManager.doRead(uri, (document, resource) -> documentSymbolService
-            .getSymbols(document, resource, params, cancelIndicator));
+    return workspaceManager
+            .doRead(uri,
+                    (document, resource) -> documentSymbolService.getSymbols(document, resource,
+                            params, cancelIndicator))
+            // filter out symbols which are empty
+            .stream().filter(s -> s.getName() != null && !s.getName().isEmpty()).toList();
   }
 
   protected IDocumentSymbolService getIDocumentSymbolService(
@@ -1436,5 +1442,17 @@ public class XsmpLanguageServer
     final var uri = getURI(params.getTextDocument());
     return getWorkspaceManager().doRead(uri, (doc, res) -> semanticTokensService
             .semanticTokensFull(doc, res, params, cancelIndicator));
+  }
+
+  @Override
+  public void cancelProgress(WorkDoneProgressCancelParams params)
+  {
+
+  }
+
+  @Override
+  public void setTrace(SetTraceParams params)
+  {
+
   }
 }

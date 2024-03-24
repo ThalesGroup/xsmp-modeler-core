@@ -11,10 +11,16 @@
 					"include": "#linecomment"
 				},
 				{
-					"include": "#blockcomment"
+					"include": "#blockcommentdocumentation"
 				},
 				{
-					"include": "#blockcommentdocumentation"
+					"include": "#blockcommentdocumentationempty"
+				},
+				{
+					"include": "#blockcommentempty"
+				},
+				{
+					"include": "#blockcomment"
 				},
 				{
 					"include": "#keyword"
@@ -29,14 +35,22 @@
 			"begin": "(^[ \\t]+)?(?=//)",
 			"end": "(?=$)"
 		},
+		"blockcommentempty": {
+			"name": "comment.block.xsmpcat",
+			"match": "/\\*(?:\\*\\*+)?\\*/"
+		},
 		"blockcomment": {
 			"name": "comment.block.xsmpcat",
-			"begin": "/\\*(?!\\*)",
+			"begin": "/\\*(?:[^\\*]|\\*\\*)",
 			"end": "\\*/"
+		},
+		"blockcommentdocumentationempty": {
+			"name": "comment.block.documentation.xsmpcat",
+			"match": "/\\*\\*\\*/"
 		},
 		"blockcommentdocumentation": {
 			"name": "comment.block.documentation.xsmpcat",
-			"begin": "/\\*\\*",
+			"begin": "/\\*\\*[^\\*\\/]",
 			"end": "\\*/"
 		},
 		"keyword": {

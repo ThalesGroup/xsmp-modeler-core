@@ -109,14 +109,26 @@
 				"type": "object",
 				"title": "Xsmp",
 				"properties": {
-					"xsmp.javaPath": {
+					"xsmp.java.home": {
 						"type": "string",
 						"scope": "machine",
-						"description": "Java executable path."
+						"description": "Java home directory."
 					}
 				}
 			}
-		]
+		],
+		"configurationDefaults": {
+			"editor.tokenColorCustomizations": {
+				"textMateRules": [
+					{
+						"scope": "comment.block.documentation.xsmpcat",
+						"settings": {
+							"foreground": "#3F5FBF"
+						}
+					}
+				]
+			}
+		}
 	},
 	"devDependencies": {
 		"@iconify/vue": "^4.1.1",
@@ -140,7 +152,7 @@
 		"fs-extra": "^11.2.0",
 		"os-browserify": "^0.3.0",
 		"path-browserify": "^1.0.1",
-		"vscode-languageclient": "^8.1.0",
+		"vscode-languageclient": "^8.0.1",
 		"vue": "^3.4.21",
 		"vue-loader": "^17.4.2",
 		"vue-style-loader": "^4.1.3",

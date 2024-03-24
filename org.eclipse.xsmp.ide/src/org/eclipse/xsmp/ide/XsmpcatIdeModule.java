@@ -12,6 +12,7 @@ package org.eclipse.xsmp.ide;
 
 import org.eclipse.xsmp.ide.commands.XsmpCommandService;
 import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
+import org.eclipse.xsmp.ide.folding.XsmpFoldingRangeProvider;
 import org.eclipse.xsmp.ide.generator.XsmpGenerator;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ide.generator.XsmpShouldGenerate;
@@ -24,6 +25,7 @@ import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.editor.folding.IFoldingRangeProvider;
 import org.eclipse.xtext.ide.editor.quickfix.IQuickFixProvider;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codeActions.QuickFixCodeActionService;
@@ -94,5 +96,10 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends IKeywordHovers> bindIKeywordHovers()
   {
     return XsmpcatKeywordHovers.class;
+  }
+
+  public Class< ? extends IFoldingRangeProvider> bindIFoldingRangeProvider()
+  {
+    return XsmpFoldingRangeProvider.class;
   }
 }

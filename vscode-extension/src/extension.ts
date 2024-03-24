@@ -101,10 +101,7 @@ export function activate(context: ExtensionContext) {
     let launcher = os.platform() === 'win32' ? 'org.eclipse.xsmp.ide.bat' : 'org.eclipse.xsmp.ide';
     let script = context.asAbsolutePath(path.join('src', 'xsmp', 'bin', launcher));
 
-    let defaultJavaPath = process.platform === 'win32' ? 'java.exe' : 'java';
-
     const startServer = () => {
-
         let serverOptions: ServerOptions;
         const remoteServer = false;
         if (remoteServer) {
@@ -122,15 +119,24 @@ export function activate(context: ExtensionContext) {
             };
         }
         else {
-            const javaPath = workspace.getConfiguration('xsmp').get<string>('javaPath') || defaultJavaPath;
+            const javaHome = workspace.getConfiguration('xsmp').get<string>('java.home');
             serverOptions = {
-                run: { command: script },
-                debug: { command: script, args: [], options: { env: createDebugEnv() } }
+                run: {
+                    command: script, options: {
+                        env: {
+                            ...process.env, ...(javaHome ? { JAVA_HOME: javaHome } : {})
+                        }
+                    }
+                },
+                debug: {
+                    command: script, options: {
+                        env: {
+                            JAVA_OPTS: "-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n,quiet=y",
+                            ...(javaHome ? { JAVA_HOME: javaHome } : {}), ...process.env
+                        }
+                    }
+                }
             };
-            /*   serverOptions = {
-                   run: { command: javaPath, args: ['-jar', script], },
-                   debug: { command: javaPath, args: ['-jar', script, '-log', '-trace'], options: { env: createDebugEnv() } },
-               };*/
         }
         const clientOptions: LanguageClientOptions = {
             documentSelector: [{ language: 'xsmpcat' }],
@@ -235,6 +241,3 @@ export function deactivate() {
     return lc.stop();
 }
 
-function createDebugEnv() {
-    return { JAVA_OPTS: "-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n,quiet=y", ...process.env }
-}
