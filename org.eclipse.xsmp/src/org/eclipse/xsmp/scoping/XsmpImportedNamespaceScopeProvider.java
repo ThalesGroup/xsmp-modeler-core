@@ -13,7 +13,6 @@ package org.eclipse.xsmp.scoping;
 
 import static java.util.Collections.singletonList;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -24,8 +23,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
 import org.eclipse.xsmp.model.xsmp.Component;
-import org.eclipse.xsmp.model.xsmp.ImportDeclaration;
-import org.eclipse.xsmp.model.xsmp.ImportSection;
 import org.eclipse.xsmp.model.xsmp.Interface;
 import org.eclipse.xsmp.model.xsmp.Structure;
 import org.eclipse.xsmp.model.xsmp.Type;
@@ -37,7 +34,6 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractGlobalScopeDelegatingScopeProvider;
@@ -60,9 +56,6 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
 
   @Inject
   private IResourceScopeCache cache;
-
-  @Inject
-  private XsmpImportsConfiguration importsConfiguration;
 
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;
@@ -152,53 +145,6 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     return Lists.<ImportNormalizer> newArrayList(
             doCreateImportNormalizer(QualifiedNames.Smp, true, ignoreCase),
             doCreateImportNormalizer(QualifiedNames.Attributes, true, ignoreCase));
-  }
-
-  protected List<ImportNormalizer> getImportedNamespaceResolvers(final EObject context,
-          final boolean ignoreCase)
-  {
-    return cache.get(Tuples.create(context, ignoreCase, "imports"), context.eResource(),
-            () -> internalGetImportedNamespaceResolvers(context, ignoreCase));
-  }
-
-  protected List<ImportNormalizer> getImportedNamespaceResolvers(ImportSection importSection,
-          boolean ignoreCase)
-  {
-    final var importDeclarations = importSection.getImportDeclarations();
-    final List<ImportNormalizer> result = Lists
-            .newArrayListWithExpectedSize(importDeclarations.size());
-    for (final ImportDeclaration imp : importDeclarations)
-    {
-
-      final var value = imp.getImportedNamespace();
-      if (value != null && !value.eIsProxy())
-      {
-        final var typeName = qualifiedNameConverter
-                .toString(qualifiedNameProvider.getFullyQualifiedName(value).append(getWildcard()));
-        final var resolver = createImportedNamespaceResolver(typeName, ignoreCase);
-        if (resolver != null)
-        {
-          result.add(resolver);
-        }
-      }
-      else if (imp.getImportedType() != null && !imp.getImportedType().eIsProxy())
-      {
-        final var typeName = qualifiedNameConverter
-                .toString(qualifiedNameProvider.getFullyQualifiedName(imp.getImportedType()));
-        final var resolver = createImportedNamespaceResolver(typeName, ignoreCase);
-        if (resolver != null)
-        {
-          result.add(resolver);
-        }
-      }
-
-    }
-    return result;
-  }
-
-  protected XsmpImportsConfiguration getImportsConfiguration()
-  {
-    return importsConfiguration;
   }
 
   protected IScope getListScope(IScope parent, IScope globalScope, EObject context,
@@ -304,15 +250,6 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     final var name = getQualifiedNameOfLocalElement(context);
     final var ignoreCase = isIgnoreCase(reference);
     final var resourceOnlySelectable = getAllDescriptions(context.eResource());
-    final ISelectable globalScopeSelectable = new ScopeBasedSelectable(globalScope);
-
-    // imports
-    final var explicitImports = getImportedNamespaceResolvers(context, ignoreCase);
-    if (!explicitImports.isEmpty())
-    {
-      result = createImportScope(result, explicitImports, globalScopeSelectable,
-              reference.getEReferenceType(), ignoreCase);
-    }
 
     switch (context.eClass().getClassifierID())
     {
@@ -456,29 +393,10 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     return new MultimapBasedSelectable(allDescriptions);
   }
 
-  protected List<ImportNormalizer> internalGetImportedNamespaceResolvers(EObject context,
-          boolean ignoreCase)
-  {
-    if (EcoreUtil.getRootContainer(context) != context)
-    {
-      return Collections.emptyList();
-    }
-    final var importSection = importsConfiguration
-            .getImportSection((XtextResource) context.eResource());
-    if (importSection != null)
-    {
-      return getImportedNamespaceResolvers(importSection, ignoreCase);
-    }
-    return Collections.emptyList();
-  }
-
   protected IScope internalGetScope(IScope parent, IScope globalScope, EObject context,
           EReference reference)
   {
-    if (context instanceof ImportDeclaration)
-    {
-      return globalScope;
-    }
+
     IScope result;
 
     final var container = context.eContainer();

@@ -62,7 +62,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/date"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/creator"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//Document/version"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Document/importSection"/>
     </genClasses>
     <genClasses image="false" ecoreClass="xsmp.ecore#//NamedElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//NamedElement/metadatum"/>
@@ -132,13 +131,6 @@
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//CharacterLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//CharacterLiteral/value"/>
-    </genClasses>
-    <genClasses ecoreClass="xsmp.ecore#//ImportSection">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportSection/importDeclarations"/>
-    </genClasses>
-    <genClasses ecoreClass="xsmp.ecore#//ImportDeclaration">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportDeclaration/importedType"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ImportDeclaration/importedNamespace"/>
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//BinaryOperation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//BinaryOperation/leftOperand"/>

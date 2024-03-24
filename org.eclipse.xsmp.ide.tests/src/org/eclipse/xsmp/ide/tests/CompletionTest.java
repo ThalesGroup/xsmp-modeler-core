@@ -33,7 +33,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
               } // namespace ${1:name}
                [[2, 0] .. [2, 0]]
               documentation (ML_DOCUMENTATION) -> documentation [[2, 0] .. [2, 0]]
-              import -> import [[2, 0] .. [2, 0]]
                             """;
 
       it.setExpectedCompletionItems(expected);

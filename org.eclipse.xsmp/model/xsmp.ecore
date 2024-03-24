@@ -38,8 +38,6 @@
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         volatile="true" transient="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importSection" eType="#//ImportSection"
-        containment="true" resolveProxies="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Identifier" instanceClassName="java.lang.String"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Name" instanceClassName="java.lang.String"/>
@@ -158,14 +156,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CharacterLiteral" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ImportSection">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importDeclarations" upperBound="-1"
-        eType="#//ImportDeclaration" containment="true" resolveProxies="false"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ImportDeclaration">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importedType" eType="#//Type"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importedNamespace" eType="#//Namespace"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BinaryOperation" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftOperand" eType="#//Expression"

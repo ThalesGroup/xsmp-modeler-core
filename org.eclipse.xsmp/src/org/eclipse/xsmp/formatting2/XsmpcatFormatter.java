@@ -52,8 +52,6 @@ import org.eclipse.xsmp.model.xsmp.EventType;
 import org.eclipse.xsmp.model.xsmp.Exception;
 import org.eclipse.xsmp.model.xsmp.Field;
 import org.eclipse.xsmp.model.xsmp.Float;
-import org.eclipse.xsmp.model.xsmp.ImportDeclaration;
-import org.eclipse.xsmp.model.xsmp.ImportSection;
 import org.eclipse.xsmp.model.xsmp.Integer;
 import org.eclipse.xsmp.model.xsmp.Interface;
 import org.eclipse.xsmp.model.xsmp.Model;
@@ -99,11 +97,6 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
       it.lowPriority();
     });
 
-    if (catalogue.getImportSection() != null)
-    {
-      doc.format(catalogue.getImportSection());
-    }
-
     for (final EObject eObject : catalogue.getMember())
     {
       doc.format(eObject);
@@ -112,31 +105,6 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
         it.lowPriority();
       });
     }
-  }
-
-  protected void format(ImportSection parent, IFormattableDocument doc)
-  {
-    doc.prepend(parent, it -> {
-      it.setNewLines(2, 2, 2);
-      it.highPriority();
-    });
-
-    parent.getImportDeclarations().forEach(doc::format);
-
-    doc.append(parent, it -> {
-      it.setNewLines(3, 3, 3);
-      it.highPriority();
-    });
-  }
-
-  protected void format(ImportDeclaration parent, IFormattableDocument doc)
-  {
-    final var importDeclarationAccess = ga.getImportDeclarationAccess();
-    final var parentRegion = regionFor(parent);
-    doc.append(parentRegion.keyword(importDeclarationAccess.getImportKeyword_0()), this::oneSpace);
-    doc.surround(parentRegion.keyword(importDeclarationAccess.getNamespaceKeyword_1_1_0()),
-            this::oneSpace);
-    doc.append(parent, this::newLine);
   }
 
   protected void format(Structure parent, IFormattableDocument doc)

@@ -17,15 +17,8 @@ import "http://org.eclipse.xsmp/xsmp"
 Catalogue:
     metadatum=Metadatum
     'catalogue' name=ValidID?
-    importSection=ImportSection?
     member+=Namespace*;
 
-ImportSection:
-    importDeclarations+=ImportDeclaration+;
-
-ImportDeclaration:
-    'import' (importedType=[LanguageType|QualifiedName]
-    | 'namespace' importedNamespace=[Namespace|QualifiedName]);
 
 enum RangeKind:
     Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';

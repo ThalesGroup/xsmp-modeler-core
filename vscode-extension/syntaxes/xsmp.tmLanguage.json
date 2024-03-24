@@ -55,7 +55,7 @@
 		},
 		"keyword": {
 			"name": "keyword.control.xsmpcat",
-			"match": "\\b(catalogue|model|struct|exception|container|writeOnly|constant|def|integer|float|eventsink|eventsource|reference|output|protected|entrypoint|property|using|void|readOnly|throws|enum|input|extends|field|transient|true|false|abstract|inout|service|namespace|array|native|get|readWrite|attribute|event|class|set|string|primitive|association|interface|out|public|private|import|implements)\\b"
+			"match": "\\b(catalogue|model|struct|exception|container|writeOnly|constant|def|integer|float|eventsink|eventsource|reference|output|protected|entrypoint|property|using|void|readOnly|throws|enum|input|extends|field|transient|true|false|abstract|inout|service|namespace|array|native|get|readWrite|attribute|event|class|set|string|primitive|association|interface|out|public|private|implements)\\b"
 		},
 		"keyword_operators": {
 			"name": "keyword.operator.xsmpcat",

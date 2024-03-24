@@ -8,10 +8,6 @@
  */
 catalogue Test
 
-import Smp.Int16
-import namespace TasMdk
-import Smp.Duration
-
 
 /**
  * My namespace
