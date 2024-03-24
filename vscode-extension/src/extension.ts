@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -9,15 +9,13 @@
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
 'use strict';
-
 import * as path from 'path';
 import * as net from 'net';
 import * as os from 'os';
-import { Trace } from 'vscode-jsonrpc';
-import { commands, window, Uri, workspace, ExtensionContext, languages, CancellationToken, ProgressLocation, Progress } from 'vscode';
+import { commands, window, Uri, workspace, ExtensionContext, languages} from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import * as fs from 'fs';
-
+import * as wizard from './wizard';
 
 
 let lc: LanguageClient;
@@ -99,7 +97,7 @@ async function openSettingsEditor() {
 
 export function activate(context: ExtensionContext) {
     let launcher = os.platform() === 'win32' ? 'org.eclipse.xsmp.ide.bat' : 'org.eclipse.xsmp.ide';
-    let script = context.asAbsolutePath(path.join('src', 'xsmp', 'bin', launcher));
+    let script = context.asAbsolutePath(path.join('dist', 'bin', launcher));
 
     const startServer = () => {
         let serverOptions: ServerOptions;
@@ -152,7 +150,7 @@ export function activate(context: ExtensionContext) {
         lc = new LanguageClient('Xsmp Server', serverOptions, clientOptions);
 
         // Enable tracing (.Off, .Messages, Verbose)
-        lc.setTrace(Trace.Verbose);
+        //lc.setTrace(Trace.Verbose);
         lc.start();
 
     };
@@ -165,31 +163,13 @@ export function activate(context: ExtensionContext) {
 
     // New project Wizard
     context.subscriptions.push(
-        commands.registerCommand('xsmp.wizard', () => {
-            window.withProgress(
-                {
-                    cancellable: false,
-                    location: ProgressLocation.Notification,
-                    title: "XSMP: New Project"
-                },
-                async (
-                    progress: Progress<{ increment: number; message: string }>,
-                    cancelToken: CancellationToken
-                ) => {
-                    try {
-                        // NewProjectPanel.createOrShow(context.extensionPath);
-                    } catch (error) {
-                        window.showErrorMessage("Error: " + error.message);
-                    }
-                }
-            )
-        })
+        commands.registerCommand('xsmp.wizard', wizard.createProjectWizard)
     );
 
     context.subscriptions.push(
         workspace.onDidChangeConfiguration((event) => {
-            if (event.affectsConfiguration('xsmp.javaPath')) {
-                // The 'xsmp.javaPath' setting has changed, so stop the existing server and start a new one.
+            if (event.affectsConfiguration('xsmp.java.home')) {
+                // The 'xsmp.java.home' setting has changed, so stop the existing server and start a new one.
                 if (lc) {
                     lc.stop().then(() => {
                         startServer();

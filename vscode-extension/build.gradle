@@ -3,7 +3,7 @@ task copyApplication(type: Sync) {
     def installDistTask = project(':org.eclipse.xsmp.ide').tasks.installDist
     dependsOn installDistTask
     from installDistTask.outputs
-    into 'src/xsmp'
+    into 'dist'
 }
 
 

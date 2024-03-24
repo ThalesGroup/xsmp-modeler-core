@@ -51,7 +51,13 @@
 		"blockcommentdocumentation": {
 			"name": "comment.block.documentation.xsmpcat",
 			"begin": "/\\*\\*[^\\*\\/]",
-			"end": "\\*/"
+			"end": "\\*/",
+			"patterns": [
+				{
+					"match": "@[^\\s]+",
+					"name": "comment.block.documentation.tag.xsmpcat"
+				}
+			]
 		},
 		"keyword": {
 			"name": "keyword.control.xsmpcat",

@@ -10,6 +10,9 @@ build.properties
 build/**
 *.gradle
 
+tslint.json
 .settings/
 META-INF/
 target/
+src/
+node_modules/
