@@ -38,10 +38,10 @@ export async function createProjectWizard() {
             prompt: "Enter project name"
         });
 
-        if (/^[a-zA-Z]\w*$/.test(projectName)) {
+        if (/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(projectName)) {
             break;
         } else {
-            vscode.window.showErrorMessage("Project name must follow the format [a-zA-z]\\w*");
+            vscode.window.showErrorMessage("Project name must follow the format [a-zA-Z][a-zA-Z0-9_.-]\\w*");
         }
     }
 
@@ -97,6 +97,7 @@ async function createTemplateProject(projectName: string, dirPath: string, profi
     // Create the catalog file
     const creator = os.userInfo().username;
     const currentDate = new Date().toISOString();
+    const catalogueName = projectName.replace(/[.-]/, '_');
 
     await fs.promises.writeFile(path.join(smdlPath, `${projectName}.xsmpcat`), `// Copyright \${year} \${user}. All rights reserved.
 //
@@ -110,12 +111,12 @@ async function createTemplateProject(projectName: string, dirPath: string, profi
  * @creator ${creator}
  * @date ${currentDate}
  */
-catalogue ${projectName}
+catalogue ${catalogueName}
 
-namespace ${projectName}
+namespace ${catalogueName}
 {
     
-} // namespace ${projectName}
+} // namespace ${catalogueName}
 `);
 
 
@@ -194,24 +195,24 @@ cd build && ctest -C Release --output-on-failure
 [pytest]
 pythonpath = .`);
 
-            let py_projectPath = path.join(py_path, projectName)
+            let py_projectPath = path.join(py_path, catalogueName)
             fs.mkdirSync(py_projectPath);
-            await fs.promises.writeFile(path.join(py_projectPath, `test_${projectName}.py`), `
+            await fs.promises.writeFile(path.join(py_projectPath, `test_${catalogueName}.py`), `
 import ecss_smp
 import xsmp
-import ${projectName}
+import ${catalogueName}
 
-class Test${projectName}(xsmp.unittest.TestCase):
+class Test${catalogueName}(xsmp.unittest.TestCase):
     try:
-        sim: ${projectName}._test_${projectName}.Simulator
+        sim: ${catalogueName}._test_${catalogueName}.Simulator
     except AttributeError:
         pass
     
     def loadAssembly(self, sim: ecss_smp.Smp.ISimulator):
-        sim.LoadLibrary("${projectName}")
+        sim.LoadLibrary("${catalogueName}")
         #TODO create instances, configuration, connections, ...
 
-    def test_${projectName}(self):
+    def test_${catalogueName}(self):
         # TODO write unit-test
         pass`);
         }
