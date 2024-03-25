@@ -25,7 +25,6 @@ shadowJar {
 		'.options', '.api_description', '*.profile', '*.html', 'about.*', 'about_files/*',
 		'plugin.xml', 'systembundle.properties', 'profile.list')
 	archiveClassifier = 'ls'
-	archiveVersion = ''
 	append('plugin.properties')
 	mergeServiceFiles()
     minimize()

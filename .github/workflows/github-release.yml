@@ -21,17 +21,12 @@ jobs:
          with:
             run: |
                 mvn -B package --file pom.xml
-                ./gradlew build vscodeExtension
+                ./gradlew -Pversion=${{ github.ref_name }} updateVersion build vscodeExtension
 
       -  name: Rename output file
          run: |
             mv ${{ github.workspace }}/org.eclipse.xsmp.repository/target/org.eclipse.xsmp.repository.zip ${{ github.workspace }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
-            mv ${{ github.workspace }}/org.eclipse.xsmp.tool.smp/build/libs/org.eclipse.xsmp.tool.smp-cli.jar ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
-            mv ${{ github.workspace }}/org.eclipse.xsmp.tool.python/build/libs/org.eclipse.xsmp.tool.python-cli.jar ${{ github.workspace }}/org.eclipse.xsmp.tool.python.cli-${{ github.ref_name }}.jar
-            mv ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk/build/libs/org.eclipse.xsmp.profile.xsmp_sdk-cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
-            mv ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk/build/libs/org.eclipse.xsmp.profile.esa_cdk-cli.jar ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
-            mv ${{ github.workspace }}/vscode-extension/build/vscode/xsmp-modeler.vsix ${{ github.workspace }}/xsmp-modeler-${{ github.ref_name }}.vsix
-
+            
       -  name: Release
          uses: softprops/action-gh-release@v2
          if: startsWith(github.ref, 'refs/tags/')
@@ -50,8 +45,8 @@ jobs:
                You can find additional Command Line utilities in the Assets.
             files: |
                ${{ github.workspace }}/org.eclipse.xsmp.repository-${{ github.ref_name }}.zip
-               ${{ github.workspace }}/xsmp-modeler-${{ github.ref_name }}.vsix
-               ${{ github.workspace }}/org.eclipse.xsmp.tool.smp.cli-${{ github.ref_name }}.jar
-               ${{ github.workspace }}/org.eclipse.xsmp.tool.python.cli-${{ github.ref_name }}.jar
-               ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk.cli-${{ github.ref_name }}.jar
-               ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk.cli-${{ github.ref_name }}.jar
+               ${{ github.workspace }}/vscode-extension/build/vscode/xsmp-modeler-${{ github.ref_name }}.vsix
+               ${{ github.workspace }}/org.eclipse.xsmp.tool.smp/build/libs/org.eclipse.xsmp.tool.smp-${{ github.ref_name }}-cli.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.tool.python/build/libs/org.eclipse.xsmp.tool.python-${{ github.ref_name }}-cli.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk/build/libs/org.eclipse.xsmp.profile.xsmp_sdk-${{ github.ref_name }}-cli.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk/build/libs/org.eclipse.xsmp.profile.esa_cdk-${{ github.ref_name }}-cli.jar

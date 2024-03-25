@@ -32,7 +32,6 @@ configure(subprojects.findAll { it.name.startsWith('org.eclipse.xsmp') }) {
     //apply plugin: 'idea'
     
     group = 'org.eclipse.xsmp'
-    version = '1.1.0-SNAPSHOT'
     
     sourceCompatibility = '17'
     targetCompatibility = '17'
@@ -68,7 +67,7 @@ configure(subprojects.findAll { it.name.equals('vscode-extension') }) {
 
     task vscodeExtension(dependsOn: [npmInstall, npmInstallVsce], type: NodeTask) {
         ext.destDir = new File(buildDir, 'vscode')
-        ext.archiveName = "xsmp-modeler.vsix"
+        ext.archiveName = "xsmp-modeler-${version}.vsix"
         ext.destPath = "$destDir/$archiveName"
         inputs.with {
             files inputFiles
@@ -93,32 +92,19 @@ configure(subprojects.findAll { it.name.equals('vscode-extension') }) {
         
     }
 
-}
-/*
-updateVersion {
-        doLast {
-            // custom code
-            def versionPattern = /\d+.\d+(.\d+)?/
-            def encoding = 'UTF-8'
-            def filesToUpdate = [
-                new File('vscode-extension', 'package.json'),
-                new File('vscode-extension-self-contained', 'package.json'),
-            ]
-
-            // String replacements - isn't long enough to justify advanced code ;)
-            filesToUpdate.forEach { file ->
-
-                String text = file.getText(encoding)
-                text = text.replaceAll("\"version\": \"$versionPattern\",", "\"version\": \"$project.version\",")
-                file.setText(text, encoding)
-            }
-        }
+    task updateVersion(type: NpmTask, dependsOn: npmSetup) {
+        group 'Node'
+        description 'Update VS Code extension version'
+        args = [ 'version', "${version}", '--allow-same-version' ]
     }
+}
 
+/*
 release {
     tagTemplate = 'v${version}'
     preTagCommitMessage = '[release] pre tag commit: '
     tagCommitMessage = '[release] creating tag: '
     newVersionCommitMessage = '[release] new version commit: '
     failOnSnapshotDependencies = false
-}*/
+}
+*/
