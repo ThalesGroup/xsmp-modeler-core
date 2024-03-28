@@ -33,18 +33,18 @@ public class XsmpHoverService extends HoverService
   @Override
   public String getContents(EObject element)
   {
-    if (element instanceof Keyword)
+    if (element instanceof final Keyword kw)
     {
-      return keywordHovers.hoverText((Keyword) element);
+      return keywordHovers.hoverText(kw);
     }
 
     final var documentation = super.getContents(element);
 
-    if (element instanceof NamedElement)
+    if (element instanceof final NamedElement ne)
     {
       final var buffer = new StringBuilder();
       buffer.append(element.eClass().getName());
-      final var label = ((NamedElement) element).getName();
+      final var label = ne.getName();
       if (label != null)
       {
         buffer.append(" <b>").append(label).append("</b><br />");

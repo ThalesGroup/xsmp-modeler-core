@@ -95,9 +95,9 @@ public final class Int32 extends AbstractPrimitiveType<Int32>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Int32)
+    if (obj instanceof final Int32 int32)
     {
-      return value == ((Int32) obj).value;
+      return value == int32.value;
     }
     return false;
   }

@@ -461,9 +461,9 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     if (visibility != VisibilityKind.PUBLIC)
     {
       final var visibilityImage = getOverlay(visibility.getLiteral() + ".png");
-      if (image instanceof ComposedImage)
+      if (image instanceof final ComposedImage ci)
       {
-        ((ComposedImage) image).getImages().add(visibilityImage);
+        ci.getImages().add(visibilityImage);
         return image;
       }
       final List<Object> images = new ArrayList<>(2);
@@ -481,9 +481,9 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     if (isAbstract)
     {
       final var abstractImage = getOverlay("abstract.png");
-      if (image instanceof ComposedImage)
+      if (image instanceof final ComposedImage ci)
       {
-        ((ComposedImage) image).getImages().add(abstractImage);
+        ci.getImages().add(abstractImage);
         return image;
       }
       final List<Object> images = new ArrayList<>(2);

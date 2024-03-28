@@ -92,9 +92,9 @@ public class Int64 extends AbstractPrimitiveType<Int64>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Int64)
+    if (obj instanceof final Int64 int64)
     {
-      return value == ((Int64) obj).value;
+      return value == int64.value;
     }
     return false;
   }

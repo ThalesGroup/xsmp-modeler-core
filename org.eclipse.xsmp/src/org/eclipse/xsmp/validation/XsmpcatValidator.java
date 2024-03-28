@@ -67,7 +67,6 @@ import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.validation.Check;
@@ -290,20 +289,11 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         error("A SimpleArray requires a SimpleType.", XsmpPackage.Literals.ARRAY__ITEM_TYPE);
       }
     }
-    // "using" keyword is deprecated
-    final var node = NodeModelUtils.findActualNodeFor(elem);
-    for (final var n : node.getAsTreeIterable())
-    {
-      if (n.getGrammarElement() == ga.getNamespaceMemberAccess().getUsingKeyword_3_7_2_0_1())
-      {
-        addIssue("'using' keyword is deprecated. Replace with 'array'.", elem, n.getOffset(),
-                n.getLength(), XsmpcatIssueCodesProvider.DEPRECATED_KEYWORD, "using", "array");
-      }
-    }
   }
 
-  private static Set<String> validUsages = XsmpPackage.eINSTANCE.getEClassifiers().stream().filter(
-          c -> c instanceof EClass && XsmpPackage.Literals.NAMED_ELEMENT.isSuperTypeOf((EClass) c))
+  private static Set<String> validUsages = XsmpPackage.eINSTANCE.getEClassifiers().stream()
+          .filter(c -> c instanceof final EClass eClass
+                  && XsmpPackage.Literals.NAMED_ELEMENT.isSuperTypeOf(eClass))
           .map(ENamedElement::getName).collect(Collectors.toSet());
 
   @Check
@@ -331,16 +321,6 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         warning("Duplicated usage.", XsmpPackage.Literals.ATTRIBUTE_TYPE__USAGE, i);
       }
     }
-    // "attribute name {}" is deprecated
-    final var node = NodeModelUtils.findActualNodeFor(elem);
-    if (node.getGrammarElement() == ga.getNamespaceMemberAccess()
-            .getAttributeTypeMetadatumAction_3_17_0())
-    {
-      addIssue("Use 'attribute <type> name = value' instead of this old deprecated declaration.",
-              elem, node.getOffset(), node.getLength(),
-              XsmpcatIssueCodesProvider.DEPRECATED_ATTRIBUTE_DECLARATION);
-    }
-
   }
 
   @Check
@@ -411,7 +391,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     }
 
     if (!elem.isAbstract() && elem.getMember().stream()
-            .anyMatch(m -> m instanceof NamedElement && xsmpUtil.isAbstract((NamedElement) m)))
+            .anyMatch(m -> m instanceof final NamedElement ne && xsmpUtil.isAbstract(ne)))
     {
       warning("The " + elem.eClass().getName() + " shall be abstract.",
               XsmpPackage.Literals.NAMED_ELEMENT__NAME);
@@ -449,11 +429,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
         case XsmpPackage.FIELD:
           fieldElementModifierValidator.checkModifiers((VisibilityElement) member, this);
           break;
-        case XsmpPackage.ENTRY_POINT:
-        case XsmpPackage.EVENT_SINK:
-        case XsmpPackage.EVENT_SOURCE:
-        case XsmpPackage.CONTAINER:
-        case XsmpPackage.REFERENCE:
+        case XsmpPackage.ENTRY_POINT, XsmpPackage.EVENT_SINK, XsmpPackage.EVENT_SOURCE, XsmpPackage.CONTAINER, XsmpPackage.REFERENCE:
           break;
         case XsmpPackage.OPERATION:
           operationElementModifierValidator.checkModifiers((VisibilityElement) member, this);
@@ -475,7 +451,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
     }
     if (!elem.isAbstract() && elem.getMember().stream()
-            .anyMatch(m -> m instanceof NamedElement && xsmpUtil.isAbstract((NamedElement) m)))
+            .anyMatch(m -> m instanceof final NamedElement ne && xsmpUtil.isAbstract(ne)))
     {
       error("The " + elem.eClass().getName() + " shall be abstract.",
               XsmpPackage.Literals.NAMED_ELEMENT__NAME);
@@ -639,8 +615,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       switch (kind)
       {
-        case FLOAT64:
-        case FLOAT32:
+        case FLOAT64, FLOAT32:
           final var min = safeExpression(elem.getMinimum(), elem);
           final var max = safeExpression(elem.getMaximum(), elem);
           if (min != null && max != null)
@@ -674,14 +649,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
       switch (kind)
       {
-        case INT16:
-        case INT32:
-        case INT64:
-        case INT8:
-        case UINT16:
-        case UINT32:
-        case UINT64:
-        case UINT8:
+        case INT16, INT32, INT64, INT8, UINT16, UINT32, UINT64, UINT8:
           final var min = safeExpression(elem.getMinimum(), elem);
           final var max = safeExpression(elem.getMaximum(), elem);
           if (min != null && max != null && min.compareTo(max) > 0)
@@ -773,11 +741,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     final var members = elem.getMetadatum().getMetadata();
     final var nbMembers = members.size();
     final var eClass = elem.eClass();
-    final List<String> elemUsages = cache.get(eClass, eClass.eResource(),
-            () -> Stream
-                    .concat(Stream.of(eClass.getName()),
-                            eClass.getEAllSuperTypes().stream().map(EClass::getName))
-                    .collect(Collectors.toList()));
+    final List<String> elemUsages = cache
+            .get(eClass, eClass.eResource(),
+                    () -> Stream
+                            .concat(Stream.of(eClass.getName()),
+                                    eClass.getEAllSuperTypes().stream().map(EClass::getName))
+                            .toList());
 
     final Set<AttributeType> visitedTypes = new HashSet<>();
     for (var i = 0; i < nbMembers; ++i)
@@ -1101,10 +1070,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     // check type modifiers
     switch (p.eClass().getClassifierID())
     {
-      case XsmpPackage.CLASS:
-      case XsmpPackage.EXCEPTION:
-      case XsmpPackage.MODEL:
-      case XsmpPackage.SERVICE:
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION, XsmpPackage.MODEL, XsmpPackage.SERVICE:
         classModifierValidator.checkModifiers(p, this);
         break;
       default:

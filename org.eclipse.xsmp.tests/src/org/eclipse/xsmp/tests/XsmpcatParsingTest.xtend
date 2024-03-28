@@ -118,7 +118,7 @@ class XsmpcatParsingTest {
                 /**
                    * @uuid a66513f6-ff90-4cdd-b20d-ab0a445ec2bb
                    */
-                using array = Bool[5]
+                array myArray = Bool[5]
                 
             
                 /**

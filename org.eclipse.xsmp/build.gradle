@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
 	api "org.eclipse.xtext:org.eclipse.xtext:${xtextVersion}"
-    api "org.eclipse.xtext:org.eclipse.xtext.xbase:${xtextVersion}"
     api 'commons-cli:commons-cli:1.6.0'
     api project(':org.eclipse.xsmp.lib')
 }

@@ -62,37 +62,35 @@ public class XsmpEObjectDocumentationProvider extends MultiLineCommentDocumentat
   @Override
   public String getDocumentation(EObject o)
   {
-    if (o instanceof Parameter)
+    if (o instanceof final Parameter p)
     {
-      return cleanHtml(((Parameter) o).getDescription());
+      return cleanHtml(p.getDescription());
     }
-    if (o instanceof NamedElement)
+    if (o instanceof final NamedElement ne)
     {
-      return cleanHtml(XsmpdocContentAccess.getHTMLContent((NamedElement) o));
+      return cleanHtml(XsmpdocContentAccess.getHTMLContent(ne));
     }
-    if (o instanceof BuiltInConstant)
+    if (o instanceof final BuiltInConstant cst)
     {
-      final var mapping = xsmpUtil.getSolver().constantMappings
-              .get(((BuiltInConstant) o).getName());
+      final var mapping = xsmpUtil.getSolver().constantMappings.get(cst.getName());
 
       if (mapping != null)
       {
         return mapping.getDocumentation();
       }
     }
-    else if (o instanceof BuiltInFunction)
+    else if (o instanceof final BuiltInFunction func)
     {
-      final var mapping = xsmpUtil.getSolver().functionMappings
-              .get(((BuiltInFunction) o).getName());
+      final var mapping = xsmpUtil.getSolver().functionMappings.get(func.getName());
 
       if (mapping != null)
       {
         return mapping.getDocumentation();
       }
     }
-    if (o instanceof Expression)
+    if (o instanceof final Expression expr)
     {
-      final var field = xsmpUtil.getField((Expression) o);
+      final var field = xsmpUtil.getField(expr);
 
       if (field != null)
       {

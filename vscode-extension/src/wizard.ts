@@ -16,90 +16,108 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from "os";
 
+const esaCdkProfileId = "org.eclipse.xsmp.profile.esa-cdk";
+const xsmpSdkProfileId = "org.eclipse.xsmp.profile.xsmp-sdk";
+const smpToolId = "org.eclipse.xsmp.tool.smp"
+const pythonToolId = "org.eclipse.xsmp.tool.python"
 
 export async function createProjectWizard() {
 
-    const destinationFolders = await vscode.window.showOpenDialog({
-        canSelectFiles: false,
-        canSelectFolders: true,
-        canSelectMany: false,
-        openLabel: "Select project destination folder"
-    });
+	const destinationFolders = await vscode.window.showOpenDialog({
+		canSelectFiles: false,
+		canSelectFolders: true,
+		canSelectMany: false,
+		openLabel: "Select project destination folder"
+	});
 
-    if (!destinationFolders || destinationFolders.length === 0)
-        return;
+	if (!destinationFolders || destinationFolders.length === 0)
+		return;
 
-    const destinationFolder = destinationFolders[0].fsPath;
+	const destinationFolder = destinationFolders[0].fsPath;
 
-    // Project name input
-    let projectName: string;
-    while (true) {
-        projectName = await vscode.window.showInputBox({
-            prompt: "Enter project name"
-        });
+	// Project name input
+	let projectName: string;
+	while (true) {
+		projectName = await vscode.window.showInputBox({
+			prompt: "Enter project name"
+		});
 
-        if (/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(projectName)) {
-            break;
-        } else {
-            vscode.window.showErrorMessage("Project name must follow the format [a-zA-Z][a-zA-Z0-9_.-]\\w*");
-        }
-    }
+		if (/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(projectName)) {
+			break;
+		} else {
+			vscode.window.showErrorMessage("Project name must follow the format [a-zA-Z][a-zA-Z0-9_.-]\\w*");
+		}
+	}
 
-    // Select profile
-    const profiles = [
-        { label: "xsmp-sdk", description: "Xsmp SDK" },
-        { label: "esa-cdk", description: "ESA CDK" }
-    ];
+	// Select profile
+	const profiles = [
+		{ id: xsmpSdkProfileId, label: "XSMP-SDK Profile" },
+		{ id: esaCdkProfileId, label: "ESA-CDK Profile" }
+	];
 
-    const profile = await vscode.window.showQuickPick(profiles, {
-        placeHolder: "Select a profile"
-    });
+	const profile = await vscode.window.showQuickPick(profiles, {
+		placeHolder: "Select a profile"
+	});
 
-    if (!profile)
-        return; // If user cancels selection
-
-    // Select tools
-    const tools = [
-        { label: "smp", description: "SMP tool", "picked": true },
-        { label: "python", description: "Python generator", "picked": profile.label === "xsmp-sdk" }
-    ];
+	if (!profile)
+		return; // If user cancels selection
 
 
-    const selectedTools = await vscode.window.showQuickPick(tools, {
-        canPickMany: true,
-        placeHolder: "Select tools to enable"
-    });
+	// Select tools
+	const tools = [
+		{ id: smpToolId, label: "SMP legacy Tool", "picked": true },
+		{ id: pythonToolId, label: "Python Wrapper", "picked": profile.id === xsmpSdkProfileId }
+	];
 
-    if (!selectedTools)
-        return; // If user cancels selection
 
-    // Create specific files
-    const projectFolderPath = path.join(destinationFolder, projectName);
+	const selectedTools = await vscode.window.showQuickPick(tools, {
+		canPickMany: true,
+		placeHolder: "Select tools to enable"
+	});
 
-    createTemplateProject(projectName, projectFolderPath, profile.label, selectedTools.map(tool => tool.label))
+	if (!selectedTools)
+		return; // If user cancels selection
 
-    // Add project to workspace
-    const uri = vscode.Uri.file(projectFolderPath);
-    vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri });
-    
-    const xsmpcatFilePath = path.join(projectFolderPath, "smdl", `${projectName}.xsmpcat`);
-    const xsmpcatDocument = await vscode.workspace.openTextDocument(xsmpcatFilePath);
-    await vscode.window.showTextDocument(xsmpcatDocument);
+	// Create specific files
+	const projectFolderPath = path.join(destinationFolder, projectName);
+
+	createTemplateProject(projectName, projectFolderPath, profile, selectedTools)
+
+	// Add project to workspace
+	const addToWorkspace = await vscode.window.showQuickPick(
+		[
+			{ label: "Yes", addToWorkspace: true },
+			{ label: "No", addToWorkspace: false }
+		],
+		{
+			placeHolder: "Add project to workspace?",
+		}
+	);
+
+	if (addToWorkspace && addToWorkspace.addToWorkspace) {
+		const uri = vscode.Uri.file(projectFolderPath);
+		vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri });
+
+		const xsmpcatFilePath = path.join(projectFolderPath, "smdl", `${projectName}.xsmpcat`);
+		const xsmpcatDocument = await vscode.workspace.openTextDocument(xsmpcatFilePath);
+		await vscode.window.showTextDocument(xsmpcatDocument);
+	}
 }
 
 
-async function createTemplateProject(projectName: string, dirPath: string, profile: string, tools: string[]) {
-    fs.mkdirSync(dirPath); // Create project directory
+async function createTemplateProject(projectName: string, dirPath: string,
+	profile: { label: string, id: string }, tools: { label: string, id: string }[]) {
+	fs.mkdirSync(dirPath); // Create project directory
 
-    const smdlPath = path.join(dirPath, 'smdl');
-    fs.mkdirSync(smdlPath);
+	const smdlPath = path.join(dirPath, 'smdl');
+	fs.mkdirSync(smdlPath);
 
-    // Create the catalog file
-    const creator = os.userInfo().username;
-    const currentDate = new Date().toISOString();
-    const catalogueName = projectName.replace(/[.-]/, '_');
+	// Create the catalog file
+	const creator = os.userInfo().username;
+	const currentDate = new Date().toISOString();
+	const catalogueName = projectName.replace(/[.-]/, '_');
 
-    await fs.promises.writeFile(path.join(smdlPath, `${projectName}.xsmpcat`), `// Copyright \${year} \${user}. All rights reserved.
+	await fs.promises.writeFile(path.join(smdlPath, `${projectName}.xsmpcat`), `// Copyright \${year} \${user}. All rights reserved.
 //
 // YOUR NOTICE
 //
@@ -117,14 +135,12 @@ namespace ${catalogueName}
 {
     
 } // namespace ${catalogueName}
+
 `);
 
 
-    fs.mkdirSync(path.join(dirPath, 'src'));
-    fs.mkdirSync(path.join(dirPath, 'src-gen'));
-
-    if (profile === 'xsmp-sdk') {
-        await fs.promises.writeFile(path.join(dirPath, 'CMakeLists.txt'), `
+	if (profile.id === xsmpSdkProfileId) {
+		await fs.promises.writeFile(path.join(dirPath, 'CMakeLists.txt'), `
 cmake_minimum_required(VERSION 3.14)
 
 project(
@@ -153,7 +169,6 @@ add_library(${projectName} SHARED \${SRC})
 target_include_directories(${projectName} PUBLIC src src-gen)
 target_link_libraries(${projectName} PUBLIC Xsmp::Cdk)
 
-
 # --------------------------------------------------------------------
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -162,9 +177,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     pytest_discover_tests()
 endif()
 
-
-`);
-        await fs.promises.writeFile(path.join(dirPath, 'README.md'), `
+`)
+		await fs.promises.writeFile(path.join(dirPath, 'README.md'), `
 # ${projectName}
 
 Project description.
@@ -186,18 +200,34 @@ cmake --build ./build --config Release
 cd build && ctest -C Release --output-on-failure
 \`\`\`
                 
-`);
-        if (tools.includes("python")) {
-            let py_path = path.join(dirPath, 'python')
-            fs.mkdirSync(py_path);
-            await fs.promises.writeFile(path.join(py_path, `pytest.ini`), `
+`)
+	}
+	else if (profile.id === esaCdkProfileId) {
+		await fs.promises.writeFile(path.join(dirPath, 'CMakeLists.txt'), `
+file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
+
+simulus_library(
+    MAIN
+    SOURCES
+        \${SRC}
+    LIBRARIES
+        esa.ecss.smp.cdk
+)
+target_include_directories(cdk PUBLIC src src-gen)
+`)
+	}
+
+	if (tools.some(t => t.id === pythonToolId)) {
+		let py_path = path.join(dirPath, 'python')
+		fs.mkdirSync(py_path);
+		await fs.promises.writeFile(path.join(py_path, `pytest.ini`), `
 # pytest.ini
 [pytest]
 pythonpath = .`);
 
-            let py_projectPath = path.join(py_path, catalogueName)
-            fs.mkdirSync(py_projectPath);
-            await fs.promises.writeFile(path.join(py_projectPath, `test_${catalogueName}.py`), `
+		let py_projectPath = path.join(py_path, catalogueName)
+		fs.mkdirSync(py_projectPath);
+		await fs.promises.writeFile(path.join(py_projectPath, `test_${catalogueName}.py`), `
 import ecss_smp
 import xsmp
 import ${catalogueName}
@@ -215,35 +245,41 @@ class Test${catalogueName}(xsmp.unittest.TestCase):
     def test_${catalogueName}(self):
         # TODO write unit-test
         pass`);
-        }
-    }
-    else if (profile === 'esa-cdk') {
-        await fs.promises.writeFile(path.join(dirPath, 'CMakeLists.txt'), `
-file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
+	}
 
-simulus_library(
-    MAIN
-    SOURCES
-        \${SRC}
-    LIBRARIES
-        esa.ecss.smp.cdk
-)
-target_include_directories(cdk PUBLIC src src-gen)
-`);
-    }
+	// Create the project file
 
-    // Create the settings.json file
-    const xsmpPath = path.join(dirPath, '.xsmp');
-    fs.mkdirSync(xsmpPath);
+	let content = `
+/**
+ * XSMP Project configuration for ${projectName}
+ */
+project "${projectName}"
 
-    const settingsFilePath = path.join(xsmpPath, 'settings.json');
-    const settingsContent = JSON.stringify({
-        generate_automatically: true,
-        profile,
-        sources: ["smdl"],
-        dependencies: [],
-        tools
-    }, null, 2);
+// project relative path(s) containing modeling files
+source "smdl"
 
-    await fs.promises.writeFile(settingsFilePath, settingsContent);
+`
+
+	if (profile)
+		content += `
+// use ${profile.label}
+profile "${profile.id}"
+
+`
+	for (const tool of tools)
+		content += `
+// use ${tool.label}
+tool "${tool.id}"
+
+`
+
+	content += `
+// If your project needs types from outside sources,
+// you can include them by adding project dependencies.
+// For example: dependency otherProject
+//              dependency otherProject2
+
+`
+
+	await fs.promises.writeFile(path.join(dirPath, 'xsmp.project'), content);
 }

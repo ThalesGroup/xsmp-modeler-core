@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,30 +10,44 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.workspace;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.workspace.IProjectConfigProvider;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
-import org.eclipse.xtext.workspace.UnknownProjectConfig;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+
+@Singleton
 public class XsmpProjectConfigProvider implements IProjectConfigProvider
 {
   @Override
   public IXsmpProjectConfig getProjectConfig(ResourceSet context)
   {
     final var adapter = ProjectConfigAdapter.findInEmfObject(context);
-    final var config = adapter != null ? adapter.getProjectConfig() : null;
-
-    if (config == null || config instanceof UnknownProjectConfig)
+    if (adapter == null)
     {
       return null;
     }
+    return adapter.getProjectConfig() instanceof final IXsmpProjectConfig xsmpConfig ? xsmpConfig
+            : null;
+  }
 
-    if (config instanceof IXsmpProjectConfig)
-    {
-      return (IXsmpProjectConfig) config;
-    }
-    // return a config with default values
-    return null;
+  @Inject
+  private Provider<XtextResourceSet> resourceSetProvider;
+
+  public IXsmpProjectConfig createProjectConfig(URI uri, IWorkspaceConfig workspaceConfig)
+  {
+    final var rs = resourceSetProvider.get();
+    final var resource = rs.getResource(uri, true);
+
+    final var project = (Project) resource.getContents().get(0);
+    return new XsmpProjectConfig(project, workspaceConfig);
   }
 
 }

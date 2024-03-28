@@ -23,6 +23,7 @@
 	"activationEvents": [
 		"onStartupFinished",
 		"onLanguage:xsmpcat",
+		"onLanguage:xsmpproject",
 		"onCommand:xsmp.wizard"
 	],
 	"main": "dist/extension",
@@ -36,26 +37,37 @@
 				"extensions": [
 					".xsmpcat"
 				],
-				"configuration": "./xsmp.configuration.json"
+				"configuration": "./xsmpcat.configuration.json",
+				"icon": {
+					"light": "./icons/xsmp.png",
+					"dark": "./icons/xsmp.png"
+				}
+			},
+			{
+				"id": "xsmpproject",
+				"aliases": [
+					"xsmpproject"
+				],
+				"filenames": [
+					"xsmp.project"
+				],
+				"configuration": "./xsmpproject.configuration.json",
+				"icon": {
+					"light": "./icons/xsmpproject.png",
+					"dark": "./icons/xsmpproject.png"
+				}
 			}
 		],
 		"grammars": [
 			{
 				"language": "xsmpcat",
 				"scopeName": "source.xsmpcat",
-				"path": "./syntaxes/xsmp.tmLanguage.json"
-			}
-		],
-		"customEditors": [
+				"path": "./syntaxes/xsmpcat.tmLanguage.json"
+			},
 			{
-				"viewType": "xsmp.settingsEditor",
-				"displayName": "Xsmp settings",
-				"selector": [
-					{
-						"filenamePattern": "**/.xsmp/settings.json"
-					}
-				],
-				"priority": "default"
+				"language": "xsmpproject",
+				"scopeName": "source.xsmpproject",
+				"path": "./syntaxes/xsmpproject.tmLanguage.json"
 			}
 		],
 		"commands": [
@@ -73,11 +85,6 @@
 				"command": "xsmp.wizard",
 				"category": "Xsmp",
 				"title": "Create new project"
-			},
-			{
-				"category": "Xsmp",
-				"command": "xsmp.openSettingsEditor",
-				"title": "Open Settings (UI)"
 			}
 		],
 		"menus": {
@@ -97,6 +104,11 @@
 						"type": "string",
 						"scope": "machine",
 						"description": "Java home directory."
+					},
+					"xsmp.remote": {
+						"type": "boolean",
+						"scope": "machine",
+						"description": "Use a remote Server (for debug purpose)."
 					}
 				}
 			}
@@ -105,13 +117,13 @@
 			"editor.tokenColorCustomizations": {
 				"textMateRules": [
 					{
-						"scope": "comment.block.documentation.xsmpcat",
+						"scope": "comment.block.documentation.xsmp",
 						"settings": {
 							"foreground": "#3F5FBF"
 						}
 					},
 					{
-						"scope": "comment.block.documentation.tag.xsmpcat",
+						"scope": "comment.block.documentation.tag.xsmp",
 						"settings": {
 							"foreground": "#7F9FBF",
 							"fontStyle": "bold"

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,37 +10,36 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.workspace;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.model.xsmp.ProjectReference;
+import org.eclipse.xsmp.model.xsmp.ToolReference;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.workspace.FileProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-
 public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProjectConfig
 {
-  private static final boolean defaultIsBuildAutomatically = true;
 
-  private String profile = "";
+  private final String profile;
 
-  private final List<String> dependencies = new ArrayList<>();
+  private final List<String> tools;
 
-  private final List<String> tools = new ArrayList<>();
+  private final List<String> dependencies;
 
-  private boolean isGenerateAutomatically = defaultIsBuildAutomatically;
-
-  public static final URI configUri = URI.createURI(".xsmp").appendSegment("settings.json");
-
-  public XsmpProjectConfig(URI uri, String uniqueProjectName, IWorkspaceConfig workspaceConfig)
+  public XsmpProjectConfig(Project project, IWorkspaceConfig workspaceConfig)
   {
-    super(uri, uniqueProjectName, workspaceConfig);
-    refresh();
+    super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), project.getName(),
+            workspaceConfig);
+
+    profile = project.getProfile() != null ? project.getProfile().getName() : "";
+    tools = project.getTools().stream().map(ToolReference::getName).toList();
+    dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
+            .filter(Objects::nonNull).toList();
+    project.getSourceFolders().forEach(folder -> addSourceFolder(folder.getName()));
   }
 
   @Override
@@ -50,9 +49,9 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
   }
 
   @Override
-  public boolean shouldGenerate()
+  public List<String> getTools()
   {
-    return isGenerateAutomatically;
+    return tools;
   }
 
   @Override
@@ -62,73 +61,15 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
   }
 
   @Override
-  public List<String> getTools()
+  public boolean equals(Object obj)
   {
-    return tools;
+    return super.equals(obj);
   }
 
   @Override
-  public void refresh()
+  public int hashCode()
   {
-
-    try
-    {
-      final var root = JsonParser
-              .parseReader(
-                      new FileReader(getPath().appendSegments(configUri.segments()).toFileString()))
-              .getAsJsonObject();
-      if (root.has("profile"))
-      {
-        profile = root.get("profile").getAsString();
-      }
-      if (root.has("generate_automatically"))
-      {
-        isGenerateAutomatically = root.get("generate_automatically").getAsBoolean();
-      }
-
-      if (root.has("sources") && !root.get("sources").getAsJsonArray().isEmpty())
-      {
-        getSourceFolders().clear();
-        for (final var source : root.get("sources").getAsJsonArray())
-        {
-          addSourceFolder(source.getAsString());
-        }
-      }
-      else
-      {
-        addSourceFolder(".");
-      }
-      if (root.has("dependencies"))
-      {
-        dependencies.clear();
-        for (final var dependency : root.get("dependencies").getAsJsonArray())
-        {
-          dependencies.add(dependency.getAsString());
-        }
-      }
-      if (root.has("tools"))
-      {
-        tools.clear();
-        for (final var tool : root.get("tools").getAsJsonArray())
-        {
-          tools.add(tool.getAsString());
-        }
-      }
-      else
-      {
-        tools.clear();
-        tools.add("smp");
-      }
-    }
-    catch (final FileNotFoundException e)
-    {
-      addSourceFolder(".");
-    }
-    catch (final JsonIOException | JsonSyntaxException e)
-    {
-      e.printStackTrace();
-    }
-
+    return super.hashCode();
   }
 
 }

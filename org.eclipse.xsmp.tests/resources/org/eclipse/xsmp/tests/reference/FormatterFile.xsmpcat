@@ -48,7 +48,7 @@ namespace ns1
 			}
 
 			/** @uuid 5ee769ff-23d4-4cc8-9dbf-c3e2a7b03314 */
-			public using arraytest = Int16[4]
+			public array arraytest = Int16[4]
 
 			/** @uuid 3c6c0da4-46c8-4504-ac33-157824ef340d */
 			private struct mystruct
@@ -168,7 +168,7 @@ namespace Tata
 
 
 		/** @uuid 2315eb62-c868-43e0-85ea-0f2df6879a68 */
-		public using usingtest = Char8[9]
+		public using usingtest = Char8*
 
 		/** @uuid 47c2221a-eeb0-4447-aeed-10307f04e4be */
 		public event eventttt extends Float32
@@ -181,7 +181,7 @@ namespace Tata
 		public integer integername extends Int64 in modelTest.i ... modelTest.i
 
 		/** @uuid 8f24b9d8-620a-41ed-afe9-4521c31727a5 */
-		public string stringname  [9]
+		public string stringname[9]
 	}
 }
 

@@ -347,4 +347,34 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmptyExpression" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="#//Document">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="#//ProfileReference"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tools" upperBound="-1"
+        eType="#//ToolReference" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceFolders" upperBound="-1"
+        eType="#//SourceFolder" containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referencedProjects" upperBound="-1"
+        eType="#//ProjectReference" containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Tool" eSuperTypes="#//Document"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Profile" eSuperTypes="#//Document"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ProfileReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="#//Profile"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ToolReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tool" eType="#//Tool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProjectReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="project" eType="#//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SourceFolder">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

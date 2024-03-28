@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.tool.smp.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.tool.smp.ide
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Export-Package: org.eclipse.xsmp.tool.smp.ide
+Bundle-SymbolicName: org.eclipse.xsmp.tool.smp.ide;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xsmp.ide,
+ org.eclipse.xtext.ide,
+ org.eclipse.xsmp.tool.smp;bundle-version="1.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-17

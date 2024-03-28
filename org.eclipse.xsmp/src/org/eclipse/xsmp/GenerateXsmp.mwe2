@@ -59,7 +59,9 @@ Workflow {
             serializer = {
                 generateStub = false
             }
-
+            generator = {
+                generateStub = false
+            }
             scopeProvider = {
                 generateStub = true
             }
@@ -93,6 +95,44 @@ Workflow {
         }
 
         language = StandardLanguage {
+            name = "org.eclipse.xsmp.Xsmpproject"
+            fileExtensions = "project"
+            referencedResource = "platform:/resource/${runtimeProjectName}/src/org/eclipse/xsmp/Xsmpcore.xtext"
+            serializer = {
+                generateStub = false
+            }
+
+            qualifiedNamesProvider = {}
+            scopeProvider = {
+                generateStub = true
+            }
+            formatter = {
+                generateStub = true
+            }
+            generator = {
+                generateStub = false
+            }
+            fragment = ui.codemining.CodeMiningFragment {
+                generateStub = false
+            }
+
+            junitSupport = {
+                junitVersion = "5"
+            }
+            projectWizard = {
+                generate = false
+            }
+            labelProvider = {
+                generateStub = false
+            }
+            outline = {
+                generateStub = false
+            }
+            quickFixProvider = {
+                generateStub = false
+            }
+        }
+        language = StandardLanguage {
             name = "org.eclipse.xsmp.Xsmpcat"
             fileExtensions = "xsmpcat"
             referencedResource = "platform:/resource/${runtimeProjectName}/src/org/eclipse/xsmp/Xsmpcore.xtext"
@@ -119,8 +159,8 @@ Workflow {
                 generate = true
             }
         }
-    }
 
+    }
     component = org.eclipse.emf.mwe2.ecore.EcoreGenerator auto-inject {
         genModel = "platform:/resource/${runtimeProjectName}/model/xsmp.genmodel"
         srcPath = "platform:/resource/${runtimeProjectName}/src"

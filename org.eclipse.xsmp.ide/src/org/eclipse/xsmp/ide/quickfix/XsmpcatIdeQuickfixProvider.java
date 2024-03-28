@@ -37,9 +37,9 @@ public class XsmpcatIdeQuickfixProvider extends AbstractDeclarativeIdeQuickfixPr
         e = e.eContainer();
       }
 
-      if (e instanceof Type)
+      if (e instanceof final Type type)
       {
-        ((Type) e).setUuid(UUID.randomUUID().toString());
+        type.setUuid(UUID.randomUUID().toString());
       }
     });
   }
@@ -53,10 +53,9 @@ public class XsmpcatIdeQuickfixProvider extends AbstractDeclarativeIdeQuickfixPr
       final var feature = e.eClass().getEStructuralFeature(data.get(1).getAsString());
       final var elem = (EObject) e.eGet(feature);
 
-      if (elem instanceof VisibilityElement && !elem.eIsProxy())
+      if (elem instanceof final VisibilityElement ve && !elem.eIsProxy())
       {
-        ((VisibilityElement) elem)
-                .setVisibility(VisibilityKind.getByName(data.get(2).getAsString()));
+        ve.setVisibility(VisibilityKind.getByName(data.get(2).getAsString()));
         // FIXME not working
       }
     });

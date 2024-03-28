@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+    <extension point="org.eclipse.xsmp.ui.profile">
+        <profile class="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkProfile">
+        </profile>
+    </extension>
+
+    <extension
+        point="org.eclipse.xtext.ui.projectTemplate">
+        <projectTemplateProvider
+            class="org.eclipse.xsmp.profile.esa_cdk.ui.EsaCdkExecutableExtensionFactory:org.eclipse.xsmp.profile.esa_cdk.ui.wizard.EsaCdkProjectTemplateProvider"
+            grammarName="org.eclipse.xsmp.Xsmpcat">
+        </projectTemplateProvider>
+    </extension>
+</plugin>

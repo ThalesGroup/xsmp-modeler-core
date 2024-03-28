@@ -12,7 +12,7 @@
 import * as path from 'path';
 import * as net from 'net';
 import * as os from 'os';
-import { commands, window, Uri, workspace, ExtensionContext, languages} from 'vscode';
+import { commands, window, Uri, workspace, ExtensionContext, languages } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import * as fs from 'fs';
 import * as wizard from './wizard';
@@ -45,63 +45,13 @@ async function isValidXsmpcatCommand(): Promise<boolean> {
     return false;
 }
 
-async function openSettingsEditor() {
-    // Get the currently opened workspaceFolder (if any)
-    const activeEditor = window.activeTextEditor;
-    if (!activeEditor) {
-        window.showErrorMessage("No project files open, project context unknown.");
-        return;
-    }
-
-    const documentUri = activeEditor.document.uri;
-    if (!documentUri) {
-        window.showErrorMessage("No document is open.");
-        return;
-    }
-
-    const activeWorkspaceFolder = workspace.getWorkspaceFolder(documentUri);
-    if (!activeWorkspaceFolder) {
-        window.showErrorMessage("No workspace folder is open.");
-        return;
-    }
-
-    // Build the full path to the .xsmp/settings.json file
-    const xsmpFolderPath = Uri.joinPath(activeWorkspaceFolder.uri, '.xsmp');
-    const settingsPath = Uri.joinPath(activeWorkspaceFolder.uri, '.xsmp', 'settings.json');
-
-    // Ensure that the .xsmp directory exists
-    try {
-        await fs.promises.mkdir(xsmpFolderPath.fsPath, { recursive: true });
-    } catch (err) {
-        window.showErrorMessage(`Error creating .xsmp directory: ${err.message}`);
-        return;
-    }
-
-    try {
-        await fs.promises.access(settingsPath.fsPath, fs.constants.F_OK);
-    } catch (err) {
-        // If the file doesn't exist, create it with default content
-        const defaultSettings = {
-            generate_automatically: true,
-            profile: "",
-            sources: [],
-            dependencies: [],
-            tools: []
-        };
-        await fs.promises.writeFile(settingsPath.fsPath, JSON.stringify(defaultSettings, null, 2), 'utf-8');
-    }
-
-    // Open the settings file
-    commands.executeCommand('vscode.openWith', settingsPath, 'xsmp.settingsEditor');
-}
-
 export function activate(context: ExtensionContext) {
-    let launcher = os.platform() === 'win32' ? 'org.eclipse.xsmp.ide.bat' : 'org.eclipse.xsmp.ide';
+    let launcher = os.platform() === 'win32' ? 'org.eclipse.xsmp.server.bat' : 'org.eclipse.xsmp.server';
     let script = context.asAbsolutePath(path.join('dist', 'bin', launcher));
 
     const startServer = () => {
         let serverOptions: ServerOptions;
-        const remoteServer = false;
+        const remoteServer = workspace.getConfiguration('xsmp').get<boolean>('remote') || false;
         if (remoteServer) {
             let connectionInfo = {
                 port: 5007
@@ -137,9 +87,9 @@ export function activate(context: ExtensionContext) {
             };
         }
         const clientOptions: LanguageClientOptions = {
-            documentSelector: [{ language: 'xsmpcat' }],
+            documentSelector: [{ language: 'xsmpcat' }, { language: 'xsmpproject' }],
             synchronize: {
-                fileEvents: workspace.createFileSystemWatcher('**/*.xsmpcat'),
+                fileEvents: [workspace.createFileSystemWatcher('**/*.xsmpcat'), workspace.createFileSystemWatcher('**/xsmp.project')],
             },
             markdown: {
                 isTrusted: true, supportHtml: true
@@ -154,12 +104,6 @@ export function activate(context: ExtensionContext) {
         lc.start();
 
     };
-
-    // context.subscriptions.push(XsmpSettingsEditorProvider.register(context));
-
-    context.subscriptions.push(
-        commands.registerCommand('xsmp.openSettingsEditor', openSettingsEditor)
-    );
 
     // New project Wizard
     context.subscriptions.push(
@@ -180,7 +124,7 @@ export function activate(context: ExtensionContext) {
         })
     );
     context.subscriptions.push(
-        workspace.createFileSystemWatcher('**/.xsmp/settings.json').onDidChange(() => {
+        workspace.createFileSystemWatcher('**/xsmp.project').onDidChange(() => {
             lc.sendNotification(`workspace/didChangeConfiguration`, undefined)
         })
     );

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -17,6 +17,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.xsmp.ide.hover.XsmpKeywordAtOffsetHelper;
 import org.eclipse.xsmp.model.xsmp.BuiltInExpression;
+import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.hover.DispatchingEObjectTextHover;
@@ -69,16 +70,18 @@ public class XsmpDispatchingEObjectTextHover extends DispatchingEObjectTextHover
   @Override
   protected Pair<EObject, IRegion> getXtextElementAt(XtextResource resource, final int offset)
   {
+
     final var result = super.getXtextElementAt(resource, offset);
-    if (result == null)
+    if (result != null && result.getFirst() instanceof NamedElement)
     {
-      final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
-      if (tmp != null)
-      {
-        final var textRegion = tmp.getSecond();
-        return Tuples.create(tmp.getFirst(),
-                new Region(textRegion.getOffset(), textRegion.getLength()));
-      }
+      return result;
+    }
+    final var tmp = keywordAtOffsetHelper.resolveKeywordAt(resource, offset);
+    if (tmp != null)
+    {
+      final var textRegion = tmp.getSecond();
+      return Tuples.create(tmp.getFirst(),
+              new Region(textRegion.getOffset(), textRegion.getLength()));
     }
     return result;
   }

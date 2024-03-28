@@ -96,9 +96,9 @@ public final class Float32 extends AbstractPrimitiveType<Float32>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Float32)
+    if (obj instanceof final Float32 float32)
     {
-      return value == ((Float32) obj).value;
+      return value == float32.value;
     }
     return false;
   }

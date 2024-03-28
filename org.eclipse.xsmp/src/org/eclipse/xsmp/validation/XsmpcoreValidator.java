@@ -65,9 +65,9 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
     {
       return;
     }
-    if (e instanceof DesignatedInitializer)
+    if (e instanceof final DesignatedInitializer de)
     {
-      e = ((DesignatedInitializer) e).getExpr();
+      e = de.getExpr();
     }
 
     if (byPointer)
@@ -110,9 +110,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
         case XsmpPackage.STRING:
           checkExpression((String) type, e);
           break;
-        case XsmpPackage.STRUCTURE:
-        case XsmpPackage.CLASS:
-        case XsmpPackage.EXCEPTION:
+        case XsmpPackage.STRUCTURE, XsmpPackage.CLASS, XsmpPackage.EXCEPTION:
           checkExpression((Structure) type, e);
           break;
         default:

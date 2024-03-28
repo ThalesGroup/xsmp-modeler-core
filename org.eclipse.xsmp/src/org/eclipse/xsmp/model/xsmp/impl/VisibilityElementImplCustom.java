@@ -53,10 +53,8 @@ public abstract class VisibilityElementImplCustom extends VisibilityElementImpl
     {
       switch (container.eClass().getClassifierID())
       {
-        case XsmpPackage.INTERFACE:
-        case XsmpPackage.STRUCTURE:
+        case XsmpPackage.INTERFACE, XsmpPackage.STRUCTURE:
           return false;
-
         default:
           break;
       }

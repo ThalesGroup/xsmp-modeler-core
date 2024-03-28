@@ -264,7 +264,7 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
     format(parent.getMetadatum(), doc, false);
     final var parentRegion = regionFor(parent);
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::newLine);
-    doc.surround(parentRegion.keyword(ga.getEnumerationLiteralAccess().getEqualsSignKeyword_2_0()),
+    doc.surround(parentRegion.keyword(ga.getEnumerationLiteralAccess().getEqualsSignKeyword_2()),
             this::oneSpace);
     doc.format(parent.getValue());
   }
@@ -503,9 +503,7 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
     format(parent.getMetadatum(), doc, false);
     formatModifiers(parent, doc);
     final var parentRegion = regionFor(parent);
-    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getUsingKeyword_3_8_2()),
-            this::oneSpace);
-    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getArrayKeyword_3_7_2_0_0()),
+    doc.append(parentRegion.keyword(ga.getNamespaceMemberAccess().getArrayKeyword_3_7_2_0()),
             this::oneSpace);
 
     doc.surround(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
@@ -627,16 +625,11 @@ public class XsmpcatFormatter extends XsmpcoreFormatter
             this::oneSpace);
 
     doc.prepend(parentRegion.feature(NAMED_ELEMENT__NAME), this::oneSpace);
+    doc.append(parentRegion.feature(NAMED_ELEMENT__NAME), this::noSpace);
 
-    doc.append(
-            parentRegion
-                    .keyword(ga.getNamespaceMemberAccess().getLeftSquareBracketKeyword_3_12_4_0()),
-            this::noSpace);
+    doc.surround(parent.getLength(), this::noSpace);
     doc.format(parent.getLength());
-    doc.prepend(
-            parentRegion
-                    .keyword(ga.getNamespaceMemberAccess().getRightSquareBracketKeyword_3_12_4_2()),
-            this::noSpace);
+
   }
 
   protected void format(Multiplicity parent, IFormattableDocument doc)

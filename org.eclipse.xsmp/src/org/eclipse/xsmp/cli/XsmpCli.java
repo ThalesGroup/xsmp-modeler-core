@@ -40,7 +40,6 @@ import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
-import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
@@ -110,9 +109,6 @@ public class XsmpCli
   @Inject
   private IOutputConfigurationProvider outputConfigurationProvider;
 
-  @Inject
-  private IResourceFactory resourceFactory;
-
   protected ResourceSet resourceSet;
 
   protected Options getOptions()
@@ -130,39 +126,6 @@ public class XsmpCli
     context.setArgs(Option.UNLIMITED_VALUES);
     options.addOption(context);
     return options;
-  }
-
-  /**
-   * Load the ECSS SMP library
-   *
-   * @param rs
-   *          the resource set to use
-   */
-  protected void loadEcssSmpLibrary(ResourceSet rs)
-  {
-
-    final var url = getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat");
-
-    if (url == null)
-    {
-      LOG.fatal("Unable to load ecss.smp.xsmpcat");
-      return;
-    }
-
-    final var uri = URI.createURI(url.toString());
-
-    final var resource = resourceFactory.createResource(uri);
-    try
-    {
-      resource.load(url.openStream(), null);
-      rs.getResources().add(resource);
-    }
-    catch (final IOException e)
-    {
-      LOG.fatal("Unable to load ecss.smp.xsmpcat", e);
-      setExitStatus(FAILURE_EXIT);
-    }
-
   }
 
   protected void printHelp(Options options)
@@ -214,11 +177,7 @@ public class XsmpCli
 
   protected ResourceSet createResourceSet(CommandLine cmd)
   {
-    final var rs = resourceSetProvider.get();
-    LOG.info("Loading ECSS SMP library ... ");
-    loadEcssSmpLibrary(rs);
-    LOG.info("Done.");
-    return rs;
+    return resourceSetProvider.get();
   }
 
   protected void doExecute(CommandLine cmd)

@@ -109,7 +109,7 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
   {
 
     // save the deprecated state
-    if (eObject instanceof NamedElement && ((NamedElement) eObject).isDeprecated())
+    if (eObject instanceof final NamedElement ne && ne.isDeprecated())
     {
       builder.put("deprecated", Boolean.toString(true));
     }
@@ -139,18 +139,18 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
     }
 
     // save the visibility of the VisibilityElement
-    if (eObject instanceof VisibilityElement)
+    if (eObject instanceof final VisibilityElement ve)
     {
-      final var visibility = ((VisibilityElement) eObject).getRealVisibility();
+      final var visibility = ve.getRealVisibility();
       if (visibility != VisibilityKind.PUBLIC)
       {
         builder.put("visibility", visibility.getName());
       }
     }
 
-    if (eObject instanceof Type)
+    if (eObject instanceof final Type type)
     {
-      final var uuid = ((Type) eObject).getUuid();
+      final var uuid = type.getUuid();
       // save the uuif of the Type
       if (uuid != null && !uuid.isEmpty())
       {
@@ -163,10 +163,10 @@ public class XsmpcatResourceDescriptionStrategy extends DefaultResourceDescripti
         builder.put("allowMultiple", Boolean.toString(attribute.isAllowMultiple()));
       }
     }
-    if (eObject instanceof Operation)
+    if (eObject instanceof final Operation op)
     {
       // save the signature of the Operation
-      builder.put("sig", getSignature((Operation) eObject));
+      builder.put("sig", getSignature(op));
     }
   }
 

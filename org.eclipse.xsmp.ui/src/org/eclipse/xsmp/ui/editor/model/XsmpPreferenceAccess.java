@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.editor.model;
 
-import org.eclipse.xsmp.ui.XsmpConstants;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 
@@ -24,31 +23,17 @@ public class XsmpPreferenceAccess
 
   public static final String PREF_UPDATE_DOCUMENT_DATE = "update_document_date"; //$NON-NLS-1$
 
-  public static final String PREF_PROFILE = "profile";
-
-  /**
-   * this preference is obsolete, use PREF_PROFILE instead
-   */
-  public static final String PREF_MDK = "mdk"; //$NON-NLS-1$
-
-  public static final String PREF_TOOLS = "tools"; //$NON-NLS-1$
-
   private IPreferenceStoreAccess preferenceStoreAccess;
 
   public static class Initializer implements IPreferenceStoreInitializer
   {
-
     @Override
     public void initialize(IPreferenceStoreAccess preferenceStoreAccess)
     {
       final var store = preferenceStoreAccess.getWritablePreferenceStore();
       store.setDefault(PREF_FORMAT, true);
       store.setDefault(PREF_UPDATE_DOCUMENT_DATE, true);
-
-      store.setDefault(PREF_PROFILE, XsmpConstants.DEFAULT_PROFILE_NAME);
-      store.setDefault(PREF_TOOLS, "org.eclipse.xsmp.tool.smp");
     }
-
   }
 
   @Inject

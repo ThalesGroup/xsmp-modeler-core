@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,47 +10,67 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.generator;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xsmp.extension.IExtensionManager;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
-import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
-import org.eclipse.xsmp.tool.python.PythonStandaloneSetup;
-import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class XsmpOutputConfigurationProvider
-        extends org.eclipse.xtext.generator.OutputConfigurationProvider
+public class XsmpOutputConfigurationProvider extends OutputConfigurationProvider
 {
   @Inject
   private XsmpProjectConfigProvider configProvider;
 
-  private final Set<OutputConfiguration> smpOutputConfigurations;
+  @Inject
+  private IExtensionManager extensionManager;
 
-  private final Set<OutputConfiguration> esaCdkOutputConfigurations;
+  private final Map<String, Set<OutputConfiguration>> profileConfigurations = new HashMap<>();
 
-  private final Set<OutputConfiguration> xsmpSdkOutputConfigurations;
+  private final Map<String, Set<OutputConfiguration>> toolConfigurations = new HashMap<>();
 
-  private final Set<OutputConfiguration> pythonOutputConfigurations;
-
-  public XsmpOutputConfigurationProvider()
+  private Set<OutputConfiguration> getProfileOutputConfigurations(String profile)
   {
+    if (profile == null || profile.isEmpty())
+    {
+      return Collections.emptySet();
+    }
+    return profileConfigurations.computeIfAbsent(profile, p -> {
+      final var provider = extensionManager.getInstanceForProfile(p,
+              IOutputConfigurationProvider.class);
+      if (provider == null)
+      {
+        return Collections.emptySet();
+      }
+      return provider.getOutputConfigurations();
+    });
+  }
 
-    smpOutputConfigurations = new SmpStandaloneSetup().createInjector()
-            .getInstance(IOutputConfigurationProvider.class).getOutputConfigurations();
-    esaCdkOutputConfigurations = new EsaCdkStandaloneSetup().createInjector()
-            .getInstance(IOutputConfigurationProvider.class).getOutputConfigurations();
-    xsmpSdkOutputConfigurations = new XsmpSdkStandaloneSetup().createInjector()
-            .getInstance(IOutputConfigurationProvider.class).getOutputConfigurations();
-    pythonOutputConfigurations = new PythonStandaloneSetup().createInjector()
-            .getInstance(IOutputConfigurationProvider.class).getOutputConfigurations();
+  private Set<OutputConfiguration> getToolOutputConfigurations(String tool)
+  {
+    if (tool == null || tool.isEmpty())
+    {
+      return Collections.emptySet();
+    }
+    return toolConfigurations.computeIfAbsent(tool, t -> {
+      final var provider = extensionManager.getInstanceForTool(t,
+              IOutputConfigurationProvider.class);
+      if (provider == null)
+      {
+        return Collections.emptySet();
+      }
+      return provider.getOutputConfigurations();
+    });
   }
 
   @Override
@@ -62,27 +82,11 @@ public class XsmpOutputConfigurationProvider
 
     if (config != null)
     {
-
-      switch (config.getProfile())
+      configurations.addAll(getProfileOutputConfigurations(config.getProfile()));
+      for (final var tool : config.getTools())
       {
-        case "esa-cdk":
-          configurations.addAll(esaCdkOutputConfigurations);
-          break;
-        case "xsmp-sdk":
-          configurations.addAll(xsmpSdkOutputConfigurations);
-          break;
-        default:
-          break;
+        configurations.addAll(getToolOutputConfigurations(tool));
       }
-      if (config.getTools().contains("smp"))
-      {
-        configurations.addAll(smpOutputConfigurations);
-      }
-      if (config.getTools().contains("python"))
-      {
-        configurations.addAll(pythonOutputConfigurations);
-      }
-
     }
     return configurations;
   }

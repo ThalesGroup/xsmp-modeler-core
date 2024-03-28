@@ -11,7 +11,7 @@
 package org.eclipse.xsmp.validation;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.Catalogue;
 import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
@@ -41,9 +41,9 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
     final var first = description.getEObjectOrProxy();
     final var second = candidate.getEObjectOrProxy();
 
-    if (first instanceof Document || second instanceof Document)
+    if (first instanceof Catalogue || second instanceof Catalogue)
     {
-      result = first instanceof Document && second instanceof Document;
+      result = first instanceof Catalogue && second instanceof Catalogue;
     }
     // 2 namespaces can have the same name except if they are in the same catalogue
     else if (first instanceof NamedElement && second instanceof NamedElement)
