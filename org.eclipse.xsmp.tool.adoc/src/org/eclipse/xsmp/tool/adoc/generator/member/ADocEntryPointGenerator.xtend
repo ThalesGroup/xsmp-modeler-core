@@ -14,7 +14,7 @@ class ADocEntryPointGenerator {
         val entryPoints = component.member.filter(EntryPoint)
         '''
             «IF !entryPoints.empty»
-                === Entry Points
+                ==== Entry Points
                 The model shall implement the entry points defined below.
                  
                 .Entry Points
@@ -33,6 +33,12 @@ class ADocEntryPointGenerator {
         '''
             |«entryPoint.name»
             |«entryPoint.description.formatDescription»
+        '''
+    }
+    
+    def CharSequence generateMermaid(EntryPoint entryPoint) {
+        '''
+            entrypoint «entryPoint.name»
         '''
     }
 }

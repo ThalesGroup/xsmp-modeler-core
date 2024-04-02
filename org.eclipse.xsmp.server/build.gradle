@@ -3,6 +3,7 @@ dependencies {
 	api project(':org.eclipse.xsmp.ide')
 	api project(':org.eclipse.xsmp.tool.python.ide')
     api project(':org.eclipse.xsmp.tool.smp.ide')
+    api project(':org.eclipse.xsmp.tool.adoc.ide')
     api project(':org.eclipse.xsmp.profile.xsmp-sdk.ide')
     api project(':org.eclipse.xsmp.profile.esa-cdk.ide')
 	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"

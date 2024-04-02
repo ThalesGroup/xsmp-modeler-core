@@ -14,7 +14,7 @@ class ADocOperatorGenerator {
         val operations = component.member.filter(Operation)
         '''
             «IF !operations.empty»
-                === Operations
+                ==== Operations
                 The model shall implement the operations defined below.
                  
                 .Operations
@@ -34,6 +34,12 @@ class ADocOperatorGenerator {
             |«operation.name»
             |«FOR param : operation.parameter SEPARATOR ','»«param.type.fqn.toString("::")» «param.name» («param.direction»)«ENDFOR»
             |«operation.description.formatDescription»
+        '''
+    }
+    
+    def CharSequence generateMermaid(Operation operation) {
+        '''
+            «operation.name»(«FOR param : operation.parameter SEPARATOR ','»«param.direction» «param.type.name»«ENDFOR») «IF operation.returnParameter === null »void«ELSE»«operation.returnParameter.type.name»«ENDIF»
         '''
     }
 }

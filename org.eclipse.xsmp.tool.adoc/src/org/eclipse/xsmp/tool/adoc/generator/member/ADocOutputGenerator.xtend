@@ -37,4 +37,13 @@ class ADocOutputGenerator {
             |N.A.
         '''
     }
+    
+    def CharSequence generateMermaid(NamedElementWithMembers elem) {
+        val fields = elem.member.filter(Field).filter[it|it.isInput]
+        '''
+            «FOR field : fields»
+                output «field.name»: «field.type.name»
+            «ENDFOR»
+        '''
+    }
 }

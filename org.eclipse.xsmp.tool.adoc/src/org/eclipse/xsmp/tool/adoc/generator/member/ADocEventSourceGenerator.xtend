@@ -14,7 +14,7 @@ class ADocEventSourceGenerator {
         val eventSources = component.member.filter(EventSource)
         '''
             «IF !eventSources.empty»
-                === Event Source
+                ==== Event Source
                 The model shall implement the events defined below.
                  
                 .Model Event Source
@@ -34,6 +34,12 @@ class ADocEventSourceGenerator {
             |«eventSource.name»
             |«eventSource.description.formatDescription»
             |«eventSource.type.fqn.toString("::")»
+        '''
+    }
+    
+    def CharSequence generateMermaid(EventSource eventSource) {
+        '''
+            eventsource «eventSource.name»: «eventSource.type.name»
         '''
     }
 }

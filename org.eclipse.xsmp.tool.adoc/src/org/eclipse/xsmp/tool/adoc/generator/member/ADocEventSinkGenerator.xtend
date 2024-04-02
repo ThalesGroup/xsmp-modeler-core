@@ -14,7 +14,7 @@ class ADocEventSinkGenerator {
         val eventSinks = component.member.filter(EventSink)
         '''
             «IF !eventSinks.empty»
-                === Event Sinks
+                ==== Event Sinks
                 The model shall implement the events defined below.
                  
                 .Model Event Sink
@@ -34,6 +34,12 @@ class ADocEventSinkGenerator {
             |«eventSink.name»
             |«eventSink.description.formatDescription»
             |«eventSink.type.fqn.toString("::")»
+        '''
+    }
+    
+    def CharSequence generateMermaid(EventSink eventSink) {
+        '''
+            eventsink «eventSink.name»: «eventSink.type.name»
         '''
     }
 }

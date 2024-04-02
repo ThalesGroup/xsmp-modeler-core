@@ -11,15 +11,15 @@ class ADocFieldGenerator {
     @Inject extension ADocUtil
 
     def CharSequence generateContent(NamedElementWithMembers elem, IFileSystemAccess2 fsa) {
-        val fields = elem.member.filter(Field).filter[it|!it.isOutput && !it.isInput]
+        val fields = elem.member.filter(Field)
         '''
             «IF !fields.empty»
-                === Fields
+                ==== Fields
                 The model shall implement the fields defined below.
                  
                 .Fields
                 |===
-                |Name |Comment |Type |Unit |Initial Value
+                |Kind |Name |Comment |Type |Unit |Initial Value
                 
                 «FOR field : fields»
                     «field.generate»
@@ -31,11 +31,22 @@ class ADocFieldGenerator {
 
     def CharSequence generate(Field field) {
         '''
+            |«field.getFieldKind»
             |«field.name»
             |«field.description.formatDescription»
             |«field.type.fqn.toString("::")»
             |N.A.
             |«field.^default.defaultValue»
         '''
+    }
+
+    def CharSequence generateMermaid(Field field) {
+        '''
+            «field.fieldKind» «field.name»: «field.type.name»
+        '''
+    }
+
+    private def String getFieldKind(Field field) {
+        return field.isOutput ? "output" : field.isInput ? "input" : "state"
     }
 }

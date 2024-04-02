@@ -11,6 +11,7 @@ include 'org.eclipse.xsmp.profile.xsmp-sdk.ide'
 include 'org.eclipse.xsmp.profile.esa-cdk.ide'
 include 'org.eclipse.xsmp.tool.python.ide'
 include 'org.eclipse.xsmp.tool.smp.ide'
+include 'org.eclipse.xsmp.tool.adoc.ide'
 include 'org.eclipse.xsmp.server'
 include 'vscode-extension'
 

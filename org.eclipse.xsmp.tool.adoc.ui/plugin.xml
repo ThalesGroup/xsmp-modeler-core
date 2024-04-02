@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-    <extension
-          point="org.eclipse.xsmp.ui.tool">
-       <factory
-             description="TODO description"
-             provider="org.eclipse.xsmp.tool.adoc.ui.ADocExtension"
-             id="org.eclipse.xsmp.tool.adoc"
-             name="Ascidoc generator">
-       </factory>
+    <extension point="org.eclipse.xsmp.ui.tool">
+        <tool class="org.eclipse.xsmp.tool.adoc.ui.ADocTool">
+        </tool>
     </extension>
 </plugin>
