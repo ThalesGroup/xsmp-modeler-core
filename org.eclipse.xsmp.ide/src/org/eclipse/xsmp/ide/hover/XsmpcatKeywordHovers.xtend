@@ -115,8 +115,7 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                 <br />A Service can reference one or more interfaces via the <b>Interface</b> links (inherited from Component), where at least one of them must be derived from Smp::IService, which qualifies it as a service interface.</p>
             '''
             // Array
-            case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0_0,
-            case ga.namespaceMemberAccess.usingKeyword_3_7_2_0_1: '''
+            case ga.namespaceMemberAccess.arrayKeyword_3_7_2_0: '''
                 <p><code>«visibility()» «kw("array")» <em>name</em> = <em>type</em> <strong>[</strong><em>integerExpression</em><strong>]</strong></code></p>
                 <br/>
                 <p>An <b>Array</b> type defines a fixed-size array of identically typed elements, where ItemType defines the type of the array items, and Size defines the number of array items.
@@ -176,8 +175,7 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                 <p>This mechanism is used within the specification to define the SMDL primitive types with respect to the Metamodel, but it can also be used to define native types within an arbitrary SMDL catalogue for use by models.
                 <br />In the latter case, native types are typically used to bind a model to some external library or existing Application Programming <b>Interface</b> (API).</p>
             '''
-            case ga.namespaceMemberAccess.attributeKeyword_3_15_2,
-            case ga.namespaceMemberAccess.attributeKeyword_3_17_2: '''
+            case ga.namespaceMemberAccess.attributeKeyword_3_15_2: '''
                 An <b>Attribute</b> Type defines a new type available for adding attributes to elements. 
                 <p><br />The AllowMultiple attribute specifies if a corresponding Attribute may be attached more than once to a language element, while the Usage element defines to which language elements attributes of this type can be attached. 
                 <br />An attribute type always references a value type, and specifies a Default value.</p>
@@ -303,105 +301,6 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
             case ga.parameterDirectionKindAccess.inoutInoutKeyword_2_0: '''
                 The parameter must be specified on call, and may be changed by the operation.
             '''
-            // keywords for xsmpasb
-            /*case xsmpasb.assemblyAccess.assemblyKeyword_1: '''
-             *    <p><code>«kw("assembly")» <em>name</em></code></p>
-             *    <br/>
-             *    An <b>Assembly</b> is a document that defines factories and simulators.
-             *    <p>It contains namespaces as a primary ordering mechanism.
-             *    <br />The names of these namespaces need to be unique within the assembly.</p>
-             *             '''
-             *             case xsmpasb.namespaceAccess.namespaceKeyword_4,
-             *             case xsmpasb.namespaceMemberAccess.namespaceKeyword_3_0_1: '''
-             *    <p><code>«kw("namespace")» <em>name</em> { } </code></p>
-             *    <br/>
-             *    A <b>Namespace</b> is a primary ordering mechanism. <br />
-             *    <p>A <b>namespace</b> may contain other namespaces (nested namespaces), and does typically contain factories and simulators.
-             *    <br />In SMDL, namespaces are contained within an <b>Assembly</b> (either directly, or within another namespace in an assembly).
-             *    <br />All sub-elements of a namespace (namespaces, factories and simulators) must have unique names.</p>
-             *             '''
-             *             case xsmpasb.namespaceMemberAccess.simulatorKeyword_3_1_1: '''
-             *    <p><code>«kw("simulator")» <em>name</em> [«kw("extends")» <em>sim1, ..., simN</em>] [«kw("epoch")» <em>epochTime</em>] [«kw("mission")» <em>missionStartTime</em>] { } </code></p>
-             *    <br/>
-             *    A <b>Simulator</b> is the root element of the simulation. <br />
-             *    <p>A <b>simulator</b> may contain Model or Service instances.
-             *    <br />All sub-elements of a simulator (models and services) must be unique.</p>
-             *             '''
-             *             case xsmpasb.namespaceMemberAccess.epochKeyword_3_1_4_0_0: '''
-             *    The Epoch Time of the <b>Simulator</b>.
-             *             '''
-             *             case xsmpasb.namespaceMemberAccess.missionKeyword_3_1_4_1_0: '''
-             *    The Mission Start Time of the <b>Simulator</b>.
-             *             '''
-             *             case xsmpasb.namespaceMemberAccess.extendsKeyword_3_1_3_0: '''
-             *    The list of <b>Simulator</b> to inherit from.
-             *             '''
-             *             case xsmpasb.namespaceMemberAccess.factoryKeyword_3_2_1: '''
-             *    <p><code>«kw("factory")» <em>name</em> «kw("extends")» «typeReference» { } </code></p>
-             *    <br/>
-             *    A <b>Factory</b> create a specialized Instance from a Component or an other Factory. <br />
-             *    <p>A <b>factory</b> may contain nested-instances, configuration, connections, ...
-             *    <br />All sub-elements of a factory (instances and resolvable elements) must have unique names.</p>
-             *             '''
-             *             case xsmpasb.instanceAccess.instanceKeyword_0: '''
-             *    <p><code>«kw("instance")» <em>name</em> «kw("extends")» «typeReference» { } </code></p>
-             *    <br/>
-             *    Create an <b>Instance</b> of the given type.
-             *             '''
-             *             case xsmpasb.instanceAccess.extendsKeyword_2: '''
-             *    The <b>Instance</b> type or factory.
-             *             '''
-             *             case xsmpasb.initEntryPointAccess.initKeyword_0: '''
-             *    <p><code>«kw("init")» <em>entryPoint</em></code></p>
-             *    <br/>
-             *    Add an <b>EntryPoint</b> or a <b>Task</b> that will be executed by the <b>Simulator</b> during the Initialising state.
-             *             '''
-             *             case xsmpasb.loadDirectiveAccess.loadKeyword_0: '''
-             *    <p><code>«kw("load")» <em>Catalogue</em></code></p>
-             *    <br/>
-             *    Load the library of a package in the <b>Simulator</b>.
-             *             '''
-             *             case xsmpasb.scheduleAccess.scheduleKeyword_0: '''
-             *    <p><code>«kw("schedule")» <em>entryPoint</em> [«kw("immediate")» | («kw("simulation")» | «kw("epoch")» | «kw("zulu")» <em>time</em> [«kw("cycle")» <em>cycle</em>«kw("repeat")» <em>repeat</em> ]  «»]</code></p>
-             *    <br/>
-             *    Add an event on the <b>Scheduler</b>.<br/>
-             *    If <b>immediate</b> the event will be executed the next time the <b>Scheduler</b> process the simulation time.<br/>
-             *             '''
-             *             case xsmpasb.scheduleAccess.immediateKeyword_2_0: '''
-             *    The event will be executed the next time the <b>Scheduler</b> process the simulation time.<br/>
-             *   '''
-             *             case xsmpasb.scheduleAccess.cycleKeyword_2_1_2_0: '''
-             *    Duration between two triggers of the event.
-             *             '''
-             *             case xsmpasb.scheduleAccess.repeatKeyword_2_1_2_2_0: '''
-             *    Number of times the event shall be repeated, or 0 for a single event, or -1 for no limit.
-             *             '''
-             *             case xsmpasb.timeKindAccess.simulationSimulationKeyword_0_0: '''
-             *    Event based on simulation time.
-             *             '''
-             *             case xsmpasb.timeKindAccess.epochEpochKeyword_1_0: '''
-             *    Event based on epoch time.
-             *             '''
-             *             case xsmpasb.timeKindAccess.missionMissionKeyword_2_0: '''
-             *    Event based on mission time.
-             *             '''
-             *             case xsmpasb.timeKindAccess.zuluZuluKeyword_3_0: '''
-             *    Event based on zulu time.
-             *             '''
-             *             case xsmpasb.configurationAccess.setKeyword_0: '''
-             *    <p><code>«kw("set")» <em>field</em> <em>value</em></code></p>
-             *    <br/>
-             *    Set the value of a <b>Field</b> or writable <b>Property</b>.
-             *             '''
-             *             case xsmpasb.connectionAccess.connectKeyword_0: '''
-             *    <p><code>«kw("connect")» <em>source</em> <em>destination</em></code></p>
-             *    <br/>
-             *    Create a <b>Connection</b> between a <em>source</em> and a <em>destination</em>.<br/>
-             *    Following <b>Connection</b> are supported:<br/>
-             *     - output <b>Field</b> to input <b>Field</b><br/>
-             *     - <b>EventSource</b> to <b>EventSink</b><br/>
-             *     - <b>Reference</b> to <b>Instance</b><br/>
-             '''*/
             default: ''''''
         }.toString
     }

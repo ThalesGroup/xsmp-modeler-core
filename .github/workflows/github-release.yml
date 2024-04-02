@@ -48,5 +48,5 @@ jobs:
                ${{ github.workspace }}/vscode-extension/build/vscode/xsmp-modeler-${{ github.ref_name }}.vsix
                ${{ github.workspace }}/org.eclipse.xsmp.tool.smp/build/libs/org.eclipse.xsmp.tool.smp-${{ github.ref_name }}-cli.jar
                ${{ github.workspace }}/org.eclipse.xsmp.tool.python/build/libs/org.eclipse.xsmp.tool.python-${{ github.ref_name }}-cli.jar
-               ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp_sdk/build/libs/org.eclipse.xsmp.profile.xsmp_sdk-${{ github.ref_name }}-cli.jar
-               ${{ github.workspace }}/org.eclipse.xsmp.profile.esa_cdk/build/libs/org.eclipse.xsmp.profile.esa_cdk-${{ github.ref_name }}-cli.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.xsmp-sdk/build/libs/org.eclipse.xsmp.profile.xsmp-sdk-${{ github.ref_name }}-cli.jar
+               ${{ github.workspace }}/org.eclipse.xsmp.profile.esa-cdk/build/libs/org.eclipse.xsmp.profile.esa-cdk-${{ github.ref_name }}-cli.jar

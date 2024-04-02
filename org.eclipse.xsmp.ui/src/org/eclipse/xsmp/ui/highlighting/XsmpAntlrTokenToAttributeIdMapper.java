@@ -27,7 +27,7 @@ public class XsmpAntlrTokenToAttributeIdMapper extends DefaultAntlrTokenToAttrib
       case "RULE_ML_DOCUMENTATION" -> XsmpcatHighlightingStyles.DOCUMENTATION_ID;
       case "'@'" -> XsmpcatHighlightingStyles.ANNOTATION_ID;
       case "RULE_INTEGER_LITERAL", "RULE_FLOATING_LITERAL" -> HighlightingStyles.NUMBER_ID;
-      case "RULE_CHARACTER_LITERAL", "RULE_STRING_LITERAL" -> HighlightingStyles.STRING_ID;
+      case "RULE_CHARACTER_LITERAL", "RULE_STRING_LITERAL", "RULE_STRING" -> HighlightingStyles.STRING_ID;
       default -> super.calculateId(tokenName, tokenType);
     };
 

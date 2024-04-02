@@ -10,7 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.conversion;
 
-import org.eclipse.xtext.xbase.conversion.XbaseQualifiedNameValueConverter;
+import org.eclipse.xtext.conversion.ValueConverterException;
+import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.util.Strings;
 
 import com.google.inject.Singleton;
 
@@ -19,8 +23,70 @@ import com.google.inject.Singleton;
  *
  * @author daveluy
  */
-@SuppressWarnings("restriction")
 @Singleton
-public class XsmpQualifiedNameValueConverter extends XbaseQualifiedNameValueConverter
+public class XsmpQualifiedNameValueConverter extends QualifiedNameValueConverter
 {
+
+  @Override
+  protected String getDelegateRuleName()
+  {
+    return "ValidID";
+  }
+
+  @Override
+  public String toValue(String string, INode node) throws ValueConverterException
+  {
+    final var buffer = new StringBuilder();
+    var isFirst = true;
+    if (node != null)
+    {
+      for (final INode child : node.getAsTreeIterable())
+      {
+        final var grammarElement = child.getGrammarElement();
+        if (isDelegateRuleCall(grammarElement) || isWildcardLiteral(grammarElement))
+        {
+          if (!isFirst)
+          {
+            buffer.append(getValueNamespaceDelimiter());
+          }
+          isFirst = false;
+          if (isDelegateRuleCall(grammarElement))
+          {
+            for (final ILeafNode leafNode : child.getLeafNodes())
+            {
+              if (!leafNode.isHidden())
+              {
+                buffer.append(delegateToValue(leafNode));
+              }
+            }
+          }
+          else
+          {
+            buffer.append(getWildcardLiteral());
+          }
+        }
+      }
+    }
+    else
+    {
+      for (final String segment : Strings.split(string, getStringNamespaceDelimiter()))
+      {
+        if (!isFirst)
+        {
+          buffer.append(getValueNamespaceDelimiter());
+        }
+        isFirst = false;
+        if (getWildcardLiteral().equals(segment))
+        {
+          buffer.append(getWildcardLiteral());
+        }
+        else
+        {
+          buffer.append(
+                  (String) valueConverterService.toValue(segment, getDelegateRuleName(), null));
+        }
+      }
+    }
+    return buffer.toString();
+  }
 }

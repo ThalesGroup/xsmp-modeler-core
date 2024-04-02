@@ -9,9 +9,10 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/xtext/formatting2/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/xbase/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/xtext/workspace/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="src" path="src/"/>
-	<classpathentry kind="src" path="src-gen/"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

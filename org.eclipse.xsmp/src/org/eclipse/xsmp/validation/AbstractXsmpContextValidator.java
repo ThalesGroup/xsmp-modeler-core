@@ -16,8 +16,13 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xsmp.services.IXsmpServiceProvider;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xsmp.extension.IProfile;
+import org.eclipse.xsmp.extension.ITool;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 import com.google.inject.Inject;
 
@@ -26,12 +31,18 @@ import com.google.inject.Inject;
  *
  * @author yannick
  */
-public class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
+public abstract class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
 {
-  private final String isResponsible = getClass().getCanonicalName() + ".isResponsible";
+  private final String isResponsibleKey = getClass().getCanonicalName() + ".isResponsible";
 
-  @Inject
-  private IXsmpServiceProvider xsmpServiceProvider;
+  @Inject(optional = true)
+  private IProjectConfigProvider configProvider;
+
+  @Inject(optional = true)
+  IProfile profile;
+
+  @Inject(optional = true)
+  ITool tool;
 
   @Override
   protected List<EPackage> getEPackages()
@@ -42,6 +53,29 @@ public class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
     return result;
   }
 
+  protected boolean isEnabledFor(IXsmpProjectConfig config)
+  {
+    if (profile != null)
+    {
+      return profile.getId().equals(config.getProfile());
+    }
+    if (tool != null)
+    {
+      return config.getTools().contains(tool.getId());
+    }
+    return true;
+  }
+
+  protected boolean isResponsible(ResourceSet context)
+  {
+    if (configProvider != null
+            && configProvider.getProjectConfig(context) instanceof final IXsmpProjectConfig config)
+    {
+      return isEnabledFor(config);
+    }
+    return true;
+  }
+
   /**
    * Cache the result in the context map
    */
@@ -49,15 +83,16 @@ public class AbstractXsmpContextValidator extends AbstractDeclarativeValidator
   protected boolean isResponsible(Map<Object, Object> context, EObject eObject)
   {
 
-    var responsible = context != null ? (Boolean) context.get(isResponsible) : null;
+    var responsible = context != null ? (Boolean) context.get(isResponsibleKey) : null;
     if (responsible == null)
     {
+
       responsible = super.isResponsible(context, eObject)
-              && xsmpServiceProvider.isEnabledFor(eObject.eResource());
+              && isResponsible(EcoreUtil2.getResourceSet(eObject));
 
       if (context != null)
       {
-        context.put(isResponsible, responsible);
+        context.put(isResponsibleKey, responsible);
       }
     }
     return responsible;

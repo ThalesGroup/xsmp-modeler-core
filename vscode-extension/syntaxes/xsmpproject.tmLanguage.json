@@ -1,0 +1,49 @@
+{
+	"scopeName": "source.xsmpproject",
+	"patterns": [
+		{
+			"match": "\\b(project|profile|tool|source|dependency)\\b",
+			"name": "keyword.control.xsmpproject"
+		},
+		{
+			"match": "\\b([a-zA-Z]\\w*)\\b",
+			"name": "entity.name.type.xsmpproject"
+		},
+		{
+			"match": "(?<!\\\\)(\"(?:[^\"\\\\]|\\\\.)*\")|(?<!\\\\)('(?:[^'\\\\]|\\\\.)*')",
+			"name": "string.quoted.double.xsmpproject"
+		},
+		{
+			"name": "comment.line.double-dash.xsmpproject",
+			"begin": "(^[ \\t]+)?(?=//)",
+			"end": "(?=$)"
+		},
+		{
+			"name": "comment.block.documentation.xsmp.project",
+			"match": "/\\*\\*\\*/"
+		},
+		{
+			"name": "comment.block.documentation.xsmp.project",
+			"begin": "/\\*\\*[^\\*\\/]",
+			"end": "\\*/",
+			"patterns": [
+				{
+					"match": "@[^\\s]+",
+					"name": "comment.block.documentation.tag.xsmp.project"
+				}
+			]
+		},
+		{
+			"name": "comment.block.xsmpproject",
+			"match": "/\\*(?:\\*\\*+)?\\*/"
+		},
+		{
+			"name": "comment.block.xsmpproject",
+			"begin": "/\\*(?:[^\\*]|\\*\\*)",
+			"end": "\\*/"
+		}
+	],
+	"repository": {
+
+	}
+}

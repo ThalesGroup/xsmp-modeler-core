@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
-import org.eclipse.xsmp.ide.generator.XsmpGenerator;
+import org.eclipse.xsmp.ide.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ide.generator.XsmpURIBasedFileSystemAccess;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
@@ -45,7 +45,7 @@ public class XsmpCommandService implements IExecutableCommandService
   private static final String IMPORT_SMPCAT_CMD = "xsmp.import.smpcat";
 
   @Inject
-  XsmpGenerator generator;
+  XsmpGeneratorDelegate generator;
 
   @Inject
   XsmpOutputConfigurationProvider outputConfigurationProvider;

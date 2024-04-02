@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-    <extension
-        point="org.eclipse.xsmp.ui.tool">
-        <factory
-            description="A tool for writing object-oriented unit tests in Python"
-            provider="org.eclipse.xsmp.tool.python.ui.PythonExtension"
-            id="org.eclipse.xsmp.tool.python"
-            name="Python wrapper">
-        </factory>
+    <extension point="org.eclipse.xsmp.ui.tool">
+        <tool class="org.eclipse.xsmp.tool.python.ui.PythonTool">
+        </tool>
     </extension>
 </plugin>

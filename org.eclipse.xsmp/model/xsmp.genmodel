@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*******************************************************************************&#xA;* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.&#xA;*&#xA;* All rights reserved. This program and the accompanying materials&#xA;* are made available under the terms of the Eclipse Public License 2.0&#xA;* which accompanies this distribution, and is available at&#xA;* https://www.eclipse.org/legal/epl-2.0/&#xA;*&#xA;* SPDX-License-Identifier: EPL-2.0&#xA;******************************************************************************"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="******************************************************************************&#xA;Copyright (C) 2024 THALES ALENIA SPACE FRANCE.&#xA;&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License 2.0&#xA;which accompanies this distribution, and is available at&#xA;https://www.eclipse.org/legal/epl-2.0/&#xA;&#xA;SPDX-License-Identifier: EPL-2.0&#xA;*****************************************************************************"
     modelDirectory="/org.eclipse.xsmp/src-gen" modelPluginID="" forceOverwrite="true"
     modelName="Xsmp" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
@@ -255,5 +255,28 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//KeywordExpression/name"/>
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//EmptyExpression"/>
+    <genClasses ecoreClass="xsmp.ecore#//Project">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/profile"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/tools"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/sourceFolders"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/referencedProjects"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//Tool"/>
+    <genClasses ecoreClass="xsmp.ecore#//Profile"/>
+    <genClasses ecoreClass="xsmp.ecore#//ProfileReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ProfileReference/profile"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//ProfileReference/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ToolReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ToolReference/tool"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//ToolReference/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//ProjectReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ProjectReference/project"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//ProjectReference/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//SourceFolder">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//SourceFolder/name"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

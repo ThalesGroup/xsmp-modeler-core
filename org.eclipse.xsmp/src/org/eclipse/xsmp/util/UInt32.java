@@ -112,9 +112,9 @@ public final class UInt32 extends AbstractPrimitiveType<UInt32>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof UInt32)
+    if (obj instanceof final UInt32 uint32)
     {
-      return value.equals(((UInt32) obj).value);
+      return value.equals(uint32.value);
     }
     return false;
   }

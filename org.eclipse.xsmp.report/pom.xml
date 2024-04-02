@@ -66,25 +66,25 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.xsmp_sdk</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp-sdk</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.xsmp_sdk.ui</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.xsmp-sdk.ui</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.esa_cdk</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.esa-cdk</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
-			<artifactId>org.eclipse.xsmp.profile.esa_cdk.ui</artifactId>
+			<artifactId>org.eclipse.xsmp.profile.esa-cdk.ui</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

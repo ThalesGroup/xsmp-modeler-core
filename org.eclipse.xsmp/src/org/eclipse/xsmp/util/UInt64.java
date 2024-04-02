@@ -105,9 +105,9 @@ public final class UInt64 extends AbstractPrimitiveType<UInt64>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof UInt64)
+    if (obj instanceof final UInt64 uint64)
     {
-      return value.equals(((UInt64) obj).value);
+      return value.equals(uint64.value);
     }
     return false;
   }

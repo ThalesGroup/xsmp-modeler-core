@@ -39,14 +39,10 @@ import org.eclipse.xtext.formatting2.IFormattableDocument;
 import org.eclipse.xtext.formatting2.ITextReplacer;
 import org.eclipse.xtext.formatting2.regionaccess.ISemanticRegion;
 import org.eclipse.xtext.formatting2.regionaccess.internal.TextSegment;
-import org.eclipse.xtext.xbase.formatting2.IndentOnceAutowrapFormatter;
-import org.eclipse.xtext.xbase.formatting2.ObjectEntry;
-import org.eclipse.xtext.xbase.formatting2.SeparatorRegions;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-@SuppressWarnings("restriction")
 public class XsmpcoreFormatter extends AbstractJavaFormatter
 {
   public static class IndentationInformation implements IIndentationInformation

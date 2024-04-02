@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,144 +10,108 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.extension;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.xsmp.ui.XsmpConstants;
-import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
+import org.eclipse.xsmp.extension.IExtensionManager;
+import org.eclipse.xsmp.extension.IProfile;
+import org.eclipse.xsmp.extension.ITool;
+import org.eclipse.xtext.Constants;
 
-public class ExtensionManager
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+
+@Singleton
+public class ExtensionManager implements IExtensionManager
 {
+  private static final Map<String, ITool> tools = loadTools();
 
-  private ExtensionManager()
+  private static Map<String, ITool> loadTools()
   {
-    // private constructor
-  }
-
-  private static final Map<String, Extension> tools = new HashMap<>();
-  static
-  {
+    final var result = new HashMap<String, ITool>();
     for (final IConfigurationElement cfg : Platform.getExtensionRegistry()
             .getConfigurationElementsFor("org.eclipse.xsmp.ui.tool"))
     {
       try
       {
-        final var ext = new Extension(cfg);
-        tools.put(ext.getId(), ext);
+        final var ext = (ITool) cfg.createExecutableExtension("class");
+        result.put(ext.getId(), ext);
       }
       catch (final Exception e)
       {
         Logger.getLogger(ExtensionManager.class).error(cfg, e);
       }
     }
-  }
-
-  public static List<Extension> getTools()
-  {
-    return new ArrayList<>(tools.values());
-  }
-
-  public static Extension getTool(String id)
-  {
-    return tools.get(id);
-  }
-
-  public static Collection<String> getToolsIds(IPreferenceStore preferenceStore)
-  {
-    return getIds(preferenceStore.getString(XsmpPreferenceAccess.PREF_TOOLS));
-  }
-
-  public static List<Extension> getTools(IPreferenceStore preferenceStore)
-  {
-    final var ids = getIds(preferenceStore.getString(XsmpPreferenceAccess.PREF_TOOLS));
-
-    return ids.stream().map(ExtensionManager::getTool).filter(Objects::nonNull).toList();
-
-  }
-
-  public static Collection<String> getDefaultToolsIds(IPreferenceStore preferenceStore)
-  {
-
-    return getIds(preferenceStore.getDefaultString(XsmpPreferenceAccess.PREF_TOOLS));
-  }
-
-  private static Collection<String> getIds(String value)
-  {
-    final var ids = value.split(",");
-    final var result = new ArrayList<String>();
-    for (var id : ids)
-    {
-      id = id.strip();
-      if (id.isEmpty())
-      {
-        continue;
-      }
-      result.add(id);
-    }
     return result;
   }
 
-  private static final Map<String, Extension> profiles = new HashMap<>();
-  static
+  @Override
+  public Collection<ITool> getTools()
   {
-    // add default profile
-    profiles.put(XsmpConstants.DEFAULT_PROFILE_NAME,
-            new Extension(XsmpConstants.DEFAULT_PROFILE_NAME, "Default", ""));
+    return tools.values();
+  }
 
+  @Override
+  public ITool getTool(String id)
+  {
+    if (id == null)
+    {
+      return null;
+    }
+    return tools.get(id);
+  }
+
+  private static final Map<String, IProfile> profiles = loadProfiles();
+
+  private static Map<String, IProfile> loadProfiles()
+  {
+    final var result = new HashMap<String, IProfile>();
     for (final IConfigurationElement cfg : Platform.getExtensionRegistry()
             .getConfigurationElementsFor("org.eclipse.xsmp.ui.profile"))
     {
       try
       {
-        final var ext = new Extension(cfg);
+        final var ext = (IProfile) cfg.createExecutableExtension("class");
 
-        profiles.put(ext.getId(), ext);
+        result.put(ext.getId(), ext);
       }
       catch (final Exception e)
       {
         Logger.getLogger(ExtensionManager.class).error(cfg, e);
       }
     }
-
+    return result;
   }
 
-  public static List<Extension> getProfiles()
+  @Override
+  public Collection<IProfile> getProfiles()
   {
-    return new ArrayList<>(profiles.values());
+    return profiles.values();
   }
 
-  public static Extension getProfile(String id)
+  @Override
+  public IProfile getProfile(String id)
   {
+    if (id == null)
+    {
+      return null;
+    }
     return profiles.get(id);
   }
 
-  public static String getProfileId(IPreferenceStore preferenceStore)
-  {
-    String id;
-    if (preferenceStore.contains(XsmpPreferenceAccess.PREF_MDK))
-    {
-      id = preferenceStore.getString(XsmpPreferenceAccess.PREF_MDK).strip();
-    }
-    else
-    {
-      id = preferenceStore.getString(XsmpPreferenceAccess.PREF_PROFILE).strip();
-    }
-    return id;
-  }
+  @Inject
+  @Named(Constants.LANGUAGE_NAME)
+  private String languageName;
 
-  public static Extension getProfile(IPreferenceStore preferenceStore)
+  @Override
+  public String getLanguageName()
   {
-    final var id = getProfileId(preferenceStore);
-
-    return getProfile(id);
+    return languageName;
   }
 
 }

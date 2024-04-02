@@ -13,7 +13,6 @@ package org.eclipse.xsmp.ui.contentassist;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.emf.ecore.EObject;
@@ -60,7 +59,6 @@ import org.eclipse.xtext.ui.label.StylerFactory;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
@@ -100,14 +98,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   protected XsmpHighlightingConfiguration highlightingConfiguration;
 
   protected XsmpUtil xsmpUtil;
-
-  protected static final Set<String> FILTERED_KEYWORDS = Sets.newHashSet("true", "false", "$",
-          "struct", "model", "service", "array", "using", "string", "integer", "float", "interface",
-          "class", "exception", "public", "private", "protected", "field", "constant", "def",
-          "reference", "container", "entrypoint", "native", "primitive", "readOnly", "readWrite",
-          "writeOnly", "input", "output", "transient", "abstract", "enum", "event", "attribute",
-          "eventsink", "eventsource", "namespace", "association", "property",
-          /* "{", "}", */ "nullptr", "default", "typename");
 
   /**
    * {@inheritDoc}
@@ -196,10 +186,6 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
   public void completeKeyword(Keyword keyword, ContentAssistContext contentAssistContext,
           ICompletionProposalAcceptor acceptor)
   {
-    if (FILTERED_KEYWORDS.contains(keyword.getValue()))
-    {
-      return;
-    }
 
     final var proposal = createCompletionProposal(keyword.getValue(),
             getKeywordDisplayString(keyword), getImage(keyword), contentAssistContext);

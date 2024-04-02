@@ -62,8 +62,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 public class XsmpSemanticHighlightingCalculator extends DefaultSemanticHighlightingCalculator
 {
 
-  int integer;
-
   /**
    * {@inheritDoc}
    */
@@ -71,7 +69,6 @@ public class XsmpSemanticHighlightingCalculator extends DefaultSemanticHighlight
   protected boolean highlightElement(EObject object, IHighlightedPositionAcceptor acceptor,
           CancelIndicator cancelIndicator)
   {
-    integer = 5;
     // all references with default style
     object.eClass().getEAllReferences().stream().filter(r -> !r.isContainment())
             .forEach(feature -> highlightCrossReference(acceptor, object, feature));

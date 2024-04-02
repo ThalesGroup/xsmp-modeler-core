@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.ui.wizard;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -20,9 +19,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.xsmp.extension.IProfile;
+import org.eclipse.xsmp.extension.ITool;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.util.PluginProjectFactory;
 
@@ -30,18 +29,14 @@ import com.google.common.collect.Lists;
 
 public class XsmpcatProjectFactory extends PluginProjectFactory
 {
-  private String profile = null;
+  private IProfile profile = null;
 
-  private List<String> tools = null;
+  private List<ITool> tools = null;
 
   protected void addXsmpNatures()
   {
-    getProjectNatures().add(JavaCore.NATURE_ID);
-    getProjectNatures().add(IBundleProjectDescription.PLUGIN_NATURE);
     getProjectNatures().add(XtextProjectHelper.NATURE_ID);
-    getBuilderIds().add(JavaCore.BUILDER_ID);
     getBuilderIds().add(XtextProjectHelper.BUILDER_ID);
-    getBuilderIds().add("org.eclipse.pde.ManifestBuilder");
   }
 
   protected void addCdtNatures()
@@ -57,21 +52,18 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
     addXsmpNatures();
     addCdtNatures();
 
-    getRequiredBundles().add("org.eclipse.xsmp.lib");
-
     getFolders().add("smdl");
-    getFolders().add("smdl-gen");
     setProjectDefaultCharset("UTF-8");
 
   }
 
-  public XsmpcatProjectFactory setProfile(String profile)
+  public XsmpcatProjectFactory setProfile(IProfile profile)
   {
     this.profile = profile;
     return this;
   }
 
-  public List<String> getTools()
+  public List<ITool> getTools()
   {
     if (tools == null)
     {
@@ -85,50 +77,59 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
     throws CoreException
   {
     super.enhanceProject(project, subMonitor, shell);
-    createCproject(project, subMonitor.newChild(1));
+
     createProjectPreference(project, subMonitor.newChild(1));
   }
 
   protected void createProjectPreference(IProject project, IProgressMonitor progressMonitor)
-    throws CoreException
   {
 
-    if (profile == null && tools == null)
-    {
-      return;
-    }
+    final var content = new StringBuilder();
 
-    final var content = new StringBuilder("eclipse.preferences.version=1\n");
+    content.append("/** XSMP Project configuration for ").append(project.getName()).append(" */\n");
+    content.append("project \"").append(project.getName()).append("\"\n");
+    content.append("\n");
+    content.append("// project relative paths containing modeling file(s)\n");
+    content.append("source \"smdl\"\n");
     if (profile != null)
     {
-      content.append("profile=" + profile + "\n");
+      content.append("\n");
+      content.append("\n");
+      content.append("// use ").append(profile.getDescription()).append("\n");
+      content.append("profile \"" + profile.getId() + "\"\n");
     }
 
     if (tools != null)
     {
-      content.append("tools=" + tools.stream().collect(Collectors.joining(",")) + "\n");
+      for (final var tool : tools)
+      {
+        if (tool != null)
+        {
+          content.append("\n");
+          content.append("\n");
+          content.append("// use ").append(tool.getDescription()).append("\n");
+          content.append("tool \"" + tool.getId() + "\"\n");
+        }
+      }
     }
+    content.append("\n");
+    content.append("\n");
+    content.append("\n");
 
-    final var settings = project.getFolder(".settings");
+    content.append("// If your project needs types from outside sources,\n");
+    content.append("// you can include them by adding project dependencies.\n");
+    content.append("// For example: dependency \"otherProject\"\n");
+    content.append("//              dependency \"otherProject2\"\n");
+
     final var subMonitor = SubMonitor.convert(progressMonitor, 2);
     try
     {
-      if (settings.exists())
-      {
-        settings.delete(false, progressMonitor);
-      }
-      settings.create(false, true, subMonitor.newChild(1));
-      createFile("org.eclipse.xsmp.Xsmpcat.prefs", settings, content.toString(),
-              subMonitor.newChild(1));
+      createFile("xsmp.project", project, content.toString(), subMonitor.newChild(1));
     }
     finally
     {
       subMonitor.done();
     }
-  }
-
-  protected void createCproject(IProject project, SubMonitor newChild)
-  {
   }
 
   public void addLink(String name, IPath location)

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -31,7 +31,7 @@ public class XsmpShouldGenerate extends OnlyWithoutErrors
   {
     final var config = configProvider.getProjectConfig(resource.getResourceSet());
 
-    if (config != null && config.shouldGenerate())
+    if (config != null)
     {
       for (final ISourceFolder sourceFolder : config.getSourceFolders())
       {

@@ -10,18 +10,27 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide;
 
+import org.eclipse.xsmp.extension.IExtensionManager;
 import org.eclipse.xsmp.ide.commands.XsmpCommandService;
+import org.eclipse.xsmp.ide.contentassist.IReferenceFilter;
 import org.eclipse.xsmp.ide.contentassist.XsmpcatIdeContentProposalProvider;
+import org.eclipse.xsmp.ide.contentassist.XsmpcatReferenceFilter;
+import org.eclipse.xsmp.ide.extension.ExtensionManager;
 import org.eclipse.xsmp.ide.folding.XsmpFoldingRangeProvider;
-import org.eclipse.xsmp.ide.generator.XsmpGenerator;
+import org.eclipse.xsmp.ide.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ide.generator.XsmpShouldGenerate;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
 import org.eclipse.xsmp.ide.hover.XsmpHoverService;
 import org.eclipse.xsmp.ide.hover.XsmpcatKeywordHovers;
 import org.eclipse.xsmp.ide.quickfix.XsmpcatIdeQuickfixProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolDeprecationInfoProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolDetailsProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolKindProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolNameProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpHierarchicalDocumentSymbolService;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
-import org.eclipse.xtext.generator.IGenerator2;
+import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
@@ -31,6 +40,11 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codeActions.QuickFixCodeActionService;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDeprecationInfoProvider;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDetailsProvider;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKindProvider;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
+import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 /**
@@ -38,14 +52,6 @@ import org.eclipse.xtext.workspace.IProjectConfigProvider;
  */
 public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
 {
-  static
-  {
-    @SuppressWarnings("unused")
-    final Class< ? >[] classes = {
-      org.apache.log4j.ConsoleAppender.class,
-      org.apache.log4j.DailyRollingFileAppender.class,
-      org.apache.log4j.PatternLayout.class };
-  }
 
   public Class< ? extends IExecutableCommandService> bindIExecutableCommandService()
   {
@@ -72,9 +78,9 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
     return XsmpHoverService.class;
   }
 
-  public Class< ? extends IGenerator2> bindIGenerator2()
+  public Class< ? extends GeneratorDelegate> bindGeneratorDelegate()
   {
-    return XsmpGenerator.class;
+    return XsmpGeneratorDelegate.class;
   }
 
   public Class< ? extends OutputConfigurationProvider> bindOutputConfigurationProvider()
@@ -101,5 +107,40 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends IFoldingRangeProvider> bindIFoldingRangeProvider()
   {
     return XsmpFoldingRangeProvider.class;
+  }
+
+  public Class< ? extends IExtensionManager> bindIExtensionManager()
+  {
+    return ExtensionManager.class;
+  }
+
+  public Class< ? extends IReferenceFilter> bindIReferenceFilter()
+  {
+    return XsmpcatReferenceFilter.class;
+  }
+
+  public Class< ? extends HierarchicalDocumentSymbolService> bindHierarchicalDocumentSymbolService()
+  {
+    return XsmpHierarchicalDocumentSymbolService.class;
+  }
+
+  public Class< ? extends DocumentSymbolDeprecationInfoProvider> bindDocumentSymbolDeprecationInfoProvider()
+  {
+    return XsmpDocumentSymbolDeprecationInfoProvider.class;
+  }
+
+  public Class< ? extends DocumentSymbolKindProvider> bindDocumentSymbolKindProvider()
+  {
+    return XsmpDocumentSymbolKindProvider.class;
+  }
+
+  public Class< ? extends DocumentSymbolNameProvider> bindDocumentSymbolNameProvider()
+  {
+    return XsmpDocumentSymbolNameProvider.class;
+  }
+
+  public Class< ? extends DocumentSymbolDetailsProvider> bindDocumentSymbolDetailsProvider()
+  {
+    return XsmpDocumentSymbolDetailsProvider.class;
   }
 }

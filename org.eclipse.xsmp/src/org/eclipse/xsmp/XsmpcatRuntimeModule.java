@@ -15,9 +15,9 @@ import org.eclipse.xsmp.documentation.XsmpEObjectDocumentationProvider;
 import org.eclipse.xsmp.formatting2.XsmpcoreFormatter;
 import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
 import org.eclipse.xsmp.naming.XsmpQualifiedNameProvider;
-import org.eclipse.xsmp.resource.XsmpResourceFactory;
 import org.eclipse.xsmp.resource.XsmpcatResource;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
+import org.eclipse.xsmp.scoping.XsmpGlobalScopeProvider;
 import org.eclipse.xsmp.scoping.XsmpImportedNamespaceScopeProvider;
 import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
@@ -27,12 +27,14 @@ import org.eclipse.xtext.formatting.IIndentationInformation;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
-import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
+import org.eclipse.xtext.workspace.ProjectConfigProvider;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
@@ -98,12 +100,6 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
     return XsmpcatIssueCodesProvider.class;
   }
 
-  @Override
-  public Class< ? extends IResourceFactory> bindIResourceFactory()
-  {
-    return XsmpResourceFactory.class;
-  }
-
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
   {
     return XsmpcatOutputConfigurationProvider.class;
@@ -113,5 +109,16 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
   public Class< ? extends XtextResource> bindXtextResource()
   {
     return XsmpcatResource.class;
+  }
+
+  @Override
+  public Class< ? extends IGlobalScopeProvider> bindIGlobalScopeProvider()
+  {
+    return XsmpGlobalScopeProvider.class;
+  }
+
+  public Class< ? extends IProjectConfigProvider> bindIProjectConfigProvider()
+  {
+    return ProjectConfigProvider.class;
   }
 }

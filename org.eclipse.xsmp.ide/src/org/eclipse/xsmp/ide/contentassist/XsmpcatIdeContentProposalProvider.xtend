@@ -21,7 +21,7 @@ import org.eclipse.xsmp.model.xsmp.XsmpPackage
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor
 
-class XsmpcatIdeContentProposalProvider extends AbstractIdeContentProposalProvider {
+class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 
 	int snippetPriority = 400;
 	

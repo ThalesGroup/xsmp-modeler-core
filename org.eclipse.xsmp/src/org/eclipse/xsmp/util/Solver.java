@@ -179,9 +179,9 @@ public class Solver
       {
         return getValue(cst.getValue(), cst.getType());
       }
-      if (value instanceof org.eclipse.xsmp.model.xsmp.EnumerationLiteral)
+      if (value instanceof final org.eclipse.xsmp.model.xsmp.EnumerationLiteral el)
       {
-        return EnumerationLiteral.valueOf((org.eclipse.xsmp.model.xsmp.EnumerationLiteral) value);
+        return EnumerationLiteral.valueOf(el);
       }
       throw new SolverException(e, "invalid reference type \"" + value.getClass().getSimpleName()
               + "\", only Contant and EnumerationLiteral are supported.");
@@ -434,10 +434,6 @@ public class Solver
           return doGetValue((StringLiteral) e);
         case XsmpPackage.UNARY_OPERATION:
           return doGetValue((UnaryOperation) e);
-        // case XsmpPackage.KEYWORD_EXPRESSION:
-        // return e;
-        // case XsmpPackage.EMPTY_EXPRESSION:
-        // return null;
         default:
           break;
       }

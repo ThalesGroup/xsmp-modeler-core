@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.profile.xsmp-sdk
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.profile.xsmp-sdk
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.profile.xsmp-sdk;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xsmp.generator.cpp,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.xsmp.profile.xsmp_sdk,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.member,
+ org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type,
+ org.eclipse.xsmp.profile.xsmp_sdk.validation

@@ -70,9 +70,9 @@ public final class String8 extends AbstractPrimitiveType<String8>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof String8)
+    if (obj instanceof final String8 string8)
     {
-      return Strings.equal(value, ((String8) obj).value);
+      return Strings.equal(value, string8.value);
     }
     return false;
   }

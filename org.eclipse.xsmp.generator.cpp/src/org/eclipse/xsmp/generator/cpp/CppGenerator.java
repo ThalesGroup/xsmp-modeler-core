@@ -220,11 +220,13 @@ public class CppGenerator extends AbstractGenerator
               "-assume-filename=" + fileName);
 
       final var process = pb.start();
+
+      final var writer = new PrintWriter(
+              new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8), true);
+      writer.append(content).close();
+
       final var reader = new BufferedReader(
               new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-      new PrintWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8),
-              true).append(content).close();
-
       final var result = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null)

@@ -51,7 +51,7 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
       case '\r' -> "\\r";
       case '\t' -> "\\t";
       default -> value >= 32 && value <= 126 ? Character.toString(value)
-                      : "\\" + Integer.toOctalString(value);
+              : "\\" + Integer.toOctalString(value);
     };
   }
 
@@ -94,9 +94,9 @@ public final class Char8 extends AbstractPrimitiveType<Char8>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Char8)
+    if (obj instanceof final Char8 char8)
     {
-      return value == ((Char8) obj).value;
+      return value == char8.value;
     }
     return false;
   }

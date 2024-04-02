@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -13,17 +13,14 @@ package org.eclipse.xsmp.ui.generator;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsmp.ui.extension.ExtensionManager;
-import org.eclipse.xsmp.ui.resource.XsmpProjectByResourceProvider;
-import org.eclipse.xtext.Constants;
+import org.eclipse.xsmp.extension.IExtensionManager;
+import org.eclipse.xsmp.ui.workspace.XsmpEclipseProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
-import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 /**
  * A generator that retrieve active profile and tools and run the generators
@@ -32,37 +29,28 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
 {
 
   @Inject
-  @Named(Constants.LANGUAGE_NAME)
-  private String languageName;
+  private IExtensionManager extensionManager;
 
   @Inject
-  private IPreferenceStoreAccess preferenceStoreAccess;
-
-  @Inject
-  private XsmpProjectByResourceProvider projectProvider;
+  private XsmpEclipseProjectConfigProvider configurationProvider;
 
   private void apply(Resource input, Consumer<IGenerator2> action)
   {
-    final var project = projectProvider.getProjectContext(input);
-    final var preferenceStore = preferenceStoreAccess.getContextPreferenceStore(project);
 
-    final var profile = ExtensionManager.getProfile(preferenceStore);
-    if (profile != null)
+    final var config = configurationProvider.getProjectConfig(input.getResourceSet());
+    if (config != null)
     {
-      final var injector = profile.getInjector(languageName);
-      final var generator = injector.getInstance(IGenerator2.class);
+      final var generator = extensionManager.getInstanceForProfile(config.getProfile(),
+              IGenerator2.class);
+      if (generator != null)
+      {
+        action.accept(generator);
+      }
+      final var generators = extensionManager.getInstancesForTools(config.getTools(),
+              IGenerator2.class);
+      generators.forEach(action);
 
-      action.accept(generator);
     }
-
-    final var tools = ExtensionManager.getTools(preferenceStore);
-    for (final var tool : tools)
-    {
-      final var injector = tool.getInjector(languageName);
-      final var generator = injector.getInstance(IGenerator2.class);
-      action.accept(generator);
-    }
-
   }
 
   @Override

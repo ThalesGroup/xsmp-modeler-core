@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.server
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.server
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.server;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xsmp.ide,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.lib,
+ org.apache.log4j;bundle-version="1.2.24",
+ org.eclipse.lsp4j;bundle-version="0.20.1",
+ org.eclipse.xsmp.profile.esa-cdk.ide;bundle-version="1.1.0",
+ org.eclipse.xsmp.profile.xsmp-sdk.ide;bundle-version="1.1.0",
+ org.eclipse.xsmp.tool.python.ide;bundle-version="1.1.0",
+ org.eclipse.xsmp.tool.smp.ide;bundle-version="1.1.0",
+ org.eclipse.lsp4j.jsonrpc,
+ com.google.gson;bundle-version="2.10.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.xsmp.server

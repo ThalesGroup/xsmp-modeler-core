@@ -19,12 +19,12 @@ Namespace returns ecore::EObject:
     {Metadatum}
     documentation=ML_DOCUMENTATION?
     metadata+=Attribute*
-    {Namespace.metadatum=current} 'namespace' name=ValidID?
+    {Namespace.metadatum=current} 'namespace' name=ValidID
     (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
 
 @Final
 NestedNamespace returns Namespace:
-    {Namespace} '::' name=ValidID?
+    {Namespace} '::' name=ValidID
     (member+=NestedNamespace | '{' member+=NamespaceMember* '}');
 
 NamespaceMember returns ecore::EObject:

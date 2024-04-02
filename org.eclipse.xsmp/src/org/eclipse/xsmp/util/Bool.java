@@ -156,9 +156,9 @@ public final class Bool extends AbstractPrimitiveType<Bool>
   @Override
   public boolean equals(Object obj)
   {
-    if (obj instanceof Bool)
+    if (obj instanceof final Bool bool)
     {
-      return value == ((Bool) obj).value;
+      return value == bool.value;
     }
     return false;
   }

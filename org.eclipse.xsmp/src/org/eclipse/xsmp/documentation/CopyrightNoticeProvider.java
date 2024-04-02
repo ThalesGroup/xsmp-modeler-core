@@ -41,10 +41,10 @@ public class CopyrightNoticeProvider
 
   public String getCopyrightNotice(final Resource resource)
   {
-    if (resource instanceof XtextResource)
+    if (resource instanceof final XtextResource xtextResource)
     {
       return cache.get(CopyrightNoticeProvider.class, resource,
-              () -> computeCopyrightNotice((XtextResource) resource));
+              () -> computeCopyrightNotice(xtextResource));
     }
     return null;
   }

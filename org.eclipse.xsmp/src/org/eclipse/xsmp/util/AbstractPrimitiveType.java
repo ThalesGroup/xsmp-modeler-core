@@ -270,9 +270,7 @@ public abstract class AbstractPrimitiveType<T extends AbstractPrimitiveType<T>>
         yield func.apply(this.float32Value(), (Float32) right);
       case UINT64:
         yield func.apply(this.uint64Value(), (UInt64) right);
-      case DATE_TIME:
-      case DURATION:
-      case INT64:
+      case DATE_TIME, DURATION, INT64:
         yield func.apply(this.int64Value(), (Int64) right);
       case UINT32:
         yield func.apply(this.uint32Value(), (UInt32) right);

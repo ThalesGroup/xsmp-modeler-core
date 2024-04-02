@@ -33,9 +33,9 @@ public class XsmpcatQuickfixProvider
   public void generateUUID(final Issue issue, IssueResolutionAcceptor acceptor)
   {
     acceptor.acceptMulti(issue, "Generate UUID", "Generate a random UUID.", "upcase.png", e -> {
-      if (e instanceof Type)
+      if (e instanceof final Type type)
       {
-        ((Type) e).setUuid(UUID.randomUUID().toString());
+        type.setUuid(UUID.randomUUID().toString());
       }
     });
   }
@@ -49,10 +49,9 @@ public class XsmpcatQuickfixProvider
               final var feature = e.eClass().getEStructuralFeature(issue.getData()[1]);
               final var elem = (EObject) e.eGet(feature);
 
-              if (elem instanceof VisibilityElement && !elem.eIsProxy())
+              if (elem instanceof final VisibilityElement ve && !elem.eIsProxy())
               {
-                ((VisibilityElement) elem)
-                        .setVisibility(VisibilityKind.getByName(issue.getData()[2]));
+                ve.setVisibility(VisibilityKind.getByName(issue.getData()[2]));
               }
             });
   }

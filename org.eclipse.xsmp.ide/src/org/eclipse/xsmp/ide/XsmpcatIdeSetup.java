@@ -12,10 +12,6 @@ package org.eclipse.xsmp.ide;
 
 import org.eclipse.xsmp.XsmpcatRuntimeModule;
 import org.eclipse.xsmp.XsmpcatStandaloneSetup;
-import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
-import org.eclipse.xsmp.tool.python.PythonStandaloneSetup;
-import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
 
 import com.google.inject.Guice;
@@ -26,22 +22,9 @@ import com.google.inject.Injector;
  */
 public class XsmpcatIdeSetup extends XsmpcatStandaloneSetup
 {
-
   @Override
   public Injector createInjector()
   {
     return Guice.createInjector(Modules2.mixin(new XsmpcatRuntimeModule(), new XsmpcatIdeModule()));
   }
-
-  @Override
-  public void register(Injector injector)
-  {
-    new SmpStandaloneSetup().createInjectorAndDoEMFRegistration();
-    new EsaCdkStandaloneSetup().createInjectorAndDoEMFRegistration();
-    new XsmpSdkStandaloneSetup().createInjectorAndDoEMFRegistration();
-    new PythonStandaloneSetup().createInjectorAndDoEMFRegistration();
-    // Current injector must be registered last to override previous ones
-    super.register(injector);
-  }
-
 }

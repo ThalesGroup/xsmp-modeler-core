@@ -16,7 +16,7 @@ import "http://org.eclipse.xsmp/xsmp"
 
 Catalogue:
     metadatum=Metadatum
-    'catalogue' name=ValidID?
+    'catalogue' name=ValidID
     member+=Namespace*;
 
 
@@ -28,42 +28,42 @@ NamespaceMember returns ecore::EObject:
     {Metadatum}
     documentation=ML_DOCUMENTATION?
     metadata+=Attribute*
-    ({Namespace.metadatum=current} 'namespace' name=ValidID?
+    ({Namespace.metadatum=current} 'namespace' name=ValidID
     (member+=NestedNamespace | '{' member+=NamespaceMember* '}')
     |
     {Structure.metadatum=current} modifiers+=VisibilityModifiers*
-    'struct' name=ValidID?
+    'struct' name=ValidID
     '{'
     member+=StructMember*
     '}'
     |
     {Class.metadatum=current} modifiers+=ClassModifiers*
-    'class' name=ValidID? ('extends' base=[Type|QualifiedName])?
+    'class' name=ValidID ('extends' base=[Type|QualifiedName])?
     '{'
     member+=ClassMember*
     '}'
     |
     {Exception.metadatum=current} modifiers+=ClassModifiers*
-    'exception' name=ValidID? ('extends' base=[Type|QualifiedName])?
+    'exception' name=ValidID ('extends' base=[Type|QualifiedName])?
     '{'
     member+=ClassMember*
     '}'
     |
     {Interface.metadatum=current} modifiers+=VisibilityModifiers*
-    'interface' name=ValidID? ('extends' base+=[Type|QualifiedName] (',' base+=[Type|QualifiedName])*)?
+    'interface' name=ValidID ('extends' base+=[Type|QualifiedName] (',' base+=[Type|QualifiedName])*)?
     '{'
     member+=InterfaceMember*
     '}'
     |
     {Model.metadatum=current} modifiers+=ClassModifiers*
-    'model' name=ValidID? ('extends' base=[Type|QualifiedName])? ('implements' interface+=[Type|QualifiedName] (','
+    'model' name=ValidID ('extends' base=[Type|QualifiedName])? ('implements' interface+=[Type|QualifiedName] (','
     interface+=[Type|QualifiedName])*)?
     '{'
     member+=ComponentMember*
     '}'
     |
     {Service.metadatum=current} modifiers+=ClassModifiers*
-    'service' name=ValidID? ('extends' base=[Type|QualifiedName])? ('implements' interface+=[Type|QualifiedName] (','
+    'service' name=ValidID ('extends' base=[Type|QualifiedName])? ('implements' interface+=[Type|QualifiedName] (','
     interface+=[Type|QualifiedName])*)?
     '{'
     member+=ComponentMember*
@@ -71,11 +71,11 @@ NamespaceMember returns ecore::EObject:
     |
     {Array.metadatum=current} modifiers+=VisibilityModifiers*
     // using keywork is deprecated and will be removed in a future release
-    (('array' | 'using') name=ValidID? '='
+    ('array' name=ValidID '='
     itemType=[Type|QualifiedName] '[') size=Expression? ']'
     |
     {ValueReference.metadatum=current} modifiers+=VisibilityModifiers*
-    'using' name=ValidID? '=' type=[Type|QualifiedName] '*'
+    'using' name=ValidID '=' type=[Type|QualifiedName] '*'
     |
     {Integer.metadatum=current} modifiers+=VisibilityModifiers*
     'integer' name=ValidID ('extends' primitiveType=[Type|QualifiedName])? ('in' (minimum=Expression |
@@ -90,7 +90,7 @@ NamespaceMember returns ecore::EObject:
     'event' name=ValidID ('extends' eventArgs=[Type|QualifiedName])?
     |
     {String.metadatum=current} modifiers+=VisibilityModifiers*
-    'string' name=ValidID ('[' length=Expression? ']')?
+    'string' name=ValidID ('[' length=Expression ']')?
     |
     {PrimitiveType.metadatum=current} modifiers+=VisibilityModifiers*
     'primitive' name=ValidID
@@ -102,18 +102,9 @@ NamespaceMember returns ecore::EObject:
     'attribute' type=[Type|QualifiedName] name=ValidID ('=' default=Expression)?
     |
     {Enumeration.metadatum=current} modifiers+=VisibilityModifiers*
-    'enum' name=ValidID?
+    'enum' name=ValidID
     '{'
     (literal+=EnumerationLiteral (',' literal+=EnumerationLiteral)* (',')?)?
-    '}'
-    |
-// This rule is deprecated and will be removed in a future release.
-// use AttributeTypeDeclaration
-// TODO to be removed
-    {AttributeType.metadatum=current} modifiers+=VisibilityModifiers*
-    'attribute' name=ValidID
-    '{'
-    type=[ValueType|QualifiedName] ValidID '?'? ('=' default=Expression)?
     '}');
 
 fragment PropertyDeclaration *:
@@ -241,12 +232,11 @@ FieldModifiers:
 
 EnumerationLiteral:
     metadatum=Metadatum
-    name=ValidID ('=' value=Expression)?;
+    name=ValidID '=' value=Expression;
 
 ParameterMetadatum returns Metadatum:
     {Metadatum}
     // do not provide documentation at parameter level( see @param tag in operation)
-    // documentation=ML_DOCUMENTATION?
     metadata+=Attribute*;
 
 ReturnParameter returns Parameter:
