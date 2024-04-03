@@ -15,10 +15,16 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.ui.testing.AbstractFoldingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import org.junit.jupiter.api.BeforeEach
 
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpUiInjectorProvider)
 class FoldingTest extends AbstractFoldingTest {
+    @BeforeEach
+    def void setup() throws Exception {
+        super.setUp();
+        XsmpcatProjectUtil.createProject(projectName).project
+    }
 
     @Test
     def complex() {

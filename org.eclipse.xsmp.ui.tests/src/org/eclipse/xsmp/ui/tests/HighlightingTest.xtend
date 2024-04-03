@@ -11,15 +11,13 @@
 package org.eclipse.xsmp.ui.tests
 
 import com.google.inject.Inject
+import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.ui.testing.AbstractHighlightingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-
-import static extension org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createJavaProject
-import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration
 
 @ExtendWith(InjectionExtension)
 @InjectWith(XsmpUiInjectorProvider)
@@ -29,8 +27,7 @@ class HighlightingTest extends AbstractHighlightingTest {
 
     @BeforeEach override void setUp() throws Exception {
         super.setUp
-        projectName.createJavaProject
-
+        XsmpcatProjectUtil.createProject(projectName)
     }
 
     @Test def catalogue_keyword() {

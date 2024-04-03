@@ -59,7 +59,7 @@ class XsmpcatValidatorTest {
             {}
         '''
         model.parse => [
-            assertNumberOfIssues(1)
+            assertNumberOfIssues(2)
             assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("constexpr"), 9,
                 "An Element Name shall not be an ISO/ANSI C++ keyword.")
         ]
@@ -73,7 +73,7 @@ class XsmpcatValidatorTest {
             {}
         '''
         model.parse => [
-            assertNumberOfIssues(1)
+            assertNumberOfIssues(2)
             assertError(NAMESPACE, NAME_IS_INVALID, model.indexOf("_invalid"), 8,
                 "An Element Name shall only contain letters, digits, and the underscore.")
         ]
@@ -90,7 +90,7 @@ class XsmpcatValidatorTest {
             }
         '''
         model.parse => [
-            assertNumberOfIssues(1)
+            assertNumberOfIssues(2)
             assertError(UNARY_OPERATION, INVALID_VALUE_RANGE, model.indexOf("-10"), 3,
                 "Integral value -10 is not in range 0L ... 9223372036854775807L.")
         ]
