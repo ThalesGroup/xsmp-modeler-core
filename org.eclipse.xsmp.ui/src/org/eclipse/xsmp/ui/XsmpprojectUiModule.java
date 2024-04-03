@@ -23,8 +23,8 @@ import org.eclipse.xsmp.ui.editor.XsmpprojectEditor;
 import org.eclipse.xsmp.ui.editor.model.XsmpDocumentProvider;
 import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xsmp.ui.highlighting.XsmpAntlrTokenToAttributeIdMapper;
-import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
-import org.eclipse.xsmp.ui.highlighting.XsmpSemanticHighlightingCalculator;
+import org.eclipse.xsmp.ui.highlighting.XsmpprojectHighlightingConfiguration;
+import org.eclipse.xsmp.ui.highlighting.XsmpprojectSemanticHighlightingCalculator;
 import org.eclipse.xsmp.ui.hover.XsmpDispatchingEObjectTextHover;
 import org.eclipse.xsmp.ui.hover.XsmpEObjectHoverProvider;
 import org.eclipse.xsmp.ui.resource.XsmpprojectResourceUIServiceProvider;
@@ -86,12 +86,12 @@ public class XsmpprojectUiModule extends AbstractXsmpprojectUiModule
 
   public Class< ? extends IHighlightingConfiguration> bindIHighlightingConfiguration()
   {
-    return XsmpHighlightingConfiguration.class;
+    return XsmpprojectHighlightingConfiguration.class;
   }
 
   public Class< ? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator()
   {
-    return XsmpSemanticHighlightingCalculator.class;
+    return XsmpprojectSemanticHighlightingCalculator.class;
   }
 
   @Override
@@ -134,4 +134,5 @@ public class XsmpprojectUiModule extends AbstractXsmpprojectUiModule
   {
     return XsmpDocumentProvider.class;
   }
+
 }

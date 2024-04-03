@@ -10,6 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.symbol;
 
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROFILE_REFERENCE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT_REFERENCE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_FOLDER;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL_REFERENCE;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.model.xsmp.VisibilityElement;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDetailsProvider;
@@ -27,7 +32,14 @@ public class XsmpDocumentSymbolDetailsProvider extends DocumentSymbolDetailsProv
       builder.append(ve.getRealVisibility().getLiteral()).append(" ");
     }
 
-    builder.append(object.eClass().getName());
+    switch (object.eClass().getClassifierID())
+    {
+      case SOURCE_FOLDER -> builder.append("Source");
+      case TOOL_REFERENCE -> builder.append("Tool");
+      case PROFILE_REFERENCE -> builder.append("Profile");
+      case PROJECT_REFERENCE -> builder.append("Dependency");
+      default -> builder.append(object.eClass().getName());
+    }
 
     return builder.toString();
   }

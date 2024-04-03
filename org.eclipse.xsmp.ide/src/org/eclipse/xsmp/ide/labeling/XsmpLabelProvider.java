@@ -29,8 +29,12 @@ import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMultiplicity;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.ProfileReference;
+import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.Property;
 import org.eclipse.xsmp.model.xsmp.Reference;
+import org.eclipse.xsmp.model.xsmp.SourceFolder;
+import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xsmp.model.xsmp.ValueReference;
 import org.eclipse.xsmp.util.QualifiedNames;
@@ -67,20 +71,20 @@ public class XsmpLabelProvider
   protected StringBuilder text(NamedElement elem, Type type, QualifiedName qn)
   {
     final var label = elem.getName();
-    final var styledLabel = new StringBuilder();
+    final var sb = new StringBuilder();
     if (label != null)
     {
-      styledLabel.append(label);
+      sb.append(label);
     }
     if (type != null && !type.eIsProxy())
     {
-      styledLabel.append(" : " + qualifiedNameProvider.getFullyQualifiedName(type).toString("::"));
+      sb.append(" : " + qualifiedNameProvider.getFullyQualifiedName(type).toString("::"));
     }
     else if (qn != null)
     {
-      styledLabel.append(" : " + qn.toString("::"));
+      sb.append(" : " + qn.toString("::"));
     }
-    return styledLabel;
+    return sb;
   }
 
   protected StringBuilder text(NamedElementWithMultiplicity elem, Type type)
@@ -199,24 +203,24 @@ public class XsmpLabelProvider
   protected String text(Array elem)
   {
     final var label = elem.getName();
-    final var styledLabel = new StringBuilder();
+    final var sb = new StringBuilder();
     if (label != null)
     {
-      styledLabel.append(label);
+      sb.append(label);
     }
     final var type = elem.getItemType();
     if (type != null && !type.eIsProxy())
     {
-      styledLabel.append(" : " + qualifiedNameProvider.getFullyQualifiedName(type).toString("::"));
+      sb.append(" : " + qualifiedNameProvider.getFullyQualifiedName(type).toString("::"));
 
-      styledLabel.append("[");
+      sb.append("[");
 
       final var size = elem.getSize();
       if (size != null)
       {
         try
         {
-          styledLabel.append(Long.toString(xsmpUtil.getInt64(size)));
+          sb.append(Long.toString(xsmpUtil.getInt64(size)));
         }
         catch (final Exception ex)
         {
@@ -224,9 +228,9 @@ public class XsmpLabelProvider
 
         }
       }
-      styledLabel.append("]");
+      sb.append("]");
     }
-    return styledLabel.toString();
+    return sb.toString();
   }
 
   private java.lang.String getParameterType(Parameter p)
@@ -258,21 +262,21 @@ public class XsmpLabelProvider
   protected String text(Operation elem)
   {
     final var label = elem.getName();
-    final var styledLabel = new StringBuilder();
+    final var sb = new StringBuilder();
     if (label != null)
     {
-      styledLabel.append(label);
+      sb.append(label);
     }
-    styledLabel.append("(");
+    sb.append("(");
 
-    styledLabel.append(elem.getParameter().stream().map(this::getParameterType)
+    sb.append(elem.getParameter().stream().map(this::getParameterType)
             .collect(Collectors.joining(", ")));
 
-    styledLabel.append(")");
-    styledLabel.append(" : " + (elem.getReturnParameter() == null ? "void"
+    sb.append(")");
+    sb.append(" : " + (elem.getReturnParameter() == null ? "void"
             : getParameterType(elem.getReturnParameter())));
 
-    return styledLabel.toString();
+    return sb.toString();
 
   }
 
@@ -289,6 +293,36 @@ public class XsmpLabelProvider
   protected String text(Reference elem)
   {
     return text(elem, elem.getInterface()).toString();
+  }
+
+  protected String text(SourceFolder ele)
+  {
+    return ele.getName();
+  }
+
+  protected String text(ProjectReference ele)
+  {
+    return ele.getName();
+  }
+
+  protected String text(ToolReference ele)
+  {
+    final var tool = ele.getTool();
+    if (tool == null || tool.eIsProxy())
+    {
+      return ele.getName();
+    }
+    return tool.getDescription();
+  }
+
+  protected String text(ProfileReference ele)
+  {
+    final var profile = ele.getProfile();
+    if (profile == null || profile.eIsProxy())
+    {
+      return ele.getName();
+    }
+    return profile.getDescription();
   }
 
 }

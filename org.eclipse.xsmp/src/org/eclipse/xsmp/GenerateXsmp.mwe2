@@ -123,10 +123,10 @@ Workflow {
                 generate = false
             }
             labelProvider = {
-                generateStub = false
+                generateStub = true
             }
             outline = {
-                generateStub = false
+                generateStub = true
             }
             quickFixProvider = {
                 generateStub = false

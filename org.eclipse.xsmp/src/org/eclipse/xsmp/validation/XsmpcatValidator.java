@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -66,6 +67,7 @@ import org.eclipse.xsmp.util.PrimitiveType;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -73,6 +75,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ComposedChecks;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -518,13 +521,35 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   }
 
+  @Inject(optional = true)
+  private IProjectConfigProvider configProvider;
+
   @Check
   protected void checkCatalogue(Catalogue doc)
   {
-    if (!resourceServiceprovider.canHandle(doc.eResource().getURI()))
+    final var resource = doc.eResource();
+    final var uri = resource.getURI();
+    if (!resourceServiceprovider.canHandle(uri))
     {
       warning("This document is not supported.", XsmpPackage.Literals.NAMED_ELEMENT__NAME);
     }
+    if (configProvider != null)
+    {
+      final var cfg = configProvider.getProjectConfig(resource.getResourceSet());
+      if (!(cfg instanceof final IXsmpProjectConfig config)
+              || !isDocumentInProjectSourceFolders(config, uri))
+      {
+        warning("This document is not contained in project source folders.",
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
+      }
+    }
+  }
+
+  private boolean isDocumentInProjectSourceFolders(IXsmpProjectConfig config, URI uri)
+  {
+    final var ws = config.getWorkspaceConfig();
+    final var project = ws.findProjectContaining(uri);
+    return project == config || config.getDependencies().contains(project.getName());
   }
 
   @Check

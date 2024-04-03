@@ -31,12 +31,16 @@ import static org.eclipse.xsmp.model.xsmp.XsmpPackage.NAMESPACE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.OPERATION;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PARAMETER;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROFILE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROFILE_REFERENCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT_REFERENCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROPERTY;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SERVICE;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_FOLDER;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.STRING;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.STRUCTURE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL_REFERENCE;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.lsp4j.SymbolKind;
@@ -70,6 +74,10 @@ public class XsmpDocumentSymbolKindProvider extends DocumentSymbolKindProvider
       case STRUCTURE -> SymbolKind.Struct;
       case NAMESPACE -> SymbolKind.Namespace;
       case CLASS, EXCEPTION, MODEL, SERVICE -> SymbolKind.Class;
+      case SOURCE_FOLDER -> SymbolKind.Package;
+      case TOOL_REFERENCE -> SymbolKind.Property;
+      case PROFILE_REFERENCE -> SymbolKind.Class;
+      case PROJECT_REFERENCE -> SymbolKind.Variable;
       default -> SymbolKind.Property;
     };
 

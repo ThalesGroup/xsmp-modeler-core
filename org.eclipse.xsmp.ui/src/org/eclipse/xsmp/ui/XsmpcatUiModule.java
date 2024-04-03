@@ -36,7 +36,6 @@ import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
 import org.eclipse.xsmp.ui.highlighting.XsmpSemanticHighlightingCalculator;
 import org.eclipse.xsmp.ui.hover.XsmpDispatchingEObjectTextHover;
 import org.eclipse.xsmp.ui.hover.XsmpEObjectHoverProvider;
-import org.eclipse.xsmp.ui.outline.XsmpcatOutlineTreeProvider;
 import org.eclipse.xsmp.ui.quickfix.XsmpTextEditComposer;
 import org.eclipse.xsmp.ui.resource.XsmpResourceUIServiceProvider;
 import org.eclipse.xsmp.ui.template.XsmpTemplateStore;
@@ -62,7 +61,6 @@ import org.eclipse.xtext.ui.editor.model.ResourceForIEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.model.edit.ITextEditComposer;
-import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
@@ -164,12 +162,6 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
   public Class< ? extends AbstractValidatorConfigurationBlock> bindAbstractValidatorConfigurationBlock()
   {
     return XsmpValidatorConfigurationBlock.class;
-  }
-
-  @Override
-  public Class< ? extends IOutlineTreeProvider> bindIOutlineTreeProvider()
-  {
-    return XsmpcatOutlineTreeProvider.class;
   }
 
   @Override
