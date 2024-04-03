@@ -124,7 +124,6 @@ import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.ILanguageServerAccess.IBuildListener;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -145,7 +144,6 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
-import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.BufferedCancelIndicator;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -162,9 +160,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
-public class XsmpLanguageServer
-        implements LanguageServer, WorkspaceService, TextDocumentService, NotebookDocumentService,
-        LanguageClientAware, Endpoint, JsonRpcMethodProvider, ILanguageServerAccess.IBuildListener
+public class XsmpLanguageServer implements LanguageServer, WorkspaceService, TextDocumentService,
+        NotebookDocumentService, LanguageClientAware, Endpoint, JsonRpcMethodProvider
 {
 
   private static final Logger LOG = Logger.getLogger(XsmpLanguageServer.class);
@@ -242,7 +239,7 @@ public class XsmpLanguageServer
     final var result = new InitializeResult();
 
     result.setCapabilities(createServerCapabilities(params));
-    access.addBuildListener(this);
+
     return requestManager.runWrite(() -> {
 
       var workspaceFolders = params.getWorkspaceFolders();
@@ -862,8 +859,15 @@ public class XsmpLanguageServer
     {
       return Collections.emptyList();
     }
-    return workspaceManager.doRead(uri, (doc, resource) -> service.getDocumentHighlights(doc,
-            resource, params, cancelIndicator));
+    try
+    {
+      return workspaceManager.doRead(uri, (doc, resource) -> service.getDocumentHighlights(doc,
+              resource, params, cancelIndicator));
+    }
+    catch (final IndexOutOfBoundsException e)
+    {
+      return Collections.emptyList();
+    }
   }
 
   @Override
@@ -1336,16 +1340,6 @@ public class XsmpLanguageServer
                               CancelIndicator.NullImpl)));
     }
   };
-
-  /**
-   * @deprecated please register a {@link IBuildListener} directly through
-   *             {@link ILanguageServerAccess#addBuildListener(IBuildListener)}
-   */
-  @Override
-  @Deprecated
-  public void afterBuild(List<IResourceDescription.Delta> deltas)
-  {
-  }
 
   protected ILanguageServerAccess getLanguageServerAccess()
   {

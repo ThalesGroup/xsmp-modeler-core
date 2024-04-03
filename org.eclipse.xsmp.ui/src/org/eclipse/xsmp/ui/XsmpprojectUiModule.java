@@ -24,11 +24,13 @@ import org.eclipse.xsmp.ui.editor.model.XsmpDocumentProvider;
 import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xsmp.ui.highlighting.XsmpAntlrTokenToAttributeIdMapper;
 import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
+import org.eclipse.xsmp.ui.highlighting.XsmpSemanticHighlightingCalculator;
 import org.eclipse.xsmp.ui.hover.XsmpDispatchingEObjectTextHover;
 import org.eclipse.xsmp.ui.hover.XsmpEObjectHoverProvider;
 import org.eclipse.xsmp.ui.resource.XsmpprojectResourceUIServiceProvider;
 import org.eclipse.xsmp.ui.validation.XsmpprojectUIValidator;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -85,6 +87,11 @@ public class XsmpprojectUiModule extends AbstractXsmpprojectUiModule
   public Class< ? extends IHighlightingConfiguration> bindIHighlightingConfiguration()
   {
     return XsmpHighlightingConfiguration.class;
+  }
+
+  public Class< ? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator()
+  {
+    return XsmpSemanticHighlightingCalculator.class;
   }
 
   @Override

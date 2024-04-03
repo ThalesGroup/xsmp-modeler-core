@@ -3,18 +3,18 @@
 	"patterns": [
 		{
 			"match": "\\b(project|profile|tool|source|dependency)\\b",
-			"name": "keyword.control.xsmpproject"
+			"name": "keyword.control.xsmp.project"
 		},
 		{
 			"match": "\\b([a-zA-Z]\\w*)\\b",
-			"name": "entity.name.type.xsmpproject"
+			"name": "entity.name.type.xsmp.project"
 		},
 		{
 			"match": "(?<!\\\\)(\"(?:[^\"\\\\]|\\\\.)*\")|(?<!\\\\)('(?:[^'\\\\]|\\\\.)*')",
-			"name": "string.quoted.double.xsmpproject"
+			"name": "string.quoted.double.xsmp.project"
 		},
 		{
-			"name": "comment.line.double-dash.xsmpproject",
+			"name": "comment.line.double-dash.xsmp.project",
 			"begin": "(^[ \\t]+)?(?=//)",
 			"end": "(?=$)"
 		},
@@ -34,11 +34,11 @@
 			]
 		},
 		{
-			"name": "comment.block.xsmpproject",
+			"name": "comment.block.xsmp.project",
 			"match": "/\\*(?:\\*\\*+)?\\*/"
 		},
 		{
-			"name": "comment.block.xsmpproject",
+			"name": "comment.block.xsmp.project",
 			"begin": "/\\*(?:[^\\*]|\\*\\*)",
 			"end": "\\*/"
 		}

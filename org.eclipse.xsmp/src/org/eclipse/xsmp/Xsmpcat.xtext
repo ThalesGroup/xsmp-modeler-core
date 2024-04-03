@@ -19,7 +19,6 @@ Catalogue:
     'catalogue' name=ValidID
     member+=Namespace*;
 
-
 enum RangeKind:
     Inclusive='...' | MinInclusive='..<' | MaxInclusive='<..' | Exclusive='<.<';
 
@@ -256,5 +255,4 @@ ValidID:
     ID | 'extends' | 'implements' | 'in' | 'out' | 'inout' | 'exception' | 'model' | 'service' | 'interface' | 'string'
     | 'native' | 'primitive' | 'attribute' | 'integer' | 'catalogue' | 'entrypoint' | 'field' | 'container' |
     'reference' | 'eventsink' | 'eventsource' | 'property' | 'association' | 'constant' | 'input' | 'output' |
-    'transient' | 'event' | 'def' | 'abstract' | 'get' | 'set' | 'readWrite' | 'readOnly' | 'writeOnly' |
-    'import' | 'array';
+    'transient' | 'event' | 'def' | 'abstract' | 'get' | 'set' | 'readWrite' | 'readOnly' | 'writeOnly' | 'array';

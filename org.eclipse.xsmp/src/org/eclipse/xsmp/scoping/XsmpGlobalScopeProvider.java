@@ -29,7 +29,7 @@ public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
 {
 
   @Inject
-  private IResourceDescription.Manager resourceDescriptionManager;
+  private IResourceDescription.Manager descriptionManager;
 
   @Inject
   private IResourceFactory resourceFactory;
@@ -56,7 +56,7 @@ public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
       {
         throw new IllegalStateException("Unable to load ecss.smp.xsmpcat");
       }
-      xsmpcatDescription = resourceDescriptionManager.getResourceDescription(resource);
+      xsmpcatDescription = descriptionManager.getResourceDescription(resource);
     }
     return xsmpcatDescription;
   }

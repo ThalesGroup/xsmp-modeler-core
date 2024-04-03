@@ -1,54 +1,32 @@
 {
-	"name": "Xsmpcat",
 	"scopeName": "source.xsmpcat",
-	"fileTypes": [
-		"xsmpcat"
-	],
-	"repository": {
-		"general": {
-			"patterns": [
-				{
-					"include": "#linecomment"
-				},
-				{
-					"include": "#blockcommentdocumentation"
-				},
-				{
-					"include": "#blockcommentdocumentationempty"
-				},
-				{
-					"include": "#blockcommentempty"
-				},
-				{
-					"include": "#blockcomment"
-				},
-				{
-					"include": "#keyword"
-				},
-				{
-					"include": "#keyword_operators"
-				}
-			]
+	"patterns": [
+		{
+			"match": "\\b(catalogue|model|struct|exception|container|constant|def|integer|float|eventsink|eventsource|reference|entrypoint|property|using|enum|field|service|namespace|array|native|attribute|event|class|string|primitive|association|interface|public|private|protected|abstract|input|output|transient|writeOnly|readOnly|readWrite|implements|extends|throws|get|set|in|out|inout)\\b",
+			"name": "keyword.control.xsmp.catalogue"
 		},
-		"linecomment": {
-			"name": "comment.line.double-dash.xsmpcat",
+		{
+			"match": "\\b(true|false|nullptr)\\b",
+			"name": "constant.language.xsmp.catalogue"
+		},
+		{
+			"match": "\\b([a-zA-Z]\\w*)\\b",
+			"name": "entity.name.type.xsmp.catalogue"
+		},
+		{
+			"match": "\\b(void)\\b",
+			"name": "storage.type.primitive.xsmp.catalogue"
+		},
+		{
+			"name": "comment.line.double-dash.xsmp.catalogue",
 			"begin": "(^[ \\t]+)?(?=//)",
 			"end": "(?=$)"
 		},
-		"blockcommentempty": {
-			"name": "comment.block.xsmpcat",
-			"match": "/\\*(?:\\*\\*+)?\\*/"
-		},
-		"blockcomment": {
-			"name": "comment.block.xsmpcat",
-			"begin": "/\\*(?:[^\\*]|\\*\\*)",
-			"end": "\\*/"
-		},
-		"blockcommentdocumentationempty": {
+		{
 			"name": "comment.block.documentation.xsmp.catalogue",
 			"match": "/\\*\\*\\*/"
 		},
-		"blockcommentdocumentation": {
+		{
 			"name": "comment.block.documentation.xsmp.catalogue",
 			"begin": "/\\*\\*[^\\*\\/]",
 			"end": "\\*/",
@@ -59,19 +37,51 @@
 				}
 			]
 		},
-		"keyword": {
-			"name": "keyword.control.xsmpcat",
-			"match": "\\b(catalogue|model|struct|exception|container|writeOnly|constant|def|integer|float|eventsink|eventsource|reference|output|protected|entrypoint|property|using|void|readOnly|throws|enum|input|extends|field|transient|true|false|abstract|inout|service|namespace|array|native|get|readWrite|attribute|event|class|set|string|primitive|association|interface|out|public|private|implements)\\b"
-		},
-		"keyword_operators": {
-			"name": "keyword.operator.xsmpcat",
-			"match": "\\b(\\|\\||<<|<=|>=|==|!=|<|>|&&|->|\\[|\\]|\\{|\\}|\\.|~|\\$|%|\\(|\\)|\\*|\\+|,|-|/|@|\\?|\\^)\\b"
-		}
-	},
-	"patterns": [
 		{
-			"include": "#general"
+			"name": "comment.block.xsmp.catalogue",
+			"match": "/\\*(?:\\*\\*+)?\\*/"
+		},
+		{
+			"name": "comment.block.xsmp.catalogue",
+			"begin": "/\\*(?:[^\\*]|\\*\\*)",
+			"end": "\\*/"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#characters"
 		}
 	],
-	"uuid": "8383e49a-fa0d-4bb5-827b-10e8abb294ca"
+	"repository": {
+		"strings": {
+			"begin": "\"",
+			"end": "\"",
+			"name": "string.quoted.double.xsmpcat",
+			"patterns": [
+				{
+					"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^\"\\\\])",
+					"name": "constant.character.escape.xsmp.catalogue"
+				}
+			]
+		},
+		"numbers": {
+			"match": "\\b(0b[01]+|0x[0-9A-Fa-f]+|[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?([uU][lL]?|[lL][uU]?|ns|us|ms|s|mn|h|d|y|[fF])?)\\b",
+			"name": "constant.numeric.xsmp.catalogue"
+		},
+		"characters": {
+			"begin": "'",
+			"end": "'",
+			"name": "string.quoted.single.xsmp.catalogue",
+			"patterns": [
+				{
+					"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^'\\\\])",
+					"name": "constant.character.escape.xsmp.catalogue"
+				}
+			]
+		}
+	}
 }

@@ -37,6 +37,14 @@ public class XsmpprojectGlobalScopeProvider extends DefaultGlobalScopeProvider
 
   private Resource resource;
 
+  /**
+   * Initialize a scope with all available extensions
+   *
+   * @param ignoreCase
+   * @param type
+   * @param filter
+   * @return
+   */
   private IScope getParentScope(boolean ignoreCase, EClass type,
           Predicate<IEObjectDescription> filter)
   {
@@ -70,7 +78,6 @@ public class XsmpprojectGlobalScopeProvider extends DefaultGlobalScopeProvider
     }
     return SelectableBasedScope.createScope(IScope.NULLSCOPE, description, filter, type,
             ignoreCase);
-
   }
 
   @Override

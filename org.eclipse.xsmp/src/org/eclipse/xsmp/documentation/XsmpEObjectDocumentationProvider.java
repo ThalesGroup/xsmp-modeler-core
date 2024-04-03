@@ -35,6 +35,10 @@ public class XsmpEObjectDocumentationProvider extends MultiLineCommentDocumentat
 
   private String cleanHtml(String content)
   {
+    if (content == null)
+    {
+      return null;
+    }
     // if the format is html, extract text between body tags
     while (true)
     {

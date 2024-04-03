@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.ide.build.XsmpBuildRequest;
 import org.eclipse.xsmp.ide.build.XsmpIncrementalBuilder;
-import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.build.IncrementalBuilder;
 import org.eclipse.xtext.build.IndexState;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -90,13 +89,6 @@ public class XsmpProjectManager
     issueAcceptor = acceptor;
     this.openedDocumentsContentProvider = openedDocumentsContentProvider;
     this.indexProvider = indexProvider;
-  }
-
-  public void setProjectConfig(IXsmpProjectConfig newProjectConfig, CancelIndicator cancelIndicator)
-  {
-
-    projectConfig = newProjectConfig;
-    doInitialBuild(cancelIndicator);
   }
 
   /**

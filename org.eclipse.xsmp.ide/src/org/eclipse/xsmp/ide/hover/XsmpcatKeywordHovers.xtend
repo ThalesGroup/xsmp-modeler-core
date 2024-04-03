@@ -276,7 +276,7 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                   </xhtml:p></p>
             '''
             case ga.operationDeclarationAccess.defKeyword_1: '''
-                <p><code>«visibility()» «kw("def")» (<em>returnType</em>|«kw("void")») <em>name</em> <strong>(</strong><em>p1, ..., pN</em><strong>)</strong> [«kw("throws")» exception1, ..., exceptionN]</code></p>
+                <p><code>«visibility()» «kw("def")» (<em>returnType</em> [<em>returnName</em>]|«kw("void")») <em>operationName</em> <strong>(</strong><em>p1, ..., pN</em><strong>)</strong> [«kw("throws")» exception1, ..., exceptionN]</code></p>
                 <p><code>p*: [(«kw("in")»|«kw("out")»|«kw("inout")»)] <em>type name</em> [ = defaultValueExpression]</code></p>
                 <br/>
                 An <b>Operation</b> may have an arbitrary number of parameters, where at most one of the parameters may be of <b>Direction = ParameterDirectionKind.return</b>. 

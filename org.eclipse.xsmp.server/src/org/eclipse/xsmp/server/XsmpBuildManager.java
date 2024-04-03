@@ -185,14 +185,29 @@ public class XsmpBuildManager
     final Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
     for (final URI dirty : allDirty)
     {
-      workspaceManager.getProjectManagers()
-              .forEach(p -> project2dirty.put(p.getProjectDescription(), dirty));
+      final var projectManager = workspaceManager.getProjectManager(dirty);
+      project2dirty.put(projectManager.getProjectDescription(), dirty);
+      workspaceManager.getProjectManagers().forEach(manager -> {
+        if (manager.getProjectDescription().getDependencies()
+                .contains(projectManager.getProjectDescription().getName()))
+        {
+          project2dirty.put(manager.getProjectDescription(), dirty);
+        }
+      });
     }
     final Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
     for (final URI deleted : deletedFiles)
     {
-      workspaceManager.getProjectManagers()
-              .forEach(p -> project2deleted.put(p.getProjectDescription(), deleted));
+      final var projectManager = workspaceManager.getProjectManager(deleted);
+      project2deleted.put(workspaceManager.getProjectManager(deleted).getProjectDescription(),
+              deleted);
+      workspaceManager.getProjectManagers().forEach(manager -> {
+        if (manager.getProjectDescription().getDependencies()
+                .contains(projectManager.getProjectDescription().getName()))
+        {
+          project2dirty.put(manager.getProjectDescription(), deleted);
+        }
+      });
     }
 
     final var sortedDescriptions = sortByDependencies(

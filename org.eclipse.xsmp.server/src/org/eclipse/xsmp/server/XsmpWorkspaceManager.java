@@ -235,8 +235,7 @@ public class XsmpWorkspaceManager
    */
   protected void refreshWorkspaceConfig(CancelIndicator cancelIndicator)
   {
-    final var newWorkspaceConfig = createWorkspaceConfig();
-    setWorkspaceConfig(newWorkspaceConfig);
+    setWorkspaceConfig(createWorkspaceConfig());
     final List<ProjectDescription> newProjects = new ArrayList<>();
     final var projectNames = projectName2ProjectManager.keySet();
     final Set<String> remainingProjectNames = new HashSet<>(projectNames);
@@ -290,7 +289,7 @@ public class XsmpWorkspaceManager
   }
 
   /**
-   * Callback after a build was performend
+   * Callback after a build was performed
    */
   protected void afterBuild(List<IResourceDescription.Delta> deltas)
   {
