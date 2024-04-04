@@ -39,10 +39,8 @@ import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type.EsaCdkArrayGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type.EsaCdkComponentGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type.EsaCdkExceptionGenerator;
 import org.eclipse.xsmp.profile.esa_cdk.generator.cpp.type.EsaCdkStringGenerator;
-import org.eclipse.xsmp.profile.esa_cdk.validation.EsaCdkValidator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.service.SingletonBinding;
 
 /**
  * Use this class to register components to be used at runtime / without the
@@ -57,11 +55,11 @@ public class EsaCdkRuntimeModule extends XsmpcatRuntimeModule
     return EsaCdkGenerator.class;
   }
 
-  @SingletonBinding(eager = true)
-  public Class< ? extends EsaCdkValidator> bindEsaCdkValidator()
-  {
-    return EsaCdkValidator.class;
-  }
+  // @SingletonBinding(eager = true)
+  // public Class< ? extends EsaCdkValidator> bindEsaCdkValidator()
+  // {
+  // return EsaCdkValidator.class;
+  // }
 
   @Override
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()

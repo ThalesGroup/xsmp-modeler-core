@@ -13,7 +13,9 @@ package org.eclipse.xsmp.profile.xsmp_sdk.ui;
 import org.eclipse.xsmp.profile.xsmp_sdk.AbstractXsmpSdkProfile;
 
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpSdkProfile extends AbstractXsmpSdkProfile
 {
   @Override

@@ -182,7 +182,8 @@ public class SmpGenerator extends AbstractModelConverter
 
     // Add all implementations of the package
     generatedCatalogue.eAllContents().forEachRemaining(it -> {
-      if (it instanceof final org.eclipse.xsmp.tool.smp.core.types.Type type && !(it instanceof Interface))
+      if (it instanceof final org.eclipse.xsmp.tool.smp.core.types.Type type
+              && !(it instanceof Interface))
       {
         final var impl = PackageFactory.eINSTANCE.createImplementationOfPackage();
         impl.setType(type);
@@ -238,9 +239,9 @@ public class SmpGenerator extends AbstractModelConverter
     final Map<EObject, String> eObjectToIdMap = new HashMap<>();
     resource.getAllContents().forEachRemaining(e -> {
 
-      if (e instanceof NamedElement && !eObjectToIdMap.containsKey(e))
+      if (e instanceof final NamedElement ne && !eObjectToIdMap.containsKey(e))
       {
-        final var idTag = ((NamedElement) e).getMetadatum().getXsmpcatdoc().tags().stream()
+        final var idTag = ne.getMetadatum().getXsmpcatdoc().tags().stream()
                 .filter(t -> "@id".equals(t.getTagName())).findFirst();
 
         String id;
@@ -852,9 +853,7 @@ public class SmpGenerator extends AbstractModelConverter
           {
             case XsmpPackage.ARRAY:
               return convert((CollectionLiteral) value, (Array) type);
-            case XsmpPackage.STRUCTURE:
-            case XsmpPackage.CLASS:
-            case XsmpPackage.EXCEPTION:
+            case XsmpPackage.STRUCTURE, XsmpPackage.CLASS, XsmpPackage.EXCEPTION:
               return convert((CollectionLiteral) value);
             default:
               break;
@@ -919,12 +918,9 @@ public class SmpGenerator extends AbstractModelConverter
 
   private void updateField(Value value, Expression e)
   {
-    if (e instanceof final DesignatedInitializer d)
+    if (e instanceof final DesignatedInitializer d && d.getField() != null)
     {
-      if (d.getField() != null)
-      {
-        value.setField(d.getField().getName());
-      }
+      value.setField(d.getField().getName());
     }
   }
 

@@ -39,10 +39,8 @@ import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkArrayGenerato
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkComponentGenerator;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkStringGenerator;
 import org.eclipse.xsmp.profile.xsmp_sdk.generator.cpp.type.XsmpSdkStructureGenerator;
-import org.eclipse.xsmp.profile.xsmp_sdk.validation.XsmpSdkValidator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.service.SingletonBinding;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
@@ -65,11 +63,11 @@ public class XsmpSdkRuntimeModule extends XsmpcatRuntimeModule
     return XsmpSdkGenerator.class;
   }
 
-  @SingletonBinding(eager = true)
-  public Class< ? extends XsmpSdkValidator> bindXsmpSdkValidator()
-  {
-    return XsmpSdkValidator.class;
-  }
+  // @SingletonBinding(eager = true)
+  // public Class< ? extends XsmpSdkValidator> bindXsmpSdkValidator()
+  // {
+  // return XsmpSdkValidator.class;
+  // }
 
   @Override
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()

@@ -29,37 +29,44 @@ public class XsmpprojectUIValidator extends AbstractXsmpprojectValidator
   protected void checkProject(Project p)
   {
     // check that project name match with eclipse
-    final var eclipseProject = projectByResourceProvider.getProjectContext(p.eResource());
-    if (!eclipseProject.getName().equals(p.getName()))
+    final var project = projectByResourceProvider.getProjectContext(p.eResource());
+    if (!project.getName().equals(p.getName()))
     {
       acceptError("XSMP project name must match with Eclipse project name", p,
               XsmpPackage.Literals.NAMED_ELEMENT__NAME,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     }
 
-    final var project = projectByResourceProvider.getProjectContext(p.eResource());
-    for (final var source : p.getSourceFolders())
+    for (final var source : p.getSources())
     {
       try
       {
         final var name = source.getName();
-        final var folder = project.getFolder(name);
-
-        if (!folder.exists() || name.startsWith("/") || name.contains("../"))
+        if (".".equals(name))
         {
-          acceptError("Source folder '" + source.getName() + "' does not exist.", source,
-                  XsmpPackage.Literals.SOURCE_FOLDER__NAME,
+          continue;
+        }
+        if (name.startsWith("/") || name.contains("../"))
+        {
+          acceptError("Source '" + source.getName() + "' is invalid", source,
+                  XsmpPackage.Literals.SOURCE_PATH__NAME,
                   ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
         }
+        if (project.getFolder(name).exists() || project.getFile(name).exists())
+        {
+          continue;
+        }
+        acceptError("Source '" + source.getName() + "' does not exist.", source,
+                XsmpPackage.Literals.SOURCE_PATH__NAME,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
       catch (final IllegalArgumentException e)
       {
-        acceptError("Source folder '" + source.getName() + "' is invalid", source,
-                XsmpPackage.Literals.SOURCE_FOLDER__NAME,
+        acceptError("Source '" + source.getName() + "' is invalid", source,
+                XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
     }
-
   }
 
 }

@@ -43,11 +43,12 @@ class XsmpprojectKeywordHovers implements IKeywordHovers {
                 <br/>
                 A <b>Tool</b> defines an additional code generator or validator applied to the project.
             '''
-            case ga.sourceFolderAccess.sourceKeyword_0: '''
+            case ga.sourcePathAccess.sourceKeyword_0: '''
                 <p><code>«kw("source")» <em>name</em></code></p>
                 <br/>
-                The <b>SourceFolder</b> defines the location of modeling files. 
-                <br />The <b>SourceFolder</b> must be relative to project root.
+                The <b>Source</b> defines the location of modeling files. 
+                <br />It must be relative to project root.
+                <br />It can be a folder or a file name.
             '''
             case ga.projectReferenceAccess.dependencyKeyword_0: '''
                 <p><code>«kw("dependency")» <em>name</em></code></p>

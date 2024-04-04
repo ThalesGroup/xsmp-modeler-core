@@ -13,6 +13,9 @@ package org.eclipse.xsmp.profile.esa_cdk.ide;
 import org.eclipse.xsmp.profile.esa_cdk.AbstractEsaCdkProfile;
 import org.eclipse.xtext.ISetup;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class EsaCdkProfile extends AbstractEsaCdkProfile
 {
   public EsaCdkProfile()

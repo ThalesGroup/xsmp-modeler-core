@@ -17,9 +17,9 @@ import "http://org.eclipse.xsmp/xsmp"
 Project:
 	metadatum=Metadatum
 	'project' name=STRING
-	((tools+=ToolReference | sourceFolders+=SourceFolder | referencedProjects+=ProjectReference)*
+	((tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference)*
 	profile=ProfileReference)?
-	(tools+=ToolReference | sourceFolders+=SourceFolder | referencedProjects+=ProjectReference)*;
+	(tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference)*;
 
 Profile:
 	metadatum=Metadatum
@@ -35,7 +35,7 @@ ProfileReference:
 ToolReference:
 	'tool' tool=[Tool|STRING];
 
-SourceFolder:
+SourcePath:
 	'source' name=STRING;
 
 ProjectReference:

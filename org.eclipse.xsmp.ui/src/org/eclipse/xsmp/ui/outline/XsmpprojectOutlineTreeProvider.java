@@ -28,7 +28,7 @@ public class XsmpprojectOutlineTreeProvider extends DefaultOutlineTreeProvider
     createEStructuralFeatureNode(parentNode, doc, XsmpPackage.Literals.NAMED_ELEMENT__NAME,
             imageDispatcher.invoke(doc), textDispatcher.invoke(doc), true);
 
-    for (final var source : doc.getSourceFolders())
+    for (final var source : doc.getSources())
     {
       createNode(parentNode, source);
     }

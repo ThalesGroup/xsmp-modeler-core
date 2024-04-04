@@ -11,20 +11,12 @@
 package org.eclipse.xsmp.tool.smp.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.extension.ITool;
 import org.eclipse.xsmp.ui.XsmpcatUiModule;
 
 public class SmpUIModule extends XsmpcatUiModule
 {
-
   public SmpUIModule(AbstractUIPlugin plugin)
   {
     super(plugin);
   }
-
-  public Class< ? extends ITool> bindITool()
-  {
-    return SmpTool.class;
-  }
-
 }

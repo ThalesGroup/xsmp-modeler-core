@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.esa_cdk.ide;
 
-import org.eclipse.xsmp.ide.XsmpcatIdeModule;
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkRuntimeModule;
 import org.eclipse.xsmp.profile.esa_cdk.EsaCdkStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
@@ -27,7 +26,7 @@ public class EsaCdkIdeSetup extends EsaCdkStandaloneSetup
   @Override
   public Injector createInjector()
   {
-    return Guice.createInjector(Modules2.mixin(new EsaCdkRuntimeModule(), new XsmpcatIdeModule()));
+    return Guice.createInjector(Modules2.mixin(new EsaCdkRuntimeModule(), new EsaCdkIdeModule()));
   }
 
 }

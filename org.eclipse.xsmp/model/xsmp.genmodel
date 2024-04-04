@@ -258,7 +258,7 @@
     <genClasses ecoreClass="xsmp.ecore#//Project">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/profile"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/tools"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/sourceFolders"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/sources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/referencedProjects"/>
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//Tool"/>
@@ -275,8 +275,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xsmp.ecore#//ProjectReference/project"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//ProjectReference/name"/>
     </genClasses>
-    <genClasses ecoreClass="xsmp.ecore#//SourceFolder">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//SourceFolder/name"/>
+    <genClasses ecoreClass="xsmp.ecore#//SourcePath">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//SourcePath/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

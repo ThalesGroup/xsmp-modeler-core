@@ -34,7 +34,7 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
   protected void checkProject(Project p)
   {
     final var visitedSources = new HashSet<String>();
-    for (final var source : p.getSourceFolders())
+    for (final var source : p.getSources())
     {
       final var name = source.getName();
 
@@ -46,13 +46,13 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
       if (name.startsWith("/"))
       {
         acceptError("Source folder '" + source.getName() + "' must be relative to project path.",
-                source, XsmpPackage.Literals.SOURCE_FOLDER__NAME,
+                source, XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
       if (name.contains("../"))
       {
         acceptError("Source folder '" + source.getName() + "' must not contain '../'.", source,
-                XsmpPackage.Literals.SOURCE_FOLDER__NAME,
+                XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
     }

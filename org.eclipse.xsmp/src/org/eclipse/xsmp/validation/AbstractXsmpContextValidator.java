@@ -17,8 +17,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xsmp.extension.IProfile;
-import org.eclipse.xsmp.extension.ITool;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
@@ -38,12 +36,6 @@ public abstract class AbstractXsmpContextValidator extends AbstractDeclarativeVa
   @Inject(optional = true)
   private IProjectConfigProvider configProvider;
 
-  @Inject(optional = true)
-  IProfile profile;
-
-  @Inject(optional = true)
-  ITool tool;
-
   @Override
   protected List<EPackage> getEPackages()
   {
@@ -53,18 +45,7 @@ public abstract class AbstractXsmpContextValidator extends AbstractDeclarativeVa
     return result;
   }
 
-  protected boolean isEnabledFor(IXsmpProjectConfig config)
-  {
-    if (profile != null)
-    {
-      return profile.getId().equals(config.getProfile());
-    }
-    if (tool != null)
-    {
-      return config.getTools().contains(tool.getId());
-    }
-    return true;
-  }
+  protected abstract boolean isEnabledFor(IXsmpProjectConfig config);
 
   protected boolean isResponsible(ResourceSet context)
   {

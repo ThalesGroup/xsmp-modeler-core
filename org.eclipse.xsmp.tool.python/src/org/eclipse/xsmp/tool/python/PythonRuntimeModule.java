@@ -22,6 +22,11 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
  */
 public class PythonRuntimeModule extends XsmpcatRuntimeModule
 {
+  // @SingletonBinding(eager = true)
+  // public Class< ? extends PythonValidator> bindXsmpSdkValidator()
+  // {
+  // return PythonValidator.class;
+  // }
 
   @Override
   public Class< ? extends IGenerator2> bindIGenerator2()

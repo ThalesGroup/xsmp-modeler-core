@@ -13,8 +13,10 @@ package org.eclipse.xsmp.profile.xsmp_sdk.ide;
 import org.eclipse.xsmp.profile.xsmp_sdk.AbstractXsmpSdkProfile;
 import org.eclipse.xtext.ISetup;
 
-public class XsmpSdkProfile extends AbstractXsmpSdkProfile
+import com.google.inject.Singleton;
 
+@Singleton
+public class XsmpSdkProfile extends AbstractXsmpSdkProfile
 {
   public XsmpSdkProfile()
   {

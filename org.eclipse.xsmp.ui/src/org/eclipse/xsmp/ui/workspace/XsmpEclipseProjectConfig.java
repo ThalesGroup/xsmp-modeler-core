@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.workspace;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
       tools = project.getTools().stream().map(ToolReference::getName).toList();
       dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
               .filter(Objects::nonNull).toList();
-      project.getSourceFolders().forEach(folder -> addSourceFolder(folder.getName()));
+      project.getSources().forEach(folder -> addSourceFolder(folder.getName()));
     }
     else
     {
@@ -65,7 +66,8 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
 
   private ISourceFolder addSourceFolder(String relativePath)
   {
-    final var sourceFolder = new EclipseSourceFolder(getProject(), relativePath);
+    final var sourceFolder = new EclipseSourceFolder(getProject(),
+            ".".equals(relativePath) ? "" : URI.create(relativePath).normalize().getPath());
     sourceFolders.add(sourceFolder);
     return sourceFolder;
   }

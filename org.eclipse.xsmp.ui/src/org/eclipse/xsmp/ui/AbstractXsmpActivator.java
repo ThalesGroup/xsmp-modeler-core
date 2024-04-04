@@ -45,13 +45,6 @@ public class AbstractXsmpActivator extends AbstractUIPlugin
           .synchronizedMap(Maps.<String, Injector> newHashMapWithExpectedSize(1));
 
   @Override
-  public void start(BundleContext context) throws Exception
-  {
-    super.start(context);
-
-  }
-
-  @Override
   public void stop(BundleContext context) throws Exception
   {
     injectors.clear();
@@ -62,12 +55,7 @@ public class AbstractXsmpActivator extends AbstractUIPlugin
   {
     synchronized (injectors)
     {
-      var injector = injectors.get(language);
-      if (injector == null)
-      {
-        injectors.put(language, injector = createInjector(language));
-      }
-      return injector;
+      return injectors.computeIfAbsent(language, this::createInjector);
     }
   }
 

@@ -11,19 +11,12 @@
 package org.eclipse.xsmp.tool.python.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.extension.ITool;
 import org.eclipse.xsmp.ui.XsmpcatUiModule;
 
 public class PythonUIModule extends XsmpcatUiModule
 {
-
   public PythonUIModule(AbstractUIPlugin plugin)
   {
     super(plugin);
-  }
-
-  public Class< ? extends ITool> bindITool()
-  {
-    return PythonTool.class;
   }
 }

@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.tool.smp.ide;
 
-import org.eclipse.xsmp.ide.XsmpcatIdeModule;
 import org.eclipse.xsmp.tool.smp.SmpRuntimeModule;
 import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
@@ -27,7 +26,7 @@ public class SmpIdeSetup extends SmpStandaloneSetup
   @Override
   public Injector createInjector()
   {
-    return Guice.createInjector(Modules2.mixin(new SmpRuntimeModule(), new XsmpcatIdeModule()));
+    return Guice.createInjector(Modules2.mixin(new SmpRuntimeModule(), new SmpIdeModule()));
   }
 
 }

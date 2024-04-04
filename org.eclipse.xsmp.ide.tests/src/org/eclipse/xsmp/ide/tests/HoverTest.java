@@ -19,8 +19,7 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
   void testHover_1()
   {
     testHover((HoverTestConfiguration it) -> {
-      // Include ECSS-SMP library
-      TestUtils.loadEcssSmpLibrary(it);
+
       final var model = """
               catalogue Catalogue1
 
@@ -47,8 +46,6 @@ class HoverTest extends AbstractXsmpcatLanguageServerTest
   void testHover_2()
   {
     testHover((HoverTestConfiguration it) -> {
-      // Include ECSS-SMP library
-      TestUtils.loadEcssSmpLibrary(it);
 
       final var model = """
               catalogue TestCatalogue

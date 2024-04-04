@@ -10,7 +10,9 @@
 ******************************************************************************/
 package org.eclipse.xsmp.profile.esa_cdk.validation;
 
+import org.eclipse.xsmp.profile.esa_cdk.AbstractEsaCdkProfile;
 import org.eclipse.xsmp.validation.AbstractXsmpContextValidator;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 
 import com.google.inject.Singleton;
 
@@ -21,5 +23,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class EsaCdkValidator extends AbstractXsmpContextValidator
 {
+  @Override
+  protected boolean isEnabledFor(IXsmpProjectConfig config)
+  {
+    return AbstractEsaCdkProfile.PROFILE_ID.equals(config.getProfile());
+  }
 
 }

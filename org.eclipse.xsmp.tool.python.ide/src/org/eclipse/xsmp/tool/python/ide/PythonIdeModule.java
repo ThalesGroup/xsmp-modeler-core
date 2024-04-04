@@ -8,25 +8,13 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.profile.xsmp_sdk.ide;
+package org.eclipse.xsmp.tool.python.ide;
 
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkRuntimeModule;
-import org.eclipse.xsmp.profile.xsmp_sdk.XsmpSdkStandaloneSetup;
-import org.eclipse.xtext.util.Modules2;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import org.eclipse.xsmp.ide.XsmpcatIdeModule;
 
 /**
  * Initialization support for running Xtext languages as language servers.
  */
-public class XsmpSdkIdeSetup extends XsmpSdkStandaloneSetup
+public class PythonIdeModule extends XsmpcatIdeModule
 {
-
-  @Override
-  public Injector createInjector()
-  {
-    return Guice.createInjector(Modules2.mixin(new XsmpSdkRuntimeModule(), new XsmpSdkIdeModule()));
-  }
-
 }

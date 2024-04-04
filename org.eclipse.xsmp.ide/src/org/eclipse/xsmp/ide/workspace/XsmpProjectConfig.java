@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.workspace;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +40,9 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
     tools = project.getTools().stream().map(ToolReference::getName).toList();
     dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
             .filter(Objects::nonNull).toList();
-    project.getSourceFolders().forEach(folder -> addSourceFolder(folder.getName()));
+
+    project.getSources().forEach(folder -> addSourceFolder(".".equals(folder.getName()) ? ""
+            : URI.create(folder.getName()).normalize().getPath()));
   }
 
   @Override

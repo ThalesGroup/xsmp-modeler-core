@@ -10,11 +10,13 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.labeling;
 
+import java.net.URI;
+
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xsmp.model.xsmp.Document;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
-import org.eclipse.xsmp.model.xsmp.SourceFolder;
+import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
@@ -43,14 +45,18 @@ public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
     return "full/obj16/Project.png";
   }
 
-  String text(SourceFolder ele)
+  String text(SourcePath ele)
   {
-    return ele.getName();
+    if (".".equals(ele.getName()))
+    {
+      return ele.getName();
+    }
+    return URI.create(ele.getName()).normalize().getPath();
   }
 
-  String image(SourceFolder ele)
+  String image(SourcePath ele)
   {
-    return "full/obj16/SourceFolder.png";
+    return "full/obj16/SourcePath.png";
   }
 
   String text(ProjectReference ele)

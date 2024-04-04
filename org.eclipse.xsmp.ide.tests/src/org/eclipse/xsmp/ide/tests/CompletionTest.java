@@ -101,7 +101,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
   void testCompletion_03()
   {
     testCompletion((TestCompletionConfiguration it) -> {
-      TestUtils.loadEcssSmpLibrary(it);
 
       it.setModel("""
               catalogue TestCatalogue
@@ -131,7 +130,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
   void testCompletion_04()
   {
     testCompletion((TestCompletionConfiguration it) -> {
-      TestUtils.loadEcssSmpLibrary(it);
 
       it.setModel("""
               catalogue TestCatalogue
@@ -161,7 +159,6 @@ class CompletionTest extends AbstractXsmpcatLanguageServerTest
   void testCompletion_05()
   {
     testCompletion((TestCompletionConfiguration it) -> {
-      TestUtils.loadEcssSmpLibrary(it);
 
       it.setModel("""
               catalogue TestCatalogue

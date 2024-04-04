@@ -13,6 +13,9 @@ package org.eclipse.xsmp.tool.python.ide;
 import org.eclipse.xsmp.tool.python.AbstractPythonTool;
 import org.eclipse.xtext.ISetup;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class PythonTool extends AbstractPythonTool
 {
   public PythonTool()

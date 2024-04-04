@@ -18,11 +18,12 @@ import org.eclipse.xsmp.extension.Profile;
 
 public abstract class AbstractXsmpSdkProfile extends Profile
 {
+  public static final String PROFILE_ID = "org.eclipse.xsmp.profile.xsmp-sdk";
 
   @Override
   public String getId()
   {
-    return "org.eclipse.xsmp.profile.xsmp-sdk";
+    return PROFILE_ID;
   }
 
   @Override

@@ -255,7 +255,7 @@ class Test${catalogueName}(xsmp.unittest.TestCase):
  */
 project "${projectName}"
 
-// project relative path(s) containing modeling files
+// project relative path(s) containing modeling file(s)
 source "smdl"
 
 `

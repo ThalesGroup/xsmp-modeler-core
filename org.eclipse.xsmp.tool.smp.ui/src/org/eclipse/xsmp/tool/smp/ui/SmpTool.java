@@ -13,10 +13,11 @@ package org.eclipse.xsmp.tool.smp.ui;
 import org.eclipse.xsmp.tool.smp.AbstractSmpTool;
 
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
+@Singleton
 public class SmpTool extends AbstractSmpTool
 {
-
   @Override
   public Injector getInjector(String languageName)
   {

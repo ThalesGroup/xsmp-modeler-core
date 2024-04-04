@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.profile.xsmp_sdk.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.extension.IProfile;
 import org.eclipse.xsmp.ui.XsmpcatUiModule;
 
 /**
@@ -19,14 +18,8 @@ import org.eclipse.xsmp.ui.XsmpcatUiModule;
  */
 public class XsmpSdkUiModule extends XsmpcatUiModule
 {
-
   public XsmpSdkUiModule(AbstractUIPlugin plugin)
   {
     super(plugin);
-  }
-
-  public Class< ? extends IProfile> bindIProfile()
-  {
-    return XsmpSdkProfile.class;
   }
 }

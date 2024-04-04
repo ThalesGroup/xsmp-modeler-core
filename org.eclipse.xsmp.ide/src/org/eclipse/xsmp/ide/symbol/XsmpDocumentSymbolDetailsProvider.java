@@ -12,7 +12,7 @@ package org.eclipse.xsmp.ide.symbol;
 
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROFILE_REFERENCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT_REFERENCE;
-import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_FOLDER;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_PATH;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL_REFERENCE;
 
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +34,7 @@ public class XsmpDocumentSymbolDetailsProvider extends DocumentSymbolDetailsProv
 
     switch (object.eClass().getClassifierID())
     {
-      case SOURCE_FOLDER -> builder.append("Source");
+      case SOURCE_PATH -> builder.append("Source");
       case TOOL_REFERENCE -> builder.append("Tool");
       case PROFILE_REFERENCE -> builder.append("Profile");
       case PROJECT_REFERENCE -> builder.append("Dependency");

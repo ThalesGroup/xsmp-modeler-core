@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.labeling;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.Property;
 import org.eclipse.xsmp.model.xsmp.Reference;
-import org.eclipse.xsmp.model.xsmp.SourceFolder;
+import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xsmp.model.xsmp.ValueReference;
@@ -295,9 +296,13 @@ public class XsmpLabelProvider
     return text(elem, elem.getInterface()).toString();
   }
 
-  protected String text(SourceFolder ele)
+  protected String text(SourcePath ele)
   {
-    return ele.getName();
+    if (".".equals(ele.getName()))
+    {
+      return ele.getName();
+    }
+    return URI.create(ele.getName()).normalize().getPath();
   }
 
   protected String text(ProjectReference ele)

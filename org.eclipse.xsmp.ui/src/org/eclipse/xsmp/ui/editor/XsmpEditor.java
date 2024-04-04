@@ -130,11 +130,9 @@ public class XsmpEditor extends XtextEditor
 
       IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
     }
-    catch (
-
-    final CoreException e)
+    catch (final CoreException e)
     {
-      e.printStackTrace();
+      throw new PartInitException(e.getMessage());
     }
   }
 }

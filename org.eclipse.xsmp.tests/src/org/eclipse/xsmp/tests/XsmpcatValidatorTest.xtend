@@ -36,16 +36,12 @@ class XsmpcatValidatorTest {
 
     def Catalogue parse(CharSequence chr) {
         var cat = parsehelper.parse(chr);
-        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-            URI.createURI("ecss.smp.xsmpcat"), null, cat.eResource.resourceSet)
         return cat
     }
 
     @Test
     def void checkValid() {
         var resourceSet = resourceSetProvider.get
-        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-            URI.createURI("ecss.smp.xsmpcat"), null, resourceSet)
 
         parsehelper.parse(getClass().getResource("testValid.xsmpcat").openStream,
             URI.createURI("testValid.xsmpcat"), null, resourceSet).assertNoErrors
@@ -59,7 +55,7 @@ class XsmpcatValidatorTest {
             {}
         '''
         model.parse => [
-            assertNumberOfIssues(2)
+            assertNumberOfIssues(1)
             assertError(NAMESPACE, NAME_IS_RESERVED_KEYWORD, model.indexOf("constexpr"), 9,
                 "An Element Name shall not be an ISO/ANSI C++ keyword.")
         ]
@@ -73,7 +69,7 @@ class XsmpcatValidatorTest {
             {}
         '''
         model.parse => [
-            assertNumberOfIssues(2)
+            assertNumberOfIssues(1)
             assertError(NAMESPACE, NAME_IS_INVALID, model.indexOf("_invalid"), 8,
                 "An Element Name shall only contain letters, digits, and the underscore.")
         ]
@@ -90,7 +86,7 @@ class XsmpcatValidatorTest {
             }
         '''
         model.parse => [
-            assertNumberOfIssues(2)
+            assertNumberOfIssues(1)
             assertError(UNARY_OPERATION, INVALID_VALUE_RANGE, model.indexOf("-10"), 3,
                 "Integral value -10 is not in range 0L ... 9223372036854775807L.")
         ]

@@ -21,7 +21,7 @@ class XsmpcatProjectUtil
     final var javaProject = JavaProjectSetupUtil.createJavaProject(projectName);
     createFile(projectName, "xsmp", "project",
             new StringBuilder().append("project \"").append(projectName).append("\"")
-                    .append(newLine).append("source \"smdl\"").append(newLine).toString());
+                    .append(newLine).append("source \".\"").append(newLine).toString());
     addNature(javaProject.getProject(), XtextProjectHelper.NATURE_ID);
     return javaProject;
   }

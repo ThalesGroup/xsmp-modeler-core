@@ -11,7 +11,6 @@
 package org.eclipse.xsmp.profile.esa_cdk.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xsmp.extension.IProfile;
 import org.eclipse.xsmp.ui.XsmpcatUiModule;
 
 /**
@@ -19,15 +18,8 @@ import org.eclipse.xsmp.ui.XsmpcatUiModule;
  */
 public class EsaCdkUiModule extends XsmpcatUiModule
 {
-
   public EsaCdkUiModule(AbstractUIPlugin plugin)
   {
     super(plugin);
   }
-
-  public Class< ? extends IProfile> bindIProfile()
-  {
-    return EsaCdkProfile.class;
-  }
-
 }

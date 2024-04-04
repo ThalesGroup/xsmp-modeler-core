@@ -89,7 +89,7 @@ public class XsmpcatProjectFactory extends PluginProjectFactory
     content.append("/** XSMP Project configuration for ").append(project.getName()).append(" */\n");
     content.append("project \"").append(project.getName()).append("\"\n");
     content.append("\n");
-    content.append("// project relative paths containing modeling file(s)\n");
+    content.append("// project relative path(s) containing modeling file(s)\n");
     content.append("source \"smdl\"\n");
     if (profile != null)
     {

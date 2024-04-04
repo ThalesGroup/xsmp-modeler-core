@@ -536,8 +536,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (configProvider != null)
     {
       final var cfg = configProvider.getProjectConfig(resource.getResourceSet());
-      if (!(cfg instanceof final IXsmpProjectConfig config)
-              || !isDocumentInProjectSourceFolders(config, uri))
+      if (cfg != null && (!(cfg instanceof final IXsmpProjectConfig config)
+              || !isDocumentInProjectSourceFolders(config, uri)))
       {
         warning("This document is not contained in project source folders.",
                 XsmpPackage.Literals.NAMED_ELEMENT__NAME);
@@ -547,9 +547,13 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   private boolean isDocumentInProjectSourceFolders(IXsmpProjectConfig config, URI uri)
   {
+    if (config.findSourceFolderContaining(uri) != null)
+    {
+      return true;
+    }
     final var ws = config.getWorkspaceConfig();
     final var project = ws.findProjectContaining(uri);
-    return project == config || config.getDependencies().contains(project.getName());
+    return config.getDependencies().contains(project.getName());
   }
 
   @Check

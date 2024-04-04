@@ -8,9 +8,9 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.profile.xsmp_sdk.validation;
+package org.eclipse.xsmp.tool.python.validation;
 
-import org.eclipse.xsmp.profile.xsmp_sdk.AbstractXsmpSdkProfile;
+import org.eclipse.xsmp.tool.python.AbstractPythonTool;
 import org.eclipse.xsmp.validation.AbstractXsmpContextValidator;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 
@@ -21,13 +21,11 @@ import com.google.inject.Singleton;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-public class XsmpSdkValidator extends AbstractXsmpContextValidator
+public class PythonValidator extends AbstractXsmpContextValidator
 {
-
   @Override
   protected boolean isEnabledFor(IXsmpProjectConfig config)
   {
-    return AbstractXsmpSdkProfile.PROFILE_ID.equals(config.getProfile());
+    return config.getTools().contains(AbstractPythonTool.TOOL_ID);
   }
-
 }

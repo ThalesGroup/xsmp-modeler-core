@@ -13,7 +13,9 @@ package org.eclipse.xsmp.tool.python.ui;
 import org.eclipse.xsmp.tool.python.AbstractPythonTool;
 
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
+@Singleton
 public class PythonTool extends AbstractPythonTool
 {
   @Override

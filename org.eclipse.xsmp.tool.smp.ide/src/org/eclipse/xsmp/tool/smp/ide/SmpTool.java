@@ -13,6 +13,9 @@ package org.eclipse.xsmp.tool.smp.ide;
 import org.eclipse.xsmp.tool.smp.AbstractSmpTool;
 import org.eclipse.xtext.ISetup;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class SmpTool extends AbstractSmpTool
 {
   public SmpTool()

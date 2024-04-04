@@ -16,7 +16,7 @@ import org.eclipse.xsmp.model.xsmp.Metadatum;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
-import org.eclipse.xsmp.model.xsmp.SourceFolder;
+import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.services.XsmpprojectGrammarAccess;
 import org.eclipse.xtext.formatting2.AbstractJavaFormatter;
@@ -46,7 +46,7 @@ public class XsmpprojectFormatter extends AbstractJavaFormatter
     {
       doc.format(tool);
     }
-    for (final var sourceFolder : project.getSourceFolders())
+    for (final var sourceFolder : project.getSources())
     {
       doc.format(sourceFolder);
     }
@@ -96,10 +96,10 @@ public class XsmpprojectFormatter extends AbstractJavaFormatter
     doc.append(kw, this::oneSpace);
   }
 
-  protected void format(SourceFolder sourceFolder, IFormattableDocument doc)
+  protected void format(SourcePath sourcePath, IFormattableDocument doc)
   {
-    final var parentRegion = regionFor(sourceFolder);
-    final var kw = parentRegion.keyword(ga.getSourceFolderAccess().getSourceKeyword_0());
+    final var parentRegion = regionFor(sourcePath);
+    final var kw = parentRegion.keyword(ga.getSourcePathAccess().getSourceKeyword_0());
     doc.prepend(kw, it -> {
       it.setNewLines(1, 2, 3);
       it.lowPriority();

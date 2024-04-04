@@ -36,7 +36,7 @@ import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROJECT_REFERENCE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.PROPERTY;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SERVICE;
-import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_FOLDER;
+import static org.eclipse.xsmp.model.xsmp.XsmpPackage.SOURCE_PATH;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.STRING;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.STRUCTURE;
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL;
@@ -74,7 +74,7 @@ public class XsmpDocumentSymbolKindProvider extends DocumentSymbolKindProvider
       case STRUCTURE -> SymbolKind.Struct;
       case NAMESPACE -> SymbolKind.Namespace;
       case CLASS, EXCEPTION, MODEL, SERVICE -> SymbolKind.Class;
-      case SOURCE_FOLDER -> SymbolKind.Package;
+      case SOURCE_PATH -> SymbolKind.Package;
       case TOOL_REFERENCE -> SymbolKind.Property;
       case PROFILE_REFERENCE -> SymbolKind.Class;
       case PROJECT_REFERENCE -> SymbolKind.Variable;

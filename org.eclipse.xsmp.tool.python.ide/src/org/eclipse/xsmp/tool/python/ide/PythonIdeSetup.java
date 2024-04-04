@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.tool.python.ide;
 
-import org.eclipse.xsmp.ide.XsmpcatIdeModule;
 import org.eclipse.xsmp.tool.python.PythonRuntimeModule;
 import org.eclipse.xsmp.tool.python.PythonStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
@@ -23,11 +22,10 @@ import com.google.inject.Injector;
  */
 public class PythonIdeSetup extends PythonStandaloneSetup
 {
-
   @Override
   public Injector createInjector()
   {
-    return Guice.createInjector(Modules2.mixin(new PythonRuntimeModule(), new XsmpcatIdeModule()));
+    return Guice.createInjector(Modules2.mixin(new PythonRuntimeModule(), new PythonIdeModule()));
   }
 
 }

@@ -18,11 +18,12 @@ import org.eclipse.xsmp.extension.Tool;
 
 public abstract class AbstractPythonTool extends Tool
 {
+  public static final String TOOL_ID = "org.eclipse.xsmp.tool.python";
 
   @Override
   public String getId()
   {
-    return "org.eclipse.xsmp.tool.python";
+    return TOOL_ID;
   }
 
   @Override

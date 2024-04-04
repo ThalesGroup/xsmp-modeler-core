@@ -39,9 +39,9 @@ class ValidatorTest extends AbstractXsmpcatLanguageServerTest
     initialize();
 
     final var problems = problems();
-    Assert.assertEquals(2, problems.size());
+    Assert.assertEquals(1, problems.size());
 
-    final var problem = Iterables.getLast(problems, null);
+    final var problem = Iterables.getFirst(problems, null);
     assertEquals("Missing Type UUID.", problem.getMessage());
   }
 
@@ -61,7 +61,7 @@ class ValidatorTest extends AbstractXsmpcatLanguageServerTest
     initialize();
 
     final var problems = problems();
-    Assert.assertEquals(2, problems.size());
+    Assert.assertEquals(1, problems.size());
 
     final var problem = Iterables.getFirst(problems, null);
     assertEquals("mismatched input 'integger' expecting '}'", problem.getMessage());
@@ -98,9 +98,9 @@ class ValidatorTest extends AbstractXsmpcatLanguageServerTest
     initialize();
 
     final var problems = problems();
-    Assert.assertEquals(2, problems.size());
+    Assert.assertEquals(1, problems.size());
 
-    final var problem = Iterables.getLast(problems, null);
+    final var problem = Iterables.getFirst(problems, null);
     assertEquals("The Model TestNamespace1.MyFirstModel is not visible.", problem.getMessage());
   }
 

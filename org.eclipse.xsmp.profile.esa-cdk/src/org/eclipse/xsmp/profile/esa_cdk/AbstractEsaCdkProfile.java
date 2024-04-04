@@ -18,10 +18,12 @@ import org.eclipse.xsmp.extension.Profile;
 
 public abstract class AbstractEsaCdkProfile extends Profile
 {
+  public static final String PROFILE_ID = "org.eclipse.xsmp.profile.esa-cdk";
+
   @Override
   public String getId()
   {
-    return "org.eclipse.xsmp.profile.esa-cdk";
+    return PROFILE_ID;
   }
 
   @Override
