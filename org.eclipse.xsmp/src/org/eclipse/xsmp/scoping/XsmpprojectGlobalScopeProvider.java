@@ -50,7 +50,7 @@ public class XsmpprojectGlobalScopeProvider extends DefaultGlobalScopeProvider
   {
     if (description == null)
     {
-      resource = new ResourceImpl(XsmpConstants.XSMP_PROJECT_EXTENSIONS_URI);
+      resource = new ResourceImpl(XsmpConstants.XSMP_EXTENSIONS_MODEL_URI);
 
       for (final var profile : extensionManager.getProfiles())
       {

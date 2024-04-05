@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -8,22 +8,17 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ide.build;
+package org.eclipse.xsmp.resource;
 
-import org.eclipse.xtext.build.BuildRequest;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.xsmp.XsmpConstants;
+import org.eclipse.xtext.resource.impl.DefaultResourceServiceProvider;
 
-public class XsmpBuildRequest extends BuildRequest
+public class XsmpprojectResourceServiceProvider extends DefaultResourceServiceProvider
 {
-  private boolean shouldGenerate;
-
-  public boolean shouldGenerate()
+  @Override
+  public boolean canHandle(URI uri)
   {
-    return shouldGenerate;
+    return XsmpConstants.XSMP_PROJECT_FILENAME.equals(uri.lastSegment());
   }
-
-  public void setShouldGenerate(boolean shouldGenerate)
-  {
-    this.shouldGenerate = shouldGenerate;
-  }
-
 }

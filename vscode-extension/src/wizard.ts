@@ -94,14 +94,16 @@ export async function createProjectWizard() {
 		}
 	);
 
-	if (addToWorkspace && addToWorkspace.addToWorkspace) {
-		const uri = vscode.Uri.file(projectFolderPath);
-		vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri });
 
-		const xsmpcatFilePath = path.join(projectFolderPath, "smdl", `${projectName}.xsmpcat`);
-		const xsmpcatDocument = await vscode.workspace.openTextDocument(xsmpcatFilePath);
-		await vscode.window.showTextDocument(xsmpcatDocument);
+	const uri = vscode.Uri.file(projectFolderPath);
+	if (!vscode.workspace.workspaceFolders.some(folder => uri.fsPath.startsWith(folder.uri.fsPath))) {
+		if (addToWorkspace && addToWorkspace.addToWorkspace) {
+			vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri });
+		}
 	}
+	const xsmpcatFilePath = path.join(projectFolderPath, "smdl", `${projectName}.xsmpcat`);
+	const xsmpcatDocument = await vscode.workspace.openTextDocument(xsmpcatFilePath);
+	await vscode.window.showTextDocument(xsmpcatDocument);
 }
 
 

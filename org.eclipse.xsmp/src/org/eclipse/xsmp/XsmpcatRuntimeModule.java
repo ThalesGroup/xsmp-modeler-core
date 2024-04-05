@@ -13,7 +13,7 @@ package org.eclipse.xsmp;
 import org.eclipse.xsmp.conversion.XsmpValueConverterService;
 import org.eclipse.xsmp.documentation.XsmpEObjectDocumentationProvider;
 import org.eclipse.xsmp.formatting2.XsmpcoreFormatter;
-import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.naming.XsmpQualifiedNameProvider;
 import org.eclipse.xsmp.resource.XsmpcatResource;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
@@ -102,7 +102,7 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
 
   public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
   {
-    return XsmpcatOutputConfigurationProvider.class;
+    return XsmpOutputConfigurationProvider.class;
   }
 
   @Override

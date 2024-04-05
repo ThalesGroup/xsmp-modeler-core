@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 
@@ -36,8 +35,7 @@ public class XsmpprojectResourceUIServiceProvider extends DefaultResourceUIServi
     // only handle xsmp.project at the project root
     if (result && storage instanceof final IResource file)
     {
-      return file.getParent() instanceof IProject
-              && XsmpConstants.XSMP_PROJECT_FILENAME.equals(uri.lastSegment());
+      return file.getParent() instanceof IProject;
     }
     return result;
   }

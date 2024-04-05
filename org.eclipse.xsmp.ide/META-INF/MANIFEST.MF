@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.xsmp;visibility:=reexport,
  org.eclipse.lsp4j.jsonrpc
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.ide,
- org.eclipse.xsmp.ide.build,
  org.eclipse.xsmp.ide.commands,
  org.eclipse.xsmp.ide.contentassist,
  org.eclipse.xsmp.ide.contentassist.antlr,

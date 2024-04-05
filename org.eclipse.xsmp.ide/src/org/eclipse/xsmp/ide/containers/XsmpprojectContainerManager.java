@@ -22,8 +22,10 @@ import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 import com.google.inject.Inject;
 
-public class XsmpprojectContainerManager
-        extends ProjectDescriptionBasedContainerManager
+/**
+ * A specialized container manager with visibility on all container
+ */
+public class XsmpprojectContainerManager extends ProjectDescriptionBasedContainerManager
 {
   @Inject
   private IProjectConfigProvider configProvider;

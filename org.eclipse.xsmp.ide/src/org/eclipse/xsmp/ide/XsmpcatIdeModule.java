@@ -19,7 +19,6 @@ import org.eclipse.xsmp.ide.extension.ExtensionManager;
 import org.eclipse.xsmp.ide.folding.XsmpFoldingRangeProvider;
 import org.eclipse.xsmp.ide.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
-import org.eclipse.xsmp.ide.generator.XsmpShouldGenerate;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
 import org.eclipse.xsmp.ide.hover.XsmpHoverService;
 import org.eclipse.xsmp.ide.hover.XsmpcatKeywordHovers;
@@ -31,7 +30,6 @@ import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolNameProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpHierarchicalDocumentSymbolService;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorDelegate;
-import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.folding.IFoldingRangeProvider;
@@ -92,11 +90,6 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends IProjectConfigProvider> bindIProjectConfigProvider()
   {
     return XsmpProjectConfigProvider.class;
-  }
-
-  public Class< ? extends IShouldGenerate> bindIShouldGenerate()
-  {
-    return XsmpShouldGenerate.class;
   }
 
   public Class< ? extends IKeywordHovers> bindIKeywordHovers()

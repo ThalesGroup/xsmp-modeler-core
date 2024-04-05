@@ -12,7 +12,7 @@ package org.eclipse.xsmp.tool.smp.generator;
 
 import java.util.Set;
 
-import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.xtext.generator.OutputConfiguration;
  *
  * @author daveluy
  */
-public class SmpOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
+public class SmpOutputConfigurationProvider extends XsmpOutputConfigurationProvider
 {
 
   public static final String SMDL_GEN = "SMDL-GEN";

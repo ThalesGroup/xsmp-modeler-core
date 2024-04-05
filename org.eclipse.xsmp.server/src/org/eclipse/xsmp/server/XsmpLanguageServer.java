@@ -523,7 +523,7 @@ public class XsmpLanguageServer implements LanguageServer, WorkspaceService, Tex
   public void didChangeConfiguration(DidChangeConfigurationParams params)
   {
     requestManager.runWrite(() -> {
-      workspaceManager.didChangeConfiguration(params, CancelIndicator.NullImpl);
+      workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
       return null;
     }, (a, b) -> null);
 

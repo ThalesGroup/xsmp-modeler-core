@@ -12,7 +12,7 @@ package org.eclipse.xsmp.profile.esa_cdk.generator;
 
 import java.util.Set;
 
-import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.generator.cpp.CppOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 /**
  * Default configuration for output folders used in the generator
  */
-public class EsaCdkOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
+public class EsaCdkOutputConfigurationProvider extends XsmpOutputConfigurationProvider
 {
 
   @Inject

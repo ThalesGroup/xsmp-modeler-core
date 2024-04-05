@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -15,7 +15,6 @@ import org.eclipse.xtext.Constants;
 
 public interface XsmpConstants extends Constants
 {
-
   String XSMP_PROJECT_FILENAME = "xsmp.project";
 
   String ORG_ECLIPSE_XSMP_XSMPCAT = "org.eclipse.xsmp.Xsmpcat";
@@ -24,5 +23,5 @@ public interface XsmpConstants extends Constants
 
   String ORG_ECLIPSE_XSMP_XSMPPROJECT = "org.eclipse.xsmp.Xsmpproject";
 
-  URI XSMP_PROJECT_EXTENSIONS_URI = URI.createURI("extension:/xsmp.project");
+  URI XSMP_EXTENSIONS_MODEL_URI = URI.createURI("extension:/xsmp.project");
 }

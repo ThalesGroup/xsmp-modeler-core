@@ -12,13 +12,13 @@ package org.eclipse.xsmp.tool.python.generator;
 
 import java.util.Set;
 
-import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
 /**
  * Default configuration for output folders used in the generator
  */
-public class PythonOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
+public class PythonOutputConfigurationProvider extends XsmpOutputConfigurationProvider
 {
 
   public static final String PYTHON = "PYTHON";

@@ -11,10 +11,14 @@
 package org.eclipse.xsmp;
 
 import org.eclipse.xsmp.documentation.XsmpEObjectDocumentationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.resource.XsmpprojectResourceDescriptionStrategy;
+import org.eclipse.xsmp.resource.XsmpprojectResourceServiceProvider;
 import org.eclipse.xsmp.scoping.XsmpprojectGlobalScopeProvider;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
+import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 
 /**
@@ -38,5 +42,15 @@ public class XsmpprojectRuntimeModule extends AbstractXsmpprojectRuntimeModule
   public Class< ? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy()
   {
     return XsmpprojectResourceDescriptionStrategy.class;
+  }
+
+  public Class< ? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider()
+  {
+    return XsmpOutputConfigurationProvider.class;
+  }
+
+  public Class< ? extends IResourceServiceProvider> bindIResourceServiceProvider()
+  {
+    return XsmpprojectResourceServiceProvider.class;
   }
 }

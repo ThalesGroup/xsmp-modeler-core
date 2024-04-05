@@ -21,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWorkspaceFoldersParams;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -241,18 +240,21 @@ public class XsmpWorkspaceManager
     final Set<String> remainingProjectNames = new HashSet<>(projectNames);
     for (final IProjectConfig projectConfig : getWorkspaceConfig().getProjects())
     {
-      if (projectName2ProjectManager.containsKey(projectConfig.getName()))
+      final var projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+      newProjects.add(projectDescription);
+      var projectManager = projectName2ProjectManager.get(projectConfig.getName());
+      if (projectManager != null)
       {
         remainingProjectNames.remove(projectConfig.getName());
+        projectManager.refreshProjectConfig(projectConfig);
       }
-
-      final var projectManager = projectManagerProvider.get();
-      final var projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-      projectManager.initialize(projectDescription, projectConfig, issueAcceptor,
-              openedDocumentsContentProvider, () -> fullIndex, cancelIndicator);
-      projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-      newProjects.add(projectDescription);
-
+      else
+      {
+        projectManager = projectManagerProvider.get();
+        projectManager.initialize(projectDescription, projectConfig, issueAcceptor,
+                openedDocumentsContentProvider, () -> fullIndex);
+        projectName2ProjectManager.put(projectDescription.getName(), projectManager);
+      }
     }
     for (final String deletedProject : remainingProjectNames)
     {
@@ -483,7 +485,7 @@ public class XsmpWorkspaceManager
   public Pair< ? super Document, ? super XtextResource> read(URI uri)
   {
     final var resourceURI = uri.trimFragment();
-    if (XsmpConstants.XSMP_PROJECT_EXTENSIONS_URI.equals(resourceURI))
+    if (XsmpConstants.XSMP_EXTENSIONS_MODEL_URI.equals(resourceURI))
     {
       return null;
     }
@@ -528,12 +530,4 @@ public class XsmpWorkspaceManager
   {
     return openDocuments.containsKey(uri);
   }
-
-  public void didChangeConfiguration(DidChangeConfigurationParams params,
-          CancelIndicator cancelIndicator)
-  {
-    // TODO handle params to update only changed projects ?
-    refreshWorkspaceConfig(cancelIndicator);
-  }
-
 }

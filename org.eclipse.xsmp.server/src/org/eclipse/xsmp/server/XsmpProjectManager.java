@@ -18,8 +18,8 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.XsmpConstants;
-import org.eclipse.xsmp.ide.build.XsmpBuildRequest;
-import org.eclipse.xsmp.ide.build.XsmpIncrementalBuilder;
+import org.eclipse.xsmp.server.build.XsmpIncrementalBuilder;
+import org.eclipse.xtext.build.BuildRequest;
 import org.eclipse.xtext.build.IncrementalBuilder;
 import org.eclipse.xtext.build.IndexState;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -77,11 +77,13 @@ public class XsmpProjectManager
 
   private IProjectConfig projectConfig;
 
+  // list of URI defined in the project before a call to refreshProjectConfig
+  private final List<URI> oldUris = new ArrayList<>();
+
   public void initialize(ProjectDescription description, IProjectConfig projectConfig,
           Procedure2< ? super URI, ? super Iterable<Issue>> acceptor,
           IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
-          Provider<Map<String, ResourceDescriptionsData>> indexProvider,
-          CancelIndicator cancelIndicator)
+          Provider<Map<String, ResourceDescriptionsData>> indexProvider)
   {
     projectDescription = description;
     this.projectConfig = projectConfig;
@@ -108,9 +110,10 @@ public class XsmpProjectManager
     {
       allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
     }
+    // keep only URI that should be deleted
+    oldUris.removeAll(allUris);
 
-    return doBuild(allUris, Collections.emptyList(), Collections.emptyList(), cancelIndicator,
-            true);
+    return doBuild(allUris, oldUris, Collections.emptyList(), cancelIndicator, true);
 
   }
 
@@ -121,10 +124,10 @@ public class XsmpProjectManager
           List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
           boolean shouldGenerate)
   {
-    final var request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator,
-            shouldGenerate);
+    final var request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
     final var result = incrementalBuilder.build(request,
-            languagesRegistry::getResourceServiceProvider);
+            languagesRegistry::getResourceServiceProvider, shouldGenerate);
+
     indexState = result.getIndexState();
     resourceSet = request.getResourceSet();
     indexProvider.get().put(projectDescription.getName(), indexState.getResourceDescriptions());
@@ -134,11 +137,10 @@ public class XsmpProjectManager
   /**
    * Creates a new build request for this project.
    */
-  protected XsmpBuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
-          List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
-          boolean shouldGenerate)
+  protected BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
+          List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator)
   {
-    final var result = new XsmpBuildRequest();
+    final var result = new BuildRequest();
     result.setBaseDir(baseDir);
     result.setState(new IndexState(indexState.getResourceDescriptions().copy(),
             indexState.getFileMappings().copy()));
@@ -152,7 +154,6 @@ public class XsmpProjectManager
     });
     result.setCancelIndicator(cancelIndicator);
     result.setIndexOnly(projectConfig.isIndexOnly());
-    result.setShouldGenerate(shouldGenerate);
     return result;
   }
 
@@ -279,6 +280,20 @@ public class XsmpProjectManager
         issueAcceptor.apply(resourceURI, Collections.emptyList());
       }
     }
+  }
+
+  public void refreshProjectConfig(IProjectConfig projectConfig)
+  {
+    // store current URIs
+    oldUris.clear();
+    for (final ISourceFolder srcFolder : getProjectConfig().getSourceFolders())
+    {
+      oldUris.addAll(srcFolder.getAllResources(fileSystemScanner));
+    }
+
+    this.projectConfig = projectConfig;
+    baseDir = projectConfig.getPath();
+    resourceSet = null;
   }
 
 }
