@@ -27,6 +27,7 @@ import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolDeprecationInfoProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolDetailsProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolKindProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolNameProvider;
+import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolRangeProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpHierarchicalDocumentSymbolService;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorDelegate;
@@ -42,6 +43,7 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDe
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDetailsProvider;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKindProvider;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolRangeProvider;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
@@ -135,5 +137,10 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends DocumentSymbolDetailsProvider> bindDocumentSymbolDetailsProvider()
   {
     return XsmpDocumentSymbolDetailsProvider.class;
+  }
+
+  public Class< ? extends DocumentSymbolRangeProvider> bindDocumentSymbolRangeProvider()
+  {
+    return XsmpDocumentSymbolRangeProvider.class;
   }
 }
