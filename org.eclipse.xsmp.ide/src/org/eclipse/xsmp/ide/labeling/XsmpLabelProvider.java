@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.labeling;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -298,11 +297,11 @@ public class XsmpLabelProvider
 
   protected String text(SourcePath ele)
   {
-    if (".".equals(ele.getName()))
+    if (ele.getName() == null || ele.getName().isEmpty())
     {
-      return ele.getName();
+      return ".";
     }
-    return URI.create(ele.getName()).normalize().getPath();
+    return ele.getName();
   }
 
   protected String text(ProjectReference ele)

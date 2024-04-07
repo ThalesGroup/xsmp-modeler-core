@@ -17,6 +17,7 @@ import static org.eclipse.xsmp.model.xsmp.XsmpPackage.TOOL_REFERENCE;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsmp.model.xsmp.VisibilityElement;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolDetailsProvider;
 
 public class XsmpDocumentSymbolDetailsProvider extends DocumentSymbolDetailsProvider
@@ -34,7 +35,16 @@ public class XsmpDocumentSymbolDetailsProvider extends DocumentSymbolDetailsProv
 
     switch (object.eClass().getClassifierID())
     {
-      case SOURCE_PATH -> builder.append("Source");
+      case SOURCE_PATH -> {
+        if (object.eContainingFeature() == XsmpPackage.Literals.PROJECT__SOURCES)
+        {
+          builder.append("Source");
+        }
+        else
+        {
+          builder.append("Include");
+        }
+      }
       case TOOL_REFERENCE -> builder.append("Tool");
       case PROFILE_REFERENCE -> builder.append("Profile");
       case PROJECT_REFERENCE -> builder.append("Dependency");

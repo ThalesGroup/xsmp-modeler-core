@@ -220,6 +220,27 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			array ${1:name} = ${2|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ARRAY__ITEM_TYPE)»|}[$0]
 		''', "Create an Array Type", context), snippetPriority);
 	}
+	def protected complete_nativeType(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
+		acceptor.accept(getProposalCreator().createSnippet('''
+			/** 
+			 * @type native_type
+			 * @location native_location
+			 * @namespace native_namespace
+			 * @uuid «generateUuid» 
+			 */
+			class ${1:name}
+		''', "Create a Native type", context), snippetPriority);
+	}
+		def protected complete_attributeType(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
+		acceptor.accept(getProposalCreator().createSnippet('''
+			/** 
+			 * // @allowMultiple
+			 * @usage ...
+			 * @uuid «generateUuid» 
+			 */
+			attribute ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE)»|} ${2:name} = $0
+		''', "Create an Attribute type", context), snippetPriority);
+	}
 
 	def private String getCrossReferences(EObject eObject, EReference eReference) {
 		val scope = scopeProvider.getScope(eObject, eReference)

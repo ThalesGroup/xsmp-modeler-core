@@ -40,23 +40,49 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
 
       if (!visitedSources.add(name))
       {
-        acceptError("Duplicated source folder '" + name + "'.", source, null, INSIGNIFICANT_INDEX,
+        acceptError("Duplicated Source path '" + name + "'.", source, null, INSIGNIFICANT_INDEX,
                 null);
       }
       if (name.startsWith("/"))
       {
-        acceptError("Source folder '" + source.getName() + "' must be relative to project path.",
+        acceptError("Source path '" + source.getName() + "' is not relative to project path.",
                 source, XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
-      if (name.contains("../"))
+      if (name.startsWith("../") || "..".equals(name))
       {
-        acceptError("Source folder '" + source.getName() + "' must not contain '../'.", source,
-                XsmpPackage.Literals.SOURCE_PATH__NAME,
+        acceptError(
+                "Source path '" + source.getName()
+                        + "' is not contained within the project directory.",
+                source, XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
     }
+    final var visitedIncludes = new HashSet<String>();
+    for (final var include : p.getIncludes())
+    {
+      final var name = include.getName();
 
+      if (!visitedIncludes.add(name))
+      {
+        acceptError("Duplicated Include path '" + name + "'.", include, null, INSIGNIFICANT_INDEX,
+                null);
+      }
+      if (name.startsWith("/"))
+      {
+        acceptError("Include path '" + include.getName() + "' is not relative to project path.",
+                include, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+      }
+      if (name.startsWith("../") || "..".equals(name))
+      {
+        acceptError(
+                "Include path '" + include.getName()
+                        + "' is not contained within the project directory.",
+                include, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+      }
+    }
     final var visitedDependencies = new HashSet<Project>();
     // check no duplicate dependency and different that current project
     for (final var dependency : p.getReferencedProjects())

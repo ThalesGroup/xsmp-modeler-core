@@ -49,6 +49,7 @@ import org.eclipse.xsmp.model.xsmp.KeywordExpression;
 import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.model.xsmp.NamedElementReference;
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMultiplicity;
+import org.eclipse.xsmp.model.xsmp.NativeType;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
 import org.eclipse.xsmp.model.xsmp.Property;
@@ -658,8 +659,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           }
           break;
         default:
-          error("Expecting a Floating Point Type, got " + kind.name() + ".",
-                  XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE);
+          error("Expecting a Floating Point Type.", XsmpPackage.Literals.FLOAT__PRIMITIVE_TYPE);
           break;
       }
 
@@ -688,8 +688,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
           }
           break;
         default:
-          error("Expecting an Integral Type, got " + kind.name() + ".",
-                  XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE);
+          error("Expecting an Integral Type.", XsmpPackage.Literals.INTEGER__PRIMITIVE_TYPE);
       }
 
     }
@@ -1008,6 +1007,15 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
   protected void checkEventType(EventType elem)
   {
     checkTypeReference(elem.getEventArgs(), elem, XsmpPackage.Literals.EVENT_TYPE__EVENT_ARGS);
+  }
+
+  @Check
+  protected void checkNativeType(NativeType elem)
+  {
+    if (elem.getType() == null || elem.getType().isEmpty())
+    {
+      error("Native type must be defined.", XsmpPackage.Literals.NATIVE_TYPE__TYPE);
+    }
   }
 
   @Check

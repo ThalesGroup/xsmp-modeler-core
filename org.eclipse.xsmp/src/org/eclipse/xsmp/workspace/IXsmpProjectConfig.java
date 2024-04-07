@@ -11,8 +11,11 @@
 package org.eclipse.xsmp.workspace;
 
 import java.util.Collection;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 public interface IXsmpProjectConfig extends IProjectConfig
 {
@@ -22,4 +25,13 @@ public interface IXsmpProjectConfig extends IProjectConfig
   Collection<String> getTools();
 
   Collection<String> getDependencies();
+
+  /** @return a set of all include folders */
+  Set< ? extends ISourceFolder> getIncludeFolders();
+
+  /**
+   * Finds the source folder that physically contains this member or null if none was found.
+   */
+  ISourceFolder findIncludeFolderContaining(URI member);
+
 }

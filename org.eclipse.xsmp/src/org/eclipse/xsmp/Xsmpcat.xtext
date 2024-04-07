@@ -221,7 +221,7 @@ VisibilityModifiers:
     'private' | 'protected' | 'public';
 
 ClassModifiers:
-    VisibilityModifiers | 'abstract';
+    'private' | 'protected' | 'public' | 'abstract';
 
 PropertyModifiers:
     VisibilityModifiers | 'readWrite' | 'readOnly' | 'writeOnly';

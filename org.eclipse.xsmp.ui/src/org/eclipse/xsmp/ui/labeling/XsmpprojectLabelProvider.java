@@ -10,8 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.labeling;
 
-import java.net.URI;
-
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xsmp.model.xsmp.Document;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
@@ -47,11 +45,11 @@ public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
 
   String text(SourcePath ele)
   {
-    if (".".equals(ele.getName()))
+    if (ele.getName() == null || ele.getName().isEmpty())
     {
-      return ele.getName();
+      return ".";
     }
-    return URI.create(ele.getName()).normalize().getPath();
+    return ele.getName();
   }
 
   String image(SourcePath ele)

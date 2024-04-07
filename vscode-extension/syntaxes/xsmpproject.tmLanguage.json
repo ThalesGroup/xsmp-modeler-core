@@ -2,7 +2,7 @@
 	"scopeName": "source.xsmpproject",
 	"patterns": [
 		{
-			"match": "\\b(project|profile|tool|source|dependency)\\b",
+			"match": "\\b(project|profile|tool|source|dependency|include)\\b",
 			"name": "keyword.control.xsmp.project"
 		},
 		{

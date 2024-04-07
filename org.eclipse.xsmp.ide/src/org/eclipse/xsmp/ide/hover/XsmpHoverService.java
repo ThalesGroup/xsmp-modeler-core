@@ -11,12 +11,15 @@
 package org.eclipse.xsmp.ide.hover;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
 import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -67,6 +70,20 @@ public class XsmpHoverService extends HoverService
     }
 
     return super.createContext(document, resource, offset);
+  }
+
+  @Override
+  public Hover hover(Document document, XtextResource resource, HoverParams params,
+          CancelIndicator cancelIndicator)
+  {
+    try
+    {
+      return super.hover(document, resource, params, cancelIndicator);
+    }
+    catch (final IndexOutOfBoundsException e)
+    {
+      return null;
+    }
   }
 
 }

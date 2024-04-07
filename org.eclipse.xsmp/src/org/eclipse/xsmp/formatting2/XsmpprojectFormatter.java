@@ -54,6 +54,10 @@ public class XsmpprojectFormatter extends AbstractJavaFormatter
     {
       doc.format(dependency);
     }
+    for (final var include : project.getIncludes())
+    {
+      doc.format(include);
+    }
   }
 
   public ITextReplacer createDocumentationReplacer(ISemanticRegion description)

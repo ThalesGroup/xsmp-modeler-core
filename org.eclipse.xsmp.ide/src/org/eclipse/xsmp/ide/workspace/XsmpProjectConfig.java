@@ -10,16 +10,22 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ide.workspace;
 
-import java.net.URI;
+import static org.eclipse.xtext.xbase.lib.IterableExtensions.findFirst;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.workspace.FileProjectConfig;
+import org.eclipse.xtext.workspace.FileSourceFolder;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProjectConfig
@@ -31,6 +37,8 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
 
   private final List<String> dependencies;
 
+  private final Set<FileSourceFolder> includeFolders = new HashSet<>();
+
   public XsmpProjectConfig(Project project, IWorkspaceConfig workspaceConfig)
   {
     super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), project.getName(),
@@ -41,8 +49,15 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
     dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
             .filter(Objects::nonNull).toList();
 
-    project.getSources().forEach(folder -> addSourceFolder(".".equals(folder.getName()) ? ""
-            : URI.create(folder.getName()).normalize().getPath()));
+    project.getSources().forEach(folder -> addSourceFolder(folder.getName()));
+    project.getIncludes().forEach(folder -> addIncludeFolder(folder.getName()));
+  }
+
+  public FileSourceFolder addIncludeFolder(String relativePath)
+  {
+    final var includeFolder = new FileSourceFolder(this, relativePath);
+    includeFolders.add(includeFolder);
+    return includeFolder;
   }
 
   @Override
@@ -73,6 +88,18 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
   public int hashCode()
   {
     return super.hashCode();
+  }
+
+  @Override
+  public Set< ? extends ISourceFolder> getIncludeFolders()
+  {
+    return includeFolders;
+  }
+
+  @Override
+  public ISourceFolder findIncludeFolderContaining(URI member)
+  {
+    return findFirst(includeFolders, f -> f.contains(member));
   }
 
 }

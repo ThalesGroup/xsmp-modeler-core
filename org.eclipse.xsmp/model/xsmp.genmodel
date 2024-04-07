@@ -260,6 +260,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/tools"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/sources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/referencedProjects"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/includes"/>
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//Tool"/>
     <genClasses ecoreClass="xsmp.ecore#//Profile"/>

@@ -142,7 +142,7 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                 <br />Optionally, the <b>PrimitiveType</b> used to encode the integer value may be specified (one of <b>Int8</b>, <b>Int16</b>, <b>Int32</b>, <b>Int64</b>, <b>UIn8</b>, <b>UInt16</b>, <b>UInt32</b>, <b>UInt64</b>, where the default is <b>Int32</b>).</p>
             '''
             case ga.namespaceMemberAccess.floatKeyword_3_10_2: '''
-                <p><code>«visibility()» «kw("float")» <em>name</em> [«kw("extends")» <em>(Float32|Float64)</em>] [«kw("in")» <em>(*|decimalExpression) ... (*|decimalExpression)</em>]</code></p>
+                <p><code>«visibility()» «kw("float")» <em>name</em> [«kw("extends")» <em>(Float32|Float64)</em>] [«kw("in")» <em>(*|decimalExpression) (...|<..|..<|<.<) (*|decimalExpression)</em>]</code></p>
                 <br/>
                 <p>A <b>Float</b> type represents floating-point values with a given range of valid values (via the Minimum and Maximum attributes). 
                 <br />The MinInclusive and MaxInclusive attributes determine whether the boundaries are included in the range or not. 
@@ -171,11 +171,23 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                 <br />The metaclasses derived from <b>SimpleValue</b>, however, are pre-defined and cannot be extended.</p>
             '''
             case ga.namespaceMemberAccess.nativeKeyword_3_14_2: '''
+                <p><code>
+                <span style="color: #3F5FBF;">
+                /**<br/>
+                 * <strong><span style="color: #7F9FBF;">@namespace</span></strong> native_namespace<br/>
+                 * <strong><span style="color: #7F9FBF;">@type</span></strong> native_typename<br/>
+                 * <strong><span style="color: #7F9FBF;">@location</span></strong> native_location<br/>
+                 */</span><br/>
+                «visibility()» «kw("native")» <em>name</em>
+                </code></p>
+                <br/>
                 A <b>Native</b> Type specifies a type with any number of platform mappings. It is used to anchor existing or user-defined types into different target platforms. 
                 <p>This mechanism is used within the specification to define the SMDL primitive types with respect to the Metamodel, but it can also be used to define native types within an arbitrary SMDL catalogue for use by models.
                 <br />In the latter case, native types are typically used to bind a model to some external library or existing Application Programming <b>Interface</b> (API).</p>
             '''
             case ga.namespaceMemberAccess.attributeKeyword_3_15_2: '''
+                <p><code>«visibility()» «kw("attribute")» <em>type name</em> = defaultValueExpression</code></p>
+                <br/>
                 An <b>Attribute</b> Type defines a new type available for adding attributes to elements. 
                 <p><br />The AllowMultiple attribute specifies if a corresponding Attribute may be attached more than once to a language element, while the Usage element defines to which language elements attributes of this type can be attached. 
                 <br />An attribute type always references a value type, and specifies a Default value.</p>
@@ -200,7 +212,7 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
                 <br />These flags default to false, but can be changed from their default value to support dataflow-based design.</p>
             '''
             case ga.constantDeclarationAccess.constantKeyword_1: '''
-                <p><code>«visibility()» «kw("constant")» <em>type name</em>  = valueExpression</code></p>
+                <p><code>«visibility()» «kw("constant")» <em>type name</em> = valueExpression</code></p>
                 <br/>
                 A <b>Constant</b> is a feature that is typed by a simple type and that must have a Value.
             '''
@@ -291,6 +303,18 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
             '''
             case ga.visibilityModifiersAccess.publicKeyword_2: '''
                 The element is globally visible.
+            '''
+            case ga.classModifiersAccess.privateKeyword_0: '''
+                The type is visible only within its containing namespace.
+            '''
+            case ga.classModifiersAccess.protectedKeyword_1: '''
+                The type is visible within its containing containing <b>Catalogue</b>.
+            '''
+            case ga.classModifiersAccess.publicKeyword_2: '''
+                The type is globally visible.
+            '''
+            case ga.classModifiersAccess.abstractKeyword_3: '''
+                The type is abstract. Abstract types cannot be instantiated, but they can be subtyped.
             '''
             case ga.parameterDirectionKindAccess.inInKeyword_0_0: '''
                 The parameter is read-only to the operation, i.e. its value must be specified on call, and cannot be changed inside the operation.

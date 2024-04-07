@@ -46,9 +46,15 @@ class XsmpprojectKeywordHovers implements IKeywordHovers {
             case ga.sourcePathAccess.sourceKeyword_0: '''
                 <p><code>«kw("source")» <em>name</em></code></p>
                 <br/>
-                The <b>Source</b> defines the location of modeling files. 
+                The <b>Source</b> directive defines the location of modeling files. 
                 <br />It must be relative to project root.
                 <br />It can be a folder or a file name.
+            '''
+            case ga.sourcePathAccess.sourceKeyword_0: '''
+                <p><code>«kw("include")» <em>name</em></code></p>
+                <br/>
+                The <b>Include</b> directive defines the location of nested project(s). 
+                <br />It must be relative to project root.
             '''
             case ga.projectReferenceAccess.dependencyKeyword_0: '''
                 <p><code>«kw("dependency")» <em>name</em></code></p>

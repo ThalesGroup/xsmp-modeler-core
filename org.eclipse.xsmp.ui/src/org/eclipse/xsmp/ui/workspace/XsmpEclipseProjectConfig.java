@@ -10,7 +10,6 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.workspace;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,6 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
@@ -67,7 +67,7 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
   private ISourceFolder addSourceFolder(String relativePath)
   {
     final var sourceFolder = new EclipseSourceFolder(getProject(),
-            ".".equals(relativePath) ? "" : URI.create(relativePath).normalize().getPath());
+            ".".equals(relativePath) ? "" : relativePath);
     sourceFolders.add(sourceFolder);
     return sourceFolder;
   }
@@ -106,5 +106,17 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
   public String toString()
   {
     return new ToStringBuilder(this).addAllFields().toString();
+  }
+
+  @Override
+  public Set< ? extends ISourceFolder> getIncludeFolders()
+  {
+    return Collections.emptySet();
+  }
+
+  @Override
+  public ISourceFolder findIncludeFolderContaining(URI member)
+  {
+    return null;
   }
 }

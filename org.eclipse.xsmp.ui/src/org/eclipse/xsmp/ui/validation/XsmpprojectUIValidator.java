@@ -42,27 +42,17 @@ public class XsmpprojectUIValidator extends AbstractXsmpprojectValidator
       try
       {
         final var name = source.getName();
-        if (".".equals(name))
+        if (!".".equals(name) && !project.getFolder(name).exists()
+                && !project.getFile(name).exists())
         {
-          continue;
-        }
-        if (name.startsWith("/") || name.contains("../"))
-        {
-          acceptError("Source '" + source.getName() + "' is invalid", source,
+          acceptError("Source '" + source.getName() + "' does not exist.", source,
                   XsmpPackage.Literals.SOURCE_PATH__NAME,
                   ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
         }
-        if (project.getFolder(name).exists() || project.getFile(name).exists())
-        {
-          continue;
-        }
-        acceptError("Source '" + source.getName() + "' does not exist.", source,
-                XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }
       catch (final IllegalArgumentException e)
       {
-        acceptError("Source '" + source.getName() + "' is invalid", source,
+        acceptError("Source '" + source.getName() + "' is invalid.", source,
                 XsmpPackage.Literals.SOURCE_PATH__NAME,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
       }

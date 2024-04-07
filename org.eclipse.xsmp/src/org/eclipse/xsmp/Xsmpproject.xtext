@@ -17,9 +17,9 @@ import "http://org.eclipse.xsmp/xsmp"
 Project:
 	metadatum=Metadatum
 	'project' name=STRING
-	((tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference)*
+	((tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference | includes+=IncludePath)*
 	profile=ProfileReference)?
-	(tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference)*;
+	(tools+=ToolReference | sources+=SourcePath | referencedProjects+=ProjectReference | includes+=IncludePath)*;
 
 Profile:
 	metadatum=Metadatum
@@ -37,6 +37,9 @@ ToolReference:
 
 SourcePath:
 	'source' name=STRING;
+
+IncludePath returns SourcePath:
+	'include' name=STRING;
 
 ProjectReference:
 	'dependency' project=[Project|STRING];

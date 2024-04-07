@@ -10,10 +10,6 @@
 			"name": "constant.language.xsmp.catalogue"
 		},
 		{
-			"match": "\\b([a-zA-Z]\\w*)\\b",
-			"name": "entity.name.type.xsmp.catalogue"
-		},
-		{
 			"match": "\\b(void)\\b",
 			"name": "storage.type.primitive.xsmp.catalogue"
 		},
@@ -54,6 +50,10 @@
 		},
 		{
 			"include": "#characters"
+		},
+		{
+			"name": "storage.type.annotation.xsmp",
+			"match": "@\\s*(?:[a-zA-Z_]\\w*\\s*\\.\\s*)*[a-zA-Z_]\\w*"
 		}
 	],
 	"repository": {

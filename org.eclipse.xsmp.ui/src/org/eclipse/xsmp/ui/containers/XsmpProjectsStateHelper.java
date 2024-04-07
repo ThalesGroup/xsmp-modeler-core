@@ -68,13 +68,13 @@ public class XsmpProjectsStateHelper extends AbstractProjectsStateHelper
           final Set<URI> result = new HashSet<>();
           for (final var source : settings.getSourceFolders())
           {
-            if (".".equals(source.getName()) || source.getName().isEmpty())
+            final var path = source.getName();
+            if (path.isEmpty())
             {
               result.addAll(getMapper().getAllEntries(project).keySet());
             }
             else
             {
-              final var path = source.getName();
               final var f = project.getFolder(path);
               if (f.exists())
               {
