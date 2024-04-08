@@ -1170,8 +1170,15 @@ public class XsmpLanguageServer implements LanguageServer, WorkspaceService, Tex
     {
       return Lists.newArrayList();
     }
-    return workspaceManager.doRead(uri, (document, resource) -> foldingRangeService
-            .createFoldingRanges(document, resource, cancelIndicator));
+    try
+    {
+      return workspaceManager.doRead(uri, (document, resource) -> foldingRangeService
+              .createFoldingRanges(document, resource, cancelIndicator));
+    }
+    catch (final IndexOutOfBoundsException e)
+    {
+      return Lists.newArrayList();
+    }
   }
 
   @Override

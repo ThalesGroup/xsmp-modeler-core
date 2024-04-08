@@ -28,7 +28,7 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 	def protected complete_association(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			association ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ASSOCIATION__TYPE)»|} ${2:name}
-		''', "Create an Association", context), snippetPriority);
+		''', "association", context), snippetPriority);
 	}
 
 	def protected complete_catalogue(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -42,7 +42,7 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			* @version 1.0
 			*/
 			catalogue ${1:name}
-		''', "Create a Catalogue", context), snippetPriority);
+		''', "catalogue", context), snippetPriority);
 	}
 
 	def protected complete_class(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -52,32 +52,32 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create a Class", context), snippetPriority);
+		''', "class", context), snippetPriority);
 
 	}
 
 	def protected complete_constant(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			constant ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.CONSTANT__TYPE)»|} ${2:name} = $0
-		''', "Create a Constant", context), snippetPriority);
+		''', "constant", context), snippetPriority);
 	}
 
 	def protected complete_container(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			container ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.CONTAINER__TYPE)»|}[*] ${2:name}
-		''', "Create a Container", context), snippetPriority);
+		''', "container", context), snippetPriority);
 	}
 
 	def protected complete_def(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			def void ${1:name} ($0)
-		''', "Create an Operation", context), snippetPriority);
+		''', "def", context), snippetPriority);
 	}
 
 	def protected complete_entrypoint(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			entrypoint ${1:name}
-		''', "Create an EntryPoint", context), snippetPriority);
+		''', "entrypoint", context), snippetPriority);
 	}
 
 	def protected complete_enum(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -87,26 +87,26 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0 = 0
 			}
-		''', "Create an Enumeration", context), snippetPriority);
+		''', "enum", context), snippetPriority);
 	}
 
 	def protected complete_event(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			event ${1:name}
-		''', "Create an Event Type", context), snippetPriority);
+		''', "event", context), snippetPriority);
 	}
 
 	def protected complete_eventsink(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			eventsink ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.EVENT_SINK__TYPE)»|} ${2:name}
-		''', "Create an Event Sink", context), snippetPriority);
+		''', "eventsink", context), snippetPriority);
 	}
 
 	def protected complete_eventsource(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			eventsource ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.EVENT_SOURCE__TYPE)»|} ${2:name}
-		''', "Create an Event Source", context), snippetPriority);
+		''', "eventsource", context), snippetPriority);
 	}
 
 	def protected complete_exception(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -116,27 +116,27 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create an Exception", context), snippetPriority);
+		''', "exception", context), snippetPriority);
 	}
 
 	def protected complete_field(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			field ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.FIELD__TYPE)»|} ${2:name}
-		''', "Create a Field", context), snippetPriority);
+		''', "field", context), snippetPriority);
 	}
 
 	def protected complete_integer(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			integer ${1:name}
-		''', "Create an Integer type", context), snippetPriority);
+		''', "integer", context), snippetPriority);
 	}
 
 	def protected complete_float(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			float ${1:name}
-		''', "Create a Float", context), snippetPriority);
+		''', "float", context), snippetPriority);
 	}
 
 	def protected complete_interface(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -146,7 +146,7 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create an Interface", context), snippetPriority);
+		''', "interface", context), snippetPriority);
 	}
 
 	def protected complete_model(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -156,7 +156,7 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create a Model", context), snippetPriority);
+		''', "model", context), snippetPriority);
 	}
 
 	def protected complete_namespace(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -165,19 +165,19 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			} // namespace ${1:name}
-		''', "Create a Namespace", context), snippetPriority);
+		''', "namespace", context), snippetPriority);
 	}
 
 	def protected complete_property(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			property ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.PROPERTY__TYPE)»|} ${2:name}
-		''', "Create a Property", context), snippetPriority);
+		''', "property", context), snippetPriority);
 	}
 
 	def protected complete_reference(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			reference ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.REFERENCE__INTERFACE)»|}[*] ${2:name}
-		''', "Create a Reference", context), snippetPriority);
+		''', "reference", context), snippetPriority);
 	}
 
 	def protected complete_service(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -187,14 +187,14 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create a Service", context), snippetPriority);
+		''', "service", context), snippetPriority);
 	}
 
 	def protected complete_string(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			string ${1:name}[$0]
-		''', "Create a String Type", context), snippetPriority);
+		''', "string", context), snippetPriority);
 	}
 
 	def protected complete_structure(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
@@ -204,21 +204,21 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			{
 			    $0
 			}
-		''', "Create a Structure", context), snippetPriority);
+		''', "struct", context), snippetPriority);
 	}
 
 	def protected complete_valueReference(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			using ${1:name} = ${2|«getCrossReferences(context.currentModel, XsmpPackage.Literals.VALUE_REFERENCE__TYPE)»|}
-		''', "Create a Value Reference", context), snippetPriority);
+		''', "using", context), snippetPriority);
 	}
 
 	def protected complete_array(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
 			/** @uuid «generateUuid» */
 			array ${1:name} = ${2|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ARRAY__ITEM_TYPE)»|}[$0]
-		''', "Create an Array Type", context), snippetPriority);
+		''', "array", context), snippetPriority);
 	}
 	def protected complete_nativeType(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
@@ -228,8 +228,8 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			 * @namespace native_namespace
 			 * @uuid «generateUuid» 
 			 */
-			class ${1:name}
-		''', "Create a Native type", context), snippetPriority);
+			native ${1:name}
+		''', "native", context), snippetPriority);
 	}
 		def protected complete_attributeType(ContentAssistContext context, IIdeContentProposalAcceptor acceptor) {
 		acceptor.accept(getProposalCreator().createSnippet('''
@@ -239,7 +239,7 @@ class XsmpcatIdeContentProposalProvider extends XsmpIdeContentProposalProvider {
 			 * @uuid «generateUuid» 
 			 */
 			attribute ${1|«getCrossReferences(context.currentModel, XsmpPackage.Literals.ATTRIBUTE_TYPE__TYPE)»|} ${2:name} = $0
-		''', "Create an Attribute type", context), snippetPriority);
+		''', "attribute", context), snippetPriority);
 	}
 
 	def private String getCrossReferences(EObject eObject, EReference eReference) {

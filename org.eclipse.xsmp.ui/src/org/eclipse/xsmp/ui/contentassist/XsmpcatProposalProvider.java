@@ -19,7 +19,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.xsmp.model.xsmp.AttributeType;
 import org.eclipse.xsmp.model.xsmp.BuiltInConstant;
 import org.eclipse.xsmp.model.xsmp.BuiltInFunction;
@@ -40,7 +46,6 @@ import org.eclipse.xsmp.model.xsmp.VisibilityElement;
 import org.eclipse.xsmp.model.xsmp.XsmpFactory;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.services.XsmpcatGrammarAccess;
-import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
 import org.eclipse.xsmp.util.PrimitiveTypeKind;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
@@ -54,7 +59,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
-import org.eclipse.xtext.ui.label.StylerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -84,20 +88,14 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }).toList();
   }
 
-  protected final List<BuiltInConstant> builtInConstants;
+  private final List<BuiltInConstant> builtInConstants;
 
-  protected final List<BuiltInFunction> builtInFunctions;
-
-  @Inject
-  protected XsmpcatGrammarAccess grammarAccess;
+  private final List<BuiltInFunction> builtInFunctions;
 
   @Inject
-  protected StylerFactory stylerFactory;
+  private XsmpcatGrammarAccess grammarAccess;
 
-  @Inject
-  protected XsmpHighlightingConfiguration highlightingConfiguration;
-
-  protected XsmpUtil xsmpUtil;
+  private XsmpUtil xsmpUtil;
 
   /**
    * {@inheritDoc}
@@ -204,13 +202,12 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     final var string = keyword.getValue();
     if (string.matches("[A-Za-z0-9 ]+"))
     {
-      return stylerFactory.createFromXtextStyle(string,
-              highlightingConfiguration.keywordTextStyle());
+      return new StyledString(string, keywordStyler);
     }
     return new StyledString(string);
   }
 
-  protected void commentProposal(EObject obj, ContentAssistContext context,
+  private void commentProposal(EObject obj, ContentAssistContext context,
           ICompletionProposalAcceptor acceptor)
   {
 
@@ -358,6 +355,23 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
           ContentAssistContext contentAssistContext)
   {
     return new XsmpProposalCreator(contentAssistContext, ruleName, getQualifiedNameConverter());
+  }
+
+  private final KeywordStyler keywordStyler = new KeywordStyler();
+
+  private static final class KeywordStyler extends Styler
+  {
+    Color color = new Color(new RGB(127, 0, 85));
+
+    @Override
+    public void applyStyles(TextStyle textStyle)
+    {
+      textStyle.foreground = color;
+      if (textStyle instanceof final StyleRange sr)
+      {
+        sr.fontStyle |= SWT.BOLD;
+      }
+    }
   }
 
   protected class XsmpProposalCreator extends DefaultProposalCreator
@@ -572,13 +586,11 @@ public class XsmpcatProposalProvider extends AbstractXsmpcatProposalProvider
     }
   }
 
-  protected ICompletionProposal createKeywordCompletionProposal(String string,
+  private ICompletionProposal createKeywordCompletionProposal(String string,
           ContentAssistContext context)
   {
-    final var styledString = stylerFactory.createFromXtextStyle(string,
-            highlightingConfiguration.keywordTextStyle());
 
-    return createCompletionProposal(string, styledString, null, context);
+    return createCompletionProposal(string, new StyledString(string, keywordStyler), null, context);
   }
 
   @Override

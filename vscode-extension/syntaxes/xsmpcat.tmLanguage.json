@@ -2,84 +2,88 @@
 	"scopeName": "source.xsmpcat",
 	"patterns": [
 		{
-			"match": "\\b(catalogue|model|struct|exception|container|constant|def|integer|float|eventsink|eventsource|reference|entrypoint|property|using|enum|field|service|namespace|array|native|attribute|event|class|string|primitive|association|interface|public|private|protected|abstract|input|output|transient|writeOnly|readOnly|readWrite|implements|extends|throws|get|set|in|out|inout)\\b",
+			"match": "\\b(catalogue|model|struct|exception|container|constant|def|integer|float|eventsink|eventsource|reference|entrypoint|property|using|enum|field|service|namespace|array|native|attribute|event|class|string|primitive|association|interface|public|private|protected|abstract|input|output|transient|writeOnly|readOnly|readWrite|implements|extends|throws|get|set|in|out|inout|void)\\b",
 			"name": "keyword.control.xsmp.catalogue"
 		},
 		{
-			"match": "\\b(true|false|nullptr)\\b",
-			"name": "constant.language.xsmp.catalogue"
+			"include": "#comments"
 		},
 		{
-			"match": "\\b(void)\\b",
-			"name": "storage.type.primitive.xsmp.catalogue"
+			"include": "#annotations"
 		},
 		{
-			"name": "comment.line.double-dash.xsmp.catalogue",
-			"begin": "(^[ \\t]+)?(?=//)",
-			"end": "(?=$)"
-		},
-		{
-			"name": "comment.block.documentation.xsmp.catalogue",
-			"match": "/\\*\\*\\*/"
-		},
-		{
-			"name": "comment.block.documentation.xsmp.catalogue",
-			"begin": "/\\*\\*[^\\*\\/]",
-			"end": "\\*/",
-			"patterns": [
-				{
-					"match": "@[^\\s]+",
-					"name": "comment.block.documentation.tag.xsmp.catalogue"
-				}
-			]
-		},
-		{
-			"name": "comment.block.xsmp.catalogue",
-			"match": "/\\*(?:\\*\\*+)?\\*/"
-		},
-		{
-			"name": "comment.block.xsmp.catalogue",
-			"begin": "/\\*(?:[^\\*]|\\*\\*)",
-			"end": "\\*/"
-		},
-		{
-			"include": "#strings"
-		},
-		{
-			"include": "#numbers"
-		},
-		{
-			"include": "#characters"
-		},
-		{
-			"name": "storage.type.annotation.xsmp",
-			"match": "@\\s*(?:[a-zA-Z_]\\w*\\s*\\.\\s*)*[a-zA-Z_]\\w*"
+			"include": "#literals"
 		}
 	],
 	"repository": {
-		"strings": {
-			"begin": "\"",
-			"end": "\"",
-			"name": "string.quoted.double.xsmpcat",
+		"comments": {
 			"patterns": [
 				{
-					"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^\"\\\\])",
-					"name": "constant.character.escape.xsmp.catalogue"
+					"name": "comment.line.double-dash.xsmp.project",
+					"begin": "(^[ \\t]+)?(?=//)",
+					"end": "(?=$)"
+				},
+				{
+					"name": "comment.block.documentation.xsmp.project",
+					"match": "/\\*\\*\\*/"
+				},
+				{
+					"name": "comment.block.documentation.xsmp.project",
+					"begin": "/\\*\\*[^\\*\\/]",
+					"end": "\\*/",
+					"patterns": [
+						{
+							"match": "@[^\\s]+",
+							"name": "comment.block.documentation.tag.xsmp.project"
+						}
+					]
+				},
+				{
+					"name": "comment.block.xsmp.project",
+					"match": "/\\*(?:\\*\\*+)?\\*/"
+				},
+				{
+					"name": "comment.block.xsmp.project",
+					"begin": "/\\*(?:[^\\*]|\\*\\*)",
+					"end": "\\*/"
 				}
 			]
 		},
-		"numbers": {
-			"match": "\\b(0b[01]+|0x[0-9A-Fa-f]+|[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?([uU][lL]?|[lL][uU]?|ns|us|ms|s|mn|h|d|y|[fF])?)\\b",
-			"name": "constant.numeric.xsmp.catalogue"
+		"annotations": {
+			"name": "storage.type.annotation.xsmp.project",
+			"match": "@\\s*(?:(?:[a-zA-Z_]\\w*\\s*\\.\\s*)*[a-zA-Z_]\\w*)?"
 		},
-		"characters": {
-			"begin": "'",
-			"end": "'",
-			"name": "string.quoted.single.xsmp.catalogue",
+		"literals": {
 			"patterns": [
 				{
-					"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^'\\\\])",
-					"name": "constant.character.escape.xsmp.catalogue"
+					"begin": "\"",
+					"end": "\"",
+					"name": "string.quoted.double.xsmpcat",
+					"patterns": [
+						{
+							"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^\"\\\\])",
+							"name": "constant.character.escape.xsmp.catalogue"
+						}
+					]
+				},
+				{
+					"match": "\\b(0b[01]+|0x[0-9A-Fa-f]+|[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?([uU][lL]?|[lL][uU]?|ns|us|ms|s|mn|h|d|y|[fF])?)\\b",
+					"name": "constant.numeric.xsmp.catalogue"
+				},
+				{
+					"begin": "'",
+					"end": "'",
+					"name": "string.quoted.single.xsmp.catalogue",
+					"patterns": [
+						{
+							"match": "\\\\(u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]+|[^'\\\\])",
+							"name": "constant.character.escape.xsmp.catalogue"
+						}
+					]
+				},
+				{
+					"match": "\\b(true|false|nullptr)\\b",
+					"name": "constant.language.xsmp.catalogue"
 				}
 			]
 		}

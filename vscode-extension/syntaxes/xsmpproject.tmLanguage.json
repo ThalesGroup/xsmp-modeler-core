@@ -6,44 +6,53 @@
 			"name": "keyword.control.xsmp.project"
 		},
 		{
-			"match": "\\b([a-zA-Z]\\w*)\\b",
-			"name": "entity.name.type.xsmp.project"
-		},
-		{
 			"match": "(?<!\\\\)(\"(?:[^\"\\\\]|\\\\.)*\")|(?<!\\\\)('(?:[^'\\\\]|\\\\.)*')",
 			"name": "string.quoted.double.xsmp.project"
 		},
 		{
-			"name": "comment.line.double-dash.xsmp.project",
-			"begin": "(^[ \\t]+)?(?=//)",
-			"end": "(?=$)"
+			"include": "#annotations"
 		},
 		{
-			"name": "comment.block.documentation.xsmp.project",
-			"match": "/\\*\\*\\*/"
-		},
-		{
-			"name": "comment.block.documentation.xsmp.project",
-			"begin": "/\\*\\*[^\\*\\/]",
-			"end": "\\*/",
-			"patterns": [
-				{
-					"match": "@[^\\s]+",
-					"name": "comment.block.documentation.tag.xsmp.project"
-				}
-			]
-		},
-		{
-			"name": "comment.block.xsmp.project",
-			"match": "/\\*(?:\\*\\*+)?\\*/"
-		},
-		{
-			"name": "comment.block.xsmp.project",
-			"begin": "/\\*(?:[^\\*]|\\*\\*)",
-			"end": "\\*/"
+			"include": "#comments"
 		}
 	],
 	"repository": {
-
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.double-dash.xsmp.project",
+					"begin": "(^[ \\t]+)?(?=//)",
+					"end": "(?=$)"
+				},
+				{
+					"name": "comment.block.documentation.xsmp.project",
+					"match": "/\\*\\*\\*/"
+				},
+				{
+					"name": "comment.block.documentation.xsmp.project",
+					"begin": "/\\*\\*[^\\*\\/]",
+					"end": "\\*/",
+					"patterns": [
+						{
+							"match": "@[^\\s]+",
+							"name": "comment.block.documentation.tag.xsmp.project"
+						}
+					]
+				},
+				{
+					"name": "comment.block.xsmp.project",
+					"match": "/\\*(?:\\*\\*+)?\\*/"
+				},
+				{
+					"name": "comment.block.xsmp.project",
+					"begin": "/\\*(?:[^\\*]|\\*\\*)",
+					"end": "\\*/"
+				}
+			]
+		},
+		"annotations": {
+			"name": "storage.type.annotation.xsmp.project",
+			"match": "@\\s*(?:(?:[a-zA-Z_]\\w*\\s*\\.\\s*)*[a-zA-Z_]\\w*)?"
+		}
 	}
 }
