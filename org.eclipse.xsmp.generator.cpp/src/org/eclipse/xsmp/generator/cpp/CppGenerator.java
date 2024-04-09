@@ -10,15 +10,9 @@
 ******************************************************************************/
 package org.eclipse.xsmp.generator.cpp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xsmp.generator.ClangFormatter;
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ClassGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
@@ -203,61 +197,16 @@ public class CppGenerator extends AbstractGenerator
     };
   }
 
-  /**
-   * Format the content with the CDT formatter
-   *
-   * @param fileName
-   *          the file name of the generated file
-   * @param content
-   *          content to format
-   * @return formatted content
-   */
-  protected CharSequence format(String fileName, CharSequence content)
-  {
-    try
-    {
-      final var pb = new ProcessBuilder("clang-format", "-style=LLVM",
-              "-assume-filename=" + fileName);
-
-      final var process = pb.start();
-
-      final var writer = new PrintWriter(
-              new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8), true);
-      writer.append(content).close();
-
-      final var reader = new BufferedReader(
-              new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-      final var result = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null)
-      {
-        result.append(line).append(System.lineSeparator());
-      }
-      reader.close();
-
-      final var exitCode = process.waitFor();
-      if (exitCode == 0)
-      {
-        return result;
-      }
-    }
-    catch (final IOException e)
-    {
-      // ignore
-    }
-    catch (final InterruptedException e)
-    {
-      Thread.currentThread().interrupt();
-    }
-    return content;
-  }
+  @Inject
+  private ClangFormatter formatter;
 
   protected void generateFile(IFileSystemAccess2 fsa, String fileName,
           String outputConfigurationName, CharSequence contents)
   {
     if (contents != null)
     {
-      fsa.generateFile(fileName, outputConfigurationName, format(fileName, contents));
+      fsa.generateFile(fileName, outputConfigurationName,
+              formatter.format(fsa.getURI(fileName, outputConfigurationName), contents));
     }
   }
 

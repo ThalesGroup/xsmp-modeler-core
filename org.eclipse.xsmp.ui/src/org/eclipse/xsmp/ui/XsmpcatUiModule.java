@@ -13,6 +13,7 @@ package org.eclipse.xsmp.ui;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xsmp.extension.IExtensionManager;
+import org.eclipse.xsmp.generator.ClangFormatter;
 import org.eclipse.xsmp.ide.contentassist.IReferenceFilter;
 import org.eclipse.xsmp.ide.contentassist.XsmpcatReferenceFilter;
 import org.eclipse.xsmp.ide.hover.IKeywordHovers;
@@ -30,6 +31,7 @@ import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.editor.model.XsmpTerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xsmp.ui.folding.XsmpFoldingRegionProvider;
+import org.eclipse.xsmp.ui.generator.EclipseClangFormatter;
 import org.eclipse.xsmp.ui.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ui.highlighting.XsmpAntlrTokenToAttributeIdMapper;
 import org.eclipse.xsmp.ui.highlighting.XsmpHighlightingConfiguration;
@@ -265,4 +267,8 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
     return XsmpEditor.class;
   }
 
+  public Class< ? extends ClangFormatter> bindClangFormatter()
+  {
+    return EclipseClangFormatter.class;
+  }
 }
