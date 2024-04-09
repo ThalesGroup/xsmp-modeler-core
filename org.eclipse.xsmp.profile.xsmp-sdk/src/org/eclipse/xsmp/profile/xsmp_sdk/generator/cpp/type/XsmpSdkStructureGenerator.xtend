@@ -47,7 +47,7 @@ class XsmpSdkStructureGenerator extends StructureGenerator {
                              _BASE(typeRegistry, typeUuid, name ,description, parent, view)
                     «FOR f : member.filter(Field) BEFORE ',\n' SEPARATOR ', '»
                         /// «f.name» initialization
-                        «f.name» {  typeRegistry, «f.type.uuid()», "«f.name»", «f.description()», this, «f.viewKind("view")», value.«f.name» }
+                        «f.name» {  typeRegistry, «f.type.uuid()», "«f.name»", «f.description()», this, «f.viewKindCpp("view")», value.«f.name» }
                     «ENDFOR»
                     {
                     }

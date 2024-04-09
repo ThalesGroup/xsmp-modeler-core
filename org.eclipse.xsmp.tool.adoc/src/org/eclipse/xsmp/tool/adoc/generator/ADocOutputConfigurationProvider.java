@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -12,13 +12,13 @@ package org.eclipse.xsmp.tool.adoc.generator;
 
 import java.util.Set;
 
-import org.eclipse.xsmp.generator.XsmpcatOutputConfigurationProvider;
+import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
 /**
  * Default configuration for output folders used in the generator
  */
-public class ADocOutputConfigurationProvider extends XsmpcatOutputConfigurationProvider
+public class ADocOutputConfigurationProvider extends XsmpOutputConfigurationProvider
 {
 
   public static final String DOC = "DOC";

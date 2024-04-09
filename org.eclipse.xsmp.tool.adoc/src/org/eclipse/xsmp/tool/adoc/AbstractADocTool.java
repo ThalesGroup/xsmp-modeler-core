@@ -28,7 +28,7 @@ public abstract class AbstractADocTool extends Tool
   @Override
   public String getDescription()
   {
-    return "AsciiDoc generator";
+    return "AsciiDoc Tool";
   }
 
   @Override

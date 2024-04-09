@@ -142,7 +142,7 @@ public class XsmpUtil
     /** Remainder of instance divided by another value */
     MODULE
   }
-
+  
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
           .<QualifiedName, PrimitiveTypeKind> builder()
           .put(QualifiedNames.Smp_Char8, PrimitiveTypeKind.CHAR8)
@@ -184,6 +184,13 @@ public class XsmpUtil
           .put(QualifiedNames.Attributes_OperatorKind_Remainder, OperatorKind.REMAINDER)
           .put(QualifiedNames.Attributes_OperatorKind_Subtract, OperatorKind.SUBTRACT)
           .put(QualifiedNames.Attributes_OperatorKind_Sum, OperatorKind.SUM).build();
+  
+  private static final Map<QualifiedName, ViewKind> viewKinds = ImmutableMap
+          .<QualifiedName, ViewKind> builder()
+          .put(QualifiedNames.Attributes_ViewKind_None, ViewKind.NONE)
+          .put(QualifiedNames.Attributes_ViewKind_Debug, ViewKind.DEBUG)
+          .put(QualifiedNames.Attributes_ViewKind_Expert, ViewKind.EXPERT)
+          .put(QualifiedNames.Attributes_ViewKind_All, ViewKind.ALL).build();
 
   public PrimitiveTypeKind getPrimitiveTypeKind(IEObjectDescription d)
   {
@@ -636,6 +643,23 @@ public class XsmpUtil
         }
       }
       return OperatorKind.NONE;
+    });
+  }
+  
+  public ViewKind getViewKind(NamedElement o)
+  {
+    final var id = QualifiedNames.Attributes_View;
+    return cache.get(Tuples.pair(o, id), o.eResource(), () -> {
+      final var attr = attributeValue(o, id);
+      if (attr != null)
+      {
+        final var literal = getEnumerationLiteral(attr);
+        if (literal != null)
+        {
+          return viewKinds.getOrDefault(fqn(literal), ViewKind.NONE);
+        }
+      }
+      return ViewKind.NONE;
     });
   }
 

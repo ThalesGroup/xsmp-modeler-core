@@ -20,6 +20,7 @@ const esaCdkProfileId = "org.eclipse.xsmp.profile.esa-cdk";
 const xsmpSdkProfileId = "org.eclipse.xsmp.profile.xsmp-sdk";
 const smpToolId = "org.eclipse.xsmp.tool.smp"
 const pythonToolId = "org.eclipse.xsmp.tool.python"
+const adocToolId = "org.eclipse.xsmp.tool.adoc"
 
 export async function createProjectWizard() {
 
@@ -66,7 +67,8 @@ export async function createProjectWizard() {
 	// Select tools
 	const tools = [
 		{ id: smpToolId, label: "SMP legacy Tool", "picked": true },
-		{ id: pythonToolId, label: "Python Wrapper", "picked": profile.id === xsmpSdkProfileId }
+		{ id: pythonToolId, label: "Python Wrapper", "picked": profile.id === xsmpSdkProfileId },
+		{ id: adocToolId, label: "AsciiDoc generator", "picked": true }
 	];
 
 

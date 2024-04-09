@@ -301,7 +301,7 @@ class GeneratorUtil extends XsmpUtil {
         '''#include <«header»>'''
     }
 
-    def CharSequence viewKind(NamedElement t, CharSequence defaultView) {
+    def CharSequence viewKindCpp(NamedElement t, CharSequence defaultView) {
 
         var value = t.attributeValue(QualifiedNames.Attributes_View)
         if (value !== null)
@@ -310,8 +310,8 @@ class GeneratorUtil extends XsmpUtil {
             defaultView
     }
 
-    def CharSequence viewKind(NamedElement t) {
-        t.viewKind('''::Smp::ViewKind::VK_None''')
+    def CharSequence viewKindCpp(NamedElement t) {
+        t.viewKindCpp('''::Smp::ViewKind::VK_None''')
     }
 
     protected def CharSequence generateUUID(Type t) {
