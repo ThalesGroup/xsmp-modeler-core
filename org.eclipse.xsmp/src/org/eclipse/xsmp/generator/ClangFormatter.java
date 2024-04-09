@@ -18,45 +18,53 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.generator.IFileSystemAccess2;
 
 import com.google.inject.Singleton;
 
 @Singleton
-public class ClangFormatter
+public class ClangFormatter implements IFileFormatter
 {
-
+  /**
+   * Convert an URI to a file string
+   * This function only handle File URI, it should be overridden to handle platform URI for example
+   *
+   * @param uri
+   *          the input URI
+   * @return the file path
+   */
   protected String toFileString(URI uri)
   {
     if (uri.isFile())
     {
       return uri.toFileString();
     }
-
+    // fallback on file name
     return uri.lastSegment();
   }
 
-  private static String OS = System.getProperty("os.name").toLowerCase();
+  private static String os = System.getProperty("os.name").toLowerCase();
 
   private static boolean isWindows()
   {
-    return OS.contains("win");
+    return os.contains("win");
   }
 
   /**
    * Format the content with clang-format
    *
-   * @param uri
-   *          the file URI of the generated file
+   * @param filename
+   *          the file name of the formatted file
    * @param content
    *          content to format
    * @return formatted content
    */
-  public CharSequence format(URI uri, CharSequence content)
+  protected CharSequence format(String filename, CharSequence content)
   {
     try
     {
       final var pb = new ProcessBuilder(isWindows() ? "clang-format.exe" : "clang-format",
-              "-assume-filename=" + toFileString(uri));
+              "-assume-filename=" + filename);
 
       final var process = pb.start();
 
@@ -89,5 +97,12 @@ public class ClangFormatter
       Thread.currentThread().interrupt();
     }
     return content;
+  }
+
+  @Override
+  public CharSequence format(IFileSystemAccess2 fsa, String fileName,
+          String outputConfigurationName, CharSequence contents)
+  {
+    return format(toFileString(fsa.getURI(fileName, outputConfigurationName)), contents);
   }
 }

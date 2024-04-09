@@ -17,6 +17,7 @@ import * as fs from 'fs';
 import * as os from "os";
 
 const esaCdkProfileId = "org.eclipse.xsmp.profile.esa-cdk";
+const esaCdkLegacyProfileId = "org.eclipse.xsmp.profile.esa-cdk-legacy";
 const xsmpSdkProfileId = "org.eclipse.xsmp.profile.xsmp-sdk";
 const smpToolId = "org.eclipse.xsmp.tool.smp"
 const pythonToolId = "org.eclipse.xsmp.tool.python"
@@ -53,7 +54,8 @@ export async function createProjectWizard() {
 	// Select profile
 	const profiles = [
 		{ id: xsmpSdkProfileId, label: "XSMP-SDK Profile" },
-		{ id: esaCdkProfileId, label: "ESA-CDK Profile" }
+		{ id: esaCdkProfileId, label: "ESA-CDK Profile" },
+		{ id: esaCdkLegacyProfileId, label: "ESA-CDK Legacy Profile (Preview)" }
 	];
 
 	const profile = await vscode.window.showQuickPick(profiles, {
@@ -206,7 +208,7 @@ cd build && ctest -C Release --output-on-failure
                 
 `)
 	}
-	else if (profile.id === esaCdkProfileId) {
+	else if (profile.id === esaCdkProfileId || profile.id === esaCdkLegacyProfileId) {
 		await fs.promises.writeFile(path.join(dirPath, 'CMakeLists.txt'), `
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
 
@@ -250,11 +252,11 @@ class Test${catalogueName}(xsmp.unittest.TestCase):
         # TODO write unit-test
         pass`);
 	}
-	
+
 	if (tools.some(t => t.id === adocToolId)) {
-        let adoc_path = path.join(dirPath, 'doc')
-        fs.mkdirSync(adoc_path)
-        await fs.promises.writeFile(path.join(adoc_path, `${catalogueName}.adoc`), `
+		let adoc_path = path.join(dirPath, 'doc')
+		fs.mkdirSync(adoc_path)
+		await fs.promises.writeFile(path.join(adoc_path, `${catalogueName}.adoc`), `
 :doctype: book
 :toc:
 :pdf-themesdir: {docdir}
@@ -263,10 +265,10 @@ class Test${catalogueName}(xsmp.unittest.TestCase):
 
 include::${catalogueName}-gen.adoc[]
         `);
-        
-        let adoc_themepath = path.join(dirPath, 'doc', 'themes')
-        fs.mkdirSync(adoc_themepath);
-        await fs.promises.writeFile(path.join(adoc_themepath, `default.yml`), `
+
+		let adoc_themepath = path.join(dirPath, 'doc', 'themes')
+		fs.mkdirSync(adoc_themepath);
+		await fs.promises.writeFile(path.join(adoc_themepath, `default.yml`), `
 extends: default
 page:
   margin: [1.5in, 0.75in]
@@ -313,8 +315,8 @@ footer:
     right:
       content: $footer-recto-right-content
         `);
-    }
-    
+	}
+
 	// Create the project file
 
 	let content = `

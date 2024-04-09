@@ -1,0 +1,11 @@
+
+dependencies {
+	api project(':org.eclipse.xsmp.ide')
+    api project(':org.eclipse.xsmp.profile.esa-cdk-legacy')
+	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
+}
+
+
+//this is an eclipse plugin project
+eclipseClasspath.enabled=false
+cleanEclipseClasspath.enabled=false

@@ -13,6 +13,7 @@ package org.eclipse.xsmp.generator.cpp;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.generator.ClangFormatter;
+import org.eclipse.xsmp.generator.XsmpGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ClassGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ComponentGenerator;
@@ -29,7 +30,6 @@ import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.ReferenceType;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
-import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 
@@ -38,7 +38,7 @@ import com.google.inject.Inject;
 /**
  * @author daveluy
  */
-public class CppGenerator extends AbstractGenerator
+public class CppGenerator extends XsmpGenerator
 {
 
   @Inject
@@ -205,8 +205,7 @@ public class CppGenerator extends AbstractGenerator
   {
     if (contents != null)
     {
-      fsa.generateFile(fileName, outputConfigurationName,
-              formatter.format(fsa.getURI(fileName, outputConfigurationName), contents));
+      generateFile(fsa, fileName, outputConfigurationName, contents, formatter);
     }
   }
 

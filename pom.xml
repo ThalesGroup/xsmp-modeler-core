@@ -54,11 +54,15 @@
 		<module>org.eclipse.xsmp.profile.esa-cdk.feature</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ide</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ui</module>
-        <module>org.eclipse.xsmp.tool.adoc</module>
-        <module>org.eclipse.xsmp.tool.adoc.feature</module>
-        <module>org.eclipse.xsmp.tool.adoc.ui</module>
-        <module>org.eclipse.xsmp.tool.adoc.ide</module>
-        <module>org.eclipse.xsmp.tool.adoc.tests</module>
+		<module>org.eclipse.xsmp.tool.adoc</module>
+		<module>org.eclipse.xsmp.tool.adoc.feature</module>
+		<module>org.eclipse.xsmp.tool.adoc.ui</module>
+		<module>org.eclipse.xsmp.tool.adoc.ide</module>
+		<module>org.eclipse.xsmp.tool.adoc.tests</module>
+		<module>org.eclipse.xsmp.profile.esa-cdk-legacy</module>
+		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.feature</module>
+		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.ide</module>
+		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.ui</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -267,7 +271,8 @@
 					<configuration>
 						<!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY
 						AUTOFORMATTING -->
-						<argLine>${platformSystemProperties} ${systemProperties} ${moduleProperties} ${additionalTestArguments}</argLine>
+						<argLine>${platformSystemProperties} ${systemProperties}
+							${moduleProperties} ${additionalTestArguments}</argLine>
 						<failIfNoTests>false</failIfNoTests>
 						<useUIHarness>false</useUIHarness>
 					</configuration>

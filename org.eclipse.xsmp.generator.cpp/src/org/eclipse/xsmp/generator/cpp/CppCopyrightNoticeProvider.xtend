@@ -40,7 +40,7 @@ class CppCopyrightNoticeProvider {
 
     protected def generatedBy() {
         '''
-            XsmpcatGenerator-«XsmpVersion.VERSION»
+            XsmpGenerator-«XsmpVersion.VERSION»
         '''
     }
 

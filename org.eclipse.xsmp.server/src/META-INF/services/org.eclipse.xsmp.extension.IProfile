@@ -1,3 +1,4 @@
 org.eclipse.xsmp.profile.esa_cdk.ide.EsaCdkProfile
+org.eclipse.xsmp.profile.esa_cdk_legacy.ide.EsaCdkLegacyProfile
 org.eclipse.xsmp.profile.xsmp_sdk.ide.XsmpSdkProfile
 

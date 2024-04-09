@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.profile.esa-cdk-legacy
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.profile.esa-cdk-legacy
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.0.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.profile.esa-cdk-legacy;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xsmp.generator.cpp,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.xsmp.profile.esa_cdk_legacy,
+ org.eclipse.xsmp.profile.esa_cdk_legacy.validation
