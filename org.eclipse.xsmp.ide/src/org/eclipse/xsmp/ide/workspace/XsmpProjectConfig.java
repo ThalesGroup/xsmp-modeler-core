@@ -39,9 +39,25 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
 
   private final Set<FileSourceFolder> includeFolders = new HashSet<>();
 
+  /**
+   * Ensure that the project name is valid
+   *
+   * @param project
+   * @return the valid project name
+   */
+  private static String getName(Project project)
+  {
+    final var name = project.getName();
+    if (name == null || project.getName().isEmpty())
+    {
+      return "<invalid_project>";
+    }
+    return name;
+  }
+
   public XsmpProjectConfig(Project project, IWorkspaceConfig workspaceConfig)
   {
-    super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), project.getName(),
+    super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), getName(project),
             workspaceConfig);
 
     profile = project.getProfile() != null ? project.getProfile().getName() : "";

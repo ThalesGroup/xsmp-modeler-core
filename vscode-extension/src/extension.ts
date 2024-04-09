@@ -12,7 +12,7 @@
 import * as path from 'path';
 import * as net from 'net';
 import * as os from 'os';
-import { commands, window, Uri, workspace, ExtensionContext, languages } from 'vscode';
+import { commands, window, Uri, workspace, ExtensionContext, languages, TextDocument } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import * as fs from 'fs';
 import * as wizard from './wizard';
@@ -155,10 +155,98 @@ export function activate(context: ExtensionContext) {
             }
         })
     );
+    let disposable = workspace.onDidOpenTextDocument((document: TextDocument) => {
+        if (document.languageId === 'xsmpcat') {
+            const folder = workspace.getWorkspaceFolder(document.uri);
+            if (folder) {
+                const workspacePath = folder.uri.fsPath;
+                const currentDirectory = path.dirname(document.fileName);
+
+                if (!findProjectFile(currentDirectory, workspacePath)) {
+                    createXsmpProjectFile(workspacePath, currentDirectory)
+                }
+            }
+        }
+    });
+
+    context.subscriptions.push(disposable);
 
     // Start the server when the extension activates
     startServer();
 
+}
+async function createXsmpProjectFile(workspacePath: string, directory: string) {
+    const createProject = await window.showQuickPick(
+        [{ label: "Yes", isTrue: true }, { label: "No", isTrue: false }],
+        { placeHolder: "XSMP Project configuration file doesn't exist. Do you want to create it ?" }
+    );
+    if (!createProject || !createProject.isTrue)
+        return;
+
+    const projectDirectory = await window.showQuickPick(getPossibleParentDirectories(directory, workspacePath),
+        { placeHolder: "Select project root directory:" })
+
+    if (!projectDirectory)
+        return;
+
+    const projectName = path.basename(projectDirectory)
+    const defaultContent = `
+/** ${projectName} project description */
+project "${projectName}"
+
+
+// project relative path(s) containing modeling file(s)
+source "smdl"
+
+
+// Uncomment one of the available profiles
+//profile "org.eclipse.xsmp.profile.xsmp-sdk"
+//profile "org.eclipse.xsmp.profile.esa-cdk"
+
+
+// Comment/Uncomment the tools you would like to use
+//tool "org.eclipse.xsmp.tool.smp"
+//tool "org.eclipse.xsmp.tool.python"
+
+
+// If your project needs types from outside sources,
+// you can include them by adding project dependencies.
+// For example: dependency "otherProject"
+//              dependency "otherProject2"
+`;
+    fs.writeFileSync(path.join(projectDirectory, 'xsmp.project'), defaultContent);
+    window.showInformationMessage("The xsmp.project file has been created successfully.");
+
+    // Open the newly created xsmp.project file
+    workspace.openTextDocument(path.join(projectDirectory, 'xsmp.project')).then((doc) => {
+        window.showTextDocument(doc);
+    });
+}
+
+function findProjectFile(directory: string, workspacePath: string): string | undefined {
+
+    while (directory !== workspacePath) {
+        const files = fs.readdirSync(directory);
+        if (files.includes('xsmp.project')) {
+            return path.join(directory, 'xsmp.project');
+        }
+        directory = path.dirname(directory);
+    }
+    const files = fs.readdirSync(directory);
+    if (files.includes('xsmp.project')) {
+        return path.join(directory, 'xsmp.project');
+    }
+    return undefined;
+}
+
+function getPossibleParentDirectories(directory: string, workspacePath: string): string[] {
+    const possibleParentDirectories: string[] = [];
+    while (directory !== workspacePath) {
+        possibleParentDirectories.push(directory);
+        directory = path.dirname(directory);
+    }
+    possibleParentDirectories.push(workspacePath);
+    return possibleParentDirectories;
 }
 
 export function deactivate() {

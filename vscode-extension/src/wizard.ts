@@ -90,7 +90,7 @@ export async function createProjectWizard() {
 			{ label: "No", addToWorkspace: false }
 		],
 		{
-			placeHolder: "Add project to workspace?",
+			placeHolder: "Add project to workspace?"
 		}
 	);
 
@@ -278,8 +278,8 @@ tool "${tool.id}"
 	content += `
 // If your project needs types from outside sources,
 // you can include them by adding project dependencies.
-// For example: dependency otherProject
-//              dependency otherProject2
+// For example: dependency "otherProject"
+//              dependency "otherProject2"
 
 `
 

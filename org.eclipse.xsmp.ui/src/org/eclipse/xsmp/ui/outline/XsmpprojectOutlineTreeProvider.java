@@ -32,8 +32,10 @@ public class XsmpprojectOutlineTreeProvider extends DefaultOutlineTreeProvider
     {
       createNode(parentNode, source);
     }
-
-    createNode(parentNode, doc.getProfile());
+    if (doc.getProfile() != null)
+    {
+      createNode(parentNode, doc.getProfile());
+    }
 
     for (final var tool : doc.getTools())
     {
