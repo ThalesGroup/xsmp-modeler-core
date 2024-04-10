@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
 import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
 import org.eclipse.xsmp.model.xsmp.Expression;
+import org.eclipse.xsmp.util.Solver.SolverException;
 import org.eclipse.xsmp.util.XsmpUtil;
 
 public class ADocUtil extends XsmpUtil
@@ -27,11 +28,19 @@ public class ADocUtil extends XsmpUtil
       final var defaultValues = getShortValuesArray(cl);
       return removeLeadingEscape(defaultValues);
     }
-    final var value = getValue(e);
-    if (value != null)
+    try
     {
-      return value.toString();
+      final var value = getValue(e);
+      if (value != null)
+      {
+        return value.toString();
+      }
     }
+    catch (final SolverException se)
+    {
+      // ignore
+    }
+
     return null;
   }
 

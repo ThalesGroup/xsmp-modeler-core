@@ -45,6 +45,7 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xsmp.util.ViewKind
 import org.eclipse.xsmp.model.xsmp.Property
 import org.eclipse.xsmp.model.xsmp.AccessKind
+import org.eclipse.xsmp.model.xsmp.VisibilityElement
 
 class ADocGenerator extends AbstractGenerator {
 
@@ -61,7 +62,9 @@ class ADocGenerator extends AbstractGenerator {
         // val externalReferences = EcoreUtil.ExternalCrossReferencer.find(catalogue).keySet.filter(Type)
         fsa.generateFile(fileName, ADocOutputConfigurationProvider.DOC, '''
             = «catTitle»
+            ++++
             «catalogue.description»
+            ++++
             
             «FOR namespace : catalogue.eAllContents.filter(Namespace).filter[hasTypeMembers].toIterable»
                 «namespace.generateNamespace»
@@ -218,44 +221,53 @@ class ADocGenerator extends AbstractGenerator {
 
     def dispatch CharSequence generateMermaidMembers(Field field) {
         '''
-            «field.type.name» «field.name»
+            «field.generateMermaidVisibility»«field.type.name» «field.name»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(EventSource eventSource) {
         '''
-            EventSource<«eventSource.type.name»> «eventSource.name»
+            +EventSource<«eventSource.type.name»> «eventSource.name»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(EventSink eventSink) {
         '''
-            EventSink<«eventSink.type.name»> «eventSink.name»
+            +EventSink<«eventSink.type.name»> «eventSink.name»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(EntryPoint entryPoint) {
         '''
-            EntryPoint «entryPoint.name»
+            +EntryPoint «entryPoint.name»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(Constant constant) {
         '''
-            constexpr «constant.type.name» «constant.name» = «constant.value.shortValue»
+            «constant.generateMermaidVisibility»constexpr «constant.type.name» «constant.name» = «constant.value.shortValue»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(Association association) {
         '''
-            «association.type.name»* «association.name»
+            «association.generateMermaidVisibility»«association.type.name»* «association.name»
         '''
     }
 
     def dispatch CharSequence generateMermaidMembers(Operation operation) {
         '''
-            «operation.name»(«FOR param : operation.parameter SEPARATOR ','»«param.direction» «param.type.name»«ENDFOR») «IF operation.returnParameter === null »void«ELSE»«operation.returnParameter.type.name»«ENDIF»
+            «operation.generateMermaidVisibility»«operation.name»(«FOR param : operation.parameter SEPARATOR ','»«param.direction» «param.type.name»«ENDFOR») «IF operation.returnParameter === null »void«ELSE»«operation.returnParameter.type.name»«ENDIF»
         '''
+    }
+
+    def CharSequence generateMermaidVisibility(VisibilityElement elem) {
+        switch elem.realVisibility {
+            case VisibilityKind::PUBLIC: return '+'
+            case VisibilityKind::PROTECTED: return '#'
+            case VisibilityKind::PRIVATE: return '-'
+            default: return ''
+        }
     }
 
     def dispatch CharSequence generateContent(EObject obj) {
@@ -263,23 +275,25 @@ class ADocGenerator extends AbstractGenerator {
 
     def dispatch CharSequence generateContent(NamedElementWithMembers element) {
         '''
-            «element.generateField»
+            «element.generateConstants»
             
-            «element.generateConstant»
+            «element.generateProperties»
             
-            «element.generateEventSource»
+            «element.generateOperations»
             
-            «element.generateEventSink»
+            «element.generateEntryPoints»
             
-            «element.generateEntryPoint»
+            «element.generateEventSinks»
             
-            «element.generateReference»
+            «element.generateEventSources»
             
-            «element.generateContainer»
+            «element.generateFields»
             
-            «element.generateAssociation»
+            «element.generateAssociations»
             
-            «element.generateOperation»
+            «element.generateContainers»
+            
+            «element.generateReferences»
         '''
     }
 
@@ -297,8 +311,8 @@ class ADocGenerator extends AbstractGenerator {
             |===
         '''
     }
-    
-    def CharSequence generateField(NamedElementWithMembers element) {
+
+    def CharSequence generateFields(NamedElementWithMembers element) {
         val fields = element.member.filter(Field)
         '''
             «IF !fields.empty»
@@ -306,13 +320,13 @@ class ADocGenerator extends AbstractGenerator {
                 The «element.name» «element.eClass.name.toLowerCase» provides the following fields:
                 
                 «FOR v : VisibilityKind.values»
-                    «element.generateField(v)»
+                    «element.generateFields(v)»
                 «ENDFOR»
             «ENDIF»
         '''
     }
 
-    def CharSequence generateField(NamedElementWithMembers element, VisibilityKind v) {
+    def CharSequence generateFields(NamedElementWithMembers element, VisibilityKind v) {
         val fields = element.member.filter(Field).filter[visibility == v]
         val hasUnit = fields.exists[unit !== null]
         val hasInitialValue = fields.exists[^default !== null]
@@ -332,14 +346,14 @@ class ADocGenerator extends AbstractGenerator {
                     «IF hasUnit»|«field.unit»«ENDIF»
                     «IF hasViewKind»|«field.viewKind.label»«ENDIF»
                     «IF hasInitialValue»|«field.^default.shortValue»«ENDIF»
-                    «IF hasDescription»|«field.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«field.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateConstant(NamedElementWithMembers element) {
+    def CharSequence generateConstants(NamedElementWithMembers element) {
         val constants = element.member.filter(Constant)
         '''
             «IF !constants.empty»
@@ -347,13 +361,13 @@ class ADocGenerator extends AbstractGenerator {
                 The «element.name» «element.eClass.name.toLowerCase» provides the following constants:
                 
                 «FOR v : VisibilityKind.values»
-                    «element.generateConstant(v)»
+                    «element.generateConstants(v)»
                 «ENDFOR»
             «ENDIF»
         '''
     }
 
-    def CharSequence generateConstant(NamedElementWithMembers element, VisibilityKind v) {
+    def CharSequence generateConstants(NamedElementWithMembers element, VisibilityKind v) {
         val constants = element.member.filter(Constant).filter[visibility == v]
         val hasDescription = constants.exists[description !== null && !description.isEmpty]
         '''
@@ -367,33 +381,22 @@ class ADocGenerator extends AbstractGenerator {
                     |«constant.name»
                     |«constant.type.crossReference(constant)»
                     |«constant.value.shortValue»
-                    «IF hasDescription»|«constant.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«constant.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateEventSource(NamedElementWithMembers element) {
+    def CharSequence generateEventSources(NamedElementWithMembers element) {
         val eventSources = element.member.filter(EventSource)
+        val hasDescription = eventSources.exists[description !== null && !description.isEmpty]
         '''
             «IF !eventSources.empty»
                 ==== Event Sources
                 The «element.name» «element.eClass.name.toLowerCase» provides the following event sources:
                 
-                «FOR v : VisibilityKind.values»
-                    «element.generateEventSource(v)»
-                «ENDFOR»
-            «ENDIF»
-        '''
-    }
-
-    def CharSequence generateEventSource(NamedElementWithMembers element, VisibilityKind v) {
-        val eventSources = element.member.filter(EventSource).filter[visibility == v]
-        val hasDescription = eventSources.exists[description !== null && !description.isEmpty]
-        '''
-            «IF !eventSources.empty»
-                .«element.name»'s «v.getName()» Event Sources
+                .«element.name»'s Event Sources
                 [%autowidth.stretch]
                 |===
                 |Name |Type «IF hasDescription»|Description«ENDIF»
@@ -401,33 +404,22 @@ class ADocGenerator extends AbstractGenerator {
                 «FOR eventSource : eventSources»
                     |«eventSource.name»
                     |«eventSource.type.crossReference(eventSource)»
-                    «IF hasDescription»|«eventSource.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«eventSource.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateEventSink(NamedElementWithMembers element) {
+    def CharSequence generateEventSinks(NamedElementWithMembers element) {
         val eventSinks = element.member.filter(EventSink)
+        val hasDescription = eventSinks.exists[description !== null && !description.isEmpty]
         '''
             «IF !eventSinks.empty»
                 ==== Event Sinks
                 The «element.name» «element.eClass.name.toLowerCase» provides the following event sinks:
                 
-                «FOR v : VisibilityKind.values»
-                    «element.generateEventSink(v)»
-                «ENDFOR»
-            «ENDIF»
-        '''
-    }
-
-    def CharSequence generateEventSink(NamedElementWithMembers element, VisibilityKind v) {
-        val eventSinks = element.member.filter(EventSink).filter[visibility == v]
-        val hasDescription = eventSinks.exists[description !== null && !description.isEmpty]
-        '''
-            «IF !eventSinks.empty»
-                .«element.name»'s «v.getName()» Event Sink
+                .«element.name»'s Event Sinks
                 [%autowidth.stretch]
                 |===
                 |Name |Type «IF hasDescription»|Description«ENDIF»
@@ -435,34 +427,23 @@ class ADocGenerator extends AbstractGenerator {
                 «FOR eventSink : eventSinks»
                     |«eventSink.name»
                     |«eventSink.type.crossReference(eventSink)»
-                    «IF hasDescription»|«eventSink.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«eventSink.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateEntryPoint(NamedElementWithMembers element) {
+    def CharSequence generateEntryPoints(NamedElementWithMembers element) {
         val entryPoints = element.member.filter(EntryPoint)
+        val hasDescription = entryPoints.exists[description !== null && !description.isEmpty]
+        val hasViewKind = entryPoints.exists[viewKind !== ViewKind.NONE]
         '''
             «IF !entryPoints.empty»
                 ==== Entry Points
                 The «element.name» «element.eClass.name.toLowerCase» provides the following entry points:
                 
-                «FOR v : VisibilityKind.values»
-                    «element.generateEntryPoint(v)»
-                «ENDFOR»
-            «ENDIF»
-        '''
-    }
-
-    def CharSequence generateEntryPoint(NamedElementWithMembers element, VisibilityKind v) {
-        val entryPoints = element.member.filter(EntryPoint).filter[visibility == v]
-        val hasDescription = entryPoints.exists[description !== null && !description.isEmpty]
-        val hasViewKind = entryPoints.exists[viewKind !== ViewKind.NONE]
-        '''
-            «IF !entryPoints.empty»
-                .«element.name»'s «v.getName()» Entry Points
+                .«element.name»'s Entry Points
                 [%autowidth.stretch]
                 |===
                 |Name «IF hasViewKind»|View Kind «ENDIF»«IF hasDescription»|Description«ENDIF»
@@ -470,33 +451,22 @@ class ADocGenerator extends AbstractGenerator {
                 «FOR entryPoint : entryPoints»
                     |«entryPoint.name»
                     «IF hasViewKind»|«entryPoint.viewKind.label»«ENDIF»
-                    «IF hasDescription»|«entryPoint.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«entryPoint.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateReference(NamedElementWithMembers element) {
+    def CharSequence generateReferences(NamedElementWithMembers element) {
         val references = element.member.filter(Reference)
+        val hasDescription = references.exists[description !== null && !description.isEmpty]
         '''
             «IF !references.empty»
                 ==== References
                 The «element.name» «element.eClass.name.toLowerCase» provides the following references:
                 
-                «FOR v : VisibilityKind.values»
-                    «element.generateReference(v)»
-                «ENDFOR»
-            «ENDIF»
-        '''
-    }
-
-    def CharSequence generateReference(NamedElementWithMembers element, VisibilityKind v) {
-        val references = element.member.filter(Reference).filter[visibility == v]
-        val hasDescription = references.exists[description !== null && !description.isEmpty]
-        '''
-            «IF !references.empty»
-                .«element.name»'s «v.getName()» references
+                .«element.name»'s references
                 [%autowidth.stretch]
                 |===
                 |Name |Type |Minimum |Maximum «IF hasDescription»|Description«ENDIF»
@@ -506,33 +476,22 @@ class ADocGenerator extends AbstractGenerator {
                     |«reference.interface.crossReference(reference)»
                     |«reference.lower»
                     |«reference.upper == -1 ? "unlimited" : reference.upper»
-                    «IF hasDescription»|«reference.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«reference.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateContainer(NamedElementWithMembers element) {
+    def CharSequence generateContainers(NamedElementWithMembers element) {
         val containers = element.member.filter(Container)
+        val hasDescription = containers.exists[description !== null && !description.isEmpty]
         '''
             «IF !containers.empty»
                 ==== Containers
                 The «element.name» «element.eClass.name.toLowerCase» provides the following containers:
                 
-                «FOR v : VisibilityKind.values»
-                    «element.generateContainer(v)»
-                «ENDFOR»
-            «ENDIF»
-        '''
-    }
-
-    def CharSequence generateContainer(NamedElementWithMembers element, VisibilityKind v) {
-        val containers = element.member.filter(Container).filter[visibility == v]
-        val hasDescription = containers.exists[description !== null && !description.isEmpty]
-        '''
-            «IF !containers.empty»
-                .«element.name»'s «v.getName()» containers
+                .«element.name»'s containers
                 [%autowidth.stretch]
                 |===
                 |Name |Type |Minimum |Maximum «IF hasDescription»|Description«ENDIF»
@@ -542,14 +501,14 @@ class ADocGenerator extends AbstractGenerator {
                     |«container.type.crossReference(container)»
                     |«container.lower»
                     |«container.upper == -1 ? "unlimited" : container.upper»
-                    «IF hasDescription»|«container.description?.espaceDescription»«ENDIF»
+                    «IF hasDescription»|«container.description?.escapeDescription»«ENDIF»
                 «ENDFOR»
                 |===
             «ENDIF»
         '''
     }
 
-    def CharSequence generateOperation(NamedElementWithMembers element) {
+    def CharSequence generateOperations(NamedElementWithMembers element) {
         val operations = element.member.filter(Operation)
         '''
             «IF !operations.empty»
@@ -570,10 +529,10 @@ class ADocGenerator extends AbstractGenerator {
                         |Direction |Name |Type «IF hasDefaultValue»|Default Value «ENDIF»«IF hasDescription»|Description«ENDIF»
                         
                         «FOR param : operation.parameter»
-                            |«param.direction» |«param.name» |«param.type.crossReference(param)» «IF hasDefaultValue»|«param.^default.shortValue» «ENDIF»«IF hasDescription»|«param.description?.espaceDescription»«ENDIF»
+                            |«param.direction» |«param.name» |«param.type.crossReference(param)» «IF hasDefaultValue»|«param.^default.shortValue» «ENDIF»«IF hasDescription»|«param.description?.escapeDescription»«ENDIF»
                         «ENDFOR»
                         «IF operation.returnParameter !== null»
-                            |return |«operation.returnParameter.name» |«operation.returnParameter.type.crossReference(operation.returnParameter)» «IF hasDefaultValue»|  «ENDIF»|«operation.returnParameter.description?.espaceDescription»
+                            |return |«operation.returnParameter.name» |«operation.returnParameter.type.crossReference(operation.returnParameter)» «IF hasDefaultValue»|  «ENDIF»|«operation.returnParameter.description?.escapeDescription»
                         «ENDIF»
                         |===
                     «ENDIF»
@@ -582,7 +541,7 @@ class ADocGenerator extends AbstractGenerator {
         '''
     }
 
-    def CharSequence generateAssociation(NamedElementWithMembers element) {
+    def CharSequence generateAssociations(NamedElementWithMembers element) {
         val associations = element.member.filter(Association)
         '''
             «IF !associations.empty»
@@ -590,18 +549,18 @@ class ADocGenerator extends AbstractGenerator {
                 The «element.name» «element.eClass.name.toLowerCase» provides the following associations:
                 
                 «FOR v : VisibilityKind.values»
-                    «element.generateAssociation(v)»
+                    «element.generateAssociations(v)»
                 «ENDFOR»
             «ENDIF»
         '''
     }
 
-    def CharSequence generateAssociation(NamedElementWithMembers element, VisibilityKind v) {
+    def CharSequence generateAssociations(NamedElementWithMembers element, VisibilityKind v) {
         val associations = element.member.filter(Association).filter[visibility == v]
         val hasDescription = associations.exists[description !== null && !description.isEmpty]
         '''
             «IF !associations.empty»
-                .«element.name»'s «v.getName()» containers
+                .«element.name»'s «v.getName()» associations
                 [%autowidth.stretch]
                 |===
                 |Name |Type «IF hasDescription»|Description«ENDIF»
@@ -616,7 +575,7 @@ class ADocGenerator extends AbstractGenerator {
         '''
     }
 
-    def CharSequence generateProperty(NamedElementWithMembers element) {
+    def CharSequence generateProperties(NamedElementWithMembers element) {
         val properties = element.member.filter(Property)
         '''
             «IF !properties.empty»
@@ -624,13 +583,13 @@ class ADocGenerator extends AbstractGenerator {
                 The «element.name» «element.eClass.name.toLowerCase» provides the following properties:
                 
                 «FOR v : VisibilityKind.values»
-                    «element.generateProperty(v)»
+                    «element.generateProperties(v)»
                 «ENDFOR»
             «ENDIF»
         '''
     }
 
-    def CharSequence generateProperty(NamedElementWithMembers element, VisibilityKind v) {
+    def CharSequence generateProperties(NamedElementWithMembers element, VisibilityKind v) {
         val properties = element.member.filter(Property).filter[visibility == v]
         val hasDescription = properties.exists[description !== null && !description.isEmpty]
         val hasViewKind = properties.exists[viewKind !== ViewKind.NONE]
@@ -685,7 +644,7 @@ class ADocGenerator extends AbstractGenerator {
             ....
         '''
     }
-    
+
     def dispatch CharSequence generateTypeInfoDetails(Type type) {
         '''
             .^h|Visibility |«type.visibility»
@@ -698,8 +657,8 @@ class ADocGenerator extends AbstractGenerator {
         '''
             «(type as Type)._generateTypeInfoDetails»
             .^h|Primitive Type |«IF type.primitiveType !== null»«type.primitiveType.crossReference(type)»«ELSE»Smp::Int32«ENDIF»
-            .^h|Minimum |«type.minimum.shortValue»
-            .^h|Maximum |«type.maximum.shortValue»
+            «IF type.minimum !== null».^h|Minimum |«type.minimum.shortValue»«ENDIF»
+            «IF type.maximum !== null».^h|Maximum |«type.maximum.shortValue»«ENDIF»
             «IF type.unit !== null».^h|Unit |«type.unit»«ENDIF»
         '''
     }
@@ -708,8 +667,8 @@ class ADocGenerator extends AbstractGenerator {
         '''
             «(type as Type)._generateTypeInfoDetails»
             .^h|Primitive Type |«IF type.primitiveType !== null»«type.primitiveType.crossReference(type)»«ELSE»Smp::Float64 TODO VERIFIER«ENDIF»
-            .^h|Minimum |«type.minimum.shortValue» «IF !type.minInclusive»(exclusive)«ENDIF»
-            .^h|Maximum |«type.maximum.shortValue» «IF !type.maxInclusive»(exclusive)«ENDIF»
+            «IF type.minimum !== null».^h|Minimum |«type.minimum.shortValue» «IF !type.minInclusive»(exclusive)«ENDIF»«ENDIF»
+            «IF type.maximum !== null».^h|Maximum |«type.maximum.shortValue» «IF !type.maxInclusive»(exclusive)«ENDIF»«ENDIF»
             «IF type.unit !== null».^h|Unit |«type.unit»«ENDIF»
         '''
     }
@@ -725,7 +684,7 @@ class ADocGenerator extends AbstractGenerator {
     def dispatch CharSequence generateTypeInfoDetails(EventType type) {
         '''
             «(type as Type)._generateTypeInfoDetails»
-            .^h|Event Type |«type.eventArgs.crossReference(type)»
+            .^h|Event Type |«IF type.eventArgs === null»void«ELSE»«type.eventArgs.crossReference(type)»«ENDIF»
         '''
     }
 
@@ -748,7 +707,7 @@ class ADocGenerator extends AbstractGenerator {
     def dispatch CharSequence generateTypeInfoDetails(Class type) {
         '''
             «(type as Type)._generateTypeInfoDetails»
-            «IF type.base !== null».^h|Base Class |«type.base.crossReference(type)»«ENDIF»
+            «IF type.base !== null».^h|Extends |«type.base.crossReference(type)»«ENDIF»
         '''
     }
 
@@ -776,7 +735,7 @@ class ADocGenerator extends AbstractGenerator {
             <<«type.fqn.toString("-")»,«type.fqn.toString("::")»>>
         '''
     }
-    
+
     private def CharSequence mermaidClassAttributes(NamedElementWithMembers element) {
         val members = element.member.reject(Operation).reject(Container).reject(Reference)
         val operations = element.member.filter(Operation)
@@ -808,7 +767,7 @@ class ADocGenerator extends AbstractGenerator {
     }
 
     private def hasTypeMembers(NamedElementWithMembers elem) {
-        return !elem.member.filter[it|!(it instanceof Namespace)].empty
+        return elem.member.exists[it|!(it instanceof Namespace)]
     }
 
     private def List<String> getFieldKinds(Field field) {
@@ -832,7 +791,7 @@ class ADocGenerator extends AbstractGenerator {
         }
     }
 
-    private def String espaceDescription(String s) {
+    private def String escapeDescription(String s) {
         return s.replace('|', '\\|')
     }
 }

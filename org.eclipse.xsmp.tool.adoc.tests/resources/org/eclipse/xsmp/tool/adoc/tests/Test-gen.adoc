@@ -1,0 +1,1577 @@
+= a title
+++++
+Catalogue Test
+++++
+
+== Namespace ns
+++++
+++++
+[.center]
+[mermaid]
+....
+classDiagram
+
+direction LR
+
+namespace ns {
+    class SingleAttribute {
+        <<AttributeType>>
+    }                        
+    class MultipleAttribute {
+        <<AttributeType>>
+    }                        
+    class ArrayOf3Bool {
+        <<Array>>
+    }                        
+    class MatrixOf3_3Bool {
+        <<Array>>
+    }                        
+    class ArrayOf3Char8 {
+        <<Array>>
+    }                        
+    class ArrayOf3Int8 {
+        <<Array>>
+    }                        
+    class ArrayOf3Int16 {
+        <<Array>>
+    }                        
+    class - {
+        <<...>>
+    }
+}
+....
+
+[#ns-SingleAttribute]
+=== AttributeType SingleAttribute
+++++
+++++
+
+.SingleAttribute's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::SingleAttribute
+.^h|UUID |c489402d-7ecc-466a-a2e7-e1cb3d1da3c5
+|===
+
+
+[#ns-MultipleAttribute]
+=== AttributeType MultipleAttribute
+++++
+++++
+
+.MultipleAttribute's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::MultipleAttribute
+.^h|UUID |52057807-e889-40fb-89f9-f568018bddf1
+|===
+
+
+[#ns-ArrayOf3Bool]
+=== Array ArrayOf3Bool
+++++
+++++
+
+.ArrayOf3Bool's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Bool
+.^h|UUID |621cf9ac-7b8d-4111-a1ef-69084815a903
+.^h|Item Type |<<Smp-Bool,Smp::Bool>>
+.^h|Size |3
+|===
+
+
+[#ns-MatrixOf3_3Bool]
+=== Array MatrixOf3_3Bool
+++++
+++++
+
+.MatrixOf3_3Bool's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::MatrixOf3_3Bool
+.^h|UUID |b92805e6-20c6-455f-b791-7327a58c499a
+.^h|Item Type |<<ns-ArrayOf3Bool,ArrayOf3Bool>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Char8]
+=== Array ArrayOf3Char8
+++++
+++++
+
+.ArrayOf3Char8's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Char8
+.^h|UUID |a6b216a8-838c-4a2b-aac3-3155b51e90a5
+.^h|Item Type |<<Smp-Char8,Smp::Char8>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Int8]
+=== Array ArrayOf3Int8
+++++
+++++
+
+.ArrayOf3Int8's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Int8
+.^h|UUID |118e9d39-6359-4dcb-9ca3-f7f3ed408ba7
+.^h|Item Type |<<Smp-Int8,Smp::Int8>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Int16]
+=== Array ArrayOf3Int16
+++++
+++++
+
+.ArrayOf3Int16's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Int16
+.^h|UUID |bb7123e4-982d-47d8-b4e1-6cf470d66bed
+.^h|Item Type |<<Smp-Int16,Smp::Int16>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Int32]
+=== Array ArrayOf3Int32
+++++
+++++
+
+.ArrayOf3Int32's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Int32
+.^h|UUID |675c2305-e381-4083-982e-8b3a64216b11
+.^h|Item Type |<<Smp-Int32,Smp::Int32>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Int64]
+=== Array ArrayOf3Int64
+++++
+++++
+
+.ArrayOf3Int64's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Int64
+.^h|UUID |bc8abc6b-dfe1-445d-8ba2-eea4c2d1fa25
+.^h|Item Type |<<Smp-Int64,Smp::Int64>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3UInt8]
+=== Array ArrayOf3UInt8
+++++
+++++
+
+.ArrayOf3UInt8's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3UInt8
+.^h|UUID |1e783d5c-f6e9-48e7-9f5f-15d1c430f603
+.^h|Item Type |<<Smp-UInt8,Smp::UInt8>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3UInt16]
+=== Array ArrayOf3UInt16
+++++
+++++
+
+.ArrayOf3UInt16's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3UInt16
+.^h|UUID |69528823-d681-418e-92d9-4cb17ad9d226
+.^h|Item Type |<<Smp-UInt16,Smp::UInt16>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3UInt32]
+=== Array ArrayOf3UInt32
+++++
+++++
+
+.ArrayOf3UInt32's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3UInt32
+.^h|UUID |41eb616b-fdd5-4fcb-8abc-c6c0e889f3ca
+.^h|Item Type |<<Smp-UInt32,Smp::UInt32>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3UInt64]
+=== Array ArrayOf3UInt64
+++++
+++++
+
+.ArrayOf3UInt64's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3UInt64
+.^h|UUID |f40b2852-997e-461f-a4af-9575ab7920a0
+.^h|Item Type |<<Smp-UInt64,Smp::UInt64>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Float32]
+=== Array ArrayOf3Float32
+++++
+++++
+
+.ArrayOf3Float32's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Float32
+.^h|UUID |edd0eb26-9a1b-4fd1-860c-3c862c3fb752
+.^h|Item Type |<<Smp-Float32,Smp::Float32>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Float64]
+=== Array ArrayOf3Float64
+++++
+++++
+
+.ArrayOf3Float64's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Float64
+.^h|UUID |6f228799-6e9a-4da8-9a53-d612050f0669
+.^h|Item Type |<<Smp-Float64,Smp::Float64>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3Duration]
+=== Array ArrayOf3Duration
+++++
+++++
+
+.ArrayOf3Duration's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3Duration
+.^h|UUID |3f203a6e-2f0a-4fd0-b3de-ef3299565749
+.^h|Item Type |<<Smp-Duration,Smp::Duration>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3DateTime]
+=== Array ArrayOf3DateTime
+++++
+++++
+
+.ArrayOf3DateTime's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3DateTime
+.^h|UUID |a7ed47b1-01b2-407c-90b0-864993f026ca
+.^h|Item Type |<<Smp-DateTime,Smp::DateTime>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3AnEnum]
+=== Array ArrayOf3AnEnum
+++++
+++++
+
+.ArrayOf3AnEnum's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3AnEnum
+.^h|UUID |582a38b3-77f7-4c67-9d1b-2df6722233bd
+.^h|Item Type |<<ns-AnEnum,AnEnum>>
+.^h|Size |3
+|===
+
+
+[#ns-ArrayOf3AString]
+=== Array ArrayOf3AString
+++++
+++++
+
+.ArrayOf3AString's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ArrayOf3AString
+.^h|UUID |7f28e66a-0741-4fc8-a8cf-e1c9d8ddb6ea
+.^h|Item Type |<<ns-AString,AString>>
+.^h|Size |3
+|===
+
+
+[#ns-AnAbstractClass]
+=== Class AnAbstractClass
+++++
+++++
+
+.AnAbstractClass's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnAbstractClass
+.^h|UUID |9b21955e-bbf9-41e6-9bc4-5ed613bf7821
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    
+    class AnAbstractClass {
+        -Float32* association
+        -constexpr Bool constant = true
+        -Bool field
+        
+        -voidOperation() void
+        -getter() Bool
+        -Setter(in Bool) void
+    }
+    
+....
+
+==== Constants
+The AnAbstractClass class provides the following constants:
+
+.AnAbstractClass's private constants
+[%autowidth.stretch]
+|===
+|Name |Type |Value 
+
+|constant
+|<<Smp-Bool,Smp::Bool>>
+|true
+|===
+
+==== Properties
+The AnAbstractClass class provides the following properties:
+
+.AnAbstractClass's private properties
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|property
+|<<Smp-Bool,Smp::Bool>>
+|===
+
+==== Operations
+The AnAbstractClass class provides the following operations:
+
+===== Operation voidOperation 
+
+===== Operation getter 
+
+.getter's parameters
+[%autowidth.stretch]
+|===
+|Direction |Name |Type 
+
+|return |return |<<Smp-Bool,Smp::Bool>>
+ |
+|===
+===== Operation Setter 
+
+.Setter's parameters
+[%autowidth.stretch]
+|===
+|Direction |Name |Type 
+
+|in |value |<<Smp-Bool,Smp::Bool>>
+|===
+
+
+
+
+==== Fields
+The AnAbstractClass class provides the following fields:
+
+.AnAbstractClass's private fields
+[%autowidth.stretch]
+|===
+|Kind |Name |Type |Initial Value 
+
+|
+|field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|===
+
+==== Associations
+The AnAbstractClass class provides the following associations:
+
+.AnAbstractClass's private associations
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|association
+|<<Smp-Float32,Smp::Float32>>
+|===
+
+
+[#ns-AClass]
+=== Class AClass
+++++
+++++
+
+.AClass's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AClass
+.^h|UUID |1d8f1fc8-4ce1-4a70-9883-3c2728f1cba4
+.^h|Extends |<<ns-AnAbstractClass,AnAbstractClass>>
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    class AnAbstractClass {
+        <<Class>>
+    }
+    
+    class AClass {
+        
+    }
+    
+    AnAbstractClass <|-- AClass
+....
+
+
+
+
+
+
+
+
+
+
+[#ns-AnEnum]
+=== Enumeration AnEnum
+++++
+++++
+
+.AnEnum's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::AnEnum
+.^h|UUID |7cb57c5f-acc1-46c7-b8c8-23e3949a6584
+|===
+
+
+.AnEnum's literals
+[%autowidth.stretch]
+|===
+|Name |Value
+
+|L1
+|0
+|L2
+|1
+|L3
+|2
+|===
+[#ns-AnIn32EventType]
+=== EventType AnIn32EventType
+++++
+++++
+
+.AnIn32EventType's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnIn32EventType
+.^h|UUID |6eb41667-3fd3-4742-a1a7-6ba3224099a6
+.^h|Event Type |<<Smp-Int32,Smp::Int32>>
+|===
+
+
+[#ns-AVoidEventType]
+=== EventType AVoidEventType
+++++
+++++
+
+.AVoidEventType's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AVoidEventType
+.^h|UUID |675ca788-4876-481a-bb51-b04a822d1f8b
+.^h|Event Type |void
+|===
+
+
+[#ns-AnAbstractException]
+=== Exception AnAbstractException
+++++
+++++
+
+.AnAbstractException's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnAbstractException
+.^h|UUID |cc5c3af5-5565-4641-a070-93c2afd55968
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    
+    class AnAbstractException {
+        
+    }
+    
+....
+
+
+
+
+
+
+
+
+
+
+[#ns-AnException]
+=== Exception AnException
+++++
+++++
+
+.AnException's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnException
+.^h|UUID |c0d3d9c5-6636-4e62-bd04-1dcc3a30eca1
+.^h|Extends |<<ns-AnAbstractException,AnAbstractException>>
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    class AnAbstractException {
+        <<Exception>>
+    }
+    
+    class AnException {
+        
+    }
+    
+    AnAbstractException <|-- AnException
+....
+
+
+
+
+
+
+
+
+
+
+[#ns-AFloat]
+=== Float AFloat
+++++
+++++
+
+.AFloat's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AFloat
+.^h|UUID |850a9105-b093-4c0e-8863-1d7f51a43286
+.^h|Primitive Type |Smp::Float64 TODO VERIFIER
+.^h|Unit |m
+|===
+
+
+[#ns-AFloat32]
+=== Float AFloat32
+++++
+++++
+
+.AFloat32's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AFloat32
+.^h|UUID |e83b1c21-d97d-45af-9158-d3beaa4687c5
+.^h|Primitive Type |<<Smp-Float32,Smp::Float32>>
+|===
+
+
+[#ns-AFloat64]
+=== Float AFloat64
+++++
+++++
+
+.AFloat64's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AFloat64
+.^h|UUID |a6526234-6242-49ab-ab14-fbf1ab9b44b2
+.^h|Primitive Type |<<Smp-Float64,Smp::Float64>>
+|===
+
+
+[#ns-AFloatWithRange]
+=== Float AFloatWithRange
+++++
+++++
+
+.AFloatWithRange's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AFloatWithRange
+.^h|UUID |9cbf0614-53b7-4a27-9b6e-3ff9134d50ea
+.^h|Primitive Type |Smp::Float64 TODO VERIFIER
+.^h|Minimum |0.0 
+.^h|Maximum |100.0 
+|===
+
+
+[#ns-AFloatWithExclusiveRange]
+=== Float AFloatWithExclusiveRange
+++++
+++++
+
+.AFloatWithExclusiveRange's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AFloatWithExclusiveRange
+.^h|UUID |6dbdb0c2-c291-4f21-a0b1-3775881e062e
+.^h|Primitive Type |Smp::Float64 TODO VERIFIER
+.^h|Minimum |0.0 (exclusive)
+.^h|Maximum |100.0 (exclusive)
+|===
+
+
+[#ns-AnInteger]
+=== Integer AnInteger
+++++
+++++
+
+.AnInteger's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnInteger
+.^h|UUID |53e1f876-1347-4874-a931-a357d0a3d4c2
+.^h|Primitive Type |Smp::Int32
+|===
+
+
+[#ns-AnInt8Integer]
+=== Integer AnInt8Integer
+++++
+++++
+
+.AnInt8Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnInt8Integer
+.^h|UUID |bc6e34b8-1a0c-46cc-8565-695f60873011
+.^h|Primitive Type |<<Smp-Int8,Smp::Int8>>
+.^h|Unit |s
+|===
+
+
+[#ns-AnInt16Integer]
+=== Integer AnInt16Integer
+++++
+++++
+
+.AnInt16Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnInt16Integer
+.^h|UUID |058690f7-fd28-4a31-bac1-498df537b4f9
+.^h|Primitive Type |<<Smp-Int16,Smp::Int16>>
+|===
+
+
+[#ns-AnInt32Integer]
+=== Integer AnInt32Integer
+++++
+++++
+
+.AnInt32Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnInt32Integer
+.^h|UUID |8489b78e-3531-44fa-b36e-8f9a9350d5f9
+.^h|Primitive Type |<<Smp-Int32,Smp::Int32>>
+|===
+
+
+[#ns-AnInt64Integer]
+=== Integer AnInt64Integer
+++++
+++++
+
+.AnInt64Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnInt64Integer
+.^h|UUID |9932c757-903e-49d4-a454-f8e88d05e099
+.^h|Primitive Type |<<Smp-Int64,Smp::Int64>>
+|===
+
+
+[#ns-AnUInt8Integer]
+=== Integer AnUInt8Integer
+++++
+++++
+
+.AnUInt8Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnUInt8Integer
+.^h|UUID |831facb7-aad5-4862-b837-7e187f2d26bb
+.^h|Primitive Type |<<Smp-UInt8,Smp::UInt8>>
+|===
+
+
+[#ns-AnUInt16Integer]
+=== Integer AnUInt16Integer
+++++
+++++
+
+.AnUInt16Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnUInt16Integer
+.^h|UUID |029ff31c-c57a-4cf1-b18e-53926ae09419
+.^h|Primitive Type |<<Smp-UInt16,Smp::UInt16>>
+|===
+
+
+[#ns-AnUInt32Integer]
+=== Integer AnUInt32Integer
+++++
+++++
+
+.AnUInt32Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnUInt32Integer
+.^h|UUID |1db4285c-2140-4fe0-ae48-bd1b5557ee4d
+.^h|Primitive Type |<<Smp-UInt32,Smp::UInt32>>
+|===
+
+
+[#ns-AnUInt64Integer]
+=== Integer AnUInt64Integer
+++++
+++++
+
+.AnUInt64Integer's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnUInt64Integer
+.^h|UUID |9e4c3c41-234a-48d6-a249-00be87bbbdae
+.^h|Primitive Type |<<Smp-UInt64,Smp::UInt64>>
+|===
+
+
+[#ns-AnIntegerWithRange]
+=== Integer AnIntegerWithRange
+++++
+++++
+
+.AnIntegerWithRange's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AnIntegerWithRange
+.^h|UUID |93b6170a-b9b9-4df5-b69d-14493f7c9cf5
+.^h|Primitive Type |Smp::Int32
+.^h|Minimum |0
+.^h|Maximum |100
+|===
+
+
+[#ns-AString]
+=== String AString
+++++
+++++
+
+.AString's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AString
+.^h|UUID |adfec040-aba1-4bc8-8561-476c1e738a02
+.^h|Length |10
+|===
+
+
+[#ns-NativeType]
+=== NativeType NativeType
+++++
+++++
+
+.NativeType's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::NativeType
+.^h|UUID |d9806d07-4cf1-4a40-982b-10b6a7e55909
+.^h|Type |NativeType
+.^h|Location |Test/NativeType.h
+.^h|Namespace |Test
+|===
+
+
+[#ns-ValueReference]
+=== ValueReference ValueReference
+++++
+++++
+
+.ValueReference's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::ValueReference
+.^h|UUID |35c6cdeb-4980-46b4-8d37-e990ab4f0fc2
+|===
+
+
+[#ns-AnInterface]
+=== Interface AnInterface
+++++
+++++
+
+.AnInterface's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::AnInterface
+.^h|UUID |d2e665e3-5f66-425e-9840-6b4ebf1bdbe5
+.2+.^h|Extends |<<Smp-IComponent,Smp::IComponent>>
+ |<<Smp-ICollection,Smp::ICollection>>
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    class IComponent {
+        <<Interface>>
+    }
+    class ICollection {
+        <<Interface>>
+    }
+
+    class AnInterface {
+        +constexpr Bool constant = false
+        
+        +voidOperation() void
+        +op(in Float32,out Float64,inout Duration) Bool
+    }
+    
+    IComponent <|-- AnInterface : extends
+    ICollection <|-- AnInterface : extends
+....
+
+==== Constants
+The AnInterface interface provides the following constants:
+
+.AnInterface's private constants
+[%autowidth.stretch]
+|===
+|Name |Type |Value 
+
+|constant
+|<<Smp-Bool,Smp::Bool>>
+|false
+|===
+
+==== Properties
+The AnInterface interface provides the following properties:
+
+.AnInterface's private properties
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|property
+|<<Smp-Bool,Smp::Bool>>
+|===
+
+==== Operations
+The AnInterface interface provides the following operations:
+
+===== Operation voidOperation 
+
+===== Operation op 
+
+.op's parameters
+[%autowidth.stretch]
+|===
+|Direction |Name |Type |Default Value |Description
+
+|in |in |<<Smp-Float32,Smp::Float32>>
+ | |
+|out |out |<<Smp-Float64,Smp::Float64>>
+ | |
+|inout |inout |<<Smp-Duration,Smp::Duration>>
+ | |a desc1
+|return |return |<<Smp-Bool,Smp::Bool>>
+ |  |
+|===
+
+
+
+
+
+
+
+[#ns-AnAbstractModel]
+=== Model AnAbstractModel
+++++
+++++
+
+.AnAbstractModel's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |protected
+.^h|Qualified Name |ns::AnAbstractModel
+.^h|UUID |02b2a015-71c8-48bc-beb1-95a494c5e438
+|===
+
+==== Diagram
+
+[.center]
+[mermaid]
+....
+classDiagram
+    
+    
+    
+    
+    class AnAbstractModel {
+        -Bool hidden_field
+        -Bool debug_field
+        -Bool expert_field
+        -Bool all_field
+        -Bool forcible_field
+        -Bool mutable_field
+        -Bool failure_field
+        
+    }
+    
+....
+
+
+
+
+
+
+
+==== Fields
+The AnAbstractModel model provides the following fields:
+
+.AnAbstractModel's private fields
+[%autowidth.stretch]
+|===
+|Kind |Name |Type |Initial Value 
+
+|
+|hidden_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|
+|debug_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|
+|expert_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|
+|all_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|forcible
+|forcible_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|
+|mutable_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|failure
+|failure_field
+|<<Smp-Bool,Smp::Bool>>
+|false
+|===
+
+
+
+[#ns-AModel]
+=== Model AModel
+++++
+++++
+
+.AModel's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |public
+.^h|Qualified Name |ns::AModel
+.^h|UUID |4fd30ec9-4add-41a5-84b2-bdccc968115b
+.^h|Extends |<<ns-AnAbstractModel,AnAbstractModel>>
+.1+.^h|Implements |<<ns-AnInterface,AnInterface>>
+|===
+
+==== Diagram
+
+[.center]
+[mermaid]
+....
+classDiagram
+    class AnAbstractModel {
+        <<Model>>
+    }
+    
+    class AnInterface {
+        <<Interface>>
+    }
+    
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    class IComposite {
+        <<Reference>>
+    }
+    
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    class IModel {
+        <<Container>>
+    }
+    
+    class AModel {
+        -Char8 aChar
+        -Char8 aCharNumber
+        -Char8 aCharWithEscape
+        -DateTime aDateTime
+        -DateTime aDateTimeStr
+        -Duration aDuration
+        -Duration aDurationStr
+        -AFloat aFloat
+        -AFloat32 aFloat32
+        ...
+        
+    }
+    
+    AnAbstractModel <|-- AModel : extends
+    AnInterface <|.. AModel : implements
+    AModel "1..1" o-- IComposite : reference
+    AModel "0..1" o-- IComposite : optional_reference
+    AModel "0..-1" o-- IComposite : list_reference
+    AModel "1..-1" o-- IComposite : non_empty_list_reference
+    AModel "4..4" o-- IComposite : list_reference_4
+    AModel "4..-1" o-- IComposite : list_reference_4_or_more
+    AModel "4..10" o-- IComposite : list_reference_betwwen_4_and_10
+    AModel "1..1" *-- IModel : container
+    AModel "0..1" *-- IModel : optional_container
+    AModel "0..-1" *-- IModel : list_container
+    AModel "1..-1" *-- IModel : non_empty_list_container
+    AModel "4..4" *-- IModel : list_container_4
+    AModel "4..-1" *-- IModel : list_container_4_or_more
+    AModel "4..10" *-- IModel : list_container_betwwen_4_and_10
+....
+
+
+
+
+==== Entry Points
+The AModel model provides the following entry points:
+
+.AModel's Entry Points
+[%autowidth.stretch]
+|===
+|Name 
+
+|ep
+|===
+
+==== Event Sinks
+The AModel model provides the following event sinks:
+
+.AModel's Event Sinks
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|voidEventSink
+|<<ns-AVoidEventType,AVoidEventType>>
+|int32EventSink
+|<<ns-AnIn32EventType,AnIn32EventType>>
+|===
+
+==== Event Sources
+The AModel model provides the following event sources:
+
+.AModel's Event Sources
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|voidEventSource
+|<<ns-AVoidEventType,AVoidEventType>>
+|int32EventSource
+|<<ns-AnIn32EventType,AnIn32EventType>>
+|===
+
+==== Fields
+The AModel model provides the following fields:
+
+.AModel's protected fields
+[%autowidth.stretch]
+|===
+|Kind |Name |Type 
+
+|input
+|input
+|<<Smp-Bool,Smp::Bool>>
+|===
+.AModel's private fields
+[%autowidth.stretch]
+|===
+|Kind |Name |Type |Initial Value 
+
+|
+|aChar
+|<<Smp-Char8,Smp::Char8>>
+|'c'
+|
+|aCharNumber
+|<<Smp-Char8,Smp::Char8>>
+|10
+|
+|aCharWithEscape
+|<<Smp-Char8,Smp::Char8>>
+|'\n'
+|
+|aDateTime
+|<<Smp-DateTime,Smp::DateTime>>
+|42
+|
+|aDateTimeStr
+|<<Smp-DateTime,Smp::DateTime>>
+|"2022-10-22T09:07:44Z"
+|
+|aDuration
+|<<Smp-Duration,Smp::Duration>>
+|100
+|
+|aDurationStr
+|<<Smp-Duration,Smp::Duration>>
+|"PT20.345S"
+|
+|aFloat
+|<<ns-AFloat,AFloat>>
+|4.5
+|
+|aFloat32
+|<<ns-AFloat32,AFloat32>>
+|10.0
+|
+|aFloat64
+|<<ns-AFloat64,AFloat64>>
+|2.5
+|
+|aFloatWithExclusiveRange
+|<<ns-AFloatWithExclusiveRange,AFloatWithExclusiveRange>>
+|0.001
+|
+|aFloatWithRange
+|<<ns-AFloatWithRange,AFloatWithRange>>
+|0.0
+|
+|anInteger
+|<<ns-AnInteger,AnInteger>>
+|10
+|
+|anIntegerWithRange
+|<<ns-AnIntegerWithRange,AnIntegerWithRange>>
+|10
+|
+|anInt8
+|<<ns-AnInt8Integer,AnInt8Integer>>
+|8
+|
+|anInt16
+|<<ns-AnInt16Integer,AnInt16Integer>>
+|16
+|
+|anInt32
+|<<ns-AnInt32Integer,AnInt32Integer>>
+|32
+|
+|anInt64
+|<<ns-AnInt64Integer,AnInt64Integer>>
+|64
+|
+|anUInt8
+|<<ns-AnUInt8Integer,AnUInt8Integer>>
+|8
+|
+|anUInt16
+|<<ns-AnUInt16Integer,AnUInt16Integer>>
+|16
+|
+|anUInt32
+|<<ns-AnUInt32Integer,AnUInt32Integer>>
+|32
+|
+|anUInt64
+|<<ns-AnUInt64Integer,AnUInt64Integer>>
+|64
+|
+|anEnum
+|<<ns-AnEnum,AnEnum>>
+|L1
+|
+|aString
+|<<ns-AString,AString>>
+|"test"
+|
+|arrayOf3Bool
+|<<ns-ArrayOf3Bool,ArrayOf3Bool>>
+|[false, false, false]
+|
+|matrixOf3_3Bool
+|<<ns-MatrixOf3_3Bool,MatrixOf3_3Bool>>
+|[[false, false, false], [true, true, false], [false, false, true]]
+|
+|arrayOf3Char8
+|<<ns-ArrayOf3Char8,ArrayOf3Char8>>
+|['a', 10, '\t']
+|
+|arrayOf3Int8
+|<<ns-ArrayOf3Int8,ArrayOf3Int8>>
+|[0, 1, 2]
+|
+|arrayOf3Int16
+|<<ns-ArrayOf3Int16,ArrayOf3Int16>>
+|[0, 1, 2]
+|
+|arrayOf3Int32
+|<<ns-ArrayOf3Int32,ArrayOf3Int32>>
+|[0, 1, 2]
+|
+|arrayOf3Int64
+|<<ns-ArrayOf3Int64,ArrayOf3Int64>>
+|[0, 1, 2]
+|
+|arrayOf3UInt8
+|<<ns-ArrayOf3UInt8,ArrayOf3UInt8>>
+|[0, 1, 2]
+|
+|arrayOf3UInt16
+|<<ns-ArrayOf3UInt16,ArrayOf3UInt16>>
+|[0, 1, 2]
+|
+|arrayOf3UInt32
+|<<ns-ArrayOf3UInt32,ArrayOf3UInt32>>
+|[0, 1, 2]
+|
+|arrayOf3UInt64
+|<<ns-ArrayOf3UInt64,ArrayOf3UInt64>>
+|[0, 1, 2]
+|
+|arrayOf3Float32
+|<<ns-ArrayOf3Float32,ArrayOf3Float32>>
+|[0, 1, 2]
+|
+|arrayOf3Float64
+|<<ns-ArrayOf3Float64,ArrayOf3Float64>>
+|[0, 1, 2]
+|
+|arrayOf3Duration
+|<<ns-ArrayOf3Duration,ArrayOf3Duration>>
+|[0, 1, 2]
+|
+|arrayOf3DateTime
+|<<ns-ArrayOf3DateTime,ArrayOf3DateTime>>
+|[0, 1, 2]
+|
+|arrayOf3AnEnum
+|<<ns-ArrayOf3AnEnum,ArrayOf3AnEnum>>
+|[L1, L2, L3]
+|
+|arrayOf3AString
+|<<ns-ArrayOf3AString,ArrayOf3AString>>
+|["0", "1", "2"]
+|
+|aStruct
+|<<ns-AStruct,AStruct>>
+|[true, 10]
+|output
+|output
+|<<Smp-Bool,Smp::Bool>>
+|
+|transient
+|transient
+|<<Smp-Bool,Smp::Bool>>
+|
+|output, input
+|inout
+|<<Smp-Bool,Smp::Bool>>
+|
+|===
+
+==== Associations
+The AModel model provides the following associations:
+
+.AModel's protected associations
+[%autowidth.stretch]
+|===
+|Name |Type 
+
+|asso
+|<<Smp-Bool,Smp::Bool>>
+|===
+
+==== Containers
+The AModel model provides the following containers:
+
+.AModel's containers
+[%autowidth.stretch]
+|===
+|Name |Type |Minimum |Maximum 
+
+|container
+|<<Smp-IModel,Smp::IModel>>
+|1
+|1
+|optional_container
+|<<Smp-IModel,Smp::IModel>>
+|0
+|1
+|list_container
+|<<Smp-IModel,Smp::IModel>>
+|0
+|unlimited
+|non_empty_list_container
+|<<Smp-IModel,Smp::IModel>>
+|1
+|unlimited
+|list_container_4
+|<<Smp-IModel,Smp::IModel>>
+|4
+|4
+|list_container_4_or_more
+|<<Smp-IModel,Smp::IModel>>
+|4
+|unlimited
+|list_container_betwwen_4_and_10
+|<<Smp-IModel,Smp::IModel>>
+|4
+|10
+|===
+
+==== References
+The AModel model provides the following references:
+
+.AModel's references
+[%autowidth.stretch]
+|===
+|Name |Type |Minimum |Maximum 
+
+|reference
+|<<Smp-IComposite,Smp::IComposite>>
+|1
+|1
+|optional_reference
+|<<Smp-IComposite,Smp::IComposite>>
+|0
+|1
+|list_reference
+|<<Smp-IComposite,Smp::IComposite>>
+|0
+|unlimited
+|non_empty_list_reference
+|<<Smp-IComposite,Smp::IComposite>>
+|1
+|unlimited
+|list_reference_4
+|<<Smp-IComposite,Smp::IComposite>>
+|4
+|4
+|list_reference_4_or_more
+|<<Smp-IComposite,Smp::IComposite>>
+|4
+|unlimited
+|list_reference_betwwen_4_and_10
+|<<Smp-IComposite,Smp::IComposite>>
+|4
+|10
+|===
+[#ns-AStruct]
+=== Structure AStruct
+++++
+++++
+
+.AStruct's informations
+[%autowidth.stretch]
+|===
+.^h|Visibility |private
+.^h|Qualified Name |ns::AStruct
+.^h|UUID |717d3adb-4aa8-4997-b4f4-ea20cba12c14
+|===
+
+==== Diagram
+            
+[.center]
+[mermaid]
+....
+classDiagram
+    
+    class AStruct {
+        +constexpr Bool constant = true
+        +Bool field1
+        +Int16 field2
+        
+    }
+    
+....
+
+==== Constants
+The AStruct structure provides the following constants:
+
+.AStruct's private constants
+[%autowidth.stretch]
+|===
+|Name |Type |Value 
+
+|constant
+|<<Smp-Bool,Smp::Bool>>
+|true
+|===
+
+
+
+
+
+
+==== Fields
+The AStruct structure provides the following fields:
+
+.AStruct's private fields
+[%autowidth.stretch]
+|===
+|Kind |Name |Type 
+
+|
+|field1
+|<<Smp-Bool,Smp::Bool>>
+|
+|field2
+|<<Smp-Int16,Smp::Int16>>
+|===
+
+
+
