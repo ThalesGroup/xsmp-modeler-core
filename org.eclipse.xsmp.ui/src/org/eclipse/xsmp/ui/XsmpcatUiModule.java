@@ -26,6 +26,7 @@ import org.eclipse.xsmp.ui.contentassist.XsmpReferenceProposalCreator;
 import org.eclipse.xsmp.ui.contentassist.XsmpTemplateContextType;
 import org.eclipse.xsmp.ui.contentassist.XsmpTemplateProposalProvider;
 import org.eclipse.xsmp.ui.editor.XsmpEditor;
+import org.eclipse.xsmp.ui.editor.XsmpProjectAddingEditorCallback;
 import org.eclipse.xsmp.ui.editor.model.XsmpDocumentProvider;
 import org.eclipse.xsmp.ui.editor.model.XsmpPreferenceAccess;
 import org.eclipse.xsmp.ui.editor.model.XsmpTerminalsTokenTypeToPartitionMapper;
@@ -49,6 +50,7 @@ import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IContextualOutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
+import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
 import org.eclipse.xtext.ui.editor.autoedit.MultiLineTerminalsEditStrategy;
@@ -271,4 +273,11 @@ public class XsmpcatUiModule extends AbstractXsmpcatUiModule
   {
     return EclipseClangFormatter.class;
   }
+
+  @Override
+  public Class< ? extends IXtextEditorCallback> bindIXtextEditorCallback()
+  {
+    return XsmpProjectAddingEditorCallback.class;
+  }
+
 }
