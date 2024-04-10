@@ -28,14 +28,14 @@ Key Features:
 
 Supported IDEs:
 
-- Eclipse (primary)
-- Visual Studio Code with LSP extension (preview).
+- Eclipse
+- Visual Studio Code
 
 
 Get Started
 -----------
 
-To start using XSMP Modeler, you can download the latest executables from the `release page <https://github.com/ThalesGroup/xsmp-modeler-core/releases>`__. For detailed documentation on how to make the most of XSMP Modeler's features, visit `ReadTheDocs <http://xsmp-modeler.readthedocs.io>`__.
+To start using XSMP Modeler, you can download the latest executables from the `release page <https://github.com/ThalesGroup/xsmp-modeler-core/releases>`__.
 
 Explore the source code and contribute on `GitHub <https://github.com/ThalesGroup/xsmp-modeler-core>`__.
 

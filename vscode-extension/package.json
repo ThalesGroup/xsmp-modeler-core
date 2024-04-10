@@ -77,11 +77,6 @@
 				"title": "Convert smpcat file to xsmpcat"
 			},
 			{
-				"command": "xsmp.generate.proxy",
-				"category": "Xsmp",
-				"title": "Generate source files"
-			},
-			{
 				"command": "xsmp.wizard",
 				"category": "Xsmp",
 				"title": "Create new project"

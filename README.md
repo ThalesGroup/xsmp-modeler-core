@@ -19,7 +19,9 @@
 
 XSMP Modeler is a framework for development of SMDL (Simulation Model Definition Language) as defined in the [ECSS SMP standard](https://ecss.nl/standard/ecss-e-st-40-07c-simulation-modelling-platform-2-march-2020/). 
 
-The primary supported IDE is Eclipse. LSP extension for Visual Studio Code is also provided (preview).
+Supported IDES:
+- Eclipse
+- Visual Studio Code
 
 It comes with:
  - an integrated Text Editor with coloring, error checking, auto-completion, formatting, hover information, outline, quick fix, ...
@@ -43,10 +45,6 @@ Maven is used to build Eclipse plugins.
 Gradle is used to build CLI and VS Code extension.
 
 From a command-line, run `mvn package` and `./gradlew build vscodeExtension` in the root directory of the project source files.
-
-## Documentation
-
-Documentation is available [here](https://xsmp-modeler.readthedocs.io).
 
 ## Contributing
 
