@@ -35,6 +35,13 @@ public class ClangFormatter
     return uri.lastSegment();
   }
 
+  private static String OS = System.getProperty("os.name").toLowerCase();
+
+  private static boolean isWindows()
+  {
+    return OS.contains("win");
+  }
+
   /**
    * Format the content with clang-format
    *
@@ -48,7 +55,8 @@ public class ClangFormatter
   {
     try
     {
-      final var pb = new ProcessBuilder("clang-format", "-assume-filename=" + toFileString(uri));
+      final var pb = new ProcessBuilder(isWindows() ? "clang-format.exe" : "clang-format",
+              "-assume-filename=" + toFileString(uri));
 
       final var process = pb.start();
 
