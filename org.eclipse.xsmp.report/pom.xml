@@ -65,6 +65,24 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+            <groupId>org.eclipse.xsmp</groupId>
+            <artifactId>org.eclipse.xsmp.tool.adoc</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.xsmp</groupId>
+            <artifactId>org.eclipse.xsmp.tool.adoc.tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.xsmp</groupId>
+            <artifactId>org.eclipse.xsmp.tool.adoc.ui</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
 			<groupId>org.eclipse.xsmp</groupId>
 			<artifactId>org.eclipse.xsmp.profile.xsmp-sdk</artifactId>
 			<version>${project.version}</version>

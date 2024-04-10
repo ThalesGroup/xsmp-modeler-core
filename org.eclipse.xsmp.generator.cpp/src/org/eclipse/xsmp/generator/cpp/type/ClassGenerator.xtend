@@ -78,7 +78,7 @@ class ClassGenerator extends AbstractTypeWithMembersGenerator<Class> {
                         «l.description()»,
                         «l.type.uuid()», /// UUID of the Field Type
                         offsetof(«name», «l.name»), ///Compute the offset of the current item
-                        «l.viewKind», /// viewkind
+                        «l.viewKindCpp», /// viewkind
                         «!l.isTransient», /// state
                         «l.isInput», /// input
                         «l.isOutput»/// output

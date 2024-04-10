@@ -178,7 +178,7 @@ class PropertyGenerator extends AbstractMemberGenerator<Property> {
         if (it.isInvokable)
             '''
                 // Publish Property «name»
-                receiver->PublishProperty("«name»", «description()», «type.uuid()», «accessKind», «viewKind»);
+                receiver->PublishProperty("«name»", «description()», «type.uuid()», «accessKind», «viewKindCpp»);
             '''
     }
 

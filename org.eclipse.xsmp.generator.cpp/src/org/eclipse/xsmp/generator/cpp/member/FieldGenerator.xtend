@@ -114,7 +114,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
                     // Publish directly with address of the field (not valid for DateTime and Duration that are identical to Int64)
                     return '''
                         // Publish field «name»
-                        receiver->PublishField("«name»", «description()», &«name»,  «viewKind», «!transient», «input», «output»);
+                        receiver->PublishField("«name»", «description()», &«name»,  «viewKindCpp», «!transient», «input», «output»);
                     '''
                 }
                 case STRING8: {
@@ -128,7 +128,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
         // Generic Publish with type UUID
         '''
             // Publish field «name»
-            receiver->PublishField("«name»", «description()», &«name», «type.uuid()», «viewKind», «!transient», «input», «output»);
+            receiver->PublishField("«name»", «description()», &«name», «type.uuid()», «viewKindCpp», «!transient», «input», «output»);
         '''
     }
 }

@@ -1,0 +1,347 @@
+/**
+ * Catalogue Test
+ * 
+ * @date 2024-04-10T10:27:34.000+0200
+ * @title a title
+ * @creator creator1
+ * @creator creator2
+ * @version 1.0.0
+ */
+catalogue Test
+
+
+namespace ns
+{
+    namespace nestedNs
+    {
+    }
+
+    /**
+     * @uuid c489402d-7ecc-466a-a2e7-e1cb3d1da3c5
+     * @usage NamedElement
+     */
+    public attribute Bool SingleAttribute = true
+
+    /**
+     * @usage NamedElement
+     * @allowMultiple
+     * @uuid 52057807-e889-40fb-89f9-f568018bddf1
+     */
+    public attribute Bool MultipleAttribute = true
+
+
+    /** @uuid 621cf9ac-7b8d-4111-a1ef-69084815a903 */
+    @SingleAttribute
+    @MultipleAttribute
+    @MultipleAttribute
+    array ArrayOf3Bool = Bool[3]
+
+
+    /** @uuid b92805e6-20c6-455f-b791-7327a58c499a */
+    array MatrixOf3_3Bool = ArrayOf3Bool[3]
+
+
+    /** @uuid a6b216a8-838c-4a2b-aac3-3155b51e90a5 */
+    array ArrayOf3Char8 = Char8[3]
+
+
+    /** @uuid 118e9d39-6359-4dcb-9ca3-f7f3ed408ba7 */
+    array ArrayOf3Int8 = Int8[3]
+
+
+    /** @uuid bb7123e4-982d-47d8-b4e1-6cf470d66bed */
+    array ArrayOf3Int16 = Int16[3]
+
+
+    /** @uuid 675c2305-e381-4083-982e-8b3a64216b11 */
+    array ArrayOf3Int32 = Int32[3]
+
+
+    /** @uuid bc8abc6b-dfe1-445d-8ba2-eea4c2d1fa25 */
+    array ArrayOf3Int64 = Int64[3]
+
+
+    /** @uuid 1e783d5c-f6e9-48e7-9f5f-15d1c430f603 */
+    array ArrayOf3UInt8 = UInt8[3]
+
+
+    /** @uuid 69528823-d681-418e-92d9-4cb17ad9d226 */
+    array ArrayOf3UInt16 = UInt16[3]
+
+
+    /** @uuid 41eb616b-fdd5-4fcb-8abc-c6c0e889f3ca */
+    array ArrayOf3UInt32 = UInt32[3]
+
+
+    /** @uuid f40b2852-997e-461f-a4af-9575ab7920a0 */
+    array ArrayOf3UInt64 = UInt64[3]
+
+
+    /** @uuid edd0eb26-9a1b-4fd1-860c-3c862c3fb752 */
+    array ArrayOf3Float32 = Float32[3]
+
+
+    /** @uuid 6f228799-6e9a-4da8-9a53-d612050f0669 */
+    array ArrayOf3Float64 = Float64[3]
+
+
+    /** @uuid 3f203a6e-2f0a-4fd0-b3de-ef3299565749 */
+    array ArrayOf3Duration = Duration[3]
+
+
+    /** @uuid a7ed47b1-01b2-407c-90b0-864993f026ca */
+    array ArrayOf3DateTime = DateTime[3]
+
+
+    /** @uuid 582a38b3-77f7-4c67-9d1b-2df6722233bd */
+    array ArrayOf3AnEnum = AnEnum[3]
+
+
+    /** @uuid 7f28e66a-0741-4fc8-a8cf-e1c9d8ddb6ea */
+    array ArrayOf3AString = AString[3]
+
+
+    /** @uuid 9b21955e-bbf9-41e6-9bc4-5ed613bf7821 */
+    abstract class AnAbstractClass
+    {
+        association Float32 association
+        constant Bool constant = true
+        def void voidOperation ()
+        def Bool getter ()
+        def void Setter (Bool value)
+        field Bool field = false
+        property Bool property -> field
+    }
+
+    /** @uuid 1d8f1fc8-4ce1-4a70-9883-3c2728f1cba4 */
+    class AClass extends AnAbstractClass
+    {
+    }
+
+    /** @uuid 7cb57c5f-acc1-46c7-b8c8-23e3949a6584 */
+    public enum AnEnum
+    {
+        L1 = 0,
+        L2 = 1,
+        L3 = 2
+    }
+
+    /** @uuid 6eb41667-3fd3-4742-a1a7-6ba3224099a6 */
+    event AnIn32EventType extends Int32
+
+    /** @uuid 675ca788-4876-481a-bb51-b04a822d1f8b */
+    event AVoidEventType
+
+    /** @uuid cc5c3af5-5565-4641-a070-93c2afd55968 */
+    exception AnAbstractException
+    {
+    }
+
+    /** @uuid c0d3d9c5-6636-4e62-bd04-1dcc3a30eca1 */
+    exception AnException extends AnAbstractException
+    {
+    }
+
+    /**
+     * @unit m
+     * @uuid 850a9105-b093-4c0e-8863-1d7f51a43286
+     */
+    float AFloat
+
+    /** @uuid e83b1c21-d97d-45af-9158-d3beaa4687c5 */
+    float AFloat32 extends Float32
+
+    /** @uuid a6526234-6242-49ab-ab14-fbf1ab9b44b2 */
+    float AFloat64 extends Float64
+
+    /** @uuid 9cbf0614-53b7-4a27-9b6e-3ff9134d50ea */
+    float AFloatWithRange in 0. ... 100.
+
+
+    /** @uuid 6dbdb0c2-c291-4f21-a0b1-3775881e062e */
+    float AFloatWithExclusiveRange in 0. <.< 100.
+
+    /** @uuid 53e1f876-1347-4874-a931-a357d0a3d4c2 */
+    integer AnInteger
+
+    /**
+     * @unit s
+     * @uuid bc6e34b8-1a0c-46cc-8565-695f60873011
+     */
+    integer AnInt8Integer extends Int8
+
+
+    /** @uuid 058690f7-fd28-4a31-bac1-498df537b4f9 */
+    integer AnInt16Integer extends Int16
+
+
+    /** @uuid 8489b78e-3531-44fa-b36e-8f9a9350d5f9 */
+    integer AnInt32Integer extends Int32
+
+
+    /** @uuid 9932c757-903e-49d4-a454-f8e88d05e099 */
+    integer AnInt64Integer extends Int64
+
+    /** @uuid 831facb7-aad5-4862-b837-7e187f2d26bb */
+    integer AnUInt8Integer extends UInt8
+
+
+    /** @uuid 029ff31c-c57a-4cf1-b18e-53926ae09419 */
+    integer AnUInt16Integer extends UInt16
+
+
+    /** @uuid 1db4285c-2140-4fe0-ae48-bd1b5557ee4d */
+    integer AnUInt32Integer extends UInt32
+
+
+    /** @uuid 9e4c3c41-234a-48d6-a249-00be87bbbdae */
+    integer AnUInt64Integer extends UInt64
+
+
+    /** @uuid 93b6170a-b9b9-4df5-b69d-14493f7c9cf5 */
+    private integer AnIntegerWithRange in 0 ... 100
+
+    /** @uuid adfec040-aba1-4bc8-8561-476c1e738a02 */
+    string AString[10]
+
+
+    /**
+     * @type NativeType
+     * @namespace Test
+     * @location Test/NativeType.h
+     * @uuid d9806d07-4cf1-4a40-982b-10b6a7e55909
+     */
+    public native NativeType
+
+    /** @uuid 35c6cdeb-4980-46b4-8d37-e990ab4f0fc2 */
+    using ValueReference = Bool*
+
+
+    /** @uuid d2e665e3-5f66-425e-9840-6b4ebf1bdbe5 */
+    public interface AnInterface extends IComponent, ICollection
+    {
+        constant Bool constant = false
+        def void voidOperation ()
+        /**
+         * @deprecated
+         * @param inout
+         *       a desc1
+         */
+        def Smp.Bool op (in Float32 in, out Float64 out, inout Duration inout = nullptr)
+        property Bool property
+    }
+
+    /** @uuid 02b2a015-71c8-48bc-beb1-95a494c5e438 */
+    protected abstract model AnAbstractModel
+    {
+        @View(ViewKind.VK_None)
+        field Bool hidden_field = false
+        @View(ViewKind.VK_Debug)
+        field Bool debug_field = false
+        @View(ViewKind.VK_Expert)
+        field Bool expert_field = false
+        @View(ViewKind.VK_All)
+        field Bool all_field = false
+        @Forcible
+        field Bool forcible_field = false
+        @Mutable
+        field Bool mutable_field = false
+        @Failure
+        field Bool failure_field = false
+    }
+
+
+    /** @uuid 4fd30ec9-4add-41a5-84b2-bdccc968115b */
+    public model AModel extends AnAbstractModel implements AnInterface
+    {
+        field Char8 aChar = 'c'
+        field Char8 aCharNumber = 10
+        field Char8 aCharWithEscape = '\n'
+        field DateTime aDateTime = 42
+        field DateTime aDateTimeStr = "2022-10-22T09:07:44Z"
+        field Duration aDuration = 100
+        field Duration aDurationStr = "PT20.345S"
+        field AFloat aFloat = 4.5
+        field AFloat32 aFloat32 = 10.
+        field AFloat64 aFloat64 = 2.5
+        field AFloatWithExclusiveRange aFloatWithExclusiveRange = 0.001
+        field AFloatWithRange aFloatWithRange = 0.0
+        field AnInteger anInteger = 10
+        field AnIntegerWithRange anIntegerWithRange = 10
+        field AnInt8Integer anInt8 = 8
+        field AnInt16Integer anInt16 = 16
+        field AnInt32Integer anInt32 = 32
+        field AnInt64Integer anInt64 = 64
+        field AnUInt8Integer anUInt8 = 8
+        field AnUInt16Integer anUInt16 = 16
+        field AnUInt32Integer anUInt32 = 32
+        field AnUInt64Integer anUInt64 = 64
+        field AnEnum anEnum = AnEnum.L1
+
+        field AString aString = "test"
+        field ArrayOf3Bool arrayOf3Bool = {false, false, false}
+        field MatrixOf3_3Bool matrixOf3_3Bool = {{false, false, false}, {true, true, false}, {false, false, true}}
+        field ArrayOf3Char8 arrayOf3Char8 = {'a', 10, '\t'}
+        field ArrayOf3Int8 arrayOf3Int8 = {0, 1, 2}
+        field ArrayOf3Int16 arrayOf3Int16 = {0, 1, 2}
+        field ArrayOf3Int32 arrayOf3Int32 = {0, 1, 2}
+        field ArrayOf3Int64 arrayOf3Int64 = {0, 1, 2}
+        field ArrayOf3UInt8 arrayOf3UInt8 = {0, 1, 2}
+        field ArrayOf3UInt16 arrayOf3UInt16 = {0, 1, 2}
+        field ArrayOf3UInt32 arrayOf3UInt32 = {0, 1, 2}
+        field ArrayOf3UInt64 arrayOf3UInt64 = {0, 1, 2}
+        field ArrayOf3Float32 arrayOf3Float32 = {0, 1, 2}
+        field ArrayOf3Float64 arrayOf3Float64 = {0, 1, 2}
+        field ArrayOf3Duration arrayOf3Duration = {0, 1, 2}
+        field ArrayOf3DateTime arrayOf3DateTime = {0, 1, 2}
+        field ArrayOf3AnEnum arrayOf3AnEnum = {AnEnum.L1, AnEnum.L2, AnEnum.L3}
+        field ArrayOf3AString arrayOf3AString = {"0", "1", "2"}
+
+
+        field AStruct aStruct = {true, 10}
+
+        container IModel container = AModel
+        container IModel? optional_container = AnAbstractModel
+        container IModel[*] list_container = AnAbstractModel
+        container IModel[+] non_empty_list_container = AnAbstractModel
+        container IModel[4] list_container_4 = AnAbstractModel
+        container IModel[4 ... *] list_container_4_or_more = AnAbstractModel
+        container IModel[4 ... 10] list_container_betwwen_4_and_10
+
+        reference IComposite reference
+        reference IComposite? optional_reference
+        reference IComposite[*] list_reference
+        reference IComposite[+] non_empty_list_reference
+        reference IComposite[4] list_reference_4
+        reference IComposite[4 ... *] list_reference_4_or_more
+        reference IComposite[4 ... 10] list_reference_betwwen_4_and_10
+
+
+        protected association Bool asso
+        protected input field Bool input
+        output field Bool output
+        transient field Bool transient
+        input output field Bool inout
+
+        entrypoint ep
+        {
+            in inout
+            out output
+            in input
+        }
+
+        eventsink AVoidEventType voidEventSink
+        eventsink AnIn32EventType int32EventSink
+        eventsource AVoidEventType voidEventSource
+        /** @singlecast */
+        eventsource AnIn32EventType int32EventSource
+    }
+
+    /** @uuid 717d3adb-4aa8-4997-b4f4-ea20cba12c14 */
+    struct AStruct
+    {
+        constant Bool constant = true
+        field Bool field1
+        field Int16 field2
+    }
+}

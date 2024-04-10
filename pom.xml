@@ -41,6 +41,7 @@
 		<module>org.eclipse.xsmp.profile.xsmp-sdk.feature</module>
 		<module>org.eclipse.xsmp.profile.xsmp-sdk.ide</module>
 		<module>org.eclipse.xsmp.profile.xsmp-sdk.ui</module>
+		<module>org.eclipse.xsmp.profile.xsmp-sdk.tests</module>
 		<module>org.eclipse.xsmp.tool.smp</module>
 		<module>org.eclipse.xsmp.tool.smp.tests</module>
 		<module>org.eclipse.xsmp.tool.smp.ide</module>
@@ -53,6 +54,11 @@
 		<module>org.eclipse.xsmp.profile.esa-cdk.feature</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ide</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk.ui</module>
+        <module>org.eclipse.xsmp.tool.adoc</module>
+        <module>org.eclipse.xsmp.tool.adoc.feature</module>
+        <module>org.eclipse.xsmp.tool.adoc.ui</module>
+        <module>org.eclipse.xsmp.tool.adoc.ide</module>
+        <module>org.eclipse.xsmp.tool.adoc.tests</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

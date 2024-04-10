@@ -43,7 +43,7 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
         if (isCdkField)
             '''
                 // «name» initialization
-                «name»{simulator->GetTypeRegistry(), «type.uuid()», "«name»", «description()», this, «viewKind»«IF ^default !== null», «^default.generateExpression()»«ENDIF»}
+                «name»{simulator->GetTypeRegistry(), «type.uuid()», "«name»", «description()», this, «viewKindCpp»«IF ^default !== null», «^default.generateExpression()»«ENDIF»}
             '''
         else
             super.initialize(container, it, useGenPattern)

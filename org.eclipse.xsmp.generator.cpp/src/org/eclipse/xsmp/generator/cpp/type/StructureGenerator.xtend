@@ -78,7 +78,7 @@ class StructureGenerator extends AbstractTypeWithMembersGenerator<Structure> {
                         «l.description()»,
                         «l.type.uuid()», ///UUID of the Field Type
                         offsetof(«name», «l.name»), ///Compute the offset of the current item
-                        «l.viewKind», ///viewkind
+                        «l.viewKindCpp», ///viewkind
                         «!l.isTransient», ///state
                         «l.isInput», ///is an input field
                         «l.isOutput» ///is an output field

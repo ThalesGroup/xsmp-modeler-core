@@ -195,7 +195,7 @@ class OperationGenerator extends AbstractMemberGenerator<Operation> {
                     «IF !parameter.empty || r !== null »
                         ::Smp::Publication::IPublishOperation* operation = 
                     «ENDIF»
-                    receiver->PublishOperation("«name»", «description()», «viewKind»);
+                    receiver->PublishOperation("«name»", «description()», «viewKindCpp»);
                     «FOR p : parameter»
                         operation->PublishParameter("«p.name»", «p.description()», «p.type.uuid()», «p.direction.generatePDK»);
                     «ENDFOR»

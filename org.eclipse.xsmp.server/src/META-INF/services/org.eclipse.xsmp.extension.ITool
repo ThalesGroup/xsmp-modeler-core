@@ -1,2 +1,3 @@
 org.eclipse.xsmp.tool.smp.ide.SmpTool
 org.eclipse.xsmp.tool.python.ide.PythonTool
+org.eclipse.xsmp.tool.adoc.ide.ADocTool

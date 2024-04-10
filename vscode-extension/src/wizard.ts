@@ -20,6 +20,7 @@ const esaCdkProfileId = "org.eclipse.xsmp.profile.esa-cdk";
 const xsmpSdkProfileId = "org.eclipse.xsmp.profile.xsmp-sdk";
 const smpToolId = "org.eclipse.xsmp.tool.smp"
 const pythonToolId = "org.eclipse.xsmp.tool.python"
+const adocToolId = "org.eclipse.xsmp.tool.adoc"
 
 export async function createProjectWizard() {
 
@@ -66,7 +67,8 @@ export async function createProjectWizard() {
 	// Select tools
 	const tools = [
 		{ id: smpToolId, label: "SMP legacy Tool", "picked": true },
-		{ id: pythonToolId, label: "Python Wrapper", "picked": profile.id === xsmpSdkProfileId }
+		{ id: pythonToolId, label: "Python Wrapper", "picked": profile.id === xsmpSdkProfileId },
+		{ id: adocToolId, label: "AsciiDoc generator", "picked": true }
 	];
 
 
@@ -248,7 +250,71 @@ class Test${catalogueName}(xsmp.unittest.TestCase):
         # TODO write unit-test
         pass`);
 	}
+	
+	if (tools.some(t => t.id === adocToolId)) {
+        let adoc_path = path.join(dirPath, 'doc')
+        fs.mkdirSync(adoc_path)
+        await fs.promises.writeFile(path.join(adoc_path, `${catalogueName}.adoc`), `
+:doctype: book
+:toc:
+:pdf-themesdir: {docdir}
 
+= Catalogue document
+
+include::${catalogueName}-gen.adoc[]
+        `);
+        
+        let adoc_themepath = path.join(dirPath, 'doc', 'themes')
+        fs.mkdirSync(adoc_themepath);
+        await fs.promises.writeFile(path.join(adoc_themepath, `default.yml`), `
+extends: default
+page:
+  margin: [1.5in, 0.75in]
+  numbering:
+    start_at: title
+base:
+  font-family: Helvetica
+running_content:
+  start_at: title
+header:
+  height: 1.25in
+  border-width: 0.25
+  border-color: #DDDDDD
+  recto:
+    center:
+      content: '{testvar}'
+    right:
+      content: |
+        *Date:* {localdatetime} +
+        *Page:* {page-number}/{page-count}
+  verso:
+    center:
+      content: $header-recto-center-content
+    right:
+      content: $header-recto-right-content
+footer:
+  height: 0.85in
+  font-size: 9
+  recto:
+    left:
+      content: ''
+    center:
+      content: |
+        *XSMP* +
+        This document has been automatically generated using the Adoc tool from XSMP Modeler. +
+        © {localyear}, All Rights Reserved
+    right:
+      content: ''
+  verso:
+    left:
+      content: $footer-recto-left-content
+    center:
+      content: $footer-recto-center-content
+    right:
+      content: $footer-recto-right-content
+        `);
+    }
+    
 	// Create the project file
 
 	let content = `

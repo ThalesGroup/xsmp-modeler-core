@@ -112,6 +112,16 @@ public final class QualifiedNames
   public static final QualifiedName Attributes_Operator = Attributes.append("Operator");
 
   public static final QualifiedName Attributes_View = Attributes.append("View");
+  
+  public static final QualifiedName Attributes_ViewKind = Attributes_View.append("ViewKind");
+  
+  public static final QualifiedName Attributes_ViewKind_None = Attributes_View.append("None");
+  
+  public static final QualifiedName Attributes_ViewKind_Debug = Attributes_View.append("Debug");
+  
+  public static final QualifiedName Attributes_ViewKind_Expert = Attributes_View.append("Expert");
+  
+  public static final QualifiedName Attributes_ViewKind_All = Attributes_View.append("All");
 
   public static final QualifiedName Smp = QualifiedName.create("Smp");
 
