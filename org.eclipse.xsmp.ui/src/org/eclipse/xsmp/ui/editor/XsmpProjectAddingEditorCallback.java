@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.xsmp.XsmpConstants;
+import org.eclipse.xsmp.ui.extension.ExtensionManager;
 import org.eclipse.xtext.builder.nature.ToggleXtextNatureCommand;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -89,6 +90,9 @@ public class XsmpProjectAddingEditorCallback extends IXtextEditorCallback.NullIm
     }
   }
 
+  @Inject
+  private ExtensionManager extensions;
+
   private void createXsmpProjectFile(IProject project)
   {
     try
@@ -96,7 +100,7 @@ public class XsmpProjectAddingEditorCallback extends IXtextEditorCallback.NullIm
       final var file = project.getFile(XsmpConstants.XSMP_PROJECT_FILENAME);
       final var contentBuilder = new StringBuilder();
 
-      contentBuilder.append("/** ").append(project.getName()).append(" project description */\n");
+      contentBuilder.append("/** ").append(project.getName()).append(" Project Configuration */\n");
       contentBuilder.append("project \"").append(project.getName()).append("\"\n");
       contentBuilder.append("\n");
       contentBuilder.append("\n");
@@ -104,20 +108,23 @@ public class XsmpProjectAddingEditorCallback extends IXtextEditorCallback.NullIm
       contentBuilder.append("source \"smdl\"\n");
       contentBuilder.append("\n");
       contentBuilder.append("\n");
-      contentBuilder.append("// Uncomment one of the available profiles\n");
-      contentBuilder.append("//profile \"org.eclipse.xsmp.profile.xsmp-sdk\"\n");
-      contentBuilder.append("//profile \"org.eclipse.xsmp.profile.esa-cdk\"\n");
-      contentBuilder.append("\n");
-      contentBuilder.append("\n");
-      contentBuilder.append("// Comment/Uncomment the tools you would like to use\n");
-      contentBuilder.append("tool \"org.eclipse.xsmp.tool.smp\"\n");
-      contentBuilder.append("//tool \"org.eclipse.xsmp.tool.python\"\n");
-      contentBuilder.append("\n");
-      contentBuilder.append("\n");
+
+      for (final var profile : extensions.getProfiles())
+      {
+        contentBuilder.append("\n");
+        contentBuilder.append("\n");
+        contentBuilder.append("// uncomment to use ").append(profile.getDescription()).append("\n");
+        contentBuilder.append("//profile \"" + profile.getId() + "\"\n");
+      }
+      for (final var tool : extensions.getTools())
+      {
+        contentBuilder.append("\n");
+        contentBuilder.append("\n");
+        contentBuilder.append("// uncomment to use ").append(tool.getDescription()).append("\n");
+        contentBuilder.append("//tool \"" + tool.getId() + "\"\n");
+      }
 
       contentBuilder.append("// Project dependencies\n");
-      contentBuilder.append(
-              "// TODO: Remove dependencies which are not required by your modeling files.\n");
 
       for (final var dep : project.getDescription().getDynamicReferences())
       {

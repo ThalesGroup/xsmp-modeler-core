@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.ui.workspace.XsmpEclipseProjectConfigProvider;
 import org.eclipse.xtext.ui.containers.AbstractProjectsStateHelper;
 
@@ -47,6 +49,13 @@ public class XsmpProjectsStateHelper extends AbstractProjectsStateHelper
     }
     final var project = file.getProject();
     return project.getName();
+  }
+
+  @Override
+  protected boolean isAccessibleXtextProject(IProject p)
+  {
+    return super.isAccessibleXtextProject(p)
+            && p.getFile(XsmpConstants.XSMP_PROJECT_FILENAME).exists();
   }
 
   public Collection<URI> initContainedURIs(String containerHandle)

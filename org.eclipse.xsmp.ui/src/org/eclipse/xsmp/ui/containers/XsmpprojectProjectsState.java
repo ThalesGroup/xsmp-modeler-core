@@ -63,7 +63,7 @@ public class XsmpprojectProjectsState extends AbstractAllContainersState
         return Collections.emptySet();
       }
       final var project = getWorkspaceRoot().getProject(containerHandle);
-      if (project != null && isAccessibleXtextProject(project))
+      if (project != null && isAccessibleXsmpProject(project))
       {
 
         final var file = getMapper()
@@ -91,13 +91,13 @@ public class XsmpprojectProjectsState extends AbstractAllContainersState
     try
     {
       final var project = getWorkspaceRoot().getProject(handle);
-      if (isAccessibleXtextProject(project))
+      if (isAccessibleXsmpProject(project))
       {
         final List<String> result = Lists.newArrayList();
 
         for (final var dependency : getWorkspaceRoot().getProjects())
         {
-          if (isAccessibleXtextProject(dependency))
+          if (isAccessibleXsmpProject(dependency))
           {
             result.add(dependency.getName());
           }
@@ -116,9 +116,10 @@ public class XsmpprojectProjectsState extends AbstractAllContainersState
     return Collections.emptyList();
   }
 
-  private boolean isAccessibleXtextProject(IProject p)
+  private boolean isAccessibleXsmpProject(IProject p)
   {
-    return p != null && XtextProjectHelper.hasNature(p) && XtextProjectHelper.hasBuilder(p);
+    return p != null && XtextProjectHelper.hasNature(p) && XtextProjectHelper.hasBuilder(p)
+            && p.getFile(XsmpConstants.XSMP_PROJECT_FILENAME).exists();
   }
 
   @Override
