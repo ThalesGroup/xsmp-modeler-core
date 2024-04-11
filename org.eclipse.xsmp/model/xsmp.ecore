@@ -347,17 +347,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmptyExpression" eSuperTypes="#//Expression"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="#//Document">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="#//ProfileReference"
-        containment="true" resolveProxies="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tools" upperBound="-1"
-        eType="#//ToolReference" containment="true" resolveProxies="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" upperBound="-1"
-        eType="#//SourcePath" containment="true" resolveProxies="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="referencedProjects" upperBound="-1"
-        eType="#//ProjectReference" containment="true" resolveProxies="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="includes" upperBound="-1"
-        eType="#//SourcePath" containment="true" resolveProxies="false"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="#//Document #//NamedElementWithMembers">
+    <eOperations name="getProfile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getTools" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getSources" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getReferencedProjects" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getIncludes" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tool" eSuperTypes="#//Document"/>
   <eClassifiers xsi:type="ecore:EClass" name="Profile" eSuperTypes="#//Document"/>
@@ -377,6 +372,9 @@
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SourcePath">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IncludePath">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

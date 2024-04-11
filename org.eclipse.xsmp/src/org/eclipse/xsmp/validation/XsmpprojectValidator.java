@@ -13,8 +13,13 @@ package org.eclipse.xsmp.validation;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.xsmp.model.xsmp.IncludePath;
+import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.model.xsmp.ProjectReference;
+import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.Tool;
+import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
@@ -31,107 +36,138 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
 {
 
   @Check
-  protected void checkProject(Project p)
+  protected void checkProfile(Project p)
   {
-    final var visitedSources = new HashSet<String>();
-    for (final var source : p.getSources())
+
+    // check no duplicated profile
+    ProfileReference profile = null;
+    for (final var member : p.getMember())
     {
-      final var name = source.getName();
-
-      if (!visitedSources.add(name))
+      if (member instanceof final ProfileReference ref)
       {
-        acceptError("Duplicated Source path '" + name + "'.", source, null, INSIGNIFICANT_INDEX,
-                null);
-      }
-      if (name.startsWith("/"))
-      {
-        acceptError("Source path '" + source.getName() + "' is not relative to project path.",
-                source, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-      }
-      if (name.startsWith("../") || "..".equals(name))
-      {
-        acceptError(
-                "Source path '" + source.getName()
-                        + "' is not contained within the project directory.",
-                source, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-      }
-    }
-    final var visitedIncludes = new HashSet<String>();
-    for (final var include : p.getIncludes())
-    {
-      final var name = include.getName();
-
-      if (!visitedIncludes.add(name))
-      {
-        acceptError("Duplicated Include path '" + name + "'.", include, null, INSIGNIFICANT_INDEX,
-                null);
-      }
-      if (name.startsWith("/"))
-      {
-        acceptError("Include path '" + include.getName() + "' is not relative to project path.",
-                include, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-      }
-      if (name.startsWith("../") || "..".equals(name))
-      {
-        acceptError(
-                "Include path '" + include.getName()
-                        + "' is not contained within the project directory.",
-                include, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-      }
-    }
-    final var visitedDependencies = new HashSet<Project>();
-    // check no duplicate dependency and different that current project
-    for (final var dependency : p.getReferencedProjects())
-    {
-      final var project = dependency.getProject();
-
-      if (!visitedDependencies.add(project))
-      {
-        acceptError("Duplicated dependency '" + dependency.getName() + "'.", dependency, null,
-                INSIGNIFICANT_INDEX, null);
-      }
-    }
-    // check no cyclic dependency
-    for (final var dependency : p.getReferencedProjects())
-    {
-      if (hasCyclicDependencies(p, dependency.getProject(), visitedDependencies))
-      {
-        acceptError("Cyclic dependency detected '" + dependency.getName() + "'.", dependency, null,
-                INSIGNIFICANT_INDEX, null);
-      }
-
-    }
-
-    final var visitedTools = new HashSet<Tool>();
-    for (final var toolReference : p.getTools())
-    {
-      final var tool = toolReference.getTool();
-
-      if (!visitedTools.add(tool))
-      {
-        acceptError("Duplicated tool '" + tool.getName() + "'.", toolReference, null,
-                INSIGNIFICANT_INDEX, null);
+        if (profile == null)
+        {
+          profile = ref;
+        }
+        else
+        {
+          acceptError("A profile is already defined.", ref, null, INSIGNIFICANT_INDEX, null);
+        }
       }
     }
   }
 
+  @Check
+  protected void checkSources(Project p)
+  {
+    final var visitedSources = new HashSet<String>();
+    p.getMember().stream().filter(SourcePath.class::isInstance).map(SourcePath.class::cast)
+            .forEach(source -> {
+              final var name = source.getName();
+
+              if (!visitedSources.add(name))
+              {
+                acceptError("Duplicated Source path '" + name + "'.", source, null,
+                        INSIGNIFICANT_INDEX, null);
+              }
+              if (name.startsWith("/"))
+              {
+                acceptError(
+                        "Source path '" + source.getName() + "' is not relative to project path.",
+                        source, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+              }
+              if (name.startsWith("../") || "..".equals(name))
+              {
+                acceptError(
+                        "Source path '" + source.getName()
+                                + "' is not contained within the project directory.",
+                        source, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+              }
+            });
+  }
+
+  @Check
+  protected void checkIncludes(Project p)
+  {
+    final var visitedIncludes = new HashSet<String>();
+    p.getMember().stream().filter(IncludePath.class::isInstance).map(IncludePath.class::cast)
+            .forEach(include -> {
+              final var name = include.getName();
+
+              if (!visitedIncludes.add(name))
+              {
+                acceptError("Duplicated Include path '" + name + "'.", include, null,
+                        INSIGNIFICANT_INDEX, null);
+              }
+              if (name.startsWith("/"))
+              {
+                acceptError(
+                        "Include path '" + include.getName() + "' is not relative to project path.",
+                        include, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+              }
+              if (name.startsWith("../") || "..".equals(name))
+              {
+                acceptError(
+                        "Include path '" + include.getName()
+                                + "' is not contained within the project directory.",
+                        include, XsmpPackage.Literals.SOURCE_PATH__NAME,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+              }
+            });
+  }
+
+  @Check
+  protected void checkDependencies(Project p)
+  {
+
+    final var visitedDependencies = new HashSet<Project>();
+    // check no duplicate dependency and different that current project
+    p.getMember().stream().filter(ProjectReference.class::isInstance)
+            .map(ProjectReference.class::cast).forEach(dependency -> {
+              final var project = dependency.getProject();
+
+              if (!visitedDependencies.add(project))
+              {
+                acceptError("Duplicated dependency '" + dependency.getName() + "'.", dependency,
+                        null, INSIGNIFICANT_INDEX, null);
+              }
+            });
+    // check no cyclic dependency
+    p.getMember().stream().filter(ProjectReference.class::isInstance)
+            .map(ProjectReference.class::cast).forEach(dependency -> {
+              if (hasCyclicDependencies(p, dependency.getProject(), visitedDependencies))
+              {
+                acceptError("Cyclic dependency detected '" + dependency.getName() + "'.",
+                        dependency, null, INSIGNIFICANT_INDEX, null);
+              }
+            });
+  }
+
+  @Check
+  protected void checkTools(Project p)
+  {
+
+    final var visitedTools = new HashSet<Tool>();
+    p.getMember().stream().filter(ToolReference.class::isInstance).map(ToolReference.class::cast)
+            .forEach(toolReference -> {
+              final var tool = toolReference.getTool();
+              if (!visitedTools.add(tool))
+              {
+                acceptError("Duplicated tool '" + tool.getName() + "'.", toolReference, null,
+                        INSIGNIFICANT_INDEX, null);
+              }
+            });
+  }
+
   private boolean hasCyclicDependencies(Project project, Project dependency, Set<Project> visited)
   {
-    for (final var ref : dependency.getReferencedProjects())
-    {
-      if (project.equals(ref.getProject()) || visited.add(ref.getProject())
-              && hasCyclicDependencies(project, ref.getProject(), visited))
-      {
-        return true;
-      }
-
-    }
-
-    return false;
+    return dependency.getMember().stream().filter(ProjectReference.class::isInstance)
+            .map(ProjectReference.class::cast)
+            .anyMatch(ref -> project.equals(ref.getProject()) || visited.add(ref.getProject())
+                    && hasCyclicDependencies(project, ref.getProject(), visited));
   }
 
 }

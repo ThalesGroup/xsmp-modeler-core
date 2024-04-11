@@ -101,7 +101,7 @@ public class XsmpcatCodeMiningProvider extends AbstractXtextCodeMiningProvider
     for (final INode n : node.getAsTreeIterable())
     {
       final var ge = n.getGrammarElement();
-      if (ge instanceof Keyword && kw.equals(((Keyword) ge).getValue()))
+      if (ge instanceof final Keyword gek && kw.equals(gek.getValue()))
       {
         acceptor.accept(createNewLineContentCodeMining(n.getEndOffset() + 1, "virtual "));
         break;

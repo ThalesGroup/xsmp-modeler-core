@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.ui.validation;
 
 import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xsmp.validation.AbstractXsmpprojectValidator;
 import org.eclipse.xtext.ui.resource.ProjectByResourceProvider;
@@ -37,26 +38,26 @@ public class XsmpprojectUIValidator extends AbstractXsmpprojectValidator
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     }
 
-    for (final var source : p.getSources())
-    {
-      try
-      {
-        final var name = source.getName();
-        if (!".".equals(name) && !project.getFolder(name).exists()
-                && !project.getFile(name).exists())
-        {
-          acceptError("Source '" + source.getName() + "' does not exist.", source,
-                  XsmpPackage.Literals.SOURCE_PATH__NAME,
-                  ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-        }
-      }
-      catch (final IllegalArgumentException e)
-      {
-        acceptError("Source '" + source.getName() + "' is invalid.", source,
-                XsmpPackage.Literals.SOURCE_PATH__NAME,
-                ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-      }
-    }
+    p.getMember().stream().filter(SourcePath.class::isInstance).map(SourcePath.class::cast)
+            .forEach(source -> {
+              try
+              {
+                final var name = source.getName();
+                if (!".".equals(name) && !project.getFolder(name).exists()
+                        && !project.getFile(name).exists())
+                {
+                  acceptError("Source '" + source.getName() + "' does not exist.", source,
+                          XsmpPackage.Literals.SOURCE_PATH__NAME,
+                          ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+                }
+              }
+              catch (final IllegalArgumentException e)
+              {
+                acceptError("Source '" + source.getName() + "' is invalid.", source,
+                        XsmpPackage.Literals.SOURCE_PATH__NAME,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+              }
+            });
   }
 
 }

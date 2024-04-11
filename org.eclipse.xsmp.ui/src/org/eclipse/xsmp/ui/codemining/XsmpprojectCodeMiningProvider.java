@@ -26,6 +26,6 @@ public class XsmpprojectCodeMiningProvider extends AbstractXtextCodeMiningProvid
           CancelIndicator indicator, IAcceptor< ? super ICodeMining> acceptor)
     throws BadLocationException
   {
-
+    // ignore
   }
 }

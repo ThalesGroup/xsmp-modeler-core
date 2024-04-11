@@ -14,7 +14,7 @@ package org.eclipse.xsmp.model.xsmp.impl;
 
 import org.eclipse.xsmp.util.XsmpUtil;
 
-public class SourcePathImplCustom extends SourcePathImpl
+public class IncludePathImplCustom extends IncludePathImpl
 {
   @Override
   public void setName(String newName)

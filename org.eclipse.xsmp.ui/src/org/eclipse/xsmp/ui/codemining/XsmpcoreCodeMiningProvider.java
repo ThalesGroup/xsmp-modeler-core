@@ -26,13 +26,6 @@ public class XsmpcoreCodeMiningProvider extends AbstractXtextCodeMiningProvider
           CancelIndicator indicator, IAcceptor< ? super ICodeMining> acceptor)
     throws BadLocationException
   {
-
-    // TODO: implement me
-    // use acceptor.accept(super.createNewLineHeaderCodeMining(...)) to add a new
-    // code mining to the final list
-
-    // example:
-    // acceptor.accept(createNewLineHeaderCodeMining(1, document, "Header
-    // annotation"));
+    // ignore
   }
 }

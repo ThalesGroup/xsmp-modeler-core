@@ -12,6 +12,7 @@ package org.eclipse.xsmp.formatting2;
 
 import static org.eclipse.xsmp.model.xsmp.XsmpPackage.Literals.METADATUM__DOCUMENTATION;
 
+import org.eclipse.xsmp.model.xsmp.IncludePath;
 import org.eclipse.xsmp.model.xsmp.Metadatum;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.Project;
@@ -40,24 +41,7 @@ public class XsmpprojectFormatter extends AbstractJavaFormatter
     doc.prepend(kw, this::noSpace);
     doc.append(kw, this::oneSpace);
 
-    doc.format(project.getProfile());
-
-    for (final var tool : project.getTools())
-    {
-      doc.format(tool);
-    }
-    for (final var sourceFolder : project.getSources())
-    {
-      doc.format(sourceFolder);
-    }
-    for (final var dependency : project.getReferencedProjects())
-    {
-      doc.format(dependency);
-    }
-    for (final var include : project.getIncludes())
-    {
-      doc.format(include);
-    }
+    project.getMember().forEach(doc::format);
   }
 
   public ITextReplacer createDocumentationReplacer(ISemanticRegion description)
@@ -104,6 +88,17 @@ public class XsmpprojectFormatter extends AbstractJavaFormatter
   {
     final var parentRegion = regionFor(sourcePath);
     final var kw = parentRegion.keyword(ga.getSourcePathAccess().getSourceKeyword_0());
+    doc.prepend(kw, it -> {
+      it.setNewLines(1, 2, 3);
+      it.lowPriority();
+    });
+    doc.append(kw, this::oneSpace);
+  }
+
+  protected void format(IncludePath sourcePath, IFormattableDocument doc)
+  {
+    final var parentRegion = regionFor(sourcePath);
+    final var kw = parentRegion.keyword(ga.getIncludePathAccess().getIncludeKeyword_0());
     doc.prepend(kw, it -> {
       it.setNewLines(1, 2, 3);
       it.lowPriority();

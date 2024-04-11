@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.ui.workspace.XsmpEclipseProjectConfigProvider;
 import org.eclipse.xtext.ui.containers.AbstractProjectsStateHelper;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -75,30 +76,7 @@ public class XsmpProjectsStateHelper extends AbstractProjectsStateHelper
         if (settings != null)
         {
           final Set<URI> result = new HashSet<>();
-          for (final var source : settings.getSourceFolders())
-          {
-            final var path = source.getName();
-            if (path.isEmpty())
-            {
-              result.addAll(getMapper().getAllEntries(project).keySet());
-            }
-            else
-            {
-              final var f = project.getFolder(path);
-              if (f.exists())
-              {
-                result.addAll(getMapper().getAllEntries(f).keySet());
-              }
-              else
-              {
-                final var file = project.getFile(path);
-                if (file.exists())
-                {
-                  result.add(getMapper().getUri(file));
-                }
-              }
-            }
-          }
+          settings.getSourceFolders().forEach(source -> collectEntries(project, source, result));
           return result;
         }
 
@@ -112,6 +90,31 @@ public class XsmpProjectsStateHelper extends AbstractProjectsStateHelper
       }
     }
     return Collections.emptyList();
+  }
+
+  protected void collectEntries(IProject project, ISourceFolder source, Set<URI> entries)
+  {
+    final var path = source.getName();
+    if (path.isEmpty())
+    {
+      entries.addAll(getMapper().getAllEntries(project).keySet());
+    }
+    else
+    {
+      final var f = project.getFolder(path);
+      if (f.exists())
+      {
+        entries.addAll(getMapper().getAllEntries(f).keySet());
+      }
+      else
+      {
+        final var file = project.getFile(path);
+        if (file.exists())
+        {
+          entries.add(getMapper().getUri(file));
+        }
+      }
+    }
   }
 
   public List<String> initVisibleHandles(String handle)

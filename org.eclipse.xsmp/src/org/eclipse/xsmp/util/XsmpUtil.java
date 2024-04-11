@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.util;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Comparator;
@@ -1222,5 +1223,16 @@ public class XsmpUtil
   {
     return literal.startsWith("u8") ? translateEscapes(literal.substring(3, literal.length() - 1))
             : translateEscapes(literal.substring(1, literal.length() - 1));
+  }
+
+  public static String normalizePath(String path)
+  {
+    if (path == null)
+    {
+      return null;
+    }
+    final var normalized = URI.create(path).normalize().getPath();
+
+    return normalized.isEmpty() ? "." : normalized;
   }
 }

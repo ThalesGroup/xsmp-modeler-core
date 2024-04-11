@@ -43,11 +43,10 @@ public class XsmpprojectReferenceFilter implements IReferenceFilter
                   model -> p -> model.eContainer() instanceof final Project project
                           && getDependencies(p).noneMatch(d -> project.getName().equals(d))
                           && project.getReferencedProjects().stream()
-                                  .noneMatch(t -> t.getName().equals(p.getName().toString())))
+                                  .noneMatch(t -> t.equals(p.getName().toString())))
           .put(XsmpPackage.Literals.TOOL_REFERENCE__TOOL,
-                  model -> p -> model.eContainer() instanceof final Project project
-                          && project.getTools().stream()
-                                  .noneMatch(t -> t.getName().equals(p.getName().toString())))
+                  model -> p -> model.eContainer() instanceof final Project project && project
+                          .getTools().stream().noneMatch(t -> t.equals(p.getName().toString())))
           // build the map
           .build();
 

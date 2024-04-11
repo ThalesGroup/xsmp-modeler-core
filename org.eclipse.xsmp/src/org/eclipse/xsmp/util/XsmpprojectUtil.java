@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.model.xsmp.ProjectReference;
 
 public class XsmpprojectUtil
 {
@@ -29,10 +30,9 @@ public class XsmpprojectUtil
   {
     if (project != null && dependencies.add(project))
     {
-      for (final var ref : project.getReferencedProjects())
-      {
-        collectDependencies(dependencies, ref.getProject());
-      }
+      project.getMember().stream().filter(ProjectReference.class::isInstance)
+              .map(m -> ((ProjectReference) m).getProject())
+              .forEach(p -> collectDependencies(dependencies, p));
     }
   }
 }

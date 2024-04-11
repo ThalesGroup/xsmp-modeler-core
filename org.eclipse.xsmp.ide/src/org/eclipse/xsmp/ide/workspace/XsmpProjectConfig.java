@@ -14,13 +14,10 @@ import static org.eclipse.xtext.xbase.lib.IterableExtensions.findFirst;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.model.xsmp.Project;
-import org.eclipse.xsmp.model.xsmp.ProjectReference;
-import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.workspace.FileProjectConfig;
@@ -60,13 +57,12 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
     super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), getName(project),
             workspaceConfig);
 
-    profile = project.getProfile() != null ? project.getProfile().getName() : "";
-    tools = project.getTools().stream().map(ToolReference::getName).toList();
-    dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
-            .filter(Objects::nonNull).toList();
+    profile = project.getProfile();
+    tools = project.getTools();
+    dependencies = project.getReferencedProjects();
 
-    project.getSources().forEach(folder -> addSourceFolder(folder.getName()));
-    project.getIncludes().forEach(folder -> addIncludeFolder(folder.getName()));
+    project.getSources().forEach(this::addSourceFolder);
+    project.getIncludes().forEach(this::addIncludeFolder);
   }
 
   public FileSourceFolder addIncludeFolder(String relativePath)

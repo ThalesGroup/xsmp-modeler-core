@@ -13,14 +13,11 @@ package org.eclipse.xsmp.ui.workspace;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.model.xsmp.Project;
-import org.eclipse.xsmp.model.xsmp.ProjectReference;
-import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.ui.workspace.EclipseProjectConfig;
 import org.eclipse.xtext.ui.workspace.EclipseProjectConfigProvider;
@@ -44,11 +41,10 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
     super(eclipseProject, projectConfigProvider);
     if (project != null)
     {
-      profile = project.getProfile() != null ? project.getProfile().getName() : "";
-      tools = project.getTools().stream().map(ToolReference::getName).toList();
-      dependencies = project.getReferencedProjects().stream().map(ProjectReference::getName)
-              .filter(Objects::nonNull).toList();
-      project.getSources().forEach(folder -> addSourceFolder(folder.getName()));
+      profile = project.getProfile();
+      tools = project.getTools();
+      dependencies = project.getReferencedProjects();
+      project.getSources().forEach(this::addSourceFolder);
     }
     else
     {
