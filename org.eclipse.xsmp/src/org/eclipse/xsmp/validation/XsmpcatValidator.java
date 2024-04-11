@@ -356,8 +356,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (checkTypeReference(base, elem, XsmpPackage.Literals.CLASS__BASE)
             && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
-      error("A " + elem.eClass().getName() + " cannot extends itself or parent "
-              + elem.eClass().getName() + ".", XsmpPackage.Literals.CLASS__BASE,
+      error("Cyclic type dependency detected.", XsmpPackage.Literals.CLASS__BASE,
               XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
     }
 
@@ -413,8 +412,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (checkTypeReference(base, elem, XsmpPackage.Literals.COMPONENT__BASE)
             && xsmpUtil.isBaseOf(elem, elem.getBase()))
     {
-      error("A " + elem.eClass().getName() + " cannot extends itself or a parent "
-              + elem.eClass().getName() + ".", XsmpPackage.Literals.COMPONENT__BASE);
+      error("Cyclic type dependency detected.", XsmpPackage.Literals.COMPONENT__BASE);
     }
 
     // check interfaces
@@ -708,8 +706,7 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
       if (checkTypeReference(bases.get(i), elem, XsmpPackage.Literals.INTERFACE__BASE, i)
               && xsmpUtil.isBaseOf(elem, bases.get(i)))
       {
-        error("An Interface cannot extends itself or a parent Interface.",
-                XsmpPackage.Literals.INTERFACE__BASE, i,
+        error("Cyclic type dependency detected.", XsmpPackage.Literals.INTERFACE__BASE, i,
                 XsmpcatIssueCodesProvider.INVALID_TYPE_REFERENCE);
       }
       if (!visited.add(bases.get(i)))

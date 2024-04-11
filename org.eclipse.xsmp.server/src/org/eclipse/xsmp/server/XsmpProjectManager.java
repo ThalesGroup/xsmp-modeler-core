@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.server.build.XsmpIncrementalBuilder;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.build.BuildRequest;
 import org.eclipse.xtext.build.IncrementalBuilder;
 import org.eclipse.xtext.build.IndexState;
@@ -294,6 +295,11 @@ public class XsmpProjectManager
     this.projectConfig = projectConfig;
     baseDir = projectConfig.getPath();
     resourceSet = null;
+    // update projectDescription with updated dependencies
+    if (projectConfig instanceof final IXsmpProjectConfig cfg)
+    {
+      projectDescription.setDependencies(new ArrayList<>(cfg.getDependencies()));
+    }
   }
 
 }

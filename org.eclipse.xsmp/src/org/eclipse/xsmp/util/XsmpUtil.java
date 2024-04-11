@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -142,7 +143,7 @@ public class XsmpUtil
     /** Remainder of instance divided by another value */
     MODULE
   }
-  
+
   private static final Map<QualifiedName, PrimitiveTypeKind> primitiveTypeKinds = ImmutableMap
           .<QualifiedName, PrimitiveTypeKind> builder()
           .put(QualifiedNames.Smp_Char8, PrimitiveTypeKind.CHAR8)
@@ -184,7 +185,7 @@ public class XsmpUtil
           .put(QualifiedNames.Attributes_OperatorKind_Remainder, OperatorKind.REMAINDER)
           .put(QualifiedNames.Attributes_OperatorKind_Subtract, OperatorKind.SUBTRACT)
           .put(QualifiedNames.Attributes_OperatorKind_Sum, OperatorKind.SUM).build();
-  
+
   private static final Map<QualifiedName, ViewKind> viewKinds = ImmutableMap
           .<QualifiedName, ViewKind> builder()
           .put(QualifiedNames.Attributes_ViewKind_None, ViewKind.NONE)
@@ -307,41 +308,41 @@ public class XsmpUtil
 
   public boolean isBaseOf(EObject base, EObject derived)
   {
-    return switch (derived.eClass().getClassifierID())
+
+    final var visited = new HashSet<EObject>();
+    visited.add(base);
+    return derived != null && (isBaseOf(derived, visited)
+            || derived instanceof final Component cmp && isBaseOf(base, cmp)
+
+    );
+  }
+
+  private boolean isBaseOf(EObject base, Component component)
+  {
+    final var fqn = fqn(base);
+    return QualifiedNames.Smp_IComponent.equals(fqn)
+            || component instanceof Model && QualifiedNames.Smp_IModel.equals(fqn(base))
+            || component instanceof Service && QualifiedNames.Smp_IService.equals(fqn(base));
+  }
+
+  private boolean isBaseOf(EObject object, Set<EObject> visited)
+  {
+
+    return object != null && (!visited.add(object) || switch (object.eClass().getClassifierID())
     {
-      case XsmpPackage.INTERFACE -> isBaseOf(base, (Interface) derived);
-      case XsmpPackage.MODEL -> isBaseOf(base, (Model) derived);
-      case XsmpPackage.SERVICE -> isBaseOf(base, (Service) derived);
-      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION -> isBaseOf(base, (Class) derived);
+      case XsmpPackage.INTERFACE -> ((Interface) object).getBase().stream()
+              .anyMatch(b -> isBaseOf(b, visited));
+
+      case XsmpPackage.MODEL, XsmpPackage.SERVICE -> isBaseOf(((Component) object).getBase(),
+              visited)
+              || ((Component) object).getInterface().stream().anyMatch(b -> isBaseOf(b, visited));
+
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION -> isBaseOf(((Class) object).getBase(),
+              visited);
+
       default -> false;
-    };
-  }
+    });
 
-  protected boolean isBaseOf(EObject base, Interface derived)
-  {
-    return base == derived || derived.getBase().stream().anyMatch(b -> isBaseOf(base, b));
-  }
-
-  protected boolean isBaseOf(EObject base, Model derived)
-  {
-    return QualifiedNames.Smp_IModel.equals(fqn(base)) || isBaseOf(base, (Component) derived);
-  }
-
-  protected boolean isBaseOf(EObject base, Service derived)
-  {
-    return QualifiedNames.Smp_IService.equals(fqn(base)) || isBaseOf(base, (Component) derived);
-  }
-
-  protected boolean isBaseOf(EObject base, Component derived)
-  {
-    return base == derived || QualifiedNames.Smp_IComponent.equals(fqn(base))
-            || derived.getBase() != null && isBaseOf(base, derived.getBase())
-            || derived.getInterface().stream().anyMatch(b -> isBaseOf(base, b));
-  }
-
-  protected boolean isBaseOf(EObject base, Class derived)
-  {
-    return base == derived || derived.getBase() != null && isBaseOf(base, derived.getBase());
   }
 
   public VisibilityKind getMinVisibility(Type type, EObject from)
@@ -645,7 +646,7 @@ public class XsmpUtil
       return OperatorKind.NONE;
     });
   }
-  
+
   public ViewKind getViewKind(NamedElement o)
   {
     final var id = QualifiedNames.Attributes_View;

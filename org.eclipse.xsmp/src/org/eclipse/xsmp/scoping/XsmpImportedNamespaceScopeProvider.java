@@ -167,7 +167,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         localResolve = true;
       }
 
-      if (!item.eIsProxy() && item != context)
+      if (!item.eIsProxy() && !xsmpUtil.isBaseOf(context, item))
       {
         result = getLocalElementsScope(result, globalScope, item, reference, localResolve);
       }
@@ -193,7 +193,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
     var result = parent;
 
     var eObject = (EObject) context.eGet(feature, resolve);
-    if (eObject != null && eObject != context)
+    if (eObject != null)
     {
 
       var localResolve = resolve;
@@ -203,7 +203,7 @@ public class XsmpImportedNamespaceScopeProvider extends AbstractGlobalScopeDeleg
         eObject = EcoreUtil.resolve(eObject, context);
         localResolve = true;
       }
-      if (!eObject.eIsProxy())
+      if (!eObject.eIsProxy() && !xsmpUtil.isBaseOf(context, eObject))
       {
         result = getLocalElementsScope(result, globalScope, eObject, reference, localResolve);
       }
