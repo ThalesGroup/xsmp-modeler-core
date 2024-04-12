@@ -72,7 +72,8 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
     throws CoreException
   {
     final var doc = xtextDocumentUtil.getXtextDocument(document);
-    final boolean hasSyntaxerrors = doc.readOnly(state -> state.getParseResult().hasSyntaxErrors());
+    final boolean hasSyntaxerrors = doc
+            .priorityReadOnly(state -> state.getParseResult().hasSyntaxErrors());
 
     // Do not perform save actions if doc has syntax errors to avoid to break the
     // doc
@@ -89,7 +90,8 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
   protected void performSaveActions(IProgressMonitor monitor, IXtextDocument document)
   {
 
-    final var project = document.readOnly(state -> projectProvider.getProjectContext(state));
+    final var project = document
+            .priorityReadOnly(state -> projectProvider.getProjectContext(state));
 
     monitor.beginTask("Updating Document", 2);
 
@@ -98,7 +100,7 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
     serializer.setUpdateRelatedFiles(false);
     serializer.setProgressMonitor(monitor);
 
-    final boolean isModified = document.readOnly(state -> {
+    final boolean isModified = document.priorityReadOnly(state -> {
 
       var modified = false;
       // update the document date

@@ -26,7 +26,7 @@ public class XsmpcatDescriptionLabelProvider extends DefaultDescriptionLabelProv
   @Override
   public String image(IEObjectDescription ele)
   {
-    return ele.getEObjectOrProxy().eClass().getName() + ".png";
+    return ele.getEClass().getName() + ".png";
   }
 
   /**

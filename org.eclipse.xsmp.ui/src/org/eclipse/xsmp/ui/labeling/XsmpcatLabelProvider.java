@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ComposedImage;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsmp.model.xsmp.Array;
 import org.eclipse.xsmp.model.xsmp.Association;
 import org.eclipse.xsmp.model.xsmp.AttributeType;
@@ -46,8 +45,6 @@ import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.ui.IImageHelper;
-import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
 import com.google.inject.Inject;
 
@@ -55,21 +52,13 @@ import com.google.inject.Inject;
  * Provides labels for EObjects. See
  * https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#label-provider
  */
-public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
+public class XsmpcatLabelProvider extends XsmpLabelProvider
 {
   @Inject
-  protected IQualifiedNameProvider qualifiedNameProvider;
+  private IQualifiedNameProvider qualifiedNameProvider;
 
   @Inject
   private XsmpUtil xsmpUtil;
-
-  @Inject
-  protected IImageHelper imageHelper;
-
-  public XsmpcatLabelProvider()
-  {
-    super(null);
-  }
 
   protected StyledString text(NamedElement elem, Type type)
   {
@@ -136,21 +125,6 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     }
 
     return text;
-  }
-
-  /**
-   * @param elem
-   *          the object
-   * @return the default label for EObject
-   */
-  public Object text(EObject elem)
-  {
-    return "";
-  }
-
-  public Object text(NamedElement elem)
-  {
-    return elem.getName();
   }
 
   public Object text(Association elem)
@@ -308,50 +282,6 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
     return text(elem, elem.getInterface());
   }
 
-  @Override
-  protected Image convertToImage(Object imageDescription)
-  {
-    if (imageDescription instanceof ComposedImage)
-    {
-      try
-      {
-        return ExtendedImageRegistry.INSTANCE.getImage(imageDescription);
-      }
-      catch (final Exception e)
-      {
-        // ignore
-      }
-    }
-    return super.convertToImage(imageDescription);
-  }
-
-  private Image doGetImage(String path)
-  {
-    var image = imageHelper.getImage(path);
-    if (image == null)
-    {
-      image = imageHelper.getImage("platform:/plugin/"
-              + org.eclipse.xsmp.ui.internal.XsmpActivator.PLUGIN_ID + "/" + path);
-    }
-    return image;
-  }
-
-  private Image getImage(String path)
-  {
-
-    return doGetImage("full/obj16/" + path);
-  }
-
-  private Image getOverlay(String path)
-  {
-    return doGetImage("full/ovr16/" + path);
-  }
-
-  private Image getDeprecatedImage()
-  {
-    return getOverlay("deprecated.png");
-  }
-
   public Object image(Field elem)
   {
     final var image = getImage(
@@ -359,48 +289,42 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
 
     if (elem.isInput() || elem.isOutput() || elem.isDeprecated())
     {
-      final List<Object> images = new ArrayList<>();
+      final List<ImageDescriptor> overlay = new ArrayList<>();
 
       if (elem.isDeprecated())
       {
-        images.add(getDeprecatedImage());
+        overlay.add(getDeprecatedImage());
       }
-
-      images.add(image);
 
       if (elem.isInput())
       {
-        images.add(getOverlay("input.png"));
+        overlay.add(getOverlay("input.png"));
       }
 
       if (elem.isOutput())
       {
-        images.add(getOverlay("output.png"));
+        overlay.add(getOverlay("output.png"));
       }
-      return new ComposedImage(images);
+      return new DecorationOverlayIcon(image, overlay.toArray(new ImageDescriptor[0]));
     }
     return image;
   }
 
   public Object image(Constant elem)
   {
-
     return getImage(elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
-
   }
 
   public Object image(Operation elem)
   {
-
     final var image = getImage(
             elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
 
     if (elem.isDeprecated())
     {
-      final List<Object> images = new ArrayList<>(2);
-      images.add(getDeprecatedImage());
-      images.add(image);
-      return new ComposedImage(images);
+      final var overlay = new ImageDescriptor[1];
+      overlay[0] = getDeprecatedImage();
+      return new DecorationOverlayIcon(image, overlay);
     }
     return image;
 
@@ -409,89 +333,55 @@ public class XsmpcatLabelProvider extends DefaultEObjectLabelProvider
   public Object image(Property elem)
   {
 
-    final List<Object> images = new ArrayList<>(4);
+    final List<ImageDescriptor> overlay = new ArrayList<>(4);
     if (elem.isDeprecated())
     {
-      images.add(getDeprecatedImage());
+      overlay.add(getDeprecatedImage());
     }
-    images.add(getImage(
-            elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png"));
+    final var image = getImage(
+            elem.eClass().getName() + "_" + elem.getRealVisibility().getLiteral() + ".png");
 
     switch (elem.getAccess())
     {
       case READ_ONLY:
-        images.add(getOverlay("read.png"));
+        overlay.add(getOverlay("read.png"));
         break;
       case WRITE_ONLY:
-        images.add(getOverlay("write.png"));
+        overlay.add(getOverlay("write.png"));
         break;
       default:
-        images.add(getOverlay("read.png"));
-        images.add(getOverlay("write.png"));
+        overlay.add(getOverlay("read.png"));
+        overlay.add(getOverlay("write.png"));
         break;
     }
-    return new ComposedImage(images);
-  }
 
-  public Image image(EObject elem)
-  {
-    return getImage(elem.eClass().getName() + ".png");
-
-  }
-
-  public Object image(NamedElement elem)
-  {
-    final var image = image((EObject) elem);
-    if (elem.isDeprecated())
-    {
-      final List<Object> images = new ArrayList<>();
-      images.add(getDeprecatedImage());
-      images.add(image);
-      return new ComposedImage(images);
-    }
-
-    return image;
-  }
-
-  public Object image(VisibilityElement elem)
-  {
-    final var image = image((NamedElement) elem);
-
-    final var visibility = elem.getRealVisibility();
-    if (visibility != VisibilityKind.PUBLIC)
-    {
-      final var visibilityImage = getOverlay(visibility.getLiteral() + ".png");
-      if (image instanceof final ComposedImage ci)
-      {
-        ci.getImages().add(visibilityImage);
-        return image;
-      }
-      final List<Object> images = new ArrayList<>(2);
-      images.add(image);
-      images.add(visibilityImage);
-      return new ComposedImage(images);
-    }
-    return image;
-
+    return new DecorationOverlayIcon(image, overlay.toArray(new ImageDescriptor[0]));
   }
 
   private Object image(VisibilityElement elem, boolean isAbstract)
   {
-    final var image = image(elem);
+    final var image = image((EObject) elem);
+    final List<ImageDescriptor> overlay = new ArrayList<>();
+
+    if (elem.isDeprecated())
+    {
+      overlay.add(getDeprecatedImage());
+    }
+
+    final var visibility = elem.getRealVisibility();
+    if (visibility != VisibilityKind.PUBLIC)
+    {
+      overlay.add(getOverlay(visibility.getLiteral() + ".png"));
+    }
     if (isAbstract)
     {
-      final var abstractImage = getOverlay("abstract.png");
-      if (image instanceof final ComposedImage ci)
-      {
-        ci.getImages().add(abstractImage);
-        return image;
-      }
-      final List<Object> images = new ArrayList<>(2);
-      images.add(image);
-      images.add(abstractImage);
-      return new ComposedImage(images);
+      overlay.add(getOverlay("abstract.png"));
     }
-    return image;
+    if (overlay.isEmpty())
+    {
+      return image;
+    }
+    return new DecorationOverlayIcon(image, overlay.toArray(new ImageDescriptor[0]));
   }
 
   public Object image(Class elem)

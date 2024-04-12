@@ -18,6 +18,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xsmp.model.xsmp.Array;
+import org.eclipse.xsmp.model.xsmp.Structure;
+import org.eclipse.xsmp.util.XsmpUtil;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
@@ -49,18 +52,40 @@ public class XsmpIdeContentProposalProvider extends IdeContentProposalProvider
     dispatchers = new HashMap<>();
   }
 
+  @Inject
+  protected XsmpUtil xsmpUtil;
+
+  @Inject
+  private DefaultValueProvider defaultValueProvider;
+
   @Override
   protected void _createProposals(Assignment assignment, ContentAssistContext context,
           IIdeContentProposalAcceptor acceptor)
   {
+
     final var terminal = assignment.getTerminal();
     if (terminal instanceof CrossReference)
     {
       createProposals(terminal, context, acceptor);
     }
-    else if (terminal instanceof RuleCall)
+    else if (terminal instanceof final RuleCall ruleCall)
     {
-      final var rule = ((RuleCall) terminal).getRule();
+      final var rule = ruleCall.getRule();
+      // add a template proposal for the default value
+      if ("Expression".equals(rule.getName()))
+      {
+        final var type = xsmpUtil.getType(context.getCurrentNode(), context.getCurrentModel());
+        if (type instanceof Structure || type instanceof Array)
+        {
+          final var defaultValue = defaultValueProvider.getDefautValue(type);
+          if (defaultValue != null)
+          {
+            acceptor.accept(
+                    getProposalCreator().createSnippet(defaultValue, "Default Value", context),
+                    1000);
+          }
+        }
+      }
       if ("ML_DOCUMENTATION".equals(rule.getName()))
       {
         return;

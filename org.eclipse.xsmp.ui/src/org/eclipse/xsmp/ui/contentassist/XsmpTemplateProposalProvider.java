@@ -15,6 +15,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xsmp.ide.contentassist.DefaultValueProvider;
 import org.eclipse.xsmp.model.xsmp.Array;
 import org.eclipse.xsmp.model.xsmp.Metadatum;
 import org.eclipse.xsmp.model.xsmp.Structure;

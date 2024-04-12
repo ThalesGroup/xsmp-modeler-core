@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -26,6 +26,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class XsmpQualifiedNameValueConverter extends QualifiedNameValueConverter
 {
+  private static final char NS_DELIMITER = '.';
 
   @Override
   protected String getDelegateRuleName()
@@ -43,50 +44,36 @@ public class XsmpQualifiedNameValueConverter extends QualifiedNameValueConverter
       for (final INode child : node.getAsTreeIterable())
       {
         final var grammarElement = child.getGrammarElement();
-        if (isDelegateRuleCall(grammarElement) || isWildcardLiteral(grammarElement))
+        if (isDelegateRuleCall(grammarElement))
         {
           if (!isFirst)
           {
-            buffer.append(getValueNamespaceDelimiter());
+            buffer.append(NS_DELIMITER);
           }
           isFirst = false;
-          if (isDelegateRuleCall(grammarElement))
+          for (final ILeafNode leafNode : child.getLeafNodes())
           {
-            for (final ILeafNode leafNode : child.getLeafNodes())
+            if (!leafNode.isHidden())
             {
-              if (!leafNode.isHidden())
-              {
-                buffer.append(delegateToValue(leafNode));
-              }
+              buffer.append(delegateToValue(leafNode));
             }
-          }
-          else
-          {
-            buffer.append(getWildcardLiteral());
           }
         }
       }
     }
     else
     {
-      for (final String segment : Strings.split(string, getStringNamespaceDelimiter()))
+      for (final String segment : Strings.split(string, NS_DELIMITER))
       {
         if (!isFirst)
         {
-          buffer.append(getValueNamespaceDelimiter());
+          buffer.append(NS_DELIMITER);
         }
         isFirst = false;
-        if (getWildcardLiteral().equals(segment))
-        {
-          buffer.append(getWildcardLiteral());
-        }
-        else
-        {
-          buffer.append(
-                  (String) valueConverterService.toValue(segment, getDelegateRuleName(), null));
-        }
+        buffer.append((String) valueConverterService.toValue(segment, getDelegateRuleName(), null));
       }
     }
     return buffer.toString();
   }
+
 }

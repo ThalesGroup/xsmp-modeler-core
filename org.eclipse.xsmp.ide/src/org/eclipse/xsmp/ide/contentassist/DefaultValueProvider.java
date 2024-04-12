@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ******************************************************************************/
-package org.eclipse.xsmp.ui.contentassist;
+package org.eclipse.xsmp.ide.contentassist;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -50,10 +50,7 @@ public class DefaultValueProvider
                 .map(l -> qualifiedNameProvider.getFullyQualifiedName(l).toString()).findFirst()
                 .orElse(null);
 
-      case XsmpPackage.FLOAT:
-      case XsmpPackage.INTEGER:
-      case XsmpPackage.STRING:
-      case XsmpPackage.PRIMITIVE_TYPE:
+      case XsmpPackage.FLOAT, XsmpPackage.INTEGER, XsmpPackage.STRING, XsmpPackage.PRIMITIVE_TYPE:
         switch (xsmpUtil.getPrimitiveTypeKind(t))
         {
           case BOOL:

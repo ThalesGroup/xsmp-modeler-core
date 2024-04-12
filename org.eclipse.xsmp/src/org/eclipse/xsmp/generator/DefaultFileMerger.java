@@ -74,7 +74,16 @@ public class DefaultFileMerger implements IFileMerger
       final var areas = userCode.get(id);
       if (areas == null || areas.isEmpty())
       {
-        result.append(newContent.subSequence(startMatcher.end(), end));
+        final var backup = restoreBackup(fsa, fileName, outputConfigurationName, id);
+        if (backup != null)
+        {
+          result.append(backup);
+          result.append(newContent.subSequence(endMatcher.start(), end));
+        }
+        else
+        {
+          result.append(newContent.subSequence(startMatcher.end(), end));
+        }
       }
       else
       {
@@ -92,6 +101,45 @@ public class DefaultFileMerger implements IFileMerger
     // backup remaining markers
     generateBackups(fsa, fileName, outputConfigurationName, userCode);
     return result;
+  }
+
+  /**
+   * Find the last available backup. If a backup is found, return the backup content and delete the
+   * backup file
+   *
+   * @param fsa
+   * @param fileName
+   * @param outputConfigurationName
+   * @param id
+   * @return
+   */
+  CharSequence restoreBackup(IFileSystemAccess2 fsa, String fileName,
+          String outputConfigurationName, String id)
+  {
+    final var lastIndex = fileName.lastIndexOf('.');
+    var extension = "";
+
+    if (lastIndex > 0)
+    {
+      extension = fileName.substring(lastIndex);
+      fileName = fileName.substring(0, lastIndex);
+    }
+    final var baseName = fileName + "@" + id + "#";
+    var i = 0;
+    String backupFile = null;
+    while (fsa.isFile(baseName + i + extension, outputConfigurationName))
+    {
+      backupFile = baseName + i + extension;
+      i++;
+    }
+    if (backupFile != null)
+    {
+      final var content = fsa.readTextFile(backupFile, outputConfigurationName);
+      fsa.deleteFile(backupFile, outputConfigurationName);
+      return content;
+    }
+
+    return null;
   }
 
   protected void generateBackups(IFileSystemAccess2 fsa, String fileName,
@@ -141,7 +189,7 @@ public class DefaultFileMerger implements IFileMerger
 
   protected String normalizeId(String id)
   {
-    return id.trim().replaceAll("\\s\\s*", "-");
+    return id.trim().replaceAll("[^\\w]+", "-");
   }
 
   protected Map<String, List<CharSequence>> readProtectedAreaContent(CharSequence content)

@@ -10,28 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.outline;
 
-import org.eclipse.xsmp.model.xsmp.Project;
-import org.eclipse.xsmp.model.xsmp.XsmpPackage;
-import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
-import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
-
 /**
  * Customization of the default outline structure. See
  * https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#outline
  */
-public class XsmpprojectOutlineTreeProvider extends DefaultOutlineTreeProvider
+public class XsmpprojectOutlineTreeProvider extends XsmpOutlineTreeProvider
 {
-
-  protected void _createChildren(DocumentRootNode parentNode, Project doc)
-  {
-
-    createEStructuralFeatureNode(parentNode, doc, XsmpPackage.Literals.NAMED_ELEMENT__NAME,
-            imageDispatcher.invoke(doc), textDispatcher.invoke(doc), true);
-
-    for (final var source : doc.getMember())
-    {
-      createNode(parentNode, source);
-    }
-  }
 
 }

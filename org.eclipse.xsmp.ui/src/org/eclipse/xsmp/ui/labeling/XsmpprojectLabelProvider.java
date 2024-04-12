@@ -10,38 +10,17 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.labeling;
 
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.xsmp.model.xsmp.Document;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.SourcePath;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
-import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
-
-import com.google.inject.Inject;
 
 /**
  * Provides labels for EObjects.
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#label-provider
  */
-public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
+public class XsmpprojectLabelProvider extends XsmpLabelProvider
 {
-
-  @Inject
-  public XsmpprojectLabelProvider(AdapterFactoryLabelProvider delegate)
-  {
-    super(delegate);
-  }
-
-  String text(Document ele)
-  {
-    return ele.getName();
-  }
-
-  String image(Document ele)
-  {
-    return "full/obj16/Project.png";
-  }
 
   String text(SourcePath ele)
   {
@@ -52,19 +31,9 @@ public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
     return ele.getName();
   }
 
-  String image(SourcePath ele)
-  {
-    return "full/obj16/SourcePath.png";
-  }
-
   String text(ProjectReference ele)
   {
     return ele.getName();
-  }
-
-  String image(ProjectReference ele)
-  {
-    return "full/obj16/ProjectReference.png";
   }
 
   String text(ToolReference ele)
@@ -77,11 +46,6 @@ public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
     return tool.getDescription();
   }
 
-  String image(ToolReference ele)
-  {
-    return "full/obj16/ToolReference.png";
-  }
-
   String text(ProfileReference ele)
   {
     final var profile = ele.getProfile();
@@ -92,8 +56,4 @@ public class XsmpprojectLabelProvider extends DefaultEObjectLabelProvider
     return profile.getDescription();
   }
 
-  String image(ProfileReference ele)
-  {
-    return "full/obj16/ProfileReference.png";
-  }
 }
