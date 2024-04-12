@@ -12,7 +12,7 @@ package org.eclipse.xsmp.validation;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.model.xsmp.Catalogue;
-import org.eclipse.xsmp.model.xsmp.NamedElement;
+import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -46,7 +46,7 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
       result = first instanceof Catalogue && second instanceof Catalogue;
     }
     // 2 namespaces can have the same name except if they are in the same catalogue
-    else if (first instanceof NamedElement && second instanceof NamedElement)
+    else if (first instanceof Namespace && second instanceof Namespace)
     {
       result = description.getEObjectURI().path().equals(candidate.getEObjectURI().path());
     }

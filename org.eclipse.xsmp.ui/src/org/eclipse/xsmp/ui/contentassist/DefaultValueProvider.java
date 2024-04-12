@@ -62,17 +62,11 @@ public class DefaultValueProvider
             return "0.0f";
           case FLOAT64:
             return "0.0";
-          case INT8:
-          case INT16:
-          case INT32:
+          case INT8, INT16, INT32:
             return "0";
-          case INT64:
-          case DATE_TIME:
-          case DURATION:
+          case INT64, DATE_TIME, DURATION:
             return "0L";
-          case UINT8:
-          case UINT16:
-          case UINT32:
+          case UINT8, UINT16, UINT32:
             return "0U";
           case UINT64:
             return "0UL";
@@ -84,7 +78,7 @@ public class DefaultValueProvider
             break;
         }
         break;
-      case XsmpPackage.STRUCTURE:
+      case XsmpPackage.CLASS, XsmpPackage.EXCEPTION, XsmpPackage.STRUCTURE:
         final var fields = xsmpUtil.getAssignableFields((Structure) t);
 
         return "{" + java.lang.String.join(", ",

@@ -226,7 +226,7 @@ class SmpImporter extends GeneratorDelegate {
                     '''.toString
         }
         if (o instanceof NativeType) {
-            var mapping = o.platform.findFirst[name == "cpp"]
+            var mapping = o.platform.findFirst["cpp".equalsIgnoreCase(name)]
             if (mapping !== null) {
                 if (mapping.location !== null)
                     m += '''

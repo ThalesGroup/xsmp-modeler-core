@@ -109,6 +109,7 @@ namespace ns
 		def void voidOperation ()
 		def Bool getter ()
 		def void Setter (Bool value)
+		def void Setter (Int32 value)
 		field Bool field = false
 		property Bool property -> field
 	}
