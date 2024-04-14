@@ -30,12 +30,6 @@
    <feature id="org.eclipse.xsmp.tool.adoc.feature.source">
       <category name="main.source"/>
    </feature>
-   <feature id="org.eclipse.xsmp.profile.esa_cdk_legacy.feature">
-      <category name="main"/>
-   </feature>
-   <feature id="org.eclipse.xsmp.profile.esa_cdk_legacy.feature.source">
-      <category name="main.source"/>
-   </feature>
    <category-def name="main" label="Xsmp"/>
    <category-def name="main.source" label="Xsmp (Sources)"/>
 </site>
