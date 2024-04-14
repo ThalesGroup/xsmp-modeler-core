@@ -128,7 +128,7 @@ namespace Tata
 		constant Bool b = false
 		constant Int32 i = 3
 		public field Float32 thefloat = 5. + $PI + $E + $abs(-5)
-		public field ns1.arraytest collectionliteral = {4, 2, 3, 0, }
+		public field ns1.arraytest collectionliteral = {4, 2, 3, 0}
 
 		association String8 assoc
 

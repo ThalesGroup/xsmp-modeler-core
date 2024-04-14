@@ -23,6 +23,6 @@ public class XsmpprojectDescriptionLabelProvider extends DefaultDescriptionLabel
   @Override
   public String image(IEObjectDescription ele)
   {
-    return ele.getEClass().getName() + ".png";
+    return "full/obj16/" + ele.getEClass().getName() + ".png";
   }
 }

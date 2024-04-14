@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -12,6 +12,7 @@ package org.eclipse.xsmp.formatting2;
 
 import java.util.stream.Collectors;
 
+import org.eclipse.xsmp.documentation.Documentation;
 import org.eclipse.xsmp.documentation.TagElement;
 import org.eclipse.xsmp.model.xsmp.Metadatum;
 import org.eclipse.xtext.formatting2.ITextReplacer;
@@ -42,9 +43,10 @@ public class DocumentationReplacer implements ITextReplacer
     this.comment = comment;
   }
 
-  protected void append(TagElement tag, StringBuilder sb, ITextReplacerContext context)
+  protected void append(Documentation doc, TagElement tag, StringBuilder sb,
+          ITextReplacerContext context)
   {
-    final var tagName = tag.getTagName();
+    final var tagName = tag.getTagName(doc);
 
     if (tagName != null)
     {
@@ -53,13 +55,13 @@ public class DocumentationReplacer implements ITextReplacer
       if (!tag.fragments().isEmpty())
       {
         sb.append(" ");
-        sb.append(tag.fragments().stream().map(Object::toString).collect(Collectors
+        sb.append(tag.fragments().stream().map(e -> e.getText(doc)).collect(Collectors
                 .joining(System.lineSeparator() + context.getIndentationString() + " *       ")));
       }
     }
     else
     {
-      sb.append(tag.fragments().stream().map(Object::toString).collect(
+      sb.append(tag.fragments().stream().map(e -> e.getText(doc)).collect(
               Collectors.joining(System.lineSeparator() + context.getIndentationString() + " * ")));
     }
   }
@@ -71,8 +73,8 @@ public class DocumentationReplacer implements ITextReplacer
   public ITextReplacerContext createReplacements(ITextReplacerContext context)
   {
     final var elem = (Metadatum) comment.getSemanticElement();
-
-    final var tags = elem.getXsmpcatdoc().tags();
+    final var doc = elem.getXsmpcatdoc();
+    final var tags = doc.tags();
 
     final var indentation = context.getIndentationString();
     final var newLine = System.lineSeparator() + indentation + " * ";
@@ -96,17 +98,17 @@ public class DocumentationReplacer implements ITextReplacer
 
     final var firstTag = it.next();
 
-    append(firstTag, sb, context);
+    append(doc, firstTag, sb, context);
 
     // add an empty line between description and first tag
-    if (firstTag.getTagName() == null && it.hasNext())
+    if (firstTag.getTagName(doc) == null && it.hasNext())
     {
       sb.append(newLine);
     }
     while (it.hasNext())
     {
       sb.append(newLine);
-      append(it.next(), sb, context);
+      append(doc, it.next(), sb, context);
     }
 
     if (multiline)

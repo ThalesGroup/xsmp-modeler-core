@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -130,8 +130,6 @@ public class XsmpBuildManager
 
   private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
 
-  private boolean shouldGenerate = false;
-
   /**
    * Enqueue the given file collections.
    *
@@ -141,8 +139,14 @@ public class XsmpBuildManager
   {
     queue(this.dirtyFiles, deletedFiles, dirtyFiles);
     queue(this.deletedFiles, dirtyFiles, deletedFiles);
-    this.shouldGenerate = shouldGenerate;
-    return this::internalBuild;
+    if (shouldGenerate)
+    {
+      // perform the build now to be sure that files are generated on save action
+      final var deltas = internalBuild(CancelIndicator.NullImpl, true);
+      return indicator -> deltas;
+    }
+
+    return indicator -> internalBuild(indicator, false);
   }
 
   /**
@@ -179,7 +183,8 @@ public class XsmpBuildManager
   /**
    * Run the build on all projects.
    */
-  protected List<IResourceDescription.Delta> internalBuild(CancelIndicator cancelIndicator)
+  protected List<IResourceDescription.Delta> internalBuild(CancelIndicator cancelIndicator,
+          boolean shouldGenerate)
   {
     final List<URI> allDirty = new ArrayList<>(dirtyFiles);
     final Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();

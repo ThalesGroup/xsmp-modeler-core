@@ -16,6 +16,9 @@ import java.util.Set;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class XsmpprojectUtil
 {
 

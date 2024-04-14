@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -18,13 +18,16 @@ public class Documentation
 
   private final EList<TagElement> tags = new BasicEList<>();
 
-  public Documentation(Documentation other)
+  private final String text;
+
+  String getText(int startIndex, int endIndex)
   {
-    other.tags.forEach(t -> tags.add(new TagElement(t)));
+    return text.substring(startIndex, endIndex);
   }
 
   public Documentation(String text)
   {
+    this.text = text;
     if (text == null || text.isEmpty())
     {
       return;
@@ -44,7 +47,7 @@ public class Documentation
       {
         final var startPosition = offset;
         offset = consumeToken(text, offset);
-        tag = new TagElement(startPosition, text.substring(startPosition, offset));
+        tag = new TagElement(startPosition, offset);
         tags.add(tag);
 
         offset = skipWS(text, offset);
@@ -54,14 +57,14 @@ public class Documentation
           continue;
         }
         offset = skipWSOrNewLine(text, offset);
-        if ("@param".equals(tag.getTagName()))
+        if ("@param".equals(tag.getTagName(this)))
         {
 
           final var lastToken = consumeToken(text, offset);
 
           if (offset != lastToken)
           {
-            tag.fragments().add(new TextElement(offset, text.substring(offset, lastToken)));
+            tag.fragments().add(new TextElement(offset, lastToken));
           }
           offset = skipWS(text, lastToken);
           if (isNewLine(text.charAt(offset)))
@@ -80,7 +83,7 @@ public class Documentation
       }
       if (tag == null)
       {
-        tag = new TagElement(offset, null);
+        tag = new TagElement(offset, offset);
         tags.add(tag);
       }
 
@@ -99,7 +102,7 @@ public class Documentation
 
       }
 
-      tag.fragments().add(new TextElement(startPosition, text.substring(startPosition, lastToken)));
+      tag.fragments().add(new TextElement(startPosition, lastToken));
 
       offset = skipWSOrNewLine(text, offset);
       if (isEnd(text, offset))
@@ -204,17 +207,17 @@ public class Documentation
 
     final var firstTag = it.next();
 
-    sb.append(firstTag);
+    sb.append(firstTag.getText(this));
 
     // add an empty line between description and first tag
-    if (firstTag.getTagName() == null && it.hasNext())
+    if (firstTag.getTagName(this) == null && it.hasNext())
     {
       sb.append(newLine);
     }
     while (it.hasNext())
     {
       sb.append(newLine);
-      sb.append(it.next());
+      sb.append(it.next().getText(this));
     }
 
     if (multiline)

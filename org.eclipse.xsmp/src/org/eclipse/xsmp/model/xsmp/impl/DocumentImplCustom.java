@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,7 @@ package org.eclipse.xsmp.model.xsmp.impl;
 import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 
 /**
@@ -88,7 +88,7 @@ public abstract class DocumentImplCustom extends DocumentImpl
   }
 
   @Override
-  protected EStructuralFeature getFeature(String name)
+  protected EAttribute getFeature(String name)
   {
     return switch (name)
     {

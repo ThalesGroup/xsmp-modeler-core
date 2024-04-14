@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2023-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -24,7 +24,6 @@ import org.eclipse.xsmp.model.xsmp.CharacterLiteral;
 import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
 import org.eclipse.xsmp.model.xsmp.Constant;
 import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
-import org.eclipse.xsmp.model.xsmp.EmptyExpression;
 import org.eclipse.xsmp.model.xsmp.Enumeration;
 import org.eclipse.xsmp.model.xsmp.Expression;
 import org.eclipse.xsmp.model.xsmp.FloatingLiteral;
@@ -195,52 +194,10 @@ public class Solver
 
     if (elements.size() == 1)
     {
-
       final var type = xsmpUtil.getType(e);
       if (type instanceof SimpleType)
       {
-        final var expression = elements.get(0);
-        if (!(expression instanceof EmptyExpression))
-        {
-          return getValue(elements.get(0));
-        }
-        switch (xsmpUtil.getPrimitiveTypeKind(type))
-        {
-          case BOOL:
-            return Bool.FALSE;
-          case CHAR8:
-            return Char8.ZERO;
-          case DATE_TIME:
-            return DateTime.ZERO;
-          case DURATION:
-            return Duration.ZERO;
-          case ENUM:
-            return Int32.ZERO;
-          case FLOAT32:
-            return Float32.ZERO;
-          case FLOAT64:
-            return Float64.ZERO;
-          case INT16:
-            return Int16.ZERO;
-          case INT32:
-            return Int32.ZERO;
-          case INT64:
-            return Int64.ZERO;
-          case INT8:
-            return Int8.ZERO;
-          case STRING8:
-            return String8.valueOf("");
-          case UINT16:
-            return UInt16.ZERO;
-          case UINT32:
-            return UInt32.ZERO;
-          case UINT64:
-            return UInt64.ZERO;
-          case UINT8:
-            return UInt8.ZERO;
-          case NONE:
-            break;
-        }
+        return getValue(elements.get(0));
       }
     }
     throw new SolverException(e, "SimpleType requires only one element.");
@@ -270,7 +227,7 @@ public class Solver
     try
     {
       // remove encoding prefix, quotes and escape sequences
-      return String8.valueOf(e.getValue().stream().map(XsmpUtil::StringLiteralToString)
+      return String8.valueOf(e.getValue().stream().map(XsmpUtil::stringLiteralToString)
               .collect(Collectors.joining()));
     }
     catch (final Exception ex)

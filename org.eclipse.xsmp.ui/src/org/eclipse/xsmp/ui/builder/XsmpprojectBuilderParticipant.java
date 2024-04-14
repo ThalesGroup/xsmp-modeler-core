@@ -12,11 +12,15 @@ package org.eclipse.xsmp.ui.builder;
 
 import static org.eclipse.xtext.builder.impl.BuildManagerAccess.findBuilder;
 
+import java.util.Objects;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.xsmp.ui.workspace.XsmpEclipseProjectConfigProvider;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.builder.BuilderParticipant;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -29,28 +33,31 @@ public class XsmpprojectBuilderParticipant extends BuilderParticipant
   @Inject
   private XsmpEclipseProjectConfigProvider configProvider;
 
-  boolean ignore = false;
+  private static final QualifiedName configKey = new QualifiedName(
+          XsmpprojectBuilderParticipant.class.getName() + ".config", "config");
 
   @SuppressWarnings("deprecation")
   @Override
   protected void handleChangedContents(Delta delta, IBuildContext context, IFileSystemAccess access)
     throws CoreException
   {
-
     if (!getResourceServiceProvider().canHandle(delta.getUri()))
     {
       return;
     }
-    if (ignore)
-    {
-      ignore = false;
-      return;
-    }
-    ignore = true;
 
     final var project = context.getBuiltProject();
 
-    final var config = configProvider.createProjectConfig(context.getBuiltProject());
+    final var oldConfig = (IXsmpProjectConfig) project.getSessionProperty(configKey);
+    final var config = configProvider.createProjectConfig(project);
+
+    if (Objects.equals(config, oldConfig))
+    {
+      return;
+    }
+
+    project.setSessionProperty(configKey, config);
+
     final var referencedProjects = config.getDependencies().stream()
             .map(name -> ResourcesPlugin.getWorkspace().getRoot().getProject(name))
             .toArray(s -> new IProject[s]);
@@ -59,13 +66,16 @@ public class XsmpprojectBuilderParticipant extends BuilderParticipant
     description.setDynamicReferences(referencedProjects);
 
     project.setDescription(description, new NullProgressMonitor());
-
-    @SuppressWarnings("restriction")
-    final var builder = findBuilder(project);
-    if (builder != null)
+    if (oldConfig != null)
     {
-      builder.forgetLastBuiltState();
+      @SuppressWarnings("restriction")
+      final var builder = findBuilder(project);
+      if (builder != null)
+      {
+        builder.forgetLastBuiltState();
+      }
     }
+
     context.needRebuild(project);
   }
 

@@ -73,12 +73,14 @@ import org.eclipse.xtext.util.Tuples;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Utility class for Xsmpcat
  *
  * @author daveluy
  */
+@Singleton
 public class XsmpUtil
 {
 
@@ -1219,7 +1221,7 @@ public class XsmpUtil
     return solver.getValue(e);
   }
 
-  public static String StringLiteralToString(String literal)
+  public static String stringLiteralToString(String literal)
   {
     return literal.startsWith("u8") ? translateEscapes(literal.substring(3, literal.length() - 1))
             : translateEscapes(literal.substring(1, literal.length() - 1));

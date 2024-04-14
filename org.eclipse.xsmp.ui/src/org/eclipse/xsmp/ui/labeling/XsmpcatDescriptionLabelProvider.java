@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -26,7 +26,7 @@ public class XsmpcatDescriptionLabelProvider extends DefaultDescriptionLabelProv
   @Override
   public String image(IEObjectDescription ele)
   {
-    return ele.getEClass().getName() + ".png";
+    return "full/obj16/" + ele.getEClass().getName() + ".png";
   }
 
   /**

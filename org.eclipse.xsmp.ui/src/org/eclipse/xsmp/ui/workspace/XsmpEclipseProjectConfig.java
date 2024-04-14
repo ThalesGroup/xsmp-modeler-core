@@ -89,7 +89,16 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
   @Override
   public boolean equals(Object obj)
   {
-    return super.equals(obj);
+    if (!super.equals(obj))
+    {
+      return false;
+    }
+
+    final var other = (XsmpEclipseProjectConfig) obj;
+
+    return getProfile().equals(other.getProfile()) && getTools().equals(other.getTools())
+            && getDependencies().equals(other.getDependencies());
+
   }
 
   @Override

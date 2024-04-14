@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -171,9 +171,9 @@ public class XsmpcoreFormatter extends AbstractJavaFormatter
     final var open = parentRegion
             .keyword(ga.getCollectionLiteralAccess().getLeftCurlyBracketKeyword_1());
     final var close = parentRegion
-            .keyword(ga.getCollectionLiteralAccess().getRightCurlyBracketKeyword_4());
+            .keyword(ga.getCollectionLiteralAccess().getRightCurlyBracketKeyword_3());
     formatCollection(parent.getElements(), open, close, doc,
-            ga.getCollectionLiteralAccess().getCommaKeyword_3_0());
+            ga.getCollectionLiteralAccess().getCommaKeyword_2_1_0());
 
   }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
+import java.util.function.Consumer;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -27,8 +29,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.xsmp.model.xsmp.Document;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xtext.ide.serializer.IChangeSerializer;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
-import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentUtil;
 import org.eclipse.xtext.ui.refactoring2.ChangeConverter;
@@ -72,26 +74,27 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
     throws CoreException
   {
     final var doc = xtextDocumentUtil.getXtextDocument(document);
-    final boolean hasSyntaxerrors = doc
-            .priorityReadOnly(state -> state.getParseResult().hasSyntaxErrors());
 
-    // Do not perform save actions if doc has syntax errors to avoid to break the
-    // doc
-    if (!hasSyntaxerrors)
-    {
-      performSaveActions(monitor, doc);
-    }
+    final var action = doc.modify(state -> {
+      // Do not perform save actions if doc has syntax errors
+      if (!state.getParseResult().hasSyntaxErrors())
+      {
+        return performSaveActions(monitor, state);
+      }
+      return (Consumer<IDocument>) d -> {
+      };
+    });
+    action.accept(document);
 
     super.doSaveDocument(monitor, element, doc, overwrite);
   }
 
   protected static XMLTypeFactoryImpl factory = new XMLTypeFactoryImpl();
 
-  protected void performSaveActions(IProgressMonitor monitor, IXtextDocument document)
+  protected Consumer<IDocument> performSaveActions(IProgressMonitor monitor, XtextResource state)
   {
 
-    final var project = document
-            .priorityReadOnly(state -> projectProvider.getProjectContext(state));
+    final var project = projectProvider.getProjectContext(state);
 
     monitor.beginTask("Updating Document", 2);
 
@@ -100,35 +103,37 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
     serializer.setUpdateRelatedFiles(false);
     serializer.setProgressMonitor(monitor);
 
-    final boolean isModified = document.priorityReadOnly(state -> {
+    final var modified = generateMissingUUIDs(serializer, state)
+            || updateDocumentDate(serializer, state, project);
 
-      var modified = false;
-      // update the document date
-      if (xsmpPreferenceAccess.isUpdateDocumentDate(project))
+    return document -> {
+      if (modified)
       {
-        serializer.addModification((Document) state.getContents().get(0), r -> r
-                .setDate(new Date(Instant.now().truncatedTo(ChronoUnit.SECONDS).toEpochMilli())));
-        modified = true;
+        applyModifications(monitor, serializer);
       }
+      if (xsmpPreferenceAccess.isFormatSourceCode(project))
+      {
+        formatSourceCode(monitor, document);
+      }
+    };
+  }
 
-      // generate the missing UUIDs
-      modified |= generateMissingUUIDs(serializer, state);
-
-      return modified;
-    });
-    if (isModified)
+  protected boolean updateDocumentDate(IChangeSerializer serializer, Resource resource,
+          IProject project)
+  {
+    if (xsmpPreferenceAccess.isUpdateDocumentDate(project))
     {
-      applyModifications(monitor, serializer);
+      serializer.addModification((Document) resource.getContents().get(0), r -> r
+              .setDate(new Date(Instant.now().truncatedTo(ChronoUnit.SECONDS).toEpochMilli())));
+      return true;
     }
-    if (xsmpPreferenceAccess.isFormatSourceCode(project))
-    {
-      formatSourceCode(monitor, document);
-    }
+    return false;
   }
 
   protected boolean generateMissingUUIDs(IChangeSerializer serializer, Resource resource)
   {
     var modified = false;
+
     final var it = resource.getAllContents();
     while (it.hasNext())
     {
@@ -168,7 +173,7 @@ public class XsmpDocumentProvider extends XtextDocumentProvider
     }
   }
 
-  protected void formatSourceCode(IProgressMonitor monitor, IXtextDocument document)
+  protected void formatSourceCode(IProgressMonitor monitor, IDocument document)
   {
     monitor.beginTask("Format document", 10);
     DocumentRewriteSession rewriteSession = null;

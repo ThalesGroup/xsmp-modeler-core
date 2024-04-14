@@ -184,6 +184,12 @@ public class DefaultFileMerger implements IFileMerger
     {
       ++i;
     }
+    // if the last backup has the same content ignore
+    if (i > 0 && fsa.readTextFile(fileName + "#" + (i - 1) + extension, outputConfigurationName)
+            .equals(content))
+    {
+      return;
+    }
     fsa.generateFile(fileName + "#" + i + extension, outputConfigurationName, content);
   }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import org.eclipse.xsmp.model.xsmp.Array;
 import org.eclipse.xsmp.model.xsmp.CollectionLiteral;
 import org.eclipse.xsmp.model.xsmp.DesignatedInitializer;
-import org.eclipse.xsmp.model.xsmp.EmptyExpression;
 import org.eclipse.xsmp.model.xsmp.Enumeration;
 import org.eclipse.xsmp.model.xsmp.Expression;
 import org.eclipse.xsmp.model.xsmp.Float;
@@ -72,7 +71,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
 
     if (byPointer)
     {
-      if (!(e instanceof KeywordExpression) && !(e instanceof EmptyExpression))
+      if (!(e instanceof KeywordExpression))
       {
         acceptError("Expecting a pointer, got " + e.getClass().getSimpleName() + ".", e, null,
                 ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
@@ -83,11 +82,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
       acceptError("Expecting a value, got a keyword.", e, null,
               ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "invalid_type");
     }
-    else if (e instanceof EmptyExpression)
-    {
-      acceptError("Missing expression.", e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
-              "invalid_type");
-    }
+
     else
     {
       switch (type.eClass().getClassifierID())
@@ -179,8 +174,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
         final var s = size.getValue();
 
         // check correct number of elements
-        if (values.getElements().size() == 1
-                && values.getElements().get(0) instanceof EmptyExpression)
+        if (values.getElements().isEmpty())
         {
           // OK
         }
@@ -285,7 +279,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
 
       final var size = values.getElements().size();
       // check correct number of elements
-      if (size == 1 && values.getElements().get(0) instanceof EmptyExpression)
+      if (size == 0)
       {
         // OK
       }
@@ -297,7 +291,7 @@ public class XsmpcoreValidator extends AbstractXsmpcoreValidator
           checkExpression(fields.get(i).getType(), values.getElements().get(i));
         }
         final var last = size - 1;
-        if (last >= 0 && !(values.getElements().get(last) instanceof EmptyExpression))
+        if (last >= 0)
         {
           checkExpression(fields.get(last).getType(), values.getElements().get(last));
         }

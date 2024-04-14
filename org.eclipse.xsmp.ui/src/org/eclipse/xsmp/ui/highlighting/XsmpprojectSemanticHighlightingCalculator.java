@@ -68,10 +68,10 @@ public class XsmpprojectSemanticHighlightingCalculator extends DefaultSemanticHi
       {
         for (final TagElement tag : xsmpcatdoc.tags())
         {
-          if (tag.getTagName() != null)
+          if (tag.getTagName(xsmpcatdoc) != null)
           {
             acceptor.addPosition(node.getTotalOffset() + tag.getStartPosition(),
-                    tag.getTagName().length(), DOCUMENTATION_TAG_ID);
+                    tag.getTagName(xsmpcatdoc).length(), DOCUMENTATION_TAG_ID);
           }
         }
       }

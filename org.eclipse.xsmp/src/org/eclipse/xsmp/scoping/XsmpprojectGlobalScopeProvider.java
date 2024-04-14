@@ -24,7 +24,9 @@ import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpprojectGlobalScopeProvider extends DefaultGlobalScopeProvider
 {
   @Inject

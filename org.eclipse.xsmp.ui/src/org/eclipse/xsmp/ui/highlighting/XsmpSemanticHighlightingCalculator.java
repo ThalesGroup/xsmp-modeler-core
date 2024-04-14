@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -203,10 +203,11 @@ public class XsmpSemanticHighlightingCalculator extends DefaultSemanticHighlight
       {
         for (final TagElement tag : xsmpcatdoc.tags())
         {
-          if (tag.getTagName() != null)
+          final var length = tag.getTagLength();
+          if (length != 0)
           {
-            acceptor.addPosition(node.getTotalOffset() + tag.getStartPosition(),
-                    tag.getTagName().length(), DOCUMENTATION_TAG_ID);
+            acceptor.addPosition(node.getTotalOffset() + tag.getStartPosition(), length,
+                    DOCUMENTATION_TAG_ID);
           }
         }
       }

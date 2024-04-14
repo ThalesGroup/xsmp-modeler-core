@@ -254,13 +254,12 @@
     <genClasses ecoreClass="xsmp.ecore#//KeywordExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//KeywordExpression/name"/>
     </genClasses>
-    <genClasses ecoreClass="xsmp.ecore#//EmptyExpression"/>
     <genClasses ecoreClass="xsmp.ecore#//Project">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/profile"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/tools"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/sources"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/referencedProjects"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xsmp.ecore#//Project/includes"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Project/getProfile"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Project/getTools"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Project/getSources"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Project/getReferencedProjects"/>
+      <genOperations ecoreOperation="xsmp.ecore#//Project/getIncludes"/>
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//Tool"/>
     <genClasses ecoreClass="xsmp.ecore#//Profile"/>
@@ -278,6 +277,9 @@
     </genClasses>
     <genClasses ecoreClass="xsmp.ecore#//SourcePath">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//SourcePath/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xsmp.ecore#//IncludePath">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xsmp.ecore#//IncludePath/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

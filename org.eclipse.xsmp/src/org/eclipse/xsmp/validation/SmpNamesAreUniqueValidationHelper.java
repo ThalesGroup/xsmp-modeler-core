@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -10,14 +10,18 @@
 ******************************************************************************/
 package org.eclipse.xsmp.validation;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsmp.model.xsmp.Catalogue;
 import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Parameter;
+import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.validation.NamesAreUniqueValidationHelper;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
+
+import com.google.common.collect.ImmutableSet;
 
 public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationHelper
 {
@@ -67,5 +71,11 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
     }
 
     return result;
+  }
+
+  @Override
+  protected ImmutableSet<EClass> getClusterTypes()
+  {
+    return ImmutableSet.of(XsmpPackage.Literals.NAMED_ELEMENT);
   }
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -84,7 +84,7 @@ public class XsmpdocContentAccess
     final var tags = xsmpcatdoc.tags();
     for (final TagElement tag : tags)
     {
-      final var tagName = tag.getTagName();
+      final var tagName = tag.getTagName(xsmpcatdoc);
       if (tagName == null)
       {
         start = tag;
@@ -236,7 +236,7 @@ public class XsmpdocContentAccess
       }
       previousNode = child;
 
-      var text = child.getText();
+      var text = child.getText(xsmpcatdoc);
       if (skipLeadingWhitespace)
       {
         text = text.replaceFirst("^\\s", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -341,7 +341,7 @@ public class XsmpdocContentAccess
   {
     for (final TagElement tag : tags)
     {
-      handleBlockTagTitle(tag.getTagName());
+      handleBlockTagTitle(tag.getTagName(xsmpcatdoc));
       fBuf.append(BLOCK_TAG_ENTRY_START);
       handleContentElements(tag.fragments());
       fBuf.append(BLOCK_TAG_ENTRY_END);
@@ -401,9 +401,10 @@ public class XsmpdocContentAccess
 
     for (final TagElement p : param)
     {
-      final var description = p.fragments().stream().skip(1).map(TextElement::getText)
+      final var description = p.fragments().stream().skip(1).map(e -> e.getText(xsmpcatdoc))
               .collect(Collectors.joining(System.lineSeparator()));
-      final var name = p.fragments().stream().map(TextElement::getText).findFirst().orElse(null);
+      final var name = p.fragments().stream().map(e -> e.getText(xsmpcatdoc)).findFirst()
+              .orElse(null);
       if (name != null)
       {
         fBuf.append(BLOCK_TAG_ENTRY_START);

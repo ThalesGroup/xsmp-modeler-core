@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -11,11 +11,10 @@
 package org.eclipse.xsmp.model.xsmp.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,13 +23,13 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xsmp.documentation.Documentation;
 import org.eclipse.xsmp.documentation.TagElement;
 import org.eclipse.xsmp.documentation.TextElement;
 import org.eclipse.xsmp.model.xsmp.Metadatum;
@@ -52,33 +51,12 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
   private class XsmpcatdocEList<E> extends EcoreEList.Dynamic<E>
   {
-    @Override
-    public boolean equals(Object object)
-    {
-      if (object instanceof XsmpcatdocEList< ? >)
-      {
-        return ((XsmpcatdocEList< ? >) object).tagName.equals(tagName) && super.equals(object);
-      }
-      return super.equals(object);
-    }
 
-    @Override
-    public int hashCode()
-    {
-      return Objects.hash(tagName, super.hashCode());
-    }
-
-    /**
-     *
-     */
     public static final long serialVersionUID = -7859434301857045784L;
 
-    private final String tagName;
-
-    public XsmpcatdocEList(InternalEObject owner, EStructuralFeature eStructuralFeature)
+    public XsmpcatdocEList(InternalEObject owner, EAttribute eStructuralFeature)
     {
       super(owner, eStructuralFeature);
-      tagName = "@" + eStructuralFeature.getName();
     }
 
     @Override
@@ -88,26 +66,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         return;
       }
-      final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-      final var filteredTags = xsmpcatdoc.tags().stream()
-              .filter(t -> tagName.equals(t.getTagName())).collect(Collectors.toList());
-
-      // compute the final tag position
-      if (filteredTags.size() > index)
-      {
-        index = xsmpcatdoc.tags().indexOf(filteredTags.get(index));
-      }
-      else
-      {
-        index = xsmpcatdoc.tags().size();
-      }
-      final var tag = new TagElement(-1, tagName);
-      tag.fragments().add(new TextElement(-1, serialize(eStructuralFeature, newObject)));
-      // add the tag
-      xsmpcatdoc.tags().add(index, tag);
-      metadatum.setDocumentation(xsmpcatdoc.toString());
-
+      updateDocumentation((EAttribute) eStructuralFeature, this);
     }
 
     @Override
@@ -117,13 +76,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         return;
       }
-      final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-      final var tag = xsmpcatdoc.tags().stream().filter(t -> tagName.equals(t.getTagName()))
-              .skip(index).findFirst().orElse(null);
-      xsmpcatdoc.tags().remove(tag);
-      metadatum.setDocumentation(xsmpcatdoc.toString());
-
+      updateDocumentation((EAttribute) eStructuralFeature, this);
     }
 
     @Override
@@ -133,12 +86,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         return;
       }
-      final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-      xsmpcatdoc.tags().removeIf(t -> tagName.equals(t.getTagName()));
-
-      metadatum.setDocumentation(xsmpcatdoc.toString());
-
+      updateDocumentation((EAttribute) eStructuralFeature, this);
     }
 
     @Override
@@ -148,20 +96,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         return;
       }
-      final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-      final var filteredTags = xsmpcatdoc.tags().stream()
-              .filter(t -> tagName.equals(t.getTagName())).collect(Collectors.toList());
-
-      // compute the tag indexes
-      oldIndex = xsmpcatdoc.tags().indexOf(filteredTags.get(oldIndex));
-      index = xsmpcatdoc.tags().indexOf(filteredTags.get(index));
-
-      // move the tag
-      xsmpcatdoc.tags().move(index, oldIndex);
-
-      metadatum.setDocumentation(xsmpcatdoc.toString());
-
+      updateDocumentation((EAttribute) eStructuralFeature, this);
     }
 
     @Override
@@ -171,32 +106,17 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
         return;
       }
-      final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-      xsmpcatdoc.tags().stream().filter(t -> tagName.equals(t.getTagName())).skip(index).findFirst()
-              .ifPresent(tag -> {
-                tag.fragments().clear();
-                // set the value
-                for (final String v : serialize(eStructuralFeature, newObject)
-                        .split(System.lineSeparator()))
-                {
-                  tag.fragments().add(new TextElement(-1, v));
-                }
-              });
-
-      metadatum.setDocumentation(xsmpcatdoc.toString());
-
+      updateDocumentation((EAttribute) eStructuralFeature, this);
     }
-
   }
 
   /**
    * Map in which to store the value of each feature define inside the DOCUMENTATION of the
    * Metadatum
    */
-  protected Map<EStructuralFeature, Object> featureMap;
+  private Map<EAttribute, Object> featureMap;
 
-  protected Diagnostic createIssue(String message, int offset, int length, int error)
+  private Diagnostic createIssue(String message, int offset, int length, int error)
   {
     return new RangeBasedDiagnostic(error, message, this, offset, length, CheckType.FAST, null,
             null) {
@@ -223,15 +143,12 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   }
 
   @SuppressWarnings("unchecked")
-  protected <T> EList<T> getFeature(EStructuralFeature feature)
+  protected <T> EList<T> getFeature(EAttribute feature)
   {
-
-    return (EList<T>) getFeatureMap().computeIfAbsent(feature,
-            f -> new XsmpcatdocEList<T>(this, f));
-
+    return (EList<T>) getFeatureMap().computeIfAbsent(feature, f -> new XsmpcatdocEList<>(this, f));
   }
 
-  protected EStructuralFeature getFeature(String name)
+  protected EAttribute getFeature(String name)
   {
     return "deprecated".equals(name) ? XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED : null;
   }
@@ -245,7 +162,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
   /**
    * @return the feature map with parsed results
    */
-  protected Map<EStructuralFeature, Object> getFeatureMap()
+  protected Map<EAttribute, Object> getFeatureMap()
   {
 
     if (featureMap == null)
@@ -275,22 +192,16 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     return super.getMetadatum();
   }
 
-  protected boolean isSetFeature(EAttribute feature)
+  protected String printFragment(Documentation doc, List< ? extends TextElement> list)
   {
-    return getFeatureMap().containsKey(feature);
-
-  }
-
-  protected String printFragment(List< ? extends TextElement> list)
-  {
-    return list.stream().map(TextElement::getText)
+    return list.stream().map(e -> e.getText(doc))
             .collect(Collectors.joining(System.lineSeparator())).trim();
   }
 
-  @SuppressWarnings({"unchecked", "rawtypes" })
-  private Map<EStructuralFeature, Object> parse()
+  @SuppressWarnings({"unchecked" })
+  private Map<EAttribute, Object> parse()
   {
-    final Map<EStructuralFeature, Object> values = new HashMap<>();
+    final Map<EAttribute, Object> values = new LinkedHashMap<>();
 
     final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
     if (xsmpcatdoc == null)
@@ -301,23 +212,24 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     final var tags = xsmpcatdoc.tags();
     for (final TagElement tag : tags)
     {
-      if (tag.getTagName() == null)
+      if (tag.getTagName(xsmpcatdoc) == null)
       {
-        values.put(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION, printFragment(tag.fragments()));
+        values.put(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION,
+                printFragment(xsmpcatdoc, tag.fragments()));
       }
       else
       {
         // find a featured tag
-        final var feature = getFeature(tag.getTagName().substring(1));
+        final var feature = getFeature(tag.getTagName(xsmpcatdoc).substring(1));
         if (feature != null)
         {
           try
           {
-            final var value = parse(feature, printFragment(tag.fragments()));
+            final var value = parse(feature, printFragment(xsmpcatdoc, tag.fragments()));
             if (feature.isMany())
             {
-              ((Collection) values.computeIfAbsent(feature, f -> new XsmpcatdocEList<>(this, f)))
-                      .add(value);
+              ((Collection<Object>) values.computeIfAbsent(feature,
+                      f -> new XsmpcatdocEList<>(this, f))).add(value);
             }
             else
             {
@@ -353,7 +265,8 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
     for (final TagElement tag : xsmpcatdoc.tags())
     {
-      if (tag.getTagName() == null)
+      final var tagName = tag.getTagName(xsmpcatdoc);
+      if (tagName == null)
       {
         features.add(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION);
       }
@@ -361,31 +274,33 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
       {
 
         // find a featured tag
-        final var feature = getFeature(tag.getTagName().substring(1));
+        final var feature = getFeature(tagName.substring(1));
         if (feature == null)
         {
-          switch (tag.getTagName())
+          switch (tagName)
           {
             // rise error for these tags because they are defined in the grammar
             case "@description":
-              chain.add(createIssue("Invalid tag: " + tag.getTagName() + ".",
-                      nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.ERROR));
+              chain.add(createIssue("Invalid tag: " + tag.getTagName(xsmpcatdoc) + ".",
+                      nodeOffset + tag.getStartPosition(), tag.getTotalLength(), Diagnostic.ERROR));
               break;
             case "@param":
-              final var paramName = tag.fragments().stream().map(TextElement::getText).findFirst()
-                      .orElse(null);
-              if (this instanceof Operation && ((Operation) this).getParameter().stream()
+              final var paramName = tag.fragments().stream().map(e -> e.getText(xsmpcatdoc))
+                      .findFirst().orElse(null);
+              if (this instanceof final Operation op && op.getParameter().stream()
                       .filter(p -> p.getName().equals(paramName)).findFirst().isEmpty())
               {
                 chain.add(createIssue("Parameter " + paramName + " does not exist.",
-                        nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.WARNING));
+                        nodeOffset + tag.getStartPosition(), tag.getTotalLength(),
+                        Diagnostic.WARNING));
               }
               break;
             case "@return":
-              if (this instanceof Operation && ((Operation) this).getReturnParameter() == null)
+              if (this instanceof final Operation op && op.getReturnParameter() == null)
               {
                 chain.add(createIssue("Operation does not returns.",
-                        nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.WARNING));
+                        nodeOffset + tag.getStartPosition(), tag.getTotalLength(),
+                        Diagnostic.WARNING));
               }
               break;
             default:
@@ -396,11 +311,11 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
         {
           if (!features.add(feature) && !feature.isMany())
           {
-            chain.add(createIssue("Duplicated tag name " + tag.getTagName(),
-                    nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.ERROR));
+            chain.add(createIssue("Duplicated tag name " + tag.getTagName(xsmpcatdoc),
+                    nodeOffset + tag.getStartPosition(), tag.getTotalLength(), Diagnostic.ERROR));
           }
 
-          final var strValue = printFragment(tag.fragments());
+          final var strValue = printFragment(xsmpcatdoc, tag.fragments());
           try
           {
             parse(feature, strValue);
@@ -410,7 +325,7 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
             chain.add(createIssue(
                     "Unable to convert '" + strValue + "' to " + feature.getEType().getName()
                             + " Type.",
-                    nodeOffset + tag.getStartPosition(), tag.getLength(), Diagnostic.ERROR));
+                    nodeOffset + tag.getStartPosition(), tag.getTotalLength(), Diagnostic.ERROR));
           }
         }
       }
@@ -419,9 +334,9 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
 
   protected Object parse(EStructuralFeature feature, String strValue)
   {
-    if (feature instanceof EReference)
+    if (feature instanceof final EReference ref)
     {
-      final var eClass = ((EReference) feature).getEReferenceType();
+      final var eClass = ref.getEReferenceType();
       final var result = EcoreUtil.create(eClass);
 
       final var values = strValue.split(",");
@@ -449,134 +364,9 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     return EcoreUtil.createFromString(dataType, strValue);
   }
 
-  protected String serialize(EStructuralFeature feature, Object object)
-  {
-
-    if (feature instanceof EReference)
-    {
-
-      final var eObject = (EObject) object;
-      return eObject.eClass().getEAllAttributes().stream().filter(eObject::eIsSet)
-              .map(a -> a.getName() + "=\"" + eObject.eGet(a).toString() + "\"")
-              .collect(Collectors.joining(", "));
-    }
-    return EcoreUtil.convertToString(((EAttribute) feature).getEAttributeType(), object);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setDescription(String newDescription)
-  {
-    final var oldValue = getFeatureMap().put(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION,
-            newDescription);
-    if (eNotificationRequired())
-    {
-      eNotify(new ENotificationImpl(this, Notification.SET,
-              XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION.getFeatureID(), oldValue,
-              newDescription));
-
-    }
-    final var metadatum = getMetadatum();
-    final var xsmpcatdoc = metadatum.getXsmpcatdoc();
-    var tag = xsmpcatdoc.tags().stream().findFirst().orElse(null);
-
-    if (tag == null || tag.getTagName() != null)
-    {
-      tag = new TagElement(-1, null);
-      xsmpcatdoc.tags().add(0, tag);
-    }
-    else
-    {
-      tag.fragments().clear();
-    }
-    // set the value
-    if (newDescription != null)
-    {
-      for (final String v : newDescription.split(System.lineSeparator()))
-      {
-        tag.fragments().add(new TextElement(-1, v));
-      }
-    }
-    else
-    {
-      xsmpcatdoc.tags().remove(tag);
-    }
-    metadatum.setDocumentation(xsmpcatdoc.toString());
-  }
-
-  protected void setFeature(EAttribute feature, Object value)
-  {
-
-    final var oldValue = getFeatureMap().put(feature, value);
-    if (eNotificationRequired())
-    {
-      eNotify(new ENotificationImpl(this, Notification.SET, feature.getFeatureID(), oldValue,
-              value));
-
-    }
-    final var metadatum = getMetadatum();
-    final var xsmpcatdoc = metadatum.getXsmpcatdoc();
-
-    // find the tag
-    final var tagName = "@" + feature.getName();
-    var tag = xsmpcatdoc.tags().stream().filter(t -> tagName.equals(t.getTagName())).findFirst()
-            .orElse(null);
-
-    final var dataType = feature.getEAttributeType();
-
-    final var strValue = EcoreUtil.convertToString(feature.getEAttributeType(), value);
-    if (dataType.getInstanceClass() == boolean.class
-            || dataType.getInstanceClass() == Boolean.class)
-    {
-      if (Boolean.FALSE.equals(value))
-      {
-        xsmpcatdoc.tags().remove(tag);
-      }
-      else if (tag == null)
-      {
-        tag = new TagElement(-1, tagName);
-        xsmpcatdoc.tags().add(tag);
-      }
-      else
-      {
-        tag.fragments().clear();
-      }
-    }
-    else if (strValue == null || strValue.isEmpty())
-    {
-      xsmpcatdoc.tags().remove(tag);
-    }
-    else
-    {
-      if (tag == null)
-      {
-        tag = new TagElement(-1, tagName);
-        xsmpcatdoc.tags().add(tag);
-      }
-      else
-      {
-        tag.fragments().clear();
-      }
-      // set the value
-      for (final String v : strValue.split(System.lineSeparator()))
-      {
-        tag.fragments().add(new TextElement(-1, v));
-      }
-    }
-
-    metadatum.setDocumentation(xsmpcatdoc.toString());
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void setMetadatum(Metadatum newMetadatum)
   {
-
     if (metadatum != null)
     {
       featureMap = null;
@@ -584,38 +374,112 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     super.setMetadatum(newMetadatum);
   }
 
-  protected void unSetFeature(EAttribute feature)
-  {
-
-    final var oldValue = getFeatureMap().remove(feature);
-    if (eNotificationRequired())
-    {
-      eNotify(new ENotificationImpl(this, Notification.UNSET, feature.getFeatureID(), oldValue,
-              null, oldValue != null));
-
-    }
-    final var xsmpcatdoc = getMetadatum().getXsmpcatdoc();
-
-    // remove the tag
-    final var tagName = "@" + feature.getName();
-    xsmpcatdoc.tags().removeIf(t -> tagName.equals(t.getTagName()));
-
-    metadatum.setDocumentation(xsmpcatdoc.toString());
-
-  }
-
   @Override
   public boolean isDeprecated()
   {
-
     return getFeature(XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED, DEPRECATED_EDEFAULT);
   }
 
   @Override
   public void setDeprecated(boolean newDeprecated)
   {
-
     setFeature(XsmpPackage.Literals.NAMED_ELEMENT__DEPRECATED, newDeprecated);
+  }
+
+  protected void setFeature(EAttribute feature, Object value)
+  {
+    final var oldValue = getFeatureMap().put(feature, value);
+
+    if (eNotificationRequired())
+    {
+      eNotify(new ENotificationImpl(this, Notification.SET, feature.getFeatureID(), oldValue,
+              value));
+    }
+    // update the documentation
+    updateDocumentation(feature, value);
+
+  }
+
+  private void updateDocumentation(EAttribute feature, Object value)
+  {
+    final var doc = metadatum.getXsmpcatdoc();
+    final var sb = new StringBuilder();
+    sb.append("/**\n");
+    var tagUpdated = false;
+    for (final var tag : doc.tags())
+    {
+      if (tag.getTagLength() == 0)
+      {
+        if (feature == XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION)
+        {
+          sb.append(value).append("\n");
+          tagUpdated = true;
+        }
+        else
+        {
+          sb.append(tag.getText(doc)).append("\n");
+        }
+      }
+      else
+      {
+        final var tagName = tag.getTagName(doc);
+        if (("@" + feature.getName()).equals(tagName))
+        {
+          if (!tagUpdated)
+          {
+            append(feature, value, sb);
+            tagUpdated = true;
+          }
+        }
+        else
+        {
+          sb.append(tag.getText(doc)).append("\n");
+        }
+      }
+    }
+    if (!tagUpdated)
+    {
+      append(feature, value, sb);
+    }
+
+    sb.append("*/");
+    metadatum.setDocumentation(new Documentation(sb.toString()).toString());
+  }
+
+  private void append(EAttribute feature, Object value, StringBuilder sb)
+  {
+    if (!eIsSet(feature))
+    {
+      return;
+    }
+    final var dataType = feature.getEAttributeType();
+    final var tagName = "@" + feature.getName();
+    if (dataType.getInstanceClass() == boolean.class
+            || dataType.getInstanceClass() == Boolean.class)
+    {
+      if (Boolean.TRUE.equals(value))
+      {
+        sb.append(tagName).append("\n");
+      }
+    }
+    else if (feature.isMany())
+    {
+      for (final var v : (Collection< ? >) value)
+      {
+        sb.append(tagName).append(" ").append(EcoreUtil.convertToString(dataType, v)).append("\n");
+      }
+    }
+    else
+    {
+      sb.append(tagName).append(" ").append(EcoreUtil.convertToString(dataType, value))
+              .append("\n");
+    }
+  }
+
+  @Override
+  public void setDescription(String newDescription)
+  {
+    setFeature(XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION, newDescription);
   }
 
 } // NamedElementImplCustom

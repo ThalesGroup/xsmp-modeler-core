@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xsmp.documentation.TextElement;
 import org.eclipse.xsmp.model.xsmp.Array;
 import org.eclipse.xsmp.model.xsmp.Association;
 import org.eclipse.xsmp.model.xsmp.Attribute;
@@ -241,14 +240,15 @@ public class SmpGenerator extends AbstractModelConverter
 
       if (e instanceof final NamedElement ne && !eObjectToIdMap.containsKey(e))
       {
-        final var idTag = ne.getMetadatum().getXsmpcatdoc().tags().stream()
-                .filter(t -> "@id".equals(t.getTagName())).findFirst();
+        final var doc = ne.getMetadatum().getXsmpcatdoc();
+        final var idTag = doc.tags().stream().filter(t -> "@id".equals(t.getTagName(doc)))
+                .findFirst();
 
         String id;
         if (idTag.isPresent())
         {
           // get the id from the @id tag in the description
-          id = idTag.get().fragments().stream().map(TextElement::getText)
+          id = idTag.get().fragments().stream().map(i -> i.getText(doc))
                   .collect(Collectors.joining("\n")).trim();
         }
         else

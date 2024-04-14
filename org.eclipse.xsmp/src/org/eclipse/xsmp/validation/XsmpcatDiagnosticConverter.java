@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -95,14 +95,14 @@ public class XsmpcatDiagnosticConverter extends DiagnosticConverterImpl
         final var tagName = "@" + structuralFeature.getName();
 
         final var tags = xsmpcatdoc.tags();
-        final var tag = tags.stream().filter(t -> tagName.equals(t.getTagName()))
+        final var tag = tags.stream().filter(t -> tagName.equals(t.getTagName(xsmpcatdoc)))
                 .skip(index > 0 ? index : 0).findFirst().orElseGet(() -> null);
         if (tag == null)
         {
           continue;
         }
         final var offset = tag.getStartPosition() + node.getTotalOffset();
-        final var length = tag.getLength();
+        final var length = tag.getTotalLength();
         if (length == 0)
         {
           continue;

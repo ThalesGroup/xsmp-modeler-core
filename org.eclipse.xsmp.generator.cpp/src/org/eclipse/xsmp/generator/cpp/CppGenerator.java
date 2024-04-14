@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -13,6 +13,7 @@ package org.eclipse.xsmp.generator.cpp;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.generator.ClangFormatter;
+import org.eclipse.xsmp.generator.IXsmpFileSystemAccess;
 import org.eclipse.xsmp.generator.XsmpGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator;
 import org.eclipse.xsmp.generator.cpp.type.ClassGenerator;
@@ -30,8 +31,6 @@ import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.ReferenceType;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
-import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
 
 import com.google.inject.Inject;
 
@@ -45,7 +44,7 @@ public class CppGenerator extends XsmpGenerator
   protected GeneratorUtil ext;
 
   @Override
-  public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
+  public void generate(Resource input, IXsmpFileSystemAccess fsa)
   {
     generateCatalogue((Catalogue) input.getContents().get(0), fsa);
   }
@@ -55,7 +54,7 @@ public class CppGenerator extends XsmpGenerator
    *
    * @param date
    */
-  protected void generateCatalogue(Catalogue cat, IFileSystemAccess2 fsa)
+  protected void generateCatalogue(Catalogue cat, IXsmpFileSystemAccess fsa)
   {
     final var acceptor = new IncludeAcceptor();
     catalogueGenerator.collectIncludes(cat, acceptor);
@@ -71,19 +70,28 @@ public class CppGenerator extends XsmpGenerator
     generateFile(fsa, name + ".pkg.cpp", CppOutputConfigurationProvider.SRC_GEN,
             catalogueGenerator.generatePkgFile(cat, false, acceptor, cat));
 
-    cat.getMember().stream().filter(Namespace.class::isInstance)
-            .forEach(ns -> generateNamespace((Namespace) ns, fsa, cat));
+    for (final var member : cat.getMember())
+    {
+      if (member instanceof final Namespace ns)
+      {
+        generateNamespace(ns, fsa, cat);
+      }
+    }
   }
 
-  protected void generateNamespace(Namespace ns, IFileSystemAccess2 fsa, Catalogue cat)
+  protected void generateNamespace(Namespace ns, IXsmpFileSystemAccess fsa, Catalogue cat)
   {
-    // generate types
-    ns.getMember().stream().filter(Type.class::isInstance)
-            .forEach(type -> generateType((Type) type, fsa, cat));
-
-    // generate nested Namespaces
-    ns.getMember().stream().filter(Namespace.class::isInstance)
-            .forEach(nns -> generateNamespace((Namespace) nns, fsa, cat));
+    for (final var member : ns.getMember())
+    {
+      if (member instanceof final Type type)
+      {
+        generateType(type, fsa, cat);
+      }
+      else if (member instanceof final Namespace nns)
+      {
+        generateNamespace(nns, fsa, cat);
+      }
+    }
   }
 
   protected boolean useGenerationGapPattern(EObject obj)
@@ -97,7 +105,7 @@ public class CppGenerator extends XsmpGenerator
    * @param cat
    */
   @SuppressWarnings("unchecked")
-  protected void generateType(Type type, IFileSystemAccess2 fsa, Catalogue cat)
+  protected void generateType(Type type, IXsmpFileSystemAccess fsa, Catalogue cat)
   {
 
     final var typeGenerator = getGenerator(type);
@@ -200,12 +208,12 @@ public class CppGenerator extends XsmpGenerator
   @Inject
   private ClangFormatter formatter;
 
-  protected void generateFile(IFileSystemAccess2 fsa, String fileName,
+  protected void generateFile(IXsmpFileSystemAccess fsa, String fileName,
           String outputConfigurationName, CharSequence contents)
   {
     if (contents != null)
     {
-      generateFile(fsa, fileName, outputConfigurationName, contents, formatter);
+      fsa.generateFile(fileName, outputConfigurationName, contents, formatter);
     }
   }
 

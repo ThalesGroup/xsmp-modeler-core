@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@ package org.eclipse.xsmp.generator.cpp;
 import java.util.stream.Collectors;
 
 import org.eclipse.xsmp.documentation.TagElement;
-import org.eclipse.xsmp.documentation.TextElement;
 import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.model.xsmp.Operation;
 import org.eclipse.xsmp.model.xsmp.Type;
@@ -40,10 +39,10 @@ public class CommentProvider
     var newLine = false;
     for (final TagElement tag : tags)
     {
-      final var tagName = tag.getTagName();
+      final var tagName = tag.getTagName(xsmpcatdoc);
       if (tagName == null)
       {
-        tag.fragments().forEach(t -> sb.append("/// ").append(t.getText()).append("\n"));
+        tag.fragments().forEach(t -> sb.append("/// ").append(t.getText(xsmpcatdoc)).append("\n"));
         newLine = true;
       }
       else if (!"@uuid".equals(tagName))
@@ -54,8 +53,8 @@ public class CommentProvider
           sb.append("/// \n");
           newLine = false;
         }
-        sb.append("/// ").append(tag.getTagName()).append(" ");
-        sb.append(tag.fragments().stream().map(TextElement::getText)
+        sb.append("/// ").append(tagName).append(" ");
+        sb.append(tag.fragments().stream().map(e -> e.getText(xsmpcatdoc))
                 .collect(Collectors.joining("\n///         ")));
         sb.append("\n");
       }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -21,27 +21,26 @@ public class TagElement
 
   private final int startPosition;
 
-  private final String tagName;
+  private final int endPosition;
 
-  public TagElement(TagElement other)
-  {
-    startPosition = other.startPosition;
-    tagName = other.tagName;
-    for (final var fragment : other.fragments)
-    {
-      fragments.add(new TextElement(fragment));
-    }
-  }
-
-  public TagElement(int startPosition, String tagName)
+  public TagElement(int startPosition, int endPosition)
   {
     this.startPosition = startPosition;
-    this.tagName = tagName;
+    this.endPosition = endPosition;
   }
 
-  public String getTagName()
+  public String getTagName(Documentation documentation)
   {
-    return tagName;
+    if (startPosition == endPosition)
+    {
+      return null;
+    }
+    return documentation.getText(startPosition, endPosition);
+  }
+
+  public int getTagLength()
+  {
+    return endPosition - startPosition;
   }
 
   public List<TextElement> fragments()
@@ -54,22 +53,24 @@ public class TagElement
     return startPosition;
   }
 
-  public int getLength()
+  public int getEndPosition()
+  {
+    return endPosition;
+  }
+
+  public int getTotalLength()
   {
     if (fragments.isEmpty())
     {
-      // tagName should not be null
-      return tagName.length();
+      return endPosition - startPosition;
     }
-
     final var lastFragment = fragments.get(fragments.size() - 1);
     return lastFragment.getStartPosition() + lastFragment.getLength() - startPosition;
   }
 
-  @Override
-  public String toString()
+  public String getText(Documentation doc)
   {
-
+    final var tagName = getTagName(doc);
     if (tagName != null)
     {
 
@@ -78,12 +79,12 @@ public class TagElement
       if (!fragments.isEmpty())
       {
         sb.append(" ");
-        sb.append(fragments.stream().map(Object::toString)
+        sb.append(fragments.stream().map(e -> e.getText(doc))
                 .collect(Collectors.joining(System.lineSeparator() + " *       ")));
       }
       return sb.toString();
     }
-    return fragments.stream().map(Object::toString)
+    return fragments.stream().map(e -> e.getText(doc))
             .collect(Collectors.joining(System.lineSeparator() + " * "));
   }
 }

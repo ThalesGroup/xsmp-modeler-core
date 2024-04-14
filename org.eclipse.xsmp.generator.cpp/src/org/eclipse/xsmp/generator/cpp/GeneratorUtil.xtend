@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -30,7 +30,6 @@ import org.eclipse.xsmp.model.xsmp.CollectionLiteral
 import org.eclipse.xsmp.model.xsmp.Constant
 import org.eclipse.xsmp.model.xsmp.DesignatedInitializer
 import org.eclipse.xsmp.model.xsmp.Document
-import org.eclipse.xsmp.model.xsmp.EmptyExpression
 import org.eclipse.xsmp.model.xsmp.Enumeration
 import org.eclipse.xsmp.model.xsmp.Expression
 import org.eclipse.xsmp.model.xsmp.FloatingLiteral
@@ -193,8 +192,6 @@ class GeneratorUtil extends XsmpUtil {
         '''«name»'''
     }
 
-    def dispatch CharSequence doGenerateExpression(EmptyExpression it) {
-    }
 
     def CharSequence generateExpression(Expression it) {
         val expectedType = type

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -15,23 +15,17 @@ public class TextElement
 
   private final int startPosition;
 
-  private final String text;
+  private final int endPosition;
 
-  public TextElement(TextElement other)
-  {
-    startPosition = other.startPosition;
-    text = other.text;
-  }
-
-  public TextElement(int startPosition, String text)
+  public TextElement(int startPosition, int endPosition)
   {
     this.startPosition = startPosition;
-    this.text = text;
+    this.endPosition = endPosition;
   }
 
-  public String getText()
+  public String getText(Documentation documentation)
   {
-    return text;
+    return documentation.getText(startPosition, endPosition);
   }
 
   public int getStartPosition()
@@ -41,12 +35,7 @@ public class TextElement
 
   public int getLength()
   {
-    return text.length();
+    return endPosition - startPosition;
   }
 
-  @Override
-  public String toString()
-  {
-    return getText();
-  }
 }

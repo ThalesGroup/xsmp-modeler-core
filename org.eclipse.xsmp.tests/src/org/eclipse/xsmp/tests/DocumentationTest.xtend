@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+ * Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
  * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -69,8 +69,8 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertEquals(1, tag.fragments.size)
-            assertNull(tag.tagName)
-            assertEquals("a", tag.fragments.get(0).text)
+            assertNull(tag.getTagName(doc))
+            assertEquals("a", tag.fragments.get(0).getText(doc))
         }
 
         for (input : #{
@@ -87,8 +87,8 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertEquals(1, tag.fragments.size)
-            assertNull(tag.tagName)
-            assertEquals("a b", tag.fragments.get(0).text)
+            assertNull(tag.getTagName(doc))
+            assertEquals("a b", tag.fragments.get(0).getText(doc))
         }
 
         for (input : #{
@@ -109,9 +109,9 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertEquals(2, tag.fragments.size)
-            assertNull(tag.tagName)
-            assertEquals("a", tag.fragments.get(0).text)
-            assertEquals("b", tag.fragments.get(1).text)
+            assertNull(tag.getTagName(doc))
+            assertEquals("a", tag.fragments.get(0).getText(doc))
+            assertEquals("b", tag.fragments.get(1).getText(doc))
         }
     }
 
@@ -137,7 +137,7 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertTrue(tag.fragments.empty)
-            assertEquals("@", tag.tagName)
+            assertEquals("@", tag.getTagName(doc))
         }
 
         for (input : #{
@@ -154,7 +154,7 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertTrue(tag.fragments.empty)
-            assertEquals("@a", tag.tagName)
+            assertEquals("@a", tag.getTagName(doc))
         }
 
         for (input : #{
@@ -171,8 +171,8 @@ class DocumentationTest {
             assertEquals(1, doc.tags.size)
             val tag = doc.tags.get(0)
             assertEquals(1, tag.fragments.size)
-            assertEquals("@a", tag.tagName)
-            assertEquals("b", tag.fragments.get(0).text)
+            assertEquals("@a", tag.getTagName(doc))
+            assertEquals("b", tag.fragments.get(0).getText(doc))
         }
 
     }
@@ -193,22 +193,22 @@ class DocumentationTest {
             val doc = input.createDocumentation;
             assertEquals(3, doc.tags.size)
             val tag = doc.tags.get(0)
-            assertNull(tag.tagName)
+            assertNull(tag.getTagName(doc))
             assertEquals(3, tag.fragments.size)
-            assertEquals("desc1", tag.fragments.get(0).text)
-            assertEquals("desc2", tag.fragments.get(1).text)
-            assertEquals("desc3", tag.fragments.get(2).text)
+            assertEquals("desc1", tag.fragments.get(0).getText(doc))
+            assertEquals("desc2", tag.fragments.get(1).getText(doc))
+            assertEquals("desc3", tag.fragments.get(2).getText(doc))
 
             val tag1 = doc.tags.get(1)
             assertEquals(0, tag1.fragments.size)
-            assertEquals("@tag1", tag1.tagName)
-            // assertEquals("tdesc1", tag1.fragments.get(0).text)
-            // assertEquals("tdesc2", tag1.fragments.get(1).text)
+            assertEquals("@tag1", tag1.getTagName(doc))
+            // assertEquals("tdesc1", tag1.fragments.get(0).getText(doc))
+            // assertEquals("tdesc2", tag1.fragments.get(1).getText(doc))
             val tag2 = doc.tags.get(2)
             assertEquals(2, tag2.fragments.size)
-            assertEquals("@tag2", tag2.tagName)
-            assertEquals("tdesc1", tag2.fragments.get(0).text)
-            assertEquals("tdesc2", tag2.fragments.get(1).text)
+            assertEquals("@tag2", tag2.getTagName(doc))
+            assertEquals("tdesc1", tag2.fragments.get(0).getText(doc))
+            assertEquals("tdesc2", tag2.fragments.get(1).getText(doc))
         }
 
     }

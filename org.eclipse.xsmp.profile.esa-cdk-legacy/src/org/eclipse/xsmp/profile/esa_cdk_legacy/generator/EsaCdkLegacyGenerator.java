@@ -14,13 +14,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.generator.ClangFormatter;
 import org.eclipse.xsmp.generator.DefaultFileMerger;
 import org.eclipse.xsmp.generator.IFileMerger;
+import org.eclipse.xsmp.generator.IXsmpFileSystemAccess;
 import org.eclipse.xsmp.generator.XsmpGenerator;
 import org.eclipse.xsmp.model.xsmp.Catalogue;
 import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.Type;
 import org.eclipse.xsmp.util.XsmpUtil;
-import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -46,7 +45,7 @@ public final class EsaCdkLegacyGenerator extends XsmpGenerator
   private Generator generator;
 
   @Override
-  public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
+  public void generate(Resource input, IXsmpFileSystemAccess fsa)
   {
 
     final var catalogue = (Catalogue) input.getContents().get(0);
@@ -60,36 +59,48 @@ public final class EsaCdkLegacyGenerator extends XsmpGenerator
    *
    * @param date
    */
-  protected void generateCatalogue(Catalogue catalogue, IFileSystemAccess2 fsa)
+  protected void generateCatalogue(Catalogue catalogue, IXsmpFileSystemAccess fsa)
   {
-    generateFile(fsa, catalogue.getName() + ".cpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
+
+    final var baseFileName = catalogue.eResource().getURI().trimFileExtension().lastSegment();
+
+    fsa.generateFile(baseFileName + ".cpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
             generator.generateSource(catalogue), cppMerger, formatter);
-    generateFile(fsa, catalogue.getName() + ".hpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
+    fsa.generateFile(baseFileName + ".h", EsaCdkLegacyOutputConfigurationProvider.SRC,
             generator.generateInclude(catalogue), cppMerger, formatter);
 
-    catalogue.getMember().stream().filter(Namespace.class::isInstance)
-            .forEach(ns -> generateNamespace((Namespace) ns, fsa, catalogue));
+    for (final var member : catalogue.getMember())
+    {
+      if (member instanceof final Namespace ns)
+      {
+        generateNamespace(ns, fsa, catalogue);
+      }
+    }
   }
 
-  protected void generateNamespace(Namespace ns, IFileSystemAccess2 fsa, Catalogue cat)
+  protected void generateNamespace(Namespace ns, IXsmpFileSystemAccess fsa, Catalogue cat)
   {
-    // generate types
-    ns.getMember().stream().filter(Type.class::isInstance)
-            .forEach(type -> generateType((Type) type, fsa, cat));
-
-    // generate nested Namespaces
-    ns.getMember().stream().filter(Namespace.class::isInstance)
-            .forEach(nns -> generateNamespace((Namespace) nns, fsa, cat));
+    for (final var member : ns.getMember())
+    {
+      if (member instanceof final Type type)
+      {
+        generateType(type, fsa, cat);
+      }
+      else if (member instanceof final Namespace nns)
+      {
+        generateNamespace(nns, fsa, cat);
+      }
+    }
   }
 
-  protected void generateType(Type type, IFileSystemAccess2 fsa, Catalogue cat)
+  protected void generateType(Type type, IXsmpFileSystemAccess fsa, Catalogue cat)
   {
 
     final var path = ext.fqn(type).toString("/");
-
-    generateFile(fsa, path + ".cpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
+    fsa.generateFile(path + ".cpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
             generator.generateSource(type), cppMerger, formatter);
-    generateFile(fsa, path + ".hpp", EsaCdkLegacyOutputConfigurationProvider.SRC,
+
+    fsa.generateFile(path + ".h", EsaCdkLegacyOutputConfigurationProvider.SRC,
             generator.generateInclude(type), cppMerger, formatter);
 
   }

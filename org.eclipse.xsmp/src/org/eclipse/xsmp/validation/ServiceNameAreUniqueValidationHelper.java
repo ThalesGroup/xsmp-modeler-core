@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (C) 2020-2022 THALES ALENIA SPACE FRANCE.
+* Copyright (C) 2020-2024 THALES ALENIA SPACE FRANCE.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License 2.0
@@ -40,8 +40,8 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
     final var object = description.getEObjectOrProxy();
     Preconditions.checkArgument(!object.eIsProxy());
 
-    final var clusterType = getClusterType(description);
-    if (clusterType == null)
+    final var clusterType = XsmpPackage.Literals.SERVICE;
+    if (!clusterType.equals(description.getEClass()))
     {
       return;
     }
@@ -58,9 +58,7 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
     }
 
     final Iterable<IEObjectDescription> sameNames = Iterables.filter(
-            validationScope.getExportedObjects(),
-            o -> XsmpPackage.Literals.SERVICE.isSuperTypeOf(o.getEClass())
-                    && name.equals(o.getName().getLastSegment()));
+            validationScope.getExportedObjects(), o -> name.equals(o.getName().getLastSegment()));
 
     if (sameNames instanceof Collection< ? > && ((Collection< ? >) sameNames).size() <= 1)
     {
@@ -71,8 +69,7 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
     {
       final var otherObject = candidate.getEObjectOrProxy();
 
-      if (object != otherObject && getAssociatedClusterType(candidate.getEClass()) == clusterType
-              && !otherObject.eIsProxy()
+      if (object != otherObject && !otherObject.eIsProxy()
               || !candidate.getEObjectURI().equals(description.getEObjectURI()))
       {
         createDuplicateNameError(description, clusterType, acceptor);

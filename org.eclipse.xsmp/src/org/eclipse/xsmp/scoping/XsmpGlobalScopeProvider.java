@@ -24,10 +24,11 @@ import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
 {
-
   @Inject
   private IResourceDescription.Manager descriptionManager;
 
@@ -41,10 +42,12 @@ public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
     if (xsmpcatDescription == null)
     {
       final var url = getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat");
+
       if (url == null)
       {
         throw new IllegalStateException("Unable to load ecss.smp.xsmpcat");
       }
+
       final var uri = URI.createURI(url.toString());
 
       final var resource = resourceFactory.createResource(uri);
