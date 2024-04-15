@@ -55,7 +55,6 @@ export async function createProjectWizard() {
     const profiles = [
         { id: xsmpSdkProfileId, label: "XSMP-SDK Profile" },
         { id: esaCdkProfileId, label: "ESA-CDK Profile" },
-        { id: esaCdkLegacyProfileId, label: "ESA-CDK Legacy Profile (Preview)" }
     ];
 
     const profile = await vscode.window.showQuickPick(profiles, {
