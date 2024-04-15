@@ -406,16 +406,20 @@ public abstract class NamedElementImplCustom extends NamedElementImpl
     final var sb = new StringBuilder();
     sb.append("/**\n");
     var tagUpdated = false;
+    if (feature == XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION)
+    {
+      if (value != null)
+      {
+        sb.append(value).append("\n");
+      }
+      tagUpdated = true;
+    }
+
     for (final var tag : doc.tags())
     {
       if (tag.getTagLength() == 0)
       {
-        if (feature == XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION)
-        {
-          sb.append(value).append("\n");
-          tagUpdated = true;
-        }
-        else
+        if (feature != XsmpPackage.Literals.NAMED_ELEMENT__DESCRIPTION)
         {
           sb.append(tag.getText(doc)).append("\n");
         }
