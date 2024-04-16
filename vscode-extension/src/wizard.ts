@@ -19,6 +19,7 @@ import * as os from "os";
 const esaCdkProfileId = "org.eclipse.xsmp.profile.esa-cdk";
 const esaCdkLegacyProfileId = "org.eclipse.xsmp.profile.esa-cdk-legacy";
 const xsmpSdkProfileId = "org.eclipse.xsmp.profile.xsmp-sdk";
+const tasMdkProfileId = "org.eclipse.xsmp.profile.tas-mdk";
 const smpToolId = "org.eclipse.xsmp.tool.smp"
 const pythonToolId = "org.eclipse.xsmp.tool.python"
 const adocToolId = "org.eclipse.xsmp.tool.adoc"
@@ -55,6 +56,7 @@ export async function createProjectWizard() {
     const profiles = [
         { id: xsmpSdkProfileId, label: "XSMP-SDK Profile" },
         { id: esaCdkProfileId, label: "ESA-CDK Profile" },
+        { id: tasMdkProfileId, label: "TAS-MDK Profile" },
     ];
 
     const profile = await vscode.window.showQuickPick(profiles, {

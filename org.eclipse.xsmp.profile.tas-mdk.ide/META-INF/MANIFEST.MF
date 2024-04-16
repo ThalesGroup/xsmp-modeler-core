@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.xsmp.profile.tas-mdk.ide
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.xsmp.profile.tas-mdk.ide
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.1.qualifier
 Export-Package: org.eclipse.xsmp.profile.tas_mdk.ide
 Bundle-SymbolicName: org.eclipse.xsmp.profile.tas-mdk.ide;singleton:=true
 Bundle-ActivationPolicy: lazy

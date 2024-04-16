@@ -31,6 +31,8 @@
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.eclipse.platform.ide"/>
     <setAttribute key="selected_features">
+        <setEntry value="com.cthing.cmakeed.feature:default"/>
+        <setEntry value="de.marw.cmake4eclipse.feature:default"/>
         <setEntry value="org.eclipse.buildship:default"/>
         <setEntry value="org.eclipse.cdt.autotools:default"/>
         <setEntry value="org.eclipse.cdt.cmake:default"/>
@@ -167,6 +169,7 @@
         <setEntry value="org.eclipse.xsmp.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.esa_cdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.esa_cdk_legacy.feature:default"/>
+        <setEntry value="org.eclipse.xsmp.profile.tas_mdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.xsmp_sdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.tool.adoc.feature:default"/>
         <setEntry value="org.eclipse.xsmp.tool.python.feature:default"/>

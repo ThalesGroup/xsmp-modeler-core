@@ -23,6 +23,8 @@ import org.eclipse.xsmp.model.xsmp.VisibilityKind
 import org.eclipse.xsmp.model.xsmp.String
 import org.eclipse.xsmp.model.xsmp.Array
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
+import org.eclipse.xsmp.model.xsmp.Property
+import org.eclipse.xsmp.model.xsmp.AccessKind
 
 class TasMdkComponentGenerator extends ComponentGenerator {
 
@@ -120,7 +122,10 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			{
 			    «FOR op : t.member.filter(Operation)»
 			    	«op.generateRqHandlerParam(t)»
-			    «ENDFOR»            
+			    «ENDFOR»
+			    «FOR property : t.member.filter(Property)»
+			    	«property.generateRqHandlerParam(t)»
+			    «ENDFOR»
 			}
 		'''
 	}
@@ -348,5 +353,27 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			}
 		'''
 	}
+    def CharSequence generateRqHandlerParam(Property p, NamedElementWithMembers container) {
 
+        '''
+            «IF p.access !== AccessKind.WRITE_ONLY»
+                if (handlers.find("get_«p.name»") == handlers.end()) {
+                    handlers["get_«p.name»"] = [](_Type & component, ::Smp::IRequest* request) {
+                        /// Invoke get_«p.name»
+                        request->SetReturnValue({«p.type.generatePrimitiveKind», component.get_«p.name»()});
+                    };
+                }
+            «ENDIF»
+            «IF p.access !== AccessKind.READ_ONLY»
+                if (handlers.find("set_«p.name»") == handlers.end()) {
+                    handlers["set_«p.name»"] = [](_Type & component, ::Smp::IRequest* request) {
+                        /// Invoke set_«p.name»
+                        «p.type.id» «p.name»;
+                        ::TasMdk::Request::initParameter(«p.name», request, "«p.name»", «p.type.generatePrimitiveKind»);
+                        component.set_«p.name»(«p.name»);
+                    };
+                }
+            «ENDIF»
+        '''
+    }
 }

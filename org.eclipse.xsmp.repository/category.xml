@@ -9,6 +9,9 @@
    <feature id="org.eclipse.xsmp.profile.esa_cdk.feature">
       <category name="main"/>
    </feature>
+   <feature id="org.eclipse.xsmp.profile.tas_mdk.feature">
+      <category name="main"/>
+   </feature>
    <feature id="org.eclipse.xsmp.feature.source">
       <category name="main.source"/>
    </feature>
@@ -16,6 +19,9 @@
       <category name="main.source"/>
    </feature>
    <feature id="org.eclipse.xsmp.profile.esa_cdk.feature.source">
+      <category name="main.source"/>
+   </feature>
+   <feature id="org.eclipse.xsmp.profile.tas_mdk.feature.source">
       <category name="main.source"/>
    </feature>
    <feature id="org.eclipse.xsmp.tool.python.feature">

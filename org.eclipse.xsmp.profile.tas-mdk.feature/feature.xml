@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.xsmp.profile.tas_mdk.feature"
       label="Thales Alenia Space Proprietary Profile"
-      version="1.1.0.qualifier">
+      version="1.1.1.qualifier">
 
    <copyright>
       Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
@@ -315,15 +315,11 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.xsmp.profile.xsmp-sdk"
-         download-size="0"
-         install-size="0"
+         id="org.eclipse.xsmp.profile.tas-mdk"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.xsmp.profile.xsmp-sdk.ui"
-         download-size="0"
-         install-size="0"
+         id="org.eclipse.xsmp.profile.tas-mdk.ui"
          version="0.0.0"/>
 
 </feature>
