@@ -598,7 +598,7 @@ public class XsmpUtil
     return attribute.getValue();
   }
 
-  protected Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
+  public Optional<Boolean> attributeBoolValue(NamedElement o, QualifiedName id)
   {
     final var v = attributeValue(o, id);
     if (v != null)
@@ -957,22 +957,26 @@ public class XsmpUtil
       case XsmpPackage.PARAMETER -> ((Parameter) parent).getType();
       case XsmpPackage.STRING, XsmpPackage.ARRAY, XsmpPackage.MULTIPLICITY -> findPrimitiveType(
               parent, QualifiedNames.Smp_Int64);
-      case XsmpPackage.FLOAT -> {
+      case XsmpPackage.FLOAT ->
+      {
         final var type = ((Float) parent).getPrimitiveType();
         yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Float64);
       }
-      case XsmpPackage.INTEGER -> {
+      case XsmpPackage.INTEGER ->
+      {
         final var type = ((org.eclipse.xsmp.model.xsmp.Integer) parent).getPrimitiveType();
         yield type != null ? type : findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       }
       case XsmpPackage.ENUMERATION_LITERAL -> findPrimitiveType(parent, QualifiedNames.Smp_Int32);
       case XsmpPackage.ENUMERATION -> (Type) parent;
-      case XsmpPackage.ATTRIBUTE -> {
+      case XsmpPackage.ATTRIBUTE ->
+      {
         final var type = ((Attribute) parent).getType();
         yield type instanceof final AttributeType attr ? attr.getType() : type;
       }
       case XsmpPackage.ATTRIBUTE_TYPE -> ((AttributeType) parent).getType();
-      case XsmpPackage.COLLECTION_LITERAL -> {
+      case XsmpPackage.COLLECTION_LITERAL ->
+      {
         final var collection = (CollectionLiteral) parent;
         yield getType(collection);
       }

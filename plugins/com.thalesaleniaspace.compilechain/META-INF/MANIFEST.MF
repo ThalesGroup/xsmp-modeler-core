@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CompileChain integration in Eclipse
+Bundle-SymbolicName: com.thalesaleniaspace.compilechain;singleton:=true
+Bundle-Version: 1.1.4.qualifier
+Automatic-Module-Name: com.thalesaleniaspace.compilechain
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.core.resources,
+ org.eclipse.cdt.core,
+ org.eclipse.cdt.managedbuilder.core

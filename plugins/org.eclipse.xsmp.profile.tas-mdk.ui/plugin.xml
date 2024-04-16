@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+    <extension point="org.eclipse.xsmp.ui.profile">
+        <profile class="org.eclipse.xsmp.profile.tas_mdk.ui.TasMdkProfile">
+        </profile>
+    </extension>
+    <extension
+        point="org.eclipse.xtext.ui.projectTemplate">
+        <projectTemplateProvider
+            class="org.eclipse.xsmp.profile.tas_mdk.ui.TasMdkExecutableExtensionFactory:org.eclipse.xsmp.profile.tas_mdk.ui.wizard.TasMdkProjectTemplateProvider"
+            grammarName="org.eclipse.xsmp.Xsmpcat">
+        </projectTemplateProvider>
+    </extension>
+</plugin>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.xsmp.profile.tas-mdk
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.xsmp.profile.tas-mdk
+Bundle-Vendor: Thales Alenia Space
+Bundle-Version: 1.1.4.qualifier
+Bundle-SymbolicName: org.eclipse.xsmp.profile.tas-mdk;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xsmp.generator.cpp,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.xsmp.profile.tas_mdk,
+ org.eclipse.xsmp.profile.tas_mdk.generator,
+ org.eclipse.xsmp.profile.tas_mdk.generator.cpp,
+ org.eclipse.xsmp.profile.tas_mdk.generator.cpp.member,
+ org.eclipse.xsmp.profile.tas_mdk.generator.cpp.type,
+ org.eclipse.xsmp.profile.tas_mdk.validation

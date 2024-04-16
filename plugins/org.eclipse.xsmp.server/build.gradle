@@ -7,6 +7,7 @@ dependencies {
     api project(':plugins:org.eclipse.xsmp.profile.xsmp-sdk.ide')
     api project(':plugins:org.eclipse.xsmp.profile.esa-cdk.ide')
     api project(':plugins:org.eclipse.xsmp.profile.esa-cdk-legacy.ide')
+    api project(':plugins:org.eclipse.xsmp.profile.tas-mdk.ide')
 	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
 }
 

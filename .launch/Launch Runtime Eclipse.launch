@@ -24,6 +24,7 @@
     </listAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl}"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
@@ -31,32 +32,20 @@
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.eclipse.platform.ide"/>
     <setAttribute key="selected_features">
-        <setEntry value="org.eclipse.buildship:default"/>
-        <setEntry value="org.eclipse.cdt.autotools:default"/>
-        <setEntry value="org.eclipse.cdt.cmake:default"/>
         <setEntry value="org.eclipse.cdt.gdb:default"/>
         <setEntry value="org.eclipse.cdt.gnu.build:default"/>
         <setEntry value="org.eclipse.cdt.gnu.debug:default"/>
         <setEntry value="org.eclipse.cdt.gnu.dsf:default"/>
-        <setEntry value="org.eclipse.cdt.meson:default"/>
         <setEntry value="org.eclipse.cdt.native:default"/>
         <setEntry value="org.eclipse.cdt.platform:default"/>
         <setEntry value="org.eclipse.cdt:default"/>
-        <setEntry value="org.eclipse.e4.rcp.source:default"/>
         <setEntry value="org.eclipse.e4.rcp:default"/>
-        <setEntry value="org.eclipse.ecf.core.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.core.feature:default"/>
-        <setEntry value="org.eclipse.ecf.core.ssl.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.filetransfer.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.httpclient5.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.filetransfer.httpclient5.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.httpclientjava.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.filetransfer.httpclientjava.feature:default"/>
-        <setEntry value="org.eclipse.ecf.filetransfer.ssl.feature.source:default"/>
         <setEntry value="org.eclipse.ecf.filetransfer.ssl.feature:default"/>
-        <setEntry value="org.eclipse.egit:default"/>
         <setEntry value="org.eclipse.emf.codegen.ecore.source:default"/>
         <setEntry value="org.eclipse.emf.codegen.ecore.ui.source:default"/>
         <setEntry value="org.eclipse.emf.codegen.ecore.ui:default"/>
@@ -81,13 +70,6 @@
         <setEntry value="org.eclipse.emf.ecore.editor.source:default"/>
         <setEntry value="org.eclipse.emf.ecore.editor:default"/>
         <setEntry value="org.eclipse.emf.ecore.source:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.lib.source:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.lib:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.sdk:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.source:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.ui.source:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore.ui:default"/>
-        <setEntry value="org.eclipse.emf.ecore.xcore:default"/>
         <setEntry value="org.eclipse.emf.ecore:default"/>
         <setEntry value="org.eclipse.emf.edit.source:default"/>
         <setEntry value="org.eclipse.emf.edit.ui.source:default"/>
@@ -108,65 +90,20 @@
         <setEntry value="org.eclipse.emf.sdk:default"/>
         <setEntry value="org.eclipse.emf.source:default"/>
         <setEntry value="org.eclipse.emf:default"/>
-        <setEntry value="org.eclipse.epp.mpc:default"/>
-        <setEntry value="org.eclipse.epp.package.common.feature:default"/>
-        <setEntry value="org.eclipse.epp.package.dsl.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.core.feature.source:default"/>
         <setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.discovery.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.extras.feature.source:default"/>
         <setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.rcp.feature.source:default"/>
         <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
-        <setEntry value="org.eclipse.equinox.p2.user.ui.source:default"/>
         <setEntry value="org.eclipse.equinox.p2.user.ui:default"/>
-        <setEntry value="org.eclipse.help.source:default"/>
         <setEntry value="org.eclipse.help:default"/>
-        <setEntry value="org.eclipse.jdt.astview.feature:default"/>
-        <setEntry value="org.eclipse.jdt.bcoview.feature:default"/>
-        <setEntry value="org.eclipse.jdt.jeview.feature:default"/>
-        <setEntry value="org.eclipse.jdt.source:default"/>
         <setEntry value="org.eclipse.jdt:default"/>
-        <setEntry value="org.eclipse.jgit.gpg.bc:default"/>
-        <setEntry value="org.eclipse.jgit.http.apache:default"/>
-        <setEntry value="org.eclipse.jgit.ssh.apache:default"/>
-        <setEntry value="org.eclipse.jgit:default"/>
-        <setEntry value="org.eclipse.justj.epp:default"/>
         <setEntry value="org.eclipse.lsp4j.sdk:default"/>
-        <setEntry value="org.eclipse.m2e.feature:default"/>
-        <setEntry value="org.eclipse.m2e.lemminx.feature:default"/>
-        <setEntry value="org.eclipse.m2e.logback.feature:default"/>
-        <setEntry value="org.eclipse.mylyn.wikitext.feature:default"/>
-        <setEntry value="org.eclipse.oomph.p2:default"/>
-        <setEntry value="org.eclipse.oomph.setup.core:default"/>
-        <setEntry value="org.eclipse.oomph.setup:default"/>
-        <setEntry value="org.eclipse.pde.source:default"/>
-        <setEntry value="org.eclipse.pde.spies.source:default"/>
-        <setEntry value="org.eclipse.pde.spies:default"/>
         <setEntry value="org.eclipse.pde:default"/>
-        <setEntry value="org.eclipse.platform.source:default"/>
         <setEntry value="org.eclipse.platform:default"/>
-        <setEntry value="org.eclipse.rcp.source:default"/>
         <setEntry value="org.eclipse.rcp:default"/>
-        <setEntry value="org.eclipse.sdk:default"/>
-        <setEntry value="org.eclipse.tm.terminal.connector.local.feature:default"/>
-        <setEntry value="org.eclipse.tm.terminal.connector.ssh.feature:default"/>
-        <setEntry value="org.eclipse.tm.terminal.connector.telnet.feature:default"/>
-        <setEntry value="org.eclipse.tm.terminal.control.feature:default"/>
-        <setEntry value="org.eclipse.tm.terminal.feature:default"/>
-        <setEntry value="org.eclipse.tm.terminal.view.feature:default"/>
-        <setEntry value="org.eclipse.userstorage:default"/>
-        <setEntry value="org.eclipse.wildwebdeveloper.embedder.node.feature:default"/>
-        <setEntry value="org.eclipse.wildwebdeveloper.feature:default"/>
-        <setEntry value="org.eclipse.wildwebdeveloper.xml.feature:default"/>
-        <setEntry value="org.eclipse.wst.common_core.feature:default"/>
-        <setEntry value="org.eclipse.wst.common_ui.feature:default"/>
-        <setEntry value="org.eclipse.wst.xml_core.feature:default"/>
-        <setEntry value="org.eclipse.wst.xml_ui.feature:default"/>
-        <setEntry value="org.eclipse.wst.xml_userdoc.feature:default"/>
         <setEntry value="org.eclipse.xsmp.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.esa_cdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.esa_cdk_legacy.feature:default"/>
+        <setEntry value="org.eclipse.xsmp.profile.tas_mdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.profile.xsmp_sdk.feature:default"/>
         <setEntry value="org.eclipse.xsmp.tool.adoc.feature:default"/>
         <setEntry value="org.eclipse.xsmp.tool.python.feature:default"/>
@@ -182,7 +119,6 @@
         <setEntry value="org.eclipse.xtext.xbase:default"/>
         <setEntry value="org.eclipse.xtext.xtext.ui.graph:default"/>
         <setEntry value="org.eclipse.xtext.xtext.ui:default"/>
-        <setEntry value="org.python.pydev.feature:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>

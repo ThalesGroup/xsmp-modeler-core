@@ -63,6 +63,11 @@
 		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.feature</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.ide</module>
 		<module>org.eclipse.xsmp.profile.esa-cdk-legacy.ui</module>
+		<module>org.eclipse.xsmp.profile.tas-mdk</module>
+		<module>org.eclipse.xsmp.profile.tas-mdk.feature</module>
+		<module>org.eclipse.xsmp.profile.tas-mdk.ide</module>
+		<module>org.eclipse.xsmp.profile.tas-mdk.ui</module>
+		<module>com.thalesaleniaspace.compilechain</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

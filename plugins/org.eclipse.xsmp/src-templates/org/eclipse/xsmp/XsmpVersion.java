@@ -18,5 +18,5 @@ public interface XsmpVersion
   /**
    * The current version of this plugin
    */
-  String VERSION = "${version}".replace("-SNAPSHOT", "");
+  String VERSION = "1.1.2".replace("-SNAPSHOT", "");
 }

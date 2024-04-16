@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_array" deleted="false" description="create an Array Type" enabled="true" id="org.eclipse.xsmp.xsmpcat.array" name="array">/** @uuid ${uuid} */
+array ${name} = ${type}[${cursor}]
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_association" deleted="false" description="create an Association" enabled="true" id="org.eclipse.xsmp.xsmpcat.association" name="association">/** description */
+association ${type:CrossReference(Association.type)} ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_catalogue" deleted="false" description="create a Catalogue" enabled="true" id="org.eclipse.xsmp.xsmpcat.Catalogue" name="catalogue">/**
+   * Specifies the SMP Component Model as Catalogue.
+   *
+   * @date ${gdate}
+   * @author ${user}
+   * @title Catalogue
+   * @version 1.0
+   */
+catalogue ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_constant" deleted="false" description="create a Constant" enabled="true" id="org.eclipse.xsmp.xsmpcat.constant" name="constant">/** description */
+constant ${type:CrossReference(Constant.type)} ${name} = ${cursor}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_container" deleted="false" description="create a Container" enabled="true" id="org.eclipse.xsmp.xsmpcat.container" name="container">/** description */
+container ${type:CrossReference(Container.type)}[*] ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_def" deleted="false" description="create an Operation" enabled="true" id="org.eclipse.xsmp.xsmpcat.operation" name="def">/** description */
+def void ope_${name} (${cursor})
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_entrypoint" deleted="false" description="create an EntryPoint" enabled="true" id="org.eclipse.xsmp.xsmpcat.entrypoint" name="entrypoint">/** description */
+entrypoint ept_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_enum" deleted="false" description="create an Enumeration Type" enabled="true" id="org.eclipse.xsmp.xsmpcat.enumeration" name="enum">/** @uuid ${uuid} */
+enum ${name}
+{
+    ${cursor} = 0
+}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_event" deleted="false" description="create an Event Type" enabled="true" id="org.eclipse.xsmp.xsmpcat.event" name="event">/** @uuid ${uuid} */
+event ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_eventsink" deleted="false" description="create an Event Sink" enabled="true" id="org.eclipse.xsmp.xsmpcat.eventsink" name="eventsink">/** description */
+eventsink ${type:CrossReference(EventSink.type)} esi_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_eventsource" deleted="false" description="create an Event Source" enabled="true" id="org.eclipse.xsmp.xsmpcat.eventsource" name="eventsource">/** description */
+eventsource ${type:CrossReference(EventSource.type)} eso_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_field" deleted="false" description="create a feature Field" enabled="true" id="org.eclipse.xsmp.xsmpcat.field" name="field">/** description */
+field ${type:CrossReference(Field.type)} fea_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_field" deleted="false" description="create an input Field" enabled="true" id="org.eclipse.xsmp.xsmpcat.input" name="input">/** description */
+input field ${type:CrossReference(Field.type)} inp_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_field" deleted="false" description="create an output Field" enabled="true" id="org.eclipse.xsmp.xsmpcat.output" name="output">/** description */
+output field ${type:CrossReference(Field.type)} out_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_field" deleted="false" description="create a state Field" enabled="true" id="org.eclipse.xsmp.xsmpcat.state" name="state">/** description */
+field ${type:CrossReference(Field.type)} sta_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_float" deleted="false" description="create a new Float" enabled="true" id="org.eclipse.xsmp.xsmpcat.float" name="float">/** @uuid ${uuid} */
+float ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_integer" deleted="false" description="create an Integer Type" enabled="true" id="org.eclipse.xsmp.xsmpcat.integer" name="integer">/** @uuid ${uuid} */
+integer ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_interface" deleted="false" description="create an Interface" enabled="true" id="org.eclipse.xsmp.xsmpcat.interface" name="interface">/** @uuid ${uuid} */
+interface ${name}
+{
+    ${cursor}
+}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_model" deleted="false" description="create a Model" enabled="true" id="org.eclipse.xsmp.xsmpcat.model" name="model">/** @uuid ${uuid} */
+model ${name} extends TasMdk.Model
+{
+    ${cursor}
+}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_namespace" deleted="false" description="create a Namespace" enabled="true" id="org.eclipse.xsmp.xsmpcat.Namespace" name="namespace">namespace ${name}
+{
+    ${cursor}
+} // namespace ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcore.Namespace" deleted="false" description="create a Namespace" enabled="true" name="namespace">namespace ${name}
+{
+    ${cursor}
+} // namespace ${name}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_property" deleted="false" description="create a Property" enabled="true" id="org.eclipse.xsmp.xsmpcat.property" name="property">/** description */
+property ${type:CrossReference(Property.type)} ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_reference" deleted="false" description="create a Reference" enabled="true" id="org.eclipse.xsmp.xsmpcat.reference" name="reference">/** description */
+reference ${interface:CrossReference(Reference.interface)}[*] ref_${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_service" deleted="false" description="create a Service" enabled="true" id="org.eclipse.xsmp.xsmpcat.service" name="service">/** @uuid ${uuid} */
+service ${name} extends TasMdk.Service
+{
+    ${cursor}
+}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_string" deleted="false" description="create a String Type" enabled="true" id="org.eclipse.xsmp.xsmpcat.string" name="string">/** @uuid ${uuid} */
+string ${name}[${cursor}]
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_struct" deleted="false" description="create a Structure" enabled="true" id="org.eclipse.xsmp.xsmpcat.structure" name="struct">/** @uuid ${uuid} */
+struct ${name}
+{
+    ${cursor}
+}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_using" deleted="false" description="create a Value Reference" enabled="true" id="org.eclipse.xsmp.xsmpcat.valuereference" name="using">/** @uuid ${uuid} */
+using ${name} = ${type:CrossReference(ValueReference.type)}*
+</template></templates>
