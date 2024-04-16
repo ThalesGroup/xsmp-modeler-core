@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.xsmp.ide,
  org.eclipse.lsp4j.jsonrpc,
  com.google.gson;bundle-version="2.10.1",
  org.eclipse.xsmp.tool.adoc.ide;bundle-version="1.1.0",
- org.eclipse.xsmp.profile.esa-cdk-legacy.ide;bundle-version="1.1.0"
+ org.eclipse.xsmp.profile.esa-cdk-legacy.ide;bundle-version="1.1.0",
+ org.eclipse.xsmp.profile.tas-mdk.ide;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.xsmp.server

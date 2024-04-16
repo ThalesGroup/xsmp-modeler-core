@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_association" deleted="false" description="create an Association" enabled="true" id="com.thalesaleniaspace.xsmp.association" name="association">/** description */
+association ${type:CrossReference(Association.type)} ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_catalogue" deleted="false" description="create a Catalogue" enabled="true" id="com.thalesaleniaspace.xsmp.Catalogue" name="catalogue">/**
+ * Specifies the SMP Component Model as Catalogue.
+ *
+ * @date ${gdate}
+ * @author ${user}
+ * @title Catalogue
+ */
+catalogue ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_constant" deleted="false" description="create a Constant" enabled="true" id="com.thalesaleniaspace.xsmp.constant" name="constant">/** description */
+constant ${type:CrossReference(Constant.type)} ${name} = ${cursor}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_def" deleted="false" description="create an Operation" enabled="true" id="com.thalesaleniaspace.xsmp.operation" name="def">/** description */
+def void ope_${name} (${cursor})
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_entrypoint" deleted="false" description="create an EntryPoint" enabled="true" id="com.thalesaleniaspace.xsmp.entrypoint" name="entrypoint">/** Description */
+entrypoint ept_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_enum" deleted="false" description="create an Enumeration Type" enabled="true" id="com.thalesaleniaspace.xsmp.enumeration" name="enum">/**
+ * @uuid ${uuid}
+ */
+enum ${name}
+{
+	${cursor} = 0
+}
+	</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_event" deleted="false" description="create an Event Type" enabled="true" id="com.thalesaleniaspace.xsmp.event" name="event">/**
+ * @uuid ${uuid}
+ */
+event ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_eventsink" deleted="false" description="create an Event Sink" enabled="true" id="com.thalesaleniaspace.xsmp.eventsink" name="eventsink">/** Description */
+eventsink ${type:CrossReference(EventSink.type)} esi_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_eventsource" deleted="false" description="create an Event Source" enabled="true" id="com.thalesaleniaspace.xsmp.eventsource" name="eventsource">/** Description */
+eventsource ${type:CrossReference(EventSource.type)} eso_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.ComponentMember" deleted="false" description="Create a feature field" enabled="true" id="com.thalesaleniaspace.xsmp.feature" name="feature">/** Description */
+field ${type:CrossReference(Field.type)} fea_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_field" deleted="false" description="Create a Field" enabled="true" name="field">field ${type:CrossReference(Field.type)} ${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_float" deleted="false" description="create a Float Type" enabled="true" id="com.thalesaleniaspace.xsmp.float" name="float">/**
+ * @uuid ${uuid}
+ */
+float ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.ComponentMember" deleted="false" description="Create an input Field" enabled="true" id="com.thalesaleniaspace.xsmp.input" name="input">/** Description */
+input field ${type:CrossReference(Field.type)} inp_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_integer" deleted="false" description="create an Integer Type" enabled="true" id="com.thalesaleniaspace.xsmp.integer" name="integer">/**
+ * @uuid ${uuid}
+ */
+integer ${name}
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_interface" deleted="false" description="create an Interface" enabled="true" id="com.thalesaleniaspace.xsmp.interface" name="interface">/**
+ * @uuid ${uuid}
+ */
+interface ${name}
+{
+	${cursor}
+}
+	</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_model" deleted="false" description="create a Model" enabled="true" id="com.thalesaleniaspace.xsmp.model" name="model">/**
+ * @uuid ${uuid}
+ */
+model ${name} extends TasMdk.Model
+{
+	${cursor}
+}
+	</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_namespace" deleted="false" description="create a Namespace" enabled="true" id="com.thalesaleniaspace.xsmp.Namespace" name="namespace">namespace ${name}
+{
+	${cursor}
+}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.ComponentMember" deleted="false" description="Create an output Field" enabled="true" id="com.thalesaleniaspace.xsmp.output" name="output">/** Description */
+output field ${type:CrossReference(Field.type)} out_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_property" deleted="false" description="create a Property" enabled="true" id="com.thalesaleniaspace.xsmp.property" name="property">/** Description */
+property ${type:CrossReference(Property.type)} ${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_reference" deleted="false" description="create a Reference" enabled="true" id="com.thalesaleniaspace.xsmp.reference" name="reference">/** 
+ * Description
+ */
+reference ${interface:CrossReference(Reference.interface)}[*] ref_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_service" deleted="false" description="create a Service" enabled="true" id="com.thalesaleniaspace.xsmp.service" name="service">/**
+ * @uuid ${uuid}
+ */
+service ${name} extends TasMdk.Service
+{
+	${cursor}
+}
+	</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.ComponentMember" deleted="false" description="Create a state Field" enabled="true" id="com.thalesaleniaspace.xsmp.state" name="state">/** Description */
+field ${type:CrossReference(Field.type)} sta_${name}
+${cursor}</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_string" deleted="false" description="create a String Type" enabled="true" id="com.thalesaleniaspace.xsmp.string" name="string">/**
+ * @uuid ${uuid}
+ */
+string ${name} [${cursor}]
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_struct" deleted="false" description="create a Structure" enabled="true" id="com.thalesaleniaspace.xsmp.structure" name="struct">/**
+ * @uuid ${uuid}
+ */
+struct ${name}
+{
+	${cursor}
+}
+	</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_using" deleted="false" description="create a Value Reference" enabled="true" id="com.thalesaleniaspace.xsmp.valuereference" name="using">/**
+ * @uuid ${uuid}
+ */
+using ${name} = ${type:CrossReference(ValueReference.type)}*
+</template><template autoinsert="true" context="org.eclipse.xsmp.Xsmpcat.kw_using" deleted="false" description="create an Array Type" enabled="true" id="com.thalesaleniaspace.xsmp.array" name="using">/**
+ * @uuid ${uuid}
+ */
+using ${name} = ${type}[${cursor}]
+</template></templates>
