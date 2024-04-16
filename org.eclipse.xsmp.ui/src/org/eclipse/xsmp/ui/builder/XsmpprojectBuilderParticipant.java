@@ -10,11 +10,11 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.builder;
 
-import static org.eclipse.xtext.builder.impl.BuildManagerAccess.findBuilder;
-
+import java.util.Collections;
 import java.util.Objects;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -22,11 +22,13 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.xsmp.ui.workspace.XsmpEclipseProjectConfigProvider;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.builder.BuilderParticipant;
+import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 
 import com.google.inject.Inject;
 
+@SuppressWarnings("restriction")
 public class XsmpprojectBuilderParticipant extends BuilderParticipant
 {
 
@@ -36,7 +38,7 @@ public class XsmpprojectBuilderParticipant extends BuilderParticipant
   private static final QualifiedName configKey = new QualifiedName(
           XsmpprojectBuilderParticipant.class.getName() + ".config", "config");
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation" })
   @Override
   protected void handleChangedContents(Delta delta, IBuildContext context, IFileSystemAccess access)
     throws CoreException
@@ -45,12 +47,14 @@ public class XsmpprojectBuilderParticipant extends BuilderParticipant
     {
       return;
     }
+    final var resource = context.getResourceSet().getResource(delta.getUri(), true);
+    saveResourceStorage(resource, access);
 
     final var project = context.getBuiltProject();
 
     final var oldConfig = (IXsmpProjectConfig) project.getSessionProperty(configKey);
     final var config = configProvider.createProjectConfig(project);
-
+    // ignore changes that does not affect the config
     if (Objects.equals(config, oldConfig))
     {
       return;
@@ -58,25 +62,19 @@ public class XsmpprojectBuilderParticipant extends BuilderParticipant
 
     project.setSessionProperty(configKey, config);
 
-    final var referencedProjects = config.getDependencies().stream()
-            .map(name -> ResourcesPlugin.getWorkspace().getRoot().getProject(name))
-            .toArray(s -> new IProject[s]);
-
+    // update project dependencies. It will trigger a rebuild of this project when a dependency
+    // changes
     final var description = project.getDescription();
-    description.setDynamicReferences(referencedProjects);
+    description.setDynamicReferences(config.getDependencies().stream()
+            .map(name -> ResourcesPlugin.getWorkspace().getRoot().getProject(name))
+            .toArray(s -> new IProject[s]));
 
-    project.setDescription(description, new NullProgressMonitor());
-    if (oldConfig != null)
-    {
-      @SuppressWarnings("restriction")
-      final var builder = findBuilder(project);
-      if (builder != null)
-      {
-        builder.forgetLastBuiltState();
-      }
-    }
+    final var pm = new NullProgressMonitor();
+    project.setDescription(description, pm);
 
-    context.needRebuild(project);
+    // trigger a full build (xtext builder only)
+    project.build(IncrementalProjectBuilder.FULL_BUILD, XtextBuilder.BUILDER_ID,
+            Collections.emptyMap(), pm);
   }
 
 }
