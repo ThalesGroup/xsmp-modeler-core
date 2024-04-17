@@ -24,6 +24,7 @@ import org.eclipse.xsmp.model.xsmp.EventSource;
 import org.eclipse.xsmp.model.xsmp.EventType;
 import org.eclipse.xsmp.model.xsmp.Field;
 import org.eclipse.xsmp.model.xsmp.Float;
+import org.eclipse.xsmp.model.xsmp.IncludePath;
 import org.eclipse.xsmp.model.xsmp.Integer;
 import org.eclipse.xsmp.model.xsmp.NamedElement;
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMultiplicity;
@@ -296,6 +297,15 @@ public class XsmpLabelProvider
   }
 
   protected String text(SourcePath ele)
+  {
+    if (ele.getName() == null || ele.getName().isEmpty())
+    {
+      return ".";
+    }
+    return ele.getName();
+  }
+
+  protected String text(IncludePath ele)
   {
     if (ele.getName() == null || ele.getName().isEmpty())
     {

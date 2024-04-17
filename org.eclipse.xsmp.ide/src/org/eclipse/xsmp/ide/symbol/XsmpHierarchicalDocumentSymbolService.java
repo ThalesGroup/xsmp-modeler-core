@@ -11,12 +11,13 @@
 package org.eclipse.xsmp.ide.symbol;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.xsmp.model.xsmp.Document;
+import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.resource.XtextResource;
@@ -33,45 +34,48 @@ public class XsmpHierarchicalDocumentSymbolService extends HierarchicalDocumentS
   @Inject
   private OperationCanceledManager operationCanceledManager;
 
+  private void collectSymbols(EObject eObject, List<DocumentSymbol> symbols,
+          CancelIndicator cancelIndicator)
+  {
+    operationCanceledManager.checkCanceled(cancelIndicator);
+
+    final var symbol = symbolMapper.toDocumentSymbol(eObject);
+    if (isValid(symbol) && symbol.getName() != null && !symbol.getName().isEmpty())
+    {
+      symbols.add(symbol);
+      if (eObject instanceof final NamedElementWithMembers ctn)
+      {
+        for (final var member : ctn.getMember())
+        {
+          collectSymbols(member, symbol.getChildren(), cancelIndicator);
+        }
+      }
+    }
+
+  }
+
   @Override
   public List<DocumentSymbol> getSymbols(XtextResource resource, CancelIndicator cancelIndicator)
   {
-    final Map<EObject, DocumentSymbol> allSymbols = new HashMap<>();
+    if (resource.getContents().isEmpty())
+    {
+      return Collections.emptyList();
+    }
+
     final List<DocumentSymbol> rootSymbols = new ArrayList<>();
-    final var itr = getAllContents(resource);
-    while (itr.hasNext())
+    if (resource.getContents().get(0) instanceof final Document doc)
     {
       operationCanceledManager.checkCanceled(cancelIndicator);
-      final var next = toEObject(itr.next());
-      if (next.isPresent())
+      final var symbol = symbolMapper.toDocumentSymbol(doc);
+      if (isValid(symbol) && symbol.getName() != null && !symbol.getName().isEmpty())
       {
-        final var object = next.get();
-        final var symbol = symbolMapper.toDocumentSymbol(object);
-        if (isValid(symbol) && symbol.getName() != null && !symbol.getName().isEmpty())
+        rootSymbols.add(symbol);
+      }
+      if (doc instanceof final NamedElementWithMembers elem)
+      {
+        for (final var member : elem.getMember())
         {
-          allSymbols.put(object, symbol);
-          var parent = object.eContainer();
-          if (parent == null)
-          {
-            rootSymbols.add(symbol);
-          }
-          else
-          {
-            var parentSymbol = allSymbols.get(parent);
-            while (parentSymbol == null && parent != null)
-            {
-              parent = parent.eContainer();
-              parentSymbol = allSymbols.get(parent);
-            }
-            if (parentSymbol == null)
-            {
-              rootSymbols.add(symbol);
-            }
-            else
-            {
-              parentSymbol.getChildren().add(symbol);
-            }
-          }
+          collectSymbols(member, rootSymbols, cancelIndicator);
         }
       }
     }

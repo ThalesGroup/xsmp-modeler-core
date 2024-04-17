@@ -10,6 +10,7 @@
 ******************************************************************************/
 package org.eclipse.xsmp.ui.labeling;
 
+import org.eclipse.xsmp.model.xsmp.IncludePath;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.ProjectReference;
 import org.eclipse.xsmp.model.xsmp.SourcePath;
@@ -23,6 +24,15 @@ public class XsmpprojectLabelProvider extends XsmpLabelProvider
 {
 
   String text(SourcePath ele)
+  {
+    if (ele.getName() == null || ele.getName().isEmpty())
+    {
+      return ".";
+    }
+    return ele.getName();
+  }
+
+  String text(IncludePath ele)
   {
     if (ele.getName() == null || ele.getName().isEmpty())
     {
