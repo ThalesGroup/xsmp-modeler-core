@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension point="org.eclipse.core.resources.variableResolvers">
+        <variableResolver
+              class="com.thalesaleniaspace.compilechain.RootObjVariable"
+              variable="ROOT_OBJ">
+        </variableResolver>
+    </extension>
+    
+  <extension
+       point="org.eclipse.cdt.core.LanguageSettingsProvider">
+    <provider
+          class="com.thalesaleniaspace.compilechain.CompileChainSpecsDetector"
+          id="com.thalesaleniaspace.compilechain.CompileChainSpecsDetector"
+          name="CompileChain Compiler Built-ins"
+          prefer-non-shared="true">
+       <language-scope
+             id="org.eclipse.cdt.core.gcc">
+       </language-scope>
+       <language-scope
+             id="org.eclipse.cdt.core.g++">
+       </language-scope>
+    </provider>
+ </extension>
+   <extension
+         id="org.eclipse.cdt.managedbuilder.core.compilechainbuilder"
+         name="Compile Chain Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true"
+            callOnEmptyDelta="true"
+            isConfigurable="true">
+         <run
+               class="com.thalesaleniaspace.compilechain.builder.CompileChainBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="compileChainNature"
+         name="Compile Chain Nature"
+         point="org.eclipse.core.resources.natures">
+      <requires-nature
+            id="org.eclipse.cdt.core.cnature">
+      </requires-nature>
+      <runtime>
+         <run
+               class="com.thalesaleniaspace.compilechain.builder.CompileChainNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.eclipse.cdt.managedbuilder.core.compilechainbuilder">
+      </builder>
+   </extension>
+   
+    <extension
+         point="org.eclipse.cdt.make.core.MakeTargetBuilder">
+      <builder
+            builderID="org.eclipse.cdt.managedbuilder.core.compilechainbuilder"
+            id="org.eclipse.cdt.build.CompileChainTargetBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.thalesaleniaspace.compilechain.compileChainNature.category"
+            name="Compile Chain Nature commands">
+      </category>
+      <command
+            categoryId="com.thalesaleniaspace.compilechain.compileChainNature.category"
+            defaultHandler="com.thalesaleniaspace.compilechain.builder.AddRemoveCompileChainNatureHandler"
+            id="com.thalesaleniaspace.compilechain.addRemoveCompileChainNature"
+            name="Add/RemoveCompile Chain Nature">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="com.thalesaleniaspace.compilechain.addRemoveCompileChainNature"
+               label="Disable Compile Chain builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="com.thalesaleniaspace.compilechain.compileChainNature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.thalesaleniaspace.compilechain.addRemoveCompileChainNature"
+               label="Enable CompileChain builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="com.thalesaleniaspace.compilechain.compileChainNature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         id="Cp.builddef"
+         name="CompileChain Build Definition"
+         point="org.eclipse.cdt.managedbuilder.core.buildDefinitions">
+      <toolChain
+            configurationEnvironmentSupplier="com.thalesaleniaspace.compilechain.ConfigurationVariableSupplier"
+            id="com.thalesaleniaspace.compilechain.toolChain"
+            isAbstract="false"
+            languageSettingsProviders="com.thalesaleniaspace.compilechain.CompileChainSpecsDetector"
+            name="CompileChain"
+            superClass="cdt.managedbuild.toolchain.gnu.base"
+            supportsManagedBuild="true">
+         <builder
+               autoBuildTarget="all"
+               buildRunner="org.eclipse.cdt.managedbuilder.core.ExternalBuildRunner"
+               cleanBuildTarget="clean"
+               command="make"
+               id="com.thalesaleniaspace.compilechain.builder"
+               ignoreErrCmd="-k"
+               incrementalBuildTarget="all"
+               isAbstract="false"
+               isVariableCaseSensitive="false"
+               name="CompileChain Builder"
+               parallelBuildCmd="-j*"
+               parallelBuildOn="true"
+               parallelizationNumber="optimal"
+               supportsManagedBuild="true">
+         </builder>
+         <targetPlatform
+               binaryParser="org.eclipse.cdt.core.GNU_ELF"
+               id="com.thalesaleniaspace.compilechain.targetPlatform"
+               isAbstract="false"
+               name="CompileChain Target Platform"
+               superClass="cdt.managedbuild.target.gnu.builder.base">
+         </targetPlatform>
+      </toolChain>
+   </extension>
+   <extension
+         point="org.eclipse.cdt.core.CodeFormatter">
+      <codeFormatter
+            class="com.thalesaleniaspace.compilechain.CodeFormatter"
+            id="com.thalesaleniaspace.compilechain.codeFormatter"
+            name="CCSL">
+      </codeFormatter>
+   </extension>
+
+</plugin>
