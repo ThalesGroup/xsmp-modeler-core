@@ -15,8 +15,12 @@ import org.eclipse.xsmp.model.xsmp.Catalogue
 import org.eclipse.xsmp.model.xsmp.Model
 import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.model.xsmp.Service
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
+import com.google.inject.Inject
 
 class TasMdkCatalogueGenerator extends CatalogueGenerator {
+    
+    @Inject extension GeneratorUtil
 
     protected override dispatch CharSequence registerComponent(Model model) {
         '''
@@ -25,13 +29,13 @@ class TasMdkCatalogueGenerator extends CatalogueGenerator {
                                 "«model.name»", // name
                                 «model.description()», // description
                                 simulator, // parent
-                                «model.uuid», // UUID
-                                "::«model.fqn.toString("::")»",// type name
+                                «model.uuid()», // UUID
+                                "«model.id»",// type name
                                 [](::Smp::String8 name,
                                    ::Smp::String8 description,
                                    ::Smp::IObject* parent,
                                    ::Smp::Publication::ITypeRegistry* type_registry) {
-                                        return new ::«model.fqn.toString("::")»(name, description, parent, type_registry);
+                                        return new «model.id»(name, description, parent, type_registry);
                                    }, // instantiation callback
                                 typeRegistry // type registry
                                 ));
@@ -42,7 +46,7 @@ class TasMdkCatalogueGenerator extends CatalogueGenerator {
     protected override dispatch CharSequence registerComponent(Service service) {
         '''
             // Register Service «service.name»
-            simulator->AddService( new ::«service.fqn.toString("::")»(
+            simulator->AddService( new «service.id»(
                                 "«service.name»", // name
                                 «service.description()», // description
                                 simulator, // parent

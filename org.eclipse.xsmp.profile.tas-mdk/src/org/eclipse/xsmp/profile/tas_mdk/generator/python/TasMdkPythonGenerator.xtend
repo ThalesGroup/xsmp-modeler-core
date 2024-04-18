@@ -10,10 +10,14 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xsmp.model.xsmp.Component
 import org.eclipse.xsmp.model.xsmp.Document
+import org.eclipse.xsmp.documentation.CopyrightNoticeProvider
 
 class TasMdkPythonGenerator extends AbstractGenerator {
     
 	@Inject extension XsmpUtil
+	
+	@Inject
+	CopyrightNoticeProvider provider
 
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		Iterators::filter(input.getAllContents(), typeof(Component)).forEachRemaining([it|generate(it, fsa)])
@@ -47,7 +51,7 @@ class TasMdkPythonGenerator extends AbstractGenerator {
 		'''
 			#!/usr/bin/env python
 			# -*- coding: utf-8 -*-
-			# Copyright (C) «year(d)» THALES ALENIA SPACE FRANCE. All rights reserved
+			«provider.getCopyrightNotice(c.eResource, "# ")»
 			
 			# Import user-defined methods for model integration
 			from .user_code import configureInstance, extendInstance

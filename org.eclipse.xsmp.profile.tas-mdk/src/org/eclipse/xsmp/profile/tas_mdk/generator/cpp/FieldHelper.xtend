@@ -33,10 +33,10 @@ class FieldHelper {
     }
 
     def boolean isTasMdkField(Field f) {
-        return f.output || f.input || f.isFailure || f.isForcible || f.ofOutput || f.ofInput || f.ofFailure ||
-            f.type.isTasMdkFieldType
+        return !f.isStatic &&
+            (f.output || f.input || f.isFailure || f.isForcible || f.ofOutput || f.ofInput || f.ofFailure ||
+                f.type.isTasMdkFieldType)
     }
-
 
     private def dispatch boolean isTasMdkFieldType(Type t) {
         return false

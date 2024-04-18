@@ -15,6 +15,7 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.type.ArrayGenerator
 import org.eclipse.xsmp.profile.tas_mdk.generator.cpp.FieldHelper
 import org.eclipse.xsmp.model.xsmp.Array
+import org.eclipse.xsmp.model.xsmp.SimpleType
 
 class TasMdkArrayGenerator extends ArrayGenerator {
 
@@ -31,15 +32,15 @@ class TasMdkArrayGenerator extends ArrayGenerator {
 	override protected generateHeaderGenBody(Array t, boolean useGenPattern) {
 		'''
 			«t.comment»
-			typedef ::TasMdk::Types::Array<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()»> «t.name(useGenPattern)»;
+			typedef ::TasMdk::Types::Array<«t.itemType.id», «t.size.doGenerateExpression()»> «t.name(useGenPattern)»;
 			
 			«t.uuidDeclaration»
 			
 			void _Register_«t.name»(::Smp::Publication::ITypeRegistry* registry);
 			
 			template<bool ...Opts>
-			«IF useGenPattern»using _«t.name(useGenPattern)» = TasMdk::Types::«IF t.isSimpleArray»Simple«ENDIF»ArrayType<::«t.itemType.fqn.toString("::")», «t.size.doGenerateExpression()», Opts...>;
-			«ELSE»using _«t.name(useGenPattern)» = TasMdk::Types::«IF t.isSimpleArray»SimpleArrayType<::«t.itemType.fqn.toString("::")»«ELSE»ArrayType<«t.itemType.field_fqn»«ENDIF», «t.size.doGenerateExpression()», Opts...>;«ENDIF»
+			«IF useGenPattern»using _«t.name(useGenPattern)» = TasMdk::Types::«IF t.itemType instanceof SimpleType»Simple«ENDIF»ArrayType<«t.itemType.id», «t.size.doGenerateExpression()», Opts...>;
+			«ELSE»using _«t.name(useGenPattern)» = TasMdk::Types::«IF t.itemType instanceof SimpleType»SimpleArrayType<«t.itemType.id»«ELSE»ArrayType<«t.itemType.field_fqn»«ENDIF», «t.size.doGenerateExpression()», Opts...>;«ENDIF»
 		'''
 	}
 

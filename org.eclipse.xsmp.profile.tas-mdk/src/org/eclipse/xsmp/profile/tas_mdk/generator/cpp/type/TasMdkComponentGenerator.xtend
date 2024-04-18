@@ -61,7 +61,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			else if (f.type instanceof Array)
 				fieldType = '''ArrayField<«f.type.field_fqn»>'''
 			else
-				fieldType = '''SimpleField<::«f.type.fqn.toString("::")»>'''
+				fieldType = '''SimpleField<«f.type.id»>'''
 
 			'''
 				«f.comment»
@@ -106,7 +106,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			«t.declareMembersGen(useGenPattern, VisibilityKind.PRIVATE)»
 			
 			// ------------------------------------------------------------------------------------
-			// -------------------------- Constructors/Destructor --------------------------
+			// ------------------------- Constructors/Destructor -------------------------
 			// ------------------------------------------------------------------------------------
 			public:
 			    «constructorDeclaration(t, useGenPattern)»
@@ -138,7 +138,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			    ::Smp::Services::ILogger* logger,
 			    ::Smp::Services::ILinkRegistry* linkRegistry) {
 			    // Call base implementation first
-			    «IF t.base !== null»::«t.base.fqn.toString("::")»::Configure(logger, linkRegistry);«ENDIF»
+			    «IF t.base !== null»«t.base.id»::Configure(logger, linkRegistry);«ENDIF»
 			    if (Configure_Callback) {
 			    	Configure_Callback(logger, linkRegistry);
 			    }
@@ -147,7 +147,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			void «t.name(useGenPattern)»::Connect(::Smp::ISimulator* simulator) {
 			    «IF t.base !== null»
 			    	// Call mdk implementation first
-			    	::«t.base.fqn.toString("::")»::Connect(simulator);
+			    	«t.base.id»::Connect(simulator);
 			    «ENDIF»
 			    if (Connect_Callback) {
 			    	Connect_Callback(simulator);
@@ -160,7 +160,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 				}
 				   «IF t.base !== null»
 				   	// Call parent implementation last, to remove references to the Simulator and its services
-				   	::«t.base.fqn.toString("::")»::Disconnect();
+				   	«t.base.id»::Disconnect();
 				   «ENDIF»
 			}
 			
@@ -182,7 +182,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			    ::Smp::IPublication* receiver) {
 			    «IF t.base !== null»
 			    	// Call base class implementation first
-			    	::«t.base.fqn.toString("::")»::Publish(receiver);
+			    	«t.base.id»::Publish(receiver);
 			    «ENDIF»
 			    
 			    if (Publish_Callback) {
@@ -209,7 +209,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			    else {
 			        «IF t.base !== null»
 			        	// pass the request down to the base model
-			        	::«t.base.fqn.toString("::")»::Invoke(request);
+			        	«t.base.id»::Invoke(request);
 			        «ELSE»
 			        	// request does not match any operation provided by this model
 			        	throw ::TasMdk::InvalidOperationName(request->GetOperationName());
@@ -244,7 +244,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 	def CharSequence addCommonModelDefinitions() {
 		'''
 			// ----------------------------------------------------------------------------------
-			// -------------------------------- IComponent ---------------------------------
+			// ------------------------------- IComponent --------------------------------
 			// ----------------------------------------------------------------------------------
 			
 			    /// Publish fields, operations and properties of the model.
@@ -343,7 +343,7 @@ class TasMdkComponentGenerator extends ComponentGenerator {
 			    	«p.initParameter(context)»
 			    «ENDFOR»
 			    /// Invoke «o.name»
-			    «IF r !== null»::«r.type.fqn.toString("::")» p_«r.name» = «ENDIF»
+			    «IF r !== null»«r.type.id» p_«r.name» = «ENDIF»
 			    component.«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
 			    «FOR p : o.parameter»
 				«p.setParameter(context)»

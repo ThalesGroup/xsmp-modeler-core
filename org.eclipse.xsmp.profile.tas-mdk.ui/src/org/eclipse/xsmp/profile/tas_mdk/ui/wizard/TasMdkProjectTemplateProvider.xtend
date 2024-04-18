@@ -10,13 +10,13 @@ import java.time.temporal.ChronoUnit
 import java.util.Random
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Status
+import org.eclipse.xsmp.ui.^extension.ExtensionManager
 import org.eclipse.xsmp.ui.wizard.XsmpcatProjectFactory
 import org.eclipse.xtext.ui.wizard.template.IProjectGenerator
 import org.eclipse.xtext.ui.wizard.template.IProjectTemplateProvider
 import org.eclipse.xtext.ui.wizard.template.ProjectTemplate
 
 import static org.eclipse.core.runtime.IStatus.*
-import org.eclipse.xsmp.ui.^extension.ExtensionManager
 
 /**
  * Create a list with all project templates to be shown in the template new project wizard.
@@ -84,6 +84,8 @@ final class GramCatalogueProject {
 				</pydev_project>
 			''')
 			addFile('''smdl/«name».xsmpcat''', '''
+				// Copyright (C) ${year} THALES ALENIA SPACE. All rights reserved
+				
 				/**
 				 * Catalogue «name»
 				 * 

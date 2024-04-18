@@ -20,7 +20,7 @@ class TasMdkEntryPointGenerator extends EntryPointGenerator {
 	override collectIncludes(EntryPoint element, IncludeAcceptor acceptor) {
 		super.collectIncludes(element, acceptor)
 		
-		acceptor.userHeader("TasMdk/EntryPoint.h")
+		acceptor.userSource("TasMdk/EntryPoint.h")
 	}
 		override initialize(NamedElementWithMembers container, EntryPoint element, boolean useGenPattern) {
 		'''      

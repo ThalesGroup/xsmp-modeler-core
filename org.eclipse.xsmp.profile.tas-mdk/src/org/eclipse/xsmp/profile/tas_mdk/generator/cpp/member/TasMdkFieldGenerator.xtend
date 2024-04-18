@@ -19,33 +19,37 @@ import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 
 class TasMdkFieldGenerator extends FieldGenerator {
 
-	@Inject extension FieldHelper
+    @Inject extension FieldHelper
 
-	override collectIncludes(Field element, IncludeAcceptor acceptor) {
-		super.collectIncludes(element, acceptor)
+    override collectIncludes(Field element, IncludeAcceptor acceptor) {
+        super.collectIncludes(element, acceptor)
 
-		if (element.isTasMdkField)
-			acceptor.userHeader("TasMdk/Field.h")
-	}
+        if (element.isTasMdkField)
+            acceptor.userHeader("TasMdk/Field.h")
+    }
 
-	override Publish(Field element) {
-		if (element.isTasMdkField)
-			'''
-				// Publish field «element.name»
-				receiver->PublishField((Smp::IField*) &«element.name»);
-			'''
-		else
-			super.Publish(element)
-	}
-	
-	override initialize(NamedElementWithMembers container, Field f, boolean useGenPattern) {
-		if (f.isTasMdkField)
-			'''
-				// «f.name» initialization
-				«f.name»{"«f.name»", «f.description()», this, «f.viewKind», _type_registry, «f.type.uuid()»«IF f.^default !== null», «f.^default.generateExpression()»«ENDIF»}
-			'''
-		else
-			super.initialize(container, f, useGenPattern)
-	}
+    override Publish(Field element) {
+        if (element.isTasMdkField)
+            '''
+                // Publish field «element.name»
+                receiver->PublishField((Smp::IField*) &«element.name»);
+            '''
+        else
+            super.Publish(element)
+    }
+
+    override initialize(NamedElementWithMembers container, Field f, boolean useGenPattern) {
+        if (f.isTasMdkField)
+            '''
+                // «f.name» initialization
+                «f.name»{"«f.name»", «f.description()», this, «f.viewKindCpp()», _type_registry, «f.type.uuid()»«IF f.^default !== null», «f.^default.generateExpression()»«ENDIF»}
+            '''
+        else
+            super.initialize(container, f, useGenPattern)
+    }
+
+    override protected isDirectListInitialization(Field it) {
+        !isStatic()
+    }
 
 }

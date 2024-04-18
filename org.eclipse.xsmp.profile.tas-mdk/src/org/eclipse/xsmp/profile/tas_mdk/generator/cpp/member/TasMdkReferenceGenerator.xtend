@@ -14,20 +14,24 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.ReferenceGenerator
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 import org.eclipse.xsmp.model.xsmp.Reference
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
+import com.google.inject.Inject
 
 class TasMdkReferenceGenerator extends ReferenceGenerator {
+    
+    @Inject extension GeneratorUtil
 
 	override declareGen(NamedElementWithMembers type, Reference element, boolean useGenPattern) {
 		'''
 			«element.comment»
-			::TasMdk::Reference<::«element.interface.fqn.toString("::")»>* «element.name»;
+			::TasMdk::Reference<«element.interface.id»>* «element.name»;
 		'''
 	}
 
 	override initialize(NamedElementWithMembers container, Reference element, boolean useGenPattern) {
 		'''      
 			// Reference: «element.name»
-			«element.name» {new ::TasMdk::Reference<::«element.interface.fqn.toString("::")»>(
+			«element.name» {new ::TasMdk::Reference<«element.interface.id»>(
 			    "«element.name»",
 			    «element.description()»,
 			    this,

@@ -14,13 +14,17 @@ import org.eclipse.xsmp.generator.cpp.IncludeAcceptor
 import org.eclipse.xsmp.generator.cpp.member.ContainerGenerator
 import org.eclipse.xsmp.model.xsmp.NamedElementWithMembers
 import org.eclipse.xsmp.model.xsmp.Container
+import org.eclipse.xsmp.generator.cpp.GeneratorUtil
+import com.google.inject.Inject
 
 class TasMdkContainerGenerator extends ContainerGenerator {
+    
+    @Inject extension GeneratorUtil
 
 	override declareGen(NamedElementWithMembers type, Container element, boolean useGenPattern) {
 		'''
 			«element.comment»
-			::TasMdk::Container<::«element.type.fqn.toString("::")»>* «element.name»;
+			::TasMdk::Container<«element.type.id»>* «element.name»;
 		'''
 	}
 
@@ -34,7 +38,7 @@ class TasMdkContainerGenerator extends ContainerGenerator {
 	override initialize(NamedElementWithMembers container, Container element, boolean useGenPattern) {
 		'''      
 			// Container: «element.name»
-			«element.name» {new ::TasMdk::Container<::«element.type.fqn.toString("::")»>(
+			«element.name» {new ::TasMdk::Container<«element.type.id»>(
 			    "«element.name»",
 			    «element.description()»,
 			    this,
