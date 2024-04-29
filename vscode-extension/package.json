@@ -142,7 +142,7 @@
 		"eslint": "^9.1.0"
 	},
 	"dependencies": {
-		"vscode-languageclient": "^8.0.1"
+		"vscode-languageclient": "^9.0.1"
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
