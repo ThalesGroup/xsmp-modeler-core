@@ -17,7 +17,6 @@ import org.eclipse.xsmp.model.xsmp.Catalogue
 import org.eclipse.xsmp.model.xsmp.NamedElement
 import org.eclipse.xsmp.model.xsmp.Namespace
 import org.eclipse.xtext.EcoreUtil2
-import com.google.inject.name.Named
 
 abstract class AbstractFileGenerator<T extends NamedElement> {
 
@@ -29,14 +28,6 @@ abstract class AbstractFileGenerator<T extends NamedElement> {
 
     @Inject
     IProtectionGuardProvider guardProvider;
-
-    @Inject(optional=true)
-    @Named(CppConfiguration.CXX_STANDARD)
-    CxxStandard cxxStandard = CxxStandard.CXX_STD_11
-
-    def getCxxStandard() {
-        cxxStandard
-    }
 
     def protected CharSequence namespace(EObject object, CharSequence body) {
         val namespace = EcoreUtil2.getContainerOfType(object, Namespace)

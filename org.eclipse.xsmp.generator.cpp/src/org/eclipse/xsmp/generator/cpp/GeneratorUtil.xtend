@@ -46,11 +46,20 @@ import org.eclipse.xsmp.model.xsmp.Type
 import org.eclipse.xsmp.model.xsmp.UnaryOperation
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
+import com.google.inject.name.Named
 
 @Singleton
 class GeneratorUtil extends XsmpUtil {
 
     @Inject CommentProvider commentProvider
+    @Inject(optional=true)
+    @Named(CppConfiguration.CXX_STANDARD)
+    CxxStandard cxxStandard = CxxStandard.CXX_STD_11
+
+    // get the CXX standard version used by the generator
+    def getCxxStandard() {
+        cxxStandard
+    }
 
     final String generatedFilePattern = "%Gen"
 
@@ -318,7 +327,7 @@ class GeneratorUtil extends XsmpUtil {
     def CharSequence uuidDeclaration(Type it) {
         ''' 
             /// Universally unique identifier of type «name».
-            static constexpr ::Smp::Uuid Uuid_«name» «generateUUID()»;
+            «IF cxxStandard >= CxxStandard.CXX_STD_17»inline «ENDIF»constexpr ::Smp::Uuid Uuid_«name» «generateUUID()»;
         '''
     }
 
