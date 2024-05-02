@@ -17,6 +17,9 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(xsmp-sdk)
 
+if(WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif(WIN32)
 
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
 
