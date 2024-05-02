@@ -1,11 +1,12 @@
 # XSMP Modeler
 
-[![Gitpod - Code Now](https://img.shields.io/badge/Gitpod-code%20now-blue.svg?longCache=true)](https://gitpod.io#https://github.com/ThalesGroup/xsmp-modeler-core)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/labels/help%20wanted)
+[![Java Build](https://github.com/ThalesGroup/xsmp-modeler-core/actions/workflows/build.yml/badge.svg)](https://github.com/ThalesGroup/xsmp-modeler-core/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThalesGroup_xsmp-modeler-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ThalesGroup_xsmp-modeler-core)
+[![Documentation Status](https://readthedocs.org/projects/xsmp-modeler/badge/?version=latest)](https://xsmp-modeler.readthedocs.io/en/latest/?badge=latest)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/labels/help%20wanted)
 [![Open questions](https://img.shields.io/badge/Open-questions-blue.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/discussions)
 [![Open bugs](https://img.shields.io/badge/Open-bugs-red.svg?style=flat-curved)](https://github.com/ThalesGroup/xsmp-modeler-core/labels/bug)
-[![Documentation Status](https://readthedocs.org/projects/xsmp-modeler/badge/?version=latest)](https://xsmp-modeler.readthedocs.io/en/latest/?badge=latest)
+
 
 <p align="center">
     <picture>
