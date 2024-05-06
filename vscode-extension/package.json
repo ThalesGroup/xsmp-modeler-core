@@ -136,7 +136,7 @@
 		"bulma": "^1.0.0",
 		"esbuild": "^0.20.2",
 		"node-sass": "^9.0.0",
-		"sass": "^1.75.0",
+		"sass": "^1.76.0",
 		"sass-loader": "^14.2.1",
 		"typescript": "^5.4.5",
 		"eslint": "^9.1.1"
