@@ -346,7 +346,7 @@ class XsmpSdkComponentGenerator extends ComponentGenerator {
                 «ENDFOR»
                 
                 /// Invoke «o.name»
-                «IF r !== null»auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
+                «IF r !== null»const auto p_«r.name» = «ENDIF»cmp->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
                 
                 «FOR p : o.parameter»
                 «p.setParameter(container)»

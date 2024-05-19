@@ -398,7 +398,7 @@ abstract class ComponentGenerator extends AbstractTypeWithMembersGenerator<Compo
                 «ENDFOR»
                 
                 /// Invoke «o.name»
-                «IF r !== null»«r.type.id» p_«r.name» = «ENDIF»component->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
+                «IF r !== null»const auto p_«r.name» = «ENDIF»component->«o.name»(«FOR p : o.parameter SEPARATOR ', '»«IF p.isByPointer»&«ENDIF»p_«p.name»«ENDFOR»);
                 
                 «FOR p : o.parameter»
                 «p.setParameter(container)»
