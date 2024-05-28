@@ -153,7 +153,7 @@ public class SmpGenerator extends AbstractModelConverter
     final var catFileName = resource.getURI().trimFileExtension().appendFileExtension(SMPCAT_EXT)
             .lastSegment();
 
-    final var catalogueResource = rs.createResource(fsa.getURI(catFileName, SMDL_GEN));
+    final var catalogueResource = rs.createResource(URI.createURI(catFileName));
     catalogueResource.getContents().add(generatedCatalogue);
     try
     {
@@ -205,7 +205,7 @@ public class SmpGenerator extends AbstractModelConverter
 
     final var pkgFileName = resource.getURI().trimFileExtension().appendFileExtension(SMPPKG_EXT)
             .lastSegment();
-    final var packageResource = rs.createResource(fsa.getURI(pkgFileName, SMDL_GEN));
+    final var packageResource = rs.createResource(URI.createURI(pkgFileName));
     packageResource.getContents().add(pkg);
     try
     {

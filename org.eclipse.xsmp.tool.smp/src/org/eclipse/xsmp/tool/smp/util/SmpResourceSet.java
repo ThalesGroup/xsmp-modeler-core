@@ -31,9 +31,10 @@ public class SmpResourceSet extends ResourceSetImpl
   }
 
   @Override
-  public Resource getResource(URI uri, boolean loadOnDemand)
+  public Resource createResource(URI uri, String contentType)
   {
     getURIConverter().getURIMap().put(URI.createURI(uri.lastSegment()), uri);
-    return super.getResource(uri, loadOnDemand);
+    return super.createResource(uri, contentType);
   }
+
 }

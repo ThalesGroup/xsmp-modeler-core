@@ -70,7 +70,7 @@ public class SmpCli extends XsmpCli
 
       // replace the resource service provider to handle smpcat files
       resourceServiceProvider = smpcatResourceServiceProvider;
-      // replace the generator with the smpcat impoter
+      // replace the generator with the smpcat importer
       generator = importer;
       fileAccess.setOutputPath("smdl");
       XsmpCli.LOG.info("Done.");
