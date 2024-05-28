@@ -139,7 +139,7 @@
 		"sass": "^1.76.0",
 		"sass-loader": "^14.2.1",
 		"typescript": "^5.4.5",
-		"eslint": "^9.2.0"
+		"eslint": "^9.3.0"
 	},
 	"dependencies": {
 		"vscode-languageclient": "^8.0.1"
