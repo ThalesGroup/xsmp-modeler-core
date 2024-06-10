@@ -43,9 +43,6 @@ class XsmpcatGeneratorTest {
     def test() {
 
         var rs = resourceSetProvider.get
-        parsehelper.parse(getClass().getResource("/org/eclipse/xsmp/lib/ecss.smp.xsmpcat").openStream,
-            URI.createURI("ecss.smp.xsmpcat"), null, rs)
-
         val model = parsehelper.parse(getClass().getResource("Test.xsmpcat").openStream, URI.createURI("Test.xsmpcat"),
             null, rs)
 
