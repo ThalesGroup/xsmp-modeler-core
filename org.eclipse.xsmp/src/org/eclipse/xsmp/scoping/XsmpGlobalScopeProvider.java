@@ -11,19 +11,22 @@
 package org.eclipse.xsmp.scoping;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceFactory;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
 import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -33,7 +36,7 @@ public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
   private IResourceDescription.Manager descriptionManager;
 
   @Inject
-  private IResourceFactory resourceFactory;
+  private Provider<XtextResourceSet> resourceSetprovider;
 
   private IResourceDescription xsmpcatDescription = null;
 
@@ -48,18 +51,17 @@ public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
         throw new IllegalStateException("Unable to load ecss.smp.xsmpcat");
       }
 
-      final var uri = URI.createURI(url.toString());
-
-      final var resource = resourceFactory.createResource(uri);
+      final var resource = resourceSetprovider.get().createResource(URI.createURI(url.toString()));
       try
       {
-        resource.load(url.openStream(), null);
+        resource.load(url.openStream(), Collections.emptyMap());
       }
       catch (final IOException e)
       {
         throw new IllegalStateException("Unable to load ecss.smp.xsmpcat");
       }
       xsmpcatDescription = descriptionManager.getResourceDescription(resource);
+      EcoreUtil.resolveAll(resource);
     }
     return xsmpcatDescription;
   }
