@@ -4,7 +4,7 @@ Automatic-Module-Name: org.eclipse.xsmp.tool.smp
 Bundle-Name: org.eclipse.xsmp.tool.smp
 Bundle-SymbolicName: org.eclipse.xsmp.tool.smp;singleton:=true
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.1.qualifier
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
