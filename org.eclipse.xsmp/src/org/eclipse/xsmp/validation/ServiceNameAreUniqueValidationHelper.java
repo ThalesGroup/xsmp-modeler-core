@@ -58,7 +58,8 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
     }
 
     final Iterable<IEObjectDescription> sameNames = Iterables.filter(
-            validationScope.getExportedObjects(), o -> name.equals(o.getName().getLastSegment()));
+            validationScope.getExportedObjectsByType(clusterType),
+            o -> name.equals(o.getName().getLastSegment()));
 
     if (sameNames instanceof Collection< ? > && ((Collection< ? >) sameNames).size() <= 1)
     {

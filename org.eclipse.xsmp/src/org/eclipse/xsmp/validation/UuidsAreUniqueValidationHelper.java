@@ -57,8 +57,9 @@ public class UuidsAreUniqueValidationHelper extends NamesAreUniqueValidationHelp
       return;
     }
 
-    final Iterable<IEObjectDescription> sameUuids = Iterables
-            .filter(validationScope.getExportedObjects(), o -> uuid.equals(o.getUserData("uuid")));
+    final Iterable<IEObjectDescription> sameUuids = Iterables.filter(
+            validationScope.getExportedObjectsByType(clusterType),
+            o -> uuid.equals(o.getUserData("uuid")));
 
     if (sameUuids instanceof Collection< ? > && ((Collection< ? >) sameUuids).size() <= 1)
     {
