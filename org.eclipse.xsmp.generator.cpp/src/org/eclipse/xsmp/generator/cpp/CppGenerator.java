@@ -144,7 +144,7 @@ public class CppGenerator extends XsmpGenerator
             typeGenerator.generateHeaderGen(type, useGenerationGapPattern, acceptor, cat));
 
     // generate source in src-gen directory
-    generateFile(fsa, ext.fqnGen(type).toString("/") + ".cpp",
+    generateFile(fsa, ext.fqn(type, useGenerationGapPattern).toString("/") + ".cpp",
             CppOutputConfigurationProvider.SRC_GEN,
             typeGenerator.generateSourceGen(type, useGenerationGapPattern, acceptor, cat));
   }
