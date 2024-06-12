@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.xsmp.tool.adoc.feature"
       label="AsciiDoc Documentation Tool"
-      version="1.1.1.qualifier">
+      version="1.1.2.qualifier">
 
    <copyright>
       Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.

@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.xsmp.profile.esa-cdk-legacy.ide
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.xsmp.profile.esa-cdk-legacy.ide
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.1.2.qualifier
 Export-Package: org.eclipse.xsmp.profile.esa_cdk_legacy.ide
 Bundle-SymbolicName: org.eclipse.xsmp.profile.esa-cdk-legacy.ide;singleton:=true
 Bundle-ActivationPolicy: lazy
