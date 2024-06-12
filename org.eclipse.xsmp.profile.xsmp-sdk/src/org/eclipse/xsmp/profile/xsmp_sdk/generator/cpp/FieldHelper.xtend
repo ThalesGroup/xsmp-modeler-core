@@ -26,7 +26,7 @@ class FieldHelper {
      * Cdk field are output or failure or forcible
      */
     def boolean isCdkField(Field f) {
-        return f.output || f.isFailure || f.isForcible || f.type.isCdkFieldType
+        return !f.isStatic && (f.output || f.isFailure || f.isForcible || f.type.isCdkFieldType)
     }
 
     private def dispatch boolean isCdkFieldType(Type t) {

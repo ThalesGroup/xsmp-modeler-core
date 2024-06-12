@@ -89,7 +89,7 @@ class FieldGenerator extends AbstractMemberGenerator<Field> {
     }
 
     override construct(NamedElementWithMembers parent, Field it, boolean useGenPattern) {
-        if (^default !== null && !isStatic && !(type instanceof SimpleType))
+        if (!isStatic && !isDirectListInitialization)
             '''
                 // «name» initialization
                 «construct(QualifiedName.EMPTY, ^default)»

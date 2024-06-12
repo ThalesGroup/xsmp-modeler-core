@@ -49,4 +49,7 @@ class XsmpSdkFieldGenerator extends FieldGenerator {
             super.initialize(container, it, useGenPattern)
     }
 
+    override protected isDirectListInitialization(Field it) {
+        !isStatic()
+    }
 }

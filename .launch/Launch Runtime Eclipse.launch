@@ -12,7 +12,7 @@
     <booleanAttribute key="clearws" value="false"/>
     <booleanAttribute key="clearwslog" value="false"/>
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Launch Runtime Eclipse"/>
-    <booleanAttribute key="default" value="false"/>
+    <booleanAttribute key="default" value="true"/>
     <stringAttribute key="featureDefaultLocation" value="workspace"/>
     <stringAttribute key="featurePluginResolution" value="workspace"/>
     <booleanAttribute key="includeOptional" value="true"/>
@@ -136,8 +136,6 @@
         <setEntry value="org.eclipse.m2e.feature:default"/>
         <setEntry value="org.eclipse.m2e.lemminx.feature:default"/>
         <setEntry value="org.eclipse.m2e.logback.feature:default"/>
-        <setEntry value="org.eclipse.mat.chart.feature:default"/>
-        <setEntry value="org.eclipse.mat.feature:default"/>
         <setEntry value="org.eclipse.mylyn.wikitext.feature:default"/>
         <setEntry value="org.eclipse.oomph.p2:default"/>
         <setEntry value="org.eclipse.oomph.setup.core:default"/>
@@ -189,7 +187,7 @@
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
-    <booleanAttribute key="useCustomFeatures" value="true"/>
+    <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfig" value="true"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>
     <booleanAttribute key="useProduct" value="true"/>
