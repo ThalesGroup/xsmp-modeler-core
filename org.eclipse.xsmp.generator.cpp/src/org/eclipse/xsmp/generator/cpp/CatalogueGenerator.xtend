@@ -114,8 +114,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                         /// Global Finalise function of Package «name».
                         /// @param simulator Simulator.
                         /// @return True if finalisation was successful, false otherwise.
-                        DLL_EXPORT bool Finalise(::Smp::ISimulator* simulator) {
-                            return Finalise_«name»(simulator);
+                        DLL_EXPORT bool Finalise(::Smp::ISimulator*) {
+                            return Finalise_«name»();
                         }
             }
         '''
@@ -134,9 +134,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
                 /// Finalise Package «name».
-                /// @param simulator Optional Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»(::Smp::ISimulator* simulator = nullptr);
+                bool Finalise_«name»();
             }
         '''
     }
@@ -154,9 +153,8 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                     ::Smp::Publication::ITypeRegistry* typeRegistry);
             
                 /// Finalise Package «name».
-                /// @param simulator Optional Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»(::Smp::ISimulator* simulator = nullptr);
+                bool Finalise_«name»();
             }
         '''
     }
@@ -223,15 +221,6 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             namespace {
             /// Simulators set.
             std::unordered_set<::Smp::ISimulator*> simulators { };
-            «IF !deps.empty»
-            /// Helper function to call Finalise function
-            bool CallFinalise(bool (*f)(::Smp::ISimulator*), ::Smp::ISimulator *simulator) {
-                return f(simulator);
-            }
-            bool CallFinalise(bool (*f)(), ::Smp::ISimulator*) {
-                return f();
-            }
-            «ENDIF»
             } // namespace
             
             
@@ -285,28 +274,24 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
                 extern "C"
                 {
                     /// Finalise Package «name(useGenPattern)».
-                    /// @param simulator Simulator.
                     /// @return True if finalisation was successful, false otherwise.
-                    bool Finalise_«name(useGenPattern)»(::Smp::ISimulator* simulator) {
-                        // backward compatibility
-                        if (!simulator) {
-                            ::simulators.clear();
-                        }
+                    bool Finalise_«name(useGenPattern)»() {
                         // avoid double finalisation
-                        else if (!::simulators.erase(simulator)) {
+                        if (::simulators.empty()) {
                             return true;
                         }
+                        ::simulators.clear();
                         
                         «IF deps.empty»
                             return true;
                         «ELSEIF deps.size == 1»
                             // Finalisation of dependent Package
-                            return CallFinalise(Finalise_«deps.get(0).name», simulator);
+                            return Finalise_«deps.get(0).name»();
                         «ELSE»
                             bool result = true;
                             // Finalisation of dependent Packages
                             «FOR c : deps»
-                                result &= CallFinalise(Finalise_«c.name», simulator);
+                                result &= Finalise_«c.name»();
                             «ENDFOR»
                             
                             return result;
@@ -345,11 +330,9 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
             extern "C"
             {
                 /// Finalise Package «name».
-                /// @param simulator Simulator.
                 /// @return True if finalisation was successful, false otherwise.
-                bool Finalise_«name»(::Smp::ISimulator* simulator) {
-            
-                    return Finalise_«nameGen»(simulator);
+                bool Finalise_«name»() {
+                    return Finalise_«nameGen»();
                 }
             }
         '''
