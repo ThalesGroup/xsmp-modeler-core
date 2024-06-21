@@ -128,7 +128,7 @@ namespace Attributes
      * @usage Structure
      * @id Smp.Attributes.BaseClass
      */
-    public attribute Smp.String8 BaseClass = ""
+    public attribute Smp.String8 BaseClass
 
     /**
      * The ByPointer attribute specifies that a parameter is passed by pointer. The default value for this attribute is false.
@@ -188,7 +188,7 @@ namespace Attributes
      * @usage Operation
      * @id Smp.Attributes.Operator
      */
-    public attribute Attributes.OperatorKind Operator = Attributes.OperatorKind.None
+    public attribute Attributes.OperatorKind Operator
 
     /**
      * Enumeration of available operator kinds
@@ -399,7 +399,7 @@ namespace Attributes
      * @usage EntryPoint
      * @id Smp.Attributes.View
      */
-    public attribute Smp.ViewKind View = Smp.ViewKind.VK_None
+    public attribute Smp.ViewKind View
 } // namespace Attributes
 
 /**
