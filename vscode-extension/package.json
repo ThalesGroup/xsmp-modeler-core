@@ -131,15 +131,14 @@
 	"devDependencies": {
 		"@types/vscode": "^1.67.0",
 		"esbuild": "^0.22.0",
-		"typescript": "^5.5.2",
-		"eslint": "^9.5.0"
+		"typescript": "^5.5.2"
 	},
 	"dependencies": {
 		"vscode-languageclient": "^8.0.1"
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./src/extension.ts ./src/wizard.ts --bundle --outdir=dist/ --external:vscode --format=cjs --platform=node",
+		"esbuild-base": "esbuild ./src/extension.ts ./src/wizard.ts --bundle --outdir=dist/ --external:vscode --format=cjs --platform=node --packages=bundle",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"test-compile": "tsc -p ./"
