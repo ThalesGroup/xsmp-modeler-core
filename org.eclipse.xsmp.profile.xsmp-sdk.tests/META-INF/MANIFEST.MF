@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.xsmp.profile.xsmp-sdk.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.xsmp.profile.xsmp-sdk.tests
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.2.qualifier
+Bundle-Version: 1.1.3.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.profile.xsmp-sdk.tests;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xsmp.lib
