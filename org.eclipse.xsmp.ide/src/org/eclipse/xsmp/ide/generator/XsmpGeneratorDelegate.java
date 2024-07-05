@@ -57,13 +57,8 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
       return EmptyGenerator.INSTANCE;
     }
     return profileGenerators.computeIfAbsent(profile, p -> {
-
       final var generator = extensionManager.getInstanceForProfile(p, IGenerator2.class);
-      if (generator == null)
-      {
-        return EmptyGenerator.INSTANCE;
-      }
-      return generator;
+      return generator == null ? EmptyGenerator.INSTANCE : generator;
     });
   }
 
@@ -74,14 +69,8 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
       return EmptyGenerator.INSTANCE;
     }
     return toolGenerators.computeIfAbsent(tool, t -> {
-
       final var generator = extensionManager.getInstanceForTool(t, IGenerator2.class);
-
-      if (generator == null)
-      {
-        return EmptyGenerator.INSTANCE;
-      }
-      return generator;
+      return generator == null ? EmptyGenerator.INSTANCE : generator;
     });
   }
 
@@ -89,7 +78,8 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context)
   {
     final var config = configProvider.getProjectConfig(input.getResourceSet());
-    if (config != null)
+    // check that the input is contained in the project source folder
+    if (config != null && config.findSourceFolderContaining(input.getURI()) != null)
     {
       getProfileGenerator(config.getProfile()).doGenerate(input, fsa, context);
       config.getTools().forEach(tool -> getToolGenerator(tool).doGenerate(input, fsa, context));
