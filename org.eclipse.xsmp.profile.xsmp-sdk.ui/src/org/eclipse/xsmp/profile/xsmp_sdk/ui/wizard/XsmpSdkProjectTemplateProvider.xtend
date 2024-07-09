@@ -100,18 +100,18 @@ final class XsmpProject {
 				#   HOMEPAGE_URL ""
 				    LANGUAGES CXX)
 				
-				find_package(xsmp-sdk QUIET)
-				if(NOT xsmp-sdk_FOUND ) 
-				    message(STATUS "xsmp-sdk is not installed, downloading it.")
-				    include(FetchContent)
-				    FetchContent_Declare(
-				        xsmp-sdk
-				        GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
-				        GIT_TAG        main # replace with a specific tag
-				    )
-				    FetchContent_MakeAvailable(xsmp-sdk)
-				    list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
-				endif()
+				include(FetchContent)
+				FetchContent_Declare(
+				    xsmp-sdk
+				    GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
+				    GIT_TAG        main # replace with a specific tag
+				)
+				FetchContent_MakeAvailable(xsmp-sdk)
+				list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
+				
+				# add python directory to PYTHONPATH
+				include(PathUtils)
+				python_path_prepend("python")
 				
 				file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
 				
@@ -124,17 +124,18 @@ final class XsmpProject {
 				
 				if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 				    include(CTest)
+				endif()
+				
+				if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 				    include(Pytest)
 				    pytest_discover_tests()
 				endif()
-				
-				
 			''')
 
-			addFile('''python/pytest.ini''', '''
+			addFile('''pytest.ini''', '''
 				# pytest.ini
 				[pytest]
-				pythonpath = .
+				testpaths = python
 			''')
 
 			addFile('''python/«name»/test_«name».py''', '''
@@ -155,13 +156,6 @@ final class XsmpProject {
 				    def test_«name»(self):
 				        # TODO write unit-test
 				        pass
-			''')
-
-			addFile('''.gitignore''', '''
-				/_build/
-			''')
-			addFile('''.gitattributes''', '''
-				* text=auto eol=lf
 			''')
 
 			addFile("README.md", '''

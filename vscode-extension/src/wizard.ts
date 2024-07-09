@@ -155,18 +155,18 @@ project(
 #   HOMEPAGE_URL ""
     LANGUAGES CXX)
 
-find_package(xsmp-sdk QUIET)
-if(NOT xsmp-sdk_FOUND ) 
-    message(STATUS "xsmp-sdk is not installed, downloading it.")
-    include(FetchContent)
-    FetchContent_Declare(
-        xsmp-sdk
-        GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
-        GIT_TAG        main # replace with a specific tag
-    )
-    FetchContent_MakeAvailable(xsmp-sdk)
-    list(APPEND CMAKE_MODULE_PATH "\${xsmp-sdk_SOURCE_DIR}/cmake")
-endif()
+include(FetchContent)
+FetchContent_Declare(
+    xsmp-sdk
+    GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
+    GIT_TAG        main # replace with a specific tag
+)
+FetchContent_MakeAvailable(xsmp-sdk)
+list(APPEND CMAKE_MODULE_PATH "\${xsmp-sdk_SOURCE_DIR}/cmake")
+
+# add python directory to PYTHONPATH
+include(PathUtils)
+python_path_prepend("python")
 
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp src-gen/*.cpp)
 
@@ -178,10 +178,12 @@ target_link_libraries(${projectName} PUBLIC Xsmp::Cdk)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
+endif()
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     include(Pytest)
     pytest_discover_tests()
 endif()
-
 `)
         await fs.promises.writeFile(path.join(dirPath, 'README.md'), `
 # ${projectName}
@@ -204,7 +206,7 @@ cmake --build ./build --config Release
 \`\`\`bash
 cd build && ctest -C Release --output-on-failure
 \`\`\`
-                
+
 `)
     }
     else if (profile.id === esaCdkProfileId || profile.id === esaCdkLegacyProfileId) {
@@ -218,17 +220,17 @@ simulus_library(
     LIBRARIES
         esa.ecss.smp.cdk
 )
-target_include_directories(cdk PUBLIC src src-gen)
+target_include_directories(${projectName} PUBLIC src src-gen)
 `)
     }
 
     if (tools.some(t => t.id === pythonToolId)) {
         let py_path = path.join(dirPath, 'python')
         fs.mkdirSync(py_path);
-        await fs.promises.writeFile(path.join(py_path, `pytest.ini`), `
+        await fs.promises.writeFile(path.join(dirPath, `pytest.ini`), `
 # pytest.ini
 [pytest]
-pythonpath = .`);
+testpaths = python`);
 
         let py_projectPath = path.join(py_path, catalogueName)
         fs.mkdirSync(py_projectPath);
