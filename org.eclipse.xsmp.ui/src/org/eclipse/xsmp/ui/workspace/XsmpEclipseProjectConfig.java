@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.ui.workspace.EclipseProjectConfig;
@@ -113,15 +112,4 @@ public class XsmpEclipseProjectConfig extends EclipseProjectConfig implements IX
     return new ToStringBuilder(this).addAllFields().toString();
   }
 
-  @Override
-  public Set< ? extends ISourceFolder> getIncludeFolders()
-  {
-    return Collections.emptySet();
-  }
-
-  @Override
-  public ISourceFolder findIncludeFolderContaining(URI member)
-  {
-    return null;
-  }
 }

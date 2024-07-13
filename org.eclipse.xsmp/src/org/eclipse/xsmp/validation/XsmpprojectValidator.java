@@ -89,34 +89,9 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
   }
 
   @Check
-  protected void checkIncludes(Project p)
+  protected void checkIncludes(IncludePath p)
   {
-    final var visitedIncludes = new HashSet<String>();
-    p.getMember().stream().filter(IncludePath.class::isInstance).map(IncludePath.class::cast)
-            .forEach(include -> {
-              final var name = include.getName();
-
-              if (!visitedIncludes.add(name))
-              {
-                acceptError("Duplicated Include path '" + name + "'.", include, null,
-                        INSIGNIFICANT_INDEX, null);
-              }
-              if (name.startsWith("/"))
-              {
-                acceptError(
-                        "Include path '" + include.getName() + "' is not relative to project path.",
-                        include, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-              }
-              if (name.startsWith("../") || "..".equals(name))
-              {
-                acceptError(
-                        "Include path '" + include.getName()
-                                + "' is not contained within the project directory.",
-                        include, XsmpPackage.Literals.SOURCE_PATH__NAME,
-                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-              }
-            });
+    warning("Include path are deprecated. Support will be dropped in next release.", null);
   }
 
   @Check

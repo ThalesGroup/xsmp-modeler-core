@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.XsmpConstants;
@@ -30,44 +29,6 @@ import com.google.inject.Inject;
 
 public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
 {
-
-  private final class ProjectVisitor extends SimpleFileVisitor<Path>
-  {
-    private final WorkspaceConfig workspaceConfig;
-
-    private final Predicate<Path> filter;
-
-    private ProjectVisitor(WorkspaceConfig workspaceConfig, Predicate<Path> filter)
-    {
-      this.workspaceConfig = workspaceConfig;
-      this.filter = filter;
-    }
-
-    @Override
-    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-    {
-      if (attrs.isSymbolicLink())
-      {
-        return FileVisitResult.SKIP_SUBTREE;
-      }
-      final var xsmpProjectFile = dir.resolve(XsmpConstants.XSMP_PROJECT_FILENAME);
-      if (filter.test(dir) && Files.exists(xsmpProjectFile))
-      {
-        final var config = projectConfigProvider.createProjectConfig(
-                URI.createFileURI(xsmpProjectFile.toString()), workspaceConfig);
-        workspaceConfig.addProject(config);
-        if (!config.getIncludeFolders().isEmpty())
-        {
-          Files.walkFileTree(Paths.get(config.getPath().path()),
-                  new ProjectVisitor(workspaceConfig, p -> !p.equals(dir) && config
-                          .findIncludeFolderContaining(URI.createFileURI(p.toString())) != null));
-        }
-
-        return FileVisitResult.SKIP_SUBTREE;
-      }
-      return super.preVisitDirectory(dir, attrs);
-    }
-  }
 
   @Inject
   private XsmpProjectConfigProvider projectConfigProvider;
@@ -86,8 +47,18 @@ public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
     }
     try
     {
-      Files.walkFileTree(Paths.get(baseFile.toURI()),
-              new ProjectVisitor(workspaceConfig, p -> true));
+      Files.walkFileTree(Paths.get(baseFile.toURI()), new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+        {
+          if (XsmpConstants.XSMP_PROJECT_FILENAME.equals(file.getFileName().toString()))
+          {
+            workspaceConfig.addProject(projectConfigProvider
+                    .createProjectConfig(URI.createFileURI(file.toString()), workspaceConfig));
+          }
+          return FileVisitResult.CONTINUE;
+        }
+      });
     }
     catch (final IOException e)
     {

@@ -50,8 +50,8 @@ class XsmpprojectKeywordHovers implements IKeywordHovers {
                 <br />It must be relative to project root.
                 <br />It can be a folder or a file name.
             '''
-            case ga.sourcePathAccess.sourceKeyword_0: '''
-                <p><code>«kw("include")» <em>name</em></code></p>
+            case ga.includePathAccess.includeKeyword_0: '''
+                <p><code>«kw("include")» <em>name</em></code></p> <strong>Deprecated.</strong>
                 <br/>
                 The <b>Include</b> directive defines the location of nested project(s). 
                 <br />It must be relative to project root.
