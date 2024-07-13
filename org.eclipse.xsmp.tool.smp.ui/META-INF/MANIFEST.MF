@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.xsmp.tool.smp.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.xsmp.tool.smp.ui
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.3.qualifier
+Bundle-Version: 1.1.4.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.tool.smp.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.xsmp.tool.smp.ui.SmpActivator

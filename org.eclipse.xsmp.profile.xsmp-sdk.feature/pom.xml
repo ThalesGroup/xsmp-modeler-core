@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.xsmp</groupId>
 		<artifactId>org.eclipse.xsmp.parent</artifactId>
-		<version>1.1.3-SNAPSHOT</version>
+		<version>1.1.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.eclipse.xsmp.profile.xsmp_sdk.feature</artifactId>
 	<packaging>eclipse-feature</packaging>

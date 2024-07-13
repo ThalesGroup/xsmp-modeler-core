@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.xsmp.generator.cpp
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.xsmp.generator.cpp
 Bundle-Vendor: Thales Alenia Space
-Bundle-Version: 1.1.3.qualifier
+Bundle-Version: 1.1.4.qualifier
 Bundle-SymbolicName: org.eclipse.xsmp.generator.cpp;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,

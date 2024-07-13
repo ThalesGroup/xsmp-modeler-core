@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.xsmp.profile.esa_cdk.feature"
       label="ESA CDK  Profile"
-      version="1.1.3.qualifier">
+      version="1.1.4.qualifier">
 
    <copyright>
       Copyright (C) 2020-2023 THALES ALENIA SPACE FRANCE.
