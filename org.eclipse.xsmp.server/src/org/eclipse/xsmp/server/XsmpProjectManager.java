@@ -12,8 +12,10 @@ package org.eclipse.xsmp.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -95,22 +97,62 @@ public class XsmpProjectManager
   }
 
   /**
+   * Collect sources for all input projects
+   *
+   * @param projects
+   *          list of projects
+   * @param allUris
+   *          collected uris
+   */
+  private void collectUris(Set<IProjectConfig> projects, List<URI> allUris)
+  {
+    for (final var config : projects)
+    {
+      if (config.getPath() != null)
+      {
+        allUris.add(
+                getProjectConfig().getPath().appendSegment(XsmpConstants.XSMP_PROJECT_FILENAME));
+      }
+
+      for (final ISourceFolder srcFolder : config.getSourceFolders())
+      {
+        allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
+      }
+    }
+  }
+
+  /**
+   * Collect all project dependencies. The root project is also included
+   *
+   * @param project
+   *          root project
+   * @param dependencies
+   *          list of dependencies including root project
+   */
+  private void collectProjectDependencies(IProjectConfig project, Set<IProjectConfig> dependencies)
+  {
+    if (project != null && dependencies.add(project)
+            && project instanceof final IXsmpProjectConfig xsmpProject)
+    {
+      for (final var dep : xsmpProject.getDependencies())
+      {
+        collectProjectDependencies(project.getWorkspaceConfig().findProjectByName(dep),
+                dependencies);
+      }
+    }
+  }
+
+  /**
    * Initial build of this project.
    */
   public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator)
   {
-
+    // collect all uris of current project and its dependencies
     final List<URI> allUris = new ArrayList<>();
+    final Set<IProjectConfig> projects = new HashSet<>();
+    collectProjectDependencies(getProjectConfig(), projects);
+    collectUris(projects, allUris);
 
-    if (getProjectConfig().getPath() != null)
-    {
-      allUris.add(getProjectConfig().getPath().appendSegment(XsmpConstants.XSMP_PROJECT_FILENAME));
-    }
-
-    for (final ISourceFolder srcFolder : getProjectConfig().getSourceFolders())
-    {
-      allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
-    }
     // keep only URI that should be deleted
     oldUris.removeAll(allUris);
 
