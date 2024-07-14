@@ -25,6 +25,7 @@ import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolDetailsProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolKindProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolNameProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpHierarchicalDocumentSymbolService;
+import org.eclipse.xsmp.ide.validation.XsmpprojectIdeValidator;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeCrossrefProposalProvider;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
@@ -34,6 +35,7 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKi
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.xtext.service.SingletonBinding;
 
 /**
  * Use this class to register ide components.
@@ -99,5 +101,11 @@ public class XsmpprojectIdeModule extends AbstractXsmpprojectIdeModule
   public Class< ? extends IdeCrossrefProposalProvider> bindIdeCrossrefProposalProvider()
   {
     return XsmpprojectIdeCrossrefProposalProvider.class;
+  }
+
+  @SingletonBinding(eager = true)
+  public Class< ? extends XsmpprojectIdeValidator> bindXsmpprojectIdeValidator()
+  {
+    return XsmpprojectIdeValidator.class;
   }
 }
