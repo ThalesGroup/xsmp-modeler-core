@@ -325,6 +325,18 @@ class XsmpcatKeywordHovers implements IKeywordHovers {
             case ga.parameterDirectionKindAccess.inoutInoutKeyword_2_0: '''
                 The parameter must be specified on call, and may be changed by the operation.
             '''
+            case ga.rangeKindAccess.inclusiveFullStopFullStopFullStopKeyword_0_0: '''
+                The minimum and maximum bounds are inclusive.
+            '''
+            case ga.rangeKindAccess.exclusiveLessThanSignFullStopLessThanSignKeyword_3_0: '''
+                The minimum and maximum bounds are exclusive.
+            '''
+            case ga.rangeKindAccess.maxInclusiveLessThanSignFullStopFullStopKeyword_2_0: '''
+                The minimum bound is exclusive and the maximum bound is inclusive.
+            '''
+            case ga.rangeKindAccess.minInclusiveFullStopFullStopLessThanSignKeyword_1_0: '''
+                The minimum bound is inclusive and the maximum bound is exclusive.
+            '''
             default: ''''''
         }.toString
     }

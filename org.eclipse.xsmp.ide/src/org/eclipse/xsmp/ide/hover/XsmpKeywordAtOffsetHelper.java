@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.ide.hover;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.EnumLiteralDeclaration;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
@@ -37,6 +38,11 @@ public class XsmpKeywordAtOffsetHelper
       if (leaf != null && leaf.getGrammarElement() instanceof Keyword)
       {
         return Tuples.create(leaf.getGrammarElement(),
+                (ITextRegion) new TextRegion(leaf.getOffset(), leaf.getLength()));
+      }
+      if (leaf != null && leaf.getGrammarElement() instanceof final EnumLiteralDeclaration literal)
+      {
+        return Tuples.create(literal.getLiteral(),
                 (ITextRegion) new TextRegion(leaf.getOffset(), leaf.getLength()));
       }
     }
