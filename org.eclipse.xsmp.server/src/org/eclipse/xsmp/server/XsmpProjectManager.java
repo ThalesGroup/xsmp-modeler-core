@@ -11,11 +11,10 @@
 package org.eclipse.xsmp.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -104,60 +103,35 @@ public class XsmpProjectManager
    * @param allUris
    *          collected uris
    */
-  private void collectUris(Set<IProjectConfig> projects, List<URI> allUris)
+  private void collectUris(IProjectConfig project, List<URI> allUris)
   {
-    for (final var config : projects)
-    {
-      if (config.getPath() != null)
-      {
-        allUris.add(
-                getProjectConfig().getPath().appendSegment(XsmpConstants.XSMP_PROJECT_FILENAME));
-      }
 
-      for (final ISourceFolder srcFolder : config.getSourceFolders())
-      {
-        allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
-      }
-    }
-  }
-
-  /**
-   * Collect all project dependencies. The root project is also included
-   *
-   * @param project
-   *          root project
-   * @param dependencies
-   *          list of dependencies including root project
-   */
-  private void collectProjectDependencies(IProjectConfig project, Set<IProjectConfig> dependencies)
-  {
-    if (project != null && dependencies.add(project)
-            && project instanceof final IXsmpProjectConfig xsmpProject)
+    if (project.getPath() != null)
     {
-      for (final var dep : xsmpProject.getDependencies())
-      {
-        collectProjectDependencies(project.getWorkspaceConfig().findProjectByName(dep),
-                dependencies);
-      }
+      allUris.add(project.getPath().appendSegment(XsmpConstants.XSMP_PROJECT_FILENAME));
     }
+
+    for (final ISourceFolder srcFolder : project.getSourceFolders())
+    {
+      allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
+    }
+
   }
 
   /**
    * Initial build of this project.
    */
-  public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator)
+  public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator,
+          Collection<IProjectConfig> dependencies)
   {
     // collect all uris of current project and its dependencies
     final List<URI> allUris = new ArrayList<>();
-    final Set<IProjectConfig> projects = new HashSet<>();
-    collectProjectDependencies(getProjectConfig(), projects);
-    collectUris(projects, allUris);
+    dependencies.forEach(d -> collectUris(d, allUris));
 
     // keep only URI that should be deleted
     oldUris.removeAll(allUris);
 
     return doBuild(allUris, oldUris, Collections.emptyList(), cancelIndicator, true);
-
   }
 
   /**
@@ -329,10 +303,10 @@ public class XsmpProjectManager
   {
     // store current URIs
     oldUris.clear();
-    for (final ISourceFolder srcFolder : getProjectConfig().getSourceFolders())
-    {
-      oldUris.addAll(srcFolder.getAllResources(fileSystemScanner));
-    }
+    final var dependencies = new ArrayList<IProjectConfig>();
+    IXsmpProjectConfig.collectProjectDependencies(this.projectConfig, dependencies);
+
+    dependencies.forEach(d -> collectUris(d, oldUris));
 
     this.projectConfig = projectConfig;
     baseDir = projectConfig.getPath();

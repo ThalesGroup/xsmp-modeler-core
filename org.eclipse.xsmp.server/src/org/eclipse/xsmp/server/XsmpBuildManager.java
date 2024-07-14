@@ -13,6 +13,8 @@ package org.eclipse.xsmp.server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.TopologicalSorter;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -27,6 +30,7 @@ import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -158,22 +162,46 @@ public class XsmpBuildManager
     files.addAll(toAdd);
   }
 
+  Map<ProjectDescription, Collection<ProjectDescription>> dependencyToProjects = new HashMap<>();
+
   /**
    * Run an initial build
    *
    * @return the delta.
    */
-  public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
+  public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> descriptions,
           CancelIndicator indicator)
   {
-    final var sortedDescriptions = sortByDependencies(projects);
+    final Map<IProjectConfig, Collection<IProjectConfig>> projectToDependencies = new HashMap<>();
+
+    final var sortedDescriptions = sortByDependencies(descriptions);
     final List<IResourceDescription.Delta> result = new ArrayList<>();
     for (final ProjectDescription description : sortedDescriptions)
     {
-      final var partialresult = workspaceManager.getProjectManager(description.getName())
-              .doInitialBuild(indicator);
+      final var project = workspaceManager.getProjectManager(description.getName());
+      final var dependencies = new ArrayList<IProjectConfig>();
+      final var config = project.getProjectConfig();
+      IXsmpProjectConfig.collectProjectDependencies(config, dependencies);
+      projectToDependencies.put(config, dependencies);
+      final var partialresult = project.doInitialBuild(indicator, dependencies);
       result.addAll(partialresult.getAffectedResources());
     }
+    // initialize depedencyToProjects
+    dependencyToProjects.clear();
+    for (final var dependency : workspaceManager.getProjectManagers())
+    {
+      final var projects = new HashSet<ProjectDescription>();
+      for (final var entry : projectToDependencies.entrySet())
+      {
+        if (entry.getValue().contains(dependency.getProjectConfig()))
+        {
+          projects.add(workspaceManager.getProjectManager(entry.getKey().getName())
+                  .getProjectDescription());
+        }
+      }
+      dependencyToProjects.put(dependency.getProjectDescription(), projects);
+    }
+
     return result;
   }
 
@@ -191,28 +219,18 @@ public class XsmpBuildManager
     for (final URI dirty : allDirty)
     {
       final var projectManager = workspaceManager.getProjectManager(dirty);
-      project2dirty.put(projectManager.getProjectDescription(), dirty);
-      workspaceManager.getProjectManagers().forEach(manager -> {
-        if (manager.getProjectDescription().getDependencies()
-                .contains(projectManager.getProjectDescription().getName()))
-        {
-          project2dirty.put(manager.getProjectDescription(), dirty);
-        }
-      });
+      dependencyToProjects.get(projectManager.getProjectDescription())
+              .forEach(d -> project2dirty.put(d, dirty));
+
     }
     final Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
     for (final URI deleted : deletedFiles)
     {
       final var projectManager = workspaceManager.getProjectManager(deleted);
-      project2deleted.put(workspaceManager.getProjectManager(deleted).getProjectDescription(),
-              deleted);
-      workspaceManager.getProjectManagers().forEach(manager -> {
-        if (manager.getProjectDescription().getDependencies()
-                .contains(projectManager.getProjectDescription().getName()))
-        {
-          project2dirty.put(manager.getProjectDescription(), deleted);
-        }
-      });
+
+      dependencyToProjects.get(projectManager.getProjectDescription())
+              .forEach(d -> project2deleted.put(d, deleted));
+
     }
 
     final var sortedDescriptions = sortByDependencies(

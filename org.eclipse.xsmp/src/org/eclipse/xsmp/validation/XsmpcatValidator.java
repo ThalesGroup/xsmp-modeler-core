@@ -547,13 +547,8 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
 
   private boolean isDocumentInProjectSourceFolders(IXsmpProjectConfig config, URI uri)
   {
-    if (config.findSourceFolderContaining(uri) != null)
-    {
-      return true;
-    }
     final var ws = config.getWorkspaceConfig();
-    final var project = ws.findProjectContaining(uri);
-    return config.getDependencies().contains(project.getName());
+    return ws.findProjectContaining(uri) != null;
   }
 
   @Check

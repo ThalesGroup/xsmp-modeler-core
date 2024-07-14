@@ -11,6 +11,7 @@
 package org.eclipse.xsmp.workspace;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -21,4 +22,26 @@ public interface IXsmpProjectConfig extends IProjectConfig
   Collection<String> getTools();
 
   Collection<String> getDependencies();
+
+  static
+  /**
+   * Collect all project dependencies. The root project is also included
+   *
+   * @param project
+   *          root project
+   * @param dependencies
+   *          list of dependencies including root project
+   */
+  void collectProjectDependencies(IProjectConfig project, List<IProjectConfig> dependencies)
+  {
+    if (project != null && dependencies.add(project)
+            && project instanceof final IXsmpProjectConfig xsmpProject)
+    {
+      for (final var dep : xsmpProject.getDependencies())
+      {
+        collectProjectDependencies(project.getWorkspaceConfig().findProjectByName(dep),
+                dependencies);
+      }
+    }
+  }
 }
