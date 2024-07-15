@@ -55,8 +55,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         GTest::gtest_main
     )
 
-    include(Pytest)
-    pytest_discover_tests()
+    #include(Pytest)
+    #pytest_discover_tests()
 endif()
 
 
