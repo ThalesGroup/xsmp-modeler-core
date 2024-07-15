@@ -29,7 +29,6 @@ import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolKindProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolNameProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpDocumentSymbolRangeProvider;
 import org.eclipse.xsmp.ide.symbol.XsmpHierarchicalDocumentSymbolService;
-import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
@@ -45,7 +44,6 @@ import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolKi
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolNameProvider;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper.DocumentSymbolRangeProvider;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
-import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 /**
  * Use this class to register ide components.
@@ -86,12 +84,6 @@ public class XsmpcatIdeModule extends AbstractXsmpcatIdeModule
   public Class< ? extends OutputConfigurationProvider> bindOutputConfigurationProvider()
   {
     return XsmpOutputConfigurationProvider.class;
-  }
-
-  @Override
-  public Class< ? extends IProjectConfigProvider> bindIProjectConfigProvider()
-  {
-    return XsmpProjectConfigProvider.class;
   }
 
   public Class< ? extends IKeywordHovers> bindIKeywordHovers()

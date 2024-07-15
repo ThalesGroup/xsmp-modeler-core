@@ -37,7 +37,7 @@ import com.google.inject.Singleton;
 @ComposedChecks(validators = {XsmpprojectUniqueElementValidator.class })
 public class XsmpprojectValidator extends AbstractXsmpprojectValidator
 {
-  @Inject
+  @Inject(optional = true)
   private IProjectConfigProvider configProvider;
 
   @Check
@@ -158,12 +158,15 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
       return;
     }
 
-    final var config = configProvider.getProjectConfig(rs);
-
-    if (!config.getName().equals(p.getName()))
+    if (configProvider != null)
     {
-      error("'" + p.getName() + "' does not match with project name '" + config.getName() + "'.",
-              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
+      final var config = configProvider.getProjectConfig(rs);
+
+      if (!config.getName().equals(p.getName()))
+      {
+        error("'" + p.getName() + "' does not match with project name '" + config.getName() + "'.",
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
+      }
     }
 
   }

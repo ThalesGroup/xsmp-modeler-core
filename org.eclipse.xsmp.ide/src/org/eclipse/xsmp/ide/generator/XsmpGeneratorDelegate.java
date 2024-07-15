@@ -15,12 +15,13 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsmp.extension.IExtensionManager;
-import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
+import org.eclipse.xsmp.ide.workspace.XsmpProjectConfig;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.GeneratorDelegate;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,7 +34,7 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
   private IExtensionManager extensionManager;
 
   @Inject
-  private XsmpProjectConfigProvider configProvider;
+  private IProjectConfigProvider configProvider;
 
   private final Map<String, IGenerator2> profileGenerators = new HashMap<>();
 
@@ -79,10 +80,10 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
   {
     final var config = configProvider.getProjectConfig(input.getResourceSet());
     // check that the input is contained in the project source folder
-    if (config != null)
+    if (config instanceof XsmpProjectConfig cfg)
     {
-      getProfileGenerator(config.getProfile()).doGenerate(input, fsa, context);
-      config.getTools().forEach(tool -> getToolGenerator(tool).doGenerate(input, fsa, context));
+      getProfileGenerator(cfg.getProfile()).doGenerate(input, fsa, context);
+      cfg.getTools().forEach(tool -> getToolGenerator(tool).doGenerate(input, fsa, context));
     }
   }
 

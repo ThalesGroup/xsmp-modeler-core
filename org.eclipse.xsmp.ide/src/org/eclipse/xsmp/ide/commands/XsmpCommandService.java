@@ -20,7 +20,6 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.xsmp.ide.generator.XsmpGeneratorDelegate;
 import org.eclipse.xsmp.ide.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.ide.generator.XsmpURIBasedFileSystemAccess;
-import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.IFilePostProcessor;
 import org.eclipse.xtext.generator.IGeneratorContext;
@@ -31,6 +30,7 @@ import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.parser.IEncodingProvider;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class XsmpCommandService implements IExecutableCommandService
   XsmpOutputConfigurationProvider outputConfigurationProvider;
 
   @Inject
-  private XsmpProjectConfigProvider projectConfigProvider;
+  private IProjectConfigProvider projectConfigProvider;
 
   @Inject
   private IFilePostProcessor postProcessor;

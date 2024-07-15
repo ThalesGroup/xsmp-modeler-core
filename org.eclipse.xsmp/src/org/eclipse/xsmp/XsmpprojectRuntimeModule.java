@@ -20,8 +20,6 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
-import org.eclipse.xtext.workspace.IProjectConfigProvider;
-import org.eclipse.xtext.workspace.ProjectConfigProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension
@@ -54,10 +52,5 @@ public class XsmpprojectRuntimeModule extends AbstractXsmpprojectRuntimeModule
   public Class< ? extends IResourceServiceProvider> bindIResourceServiceProvider()
   {
     return XsmpprojectResourceServiceProvider.class;
-  }
-
-  public Class< ? extends IProjectConfigProvider> bindIProjectConfigProvider()
-  {
-    return ProjectConfigProvider.class;
   }
 }

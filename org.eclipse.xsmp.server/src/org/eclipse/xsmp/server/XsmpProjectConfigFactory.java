@@ -21,17 +21,30 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.XsmpConstants;
-import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
+import org.eclipse.xsmp.ide.workspace.XsmpProjectConfig;
+import org.eclipse.xsmp.model.xsmp.Project;
+import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.ide.server.MultiProjectWorkspaceConfigFactory;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.workspace.WorkspaceConfig;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
 {
-
   @Inject
-  private XsmpProjectConfigProvider projectConfigProvider;
+  private Provider<XtextResourceSet> resourceSetProvider;
+
+  public IXsmpProjectConfig createProjectConfig(URI uri, IWorkspaceConfig workspaceConfig)
+  {
+    final var rs = resourceSetProvider.get();
+    final var resource = rs.getResource(uri, true);
+
+    final var project = (Project) resource.getContents().get(0);
+    return new XsmpProjectConfig(project, workspaceConfig);
+  }
 
   @Override
   public void findProjects(WorkspaceConfig workspaceConfig, URI uri)
@@ -53,8 +66,8 @@ public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
         {
           if (XsmpConstants.XSMP_PROJECT_FILENAME.equals(file.getFileName().toString()))
           {
-            workspaceConfig.addProject(projectConfigProvider
-                    .createProjectConfig(URI.createFileURI(file.toString()), workspaceConfig));
+            workspaceConfig.addProject(
+                    createProjectConfig(URI.createFileURI(file.toString()), workspaceConfig));
           }
           return FileVisitResult.CONTINUE;
         }

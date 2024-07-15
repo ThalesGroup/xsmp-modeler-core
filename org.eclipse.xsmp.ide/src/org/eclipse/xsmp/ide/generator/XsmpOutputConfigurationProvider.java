@@ -18,10 +18,11 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.extension.IExtensionManager;
-import org.eclipse.xsmp.ide.workspace.XsmpProjectConfigProvider;
+import org.eclipse.xsmp.ide.workspace.XsmpProjectConfig;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,7 +31,7 @@ import com.google.inject.Singleton;
 public class XsmpOutputConfigurationProvider extends OutputConfigurationProvider
 {
   @Inject
-  private XsmpProjectConfigProvider configProvider;
+  private IProjectConfigProvider configProvider;
 
   @Inject
   private IExtensionManager extensionManager;
@@ -80,10 +81,10 @@ public class XsmpOutputConfigurationProvider extends OutputConfigurationProvider
     final Set<OutputConfiguration> configurations = new HashSet<>();
     final var config = configProvider.getProjectConfig(context);
 
-    if (config != null)
+    if (config instanceof XsmpProjectConfig cfg)
     {
-      configurations.addAll(getProfileOutputConfigurations(config.getProfile()));
-      for (final var tool : config.getTools())
+      configurations.addAll(getProfileOutputConfigurations(cfg.getProfile()));
+      for (final var tool : cfg.getTools())
       {
         configurations.addAll(getToolOutputConfigurations(tool));
       }
