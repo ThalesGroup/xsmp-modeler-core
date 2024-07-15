@@ -15,7 +15,14 @@ jobs:
       steps:
       -  name: Setup Maven Action
          uses: s4u/setup-maven-action@v1.14.0
-
+      -  name: Set up Python
+         uses: actions/setup-python@v5
+         with:
+            python-version: 3.12
+            cache: pip # caching pip dependencies
+      -  name: install pytest
+         run: |
+            pip install pytest
       -  name: Build
          uses: coactions/setup-xvfb@v1
          with:
