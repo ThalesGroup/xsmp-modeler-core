@@ -19,12 +19,14 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.ide.workspace.XsmpProjectConfig;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.ide.server.MultiProjectWorkspaceConfigFactory;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.workspace.WorkspaceConfig;
@@ -36,6 +38,11 @@ public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
 {
   @Inject
   private Provider<XtextResourceSet> resourceSetProvider;
+
+  @Inject
+  private UriExtensions uriExtensions;
+
+  private static final Logger LOG = Logger.getLogger(XsmpProjectConfigFactory.class);
 
   public IXsmpProjectConfig createProjectConfig(URI uri, IWorkspaceConfig workspaceConfig)
   {
@@ -67,7 +74,7 @@ public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
           if (XsmpConstants.XSMP_PROJECT_FILENAME.equals(file.getFileName().toString()))
           {
             workspaceConfig.addProject(
-                    createProjectConfig(URI.createFileURI(file.toString()), workspaceConfig));
+                    createProjectConfig(uriExtensions.toEmfUri(file.toUri()), workspaceConfig));
           }
           return FileVisitResult.CONTINUE;
         }
@@ -75,7 +82,7 @@ public class XsmpProjectConfigFactory extends MultiProjectWorkspaceConfigFactory
     }
     catch (final IOException e)
     {
-      e.printStackTrace();
+      LOG.error(e);
     }
 
   }

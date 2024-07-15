@@ -13,6 +13,7 @@ package org.eclipse.xsmp.validation;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.xsmp.XsmpConstants;
 import org.eclipse.xsmp.model.xsmp.IncludePath;
 import org.eclipse.xsmp.model.xsmp.ProfileReference;
 import org.eclipse.xsmp.model.xsmp.Project;
@@ -161,10 +162,15 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
     if (configProvider != null)
     {
       final var config = configProvider.getProjectConfig(rs);
-
-      if (!config.getName().equals(p.getName()))
+      if (!resource.getURI().trimSegments(1).equals(config.getPath().trimSegments(1)))
       {
-        error("'" + p.getName() + "' does not match with project name '" + config.getName() + "'.",
+        error("The '" + XsmpConstants.XSMP_PROJECT_FILENAME
+                + "' file should be located in the project root directory.",
+                XsmpPackage.Literals.NAMED_ELEMENT__NAME);
+      }
+      else if (!config.getName().equals(p.getName()))
+      {
+        error("The project name '" + config.getName() + "' does not match '" + p.getName() + "'.",
                 XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
