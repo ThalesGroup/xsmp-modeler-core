@@ -12,10 +12,11 @@ include(FetchContent)
 FetchContent_Declare(
   xsmp-sdk
   GIT_REPOSITORY https://github.com/ThalesGroup/xsmp-sdk.git
-  GIT_TAG        main 
+  GIT_TAG        v1.0.3
 )
 
 FetchContent_MakeAvailable(xsmp-sdk)
+list(APPEND CMAKE_MODULE_PATH "${xsmp-sdk_SOURCE_DIR}/cmake")
 
 if(WIN32)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -54,7 +55,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         GTest::gtest_main
     )
 
-    gtest_discover_tests(xsmp_sdk_profile_tests)
+    include(Pytest)
+    pytest_discover_tests()
 endif()
 
 
