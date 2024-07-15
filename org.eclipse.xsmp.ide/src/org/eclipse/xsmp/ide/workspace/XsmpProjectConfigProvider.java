@@ -15,26 +15,21 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.workspace.IProjectConfigProvider;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
-import org.eclipse.xtext.workspace.ProjectConfigAdapter;
+import org.eclipse.xtext.workspace.ProjectConfigProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
-public class XsmpProjectConfigProvider implements IProjectConfigProvider
+public class XsmpProjectConfigProvider extends ProjectConfigProvider
 {
   @Override
   public IXsmpProjectConfig getProjectConfig(ResourceSet context)
   {
-    final var adapter = ProjectConfigAdapter.findInEmfObject(context);
-    if (adapter == null)
-    {
-      return null;
-    }
-    return adapter.getProjectConfig() instanceof final IXsmpProjectConfig xsmpConfig ? xsmpConfig
+    return super.getProjectConfig(context) instanceof final IXsmpProjectConfig xsmpConfig
+            ? xsmpConfig
             : null;
   }
 

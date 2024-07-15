@@ -30,7 +30,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
-public class XsmpGlobalScopeProvider extends DefaultGlobalScopeProvider
+public class XsmpcatGlobalScopeProvider extends DefaultGlobalScopeProvider
 {
   @Inject
   private IResourceDescription.Manager descriptionManager;

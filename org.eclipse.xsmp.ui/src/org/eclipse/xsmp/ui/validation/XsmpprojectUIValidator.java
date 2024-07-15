@@ -31,12 +31,6 @@ public class XsmpprojectUIValidator extends AbstractXsmpprojectValidator
   {
     // check that project name match with eclipse
     final var project = projectByResourceProvider.getProjectContext(p.eResource());
-    if (!project.getName().equals(p.getName()))
-    {
-      acceptError("XSMP project name must match with Eclipse project name", p,
-              XsmpPackage.Literals.NAMED_ELEMENT__NAME,
-              ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-    }
 
     p.getMember().stream().filter(SourcePath.class::isInstance).map(SourcePath.class::cast)
             .forEach(source -> {

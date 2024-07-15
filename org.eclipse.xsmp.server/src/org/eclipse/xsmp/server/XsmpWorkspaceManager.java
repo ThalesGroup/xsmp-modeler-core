@@ -367,6 +367,20 @@ public class XsmpWorkspaceManager
    */
   protected IProjectConfig getProjectConfig(URI uri)
   {
+    if (XsmpConstants.XSMP_PROJECT_FILENAME.equals(uri.lastSegment()))
+    {
+      final var baseUri = uriExtensions.toUriString(uri.trimSegments(1));
+      for (final var project : getWorkspaceConfig().getProjects())
+      {
+        if ((project.getPath() != null)
+                && uriExtensions.toUriString(project.getPath().trimSegments(1)).equals(baseUri))
+        {
+          return project;
+        }
+      }
+
+    }
+
     return getWorkspaceConfig().findProjectContaining(uri);
   }
 
@@ -489,10 +503,10 @@ public class XsmpWorkspaceManager
     {
       return null;
     }
-    final var projectMnr = getProjectManager(resourceURI);
-    if (projectMnr != null)
+    final var projectManager = getProjectManager(resourceURI);
+    if (projectManager != null)
     {
-      final var resource = projectMnr.getResource(resourceURI);
+      final var resource = projectManager.getResource(resourceURI);
       if (resource instanceof final XtextResource xtextResource)
       {
         final var doc = getDocument(xtextResource);

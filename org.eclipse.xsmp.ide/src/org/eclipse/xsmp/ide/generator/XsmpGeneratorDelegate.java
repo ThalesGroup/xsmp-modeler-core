@@ -79,7 +79,7 @@ public class XsmpGeneratorDelegate extends GeneratorDelegate
   {
     final var config = configProvider.getProjectConfig(input.getResourceSet());
     // check that the input is contained in the project source folder
-    if (config != null && config.findSourceFolderContaining(input.getURI()) != null)
+    if (config != null)
     {
       getProfileGenerator(config.getProfile()).doGenerate(input, fsa, context);
       config.getTools().forEach(tool -> getToolGenerator(tool).doGenerate(input, fsa, context));

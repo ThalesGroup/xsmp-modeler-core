@@ -22,8 +22,11 @@ import org.eclipse.xsmp.model.xsmp.Tool;
 import org.eclipse.xsmp.model.xsmp.ToolReference;
 import org.eclipse.xsmp.model.xsmp.XsmpPackage;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.ComposedChecks;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
+import org.eclipse.xtext.workspace.IProjectConfigProvider;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -31,9 +34,11 @@ import com.google.inject.Singleton;
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-// @ComposedChecks(validators = {UniqueElementValidator.class })
+@ComposedChecks(validators = {XsmpprojectUniqueElementValidator.class })
 public class XsmpprojectValidator extends AbstractXsmpprojectValidator
 {
+  @Inject
+  private IProjectConfigProvider configProvider;
 
   @Check
   protected void checkProfile(Project p)
@@ -91,7 +96,7 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
   @Check
   protected void checkIncludes(IncludePath p)
   {
-    warning("Include path are deprecated. Support will be dropped in next release.", null);
+    error("Include path are deprecated. Support will be dropped in next release.", null);
   }
 
   @Check
@@ -135,6 +140,32 @@ public class XsmpprojectValidator extends AbstractXsmpprojectValidator
                         INSIGNIFICANT_INDEX, null);
               }
             });
+  }
+
+  @Check
+  protected void checkProject(Project p)
+  {
+    final var resource = p.eResource();
+
+    if (resource == null)
+    {
+      return;
+    }
+    final var rs = resource.getResourceSet();
+
+    if (rs == null)
+    {
+      return;
+    }
+
+    final var config = configProvider.getProjectConfig(rs);
+
+    if (!config.getName().equals(p.getName()))
+    {
+      error("'" + p.getName() + "' does not match with project name '" + config.getName() + "'.",
+              XsmpPackage.Literals.NAMED_ELEMENT__NAME);
+    }
+
   }
 
   private boolean hasCyclicDependencies(Project project, Project dependency, Set<Project> visited)

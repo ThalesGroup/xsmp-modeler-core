@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.xsmp.model.xsmp.Project;
 import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.workspace.FileProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
@@ -33,21 +32,36 @@ public class XsmpProjectConfig extends FileProjectConfig implements IXsmpProject
    * @param project
    * @return the valid project name
    */
-  private static String getName(Project project)
+  private static String getName(Project project, IWorkspaceConfig workspaceConfig)
   {
-    final var name = project.getName();
+    var name = project.getName();
     if (name == null || project.getName().isEmpty())
     {
-      return "<invalid_project>";
+      name = "<invalid_project>";
     }
-    return name;
+
+    return getUniqueProjectName(name, workspaceConfig);
+  }
+
+  private static String getUniqueProjectName(String proposal, IWorkspaceConfig workspaceConfig)
+  {
+    if (workspaceConfig.findProjectByName(proposal) == null)
+    {
+      return proposal;
+    }
+    for (var count = 1; true; ++count)
+    {
+      if (workspaceConfig.findProjectByName(proposal + count) == null)
+      {
+        return proposal + count;
+      }
+    }
   }
 
   public XsmpProjectConfig(Project project, IWorkspaceConfig workspaceConfig)
   {
-    super(EcoreUtil2.getNormalizedResourceURI(project).trimSegments(1), getName(project),
+    super(project.eResource().getURI().trimSegments(1), getName(project, workspaceConfig),
             workspaceConfig);
-
     profile = project.getProfile();
     tools = project.getTools();
     dependencies = project.getReferencedProjects();

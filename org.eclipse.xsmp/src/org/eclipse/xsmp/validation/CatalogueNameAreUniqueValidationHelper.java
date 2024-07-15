@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
-public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidationHelper
+public class CatalogueNameAreUniqueValidationHelper extends NamesAreUniqueValidationHelper
 {
 
   @Override
@@ -40,7 +40,7 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
     final var object = description.getEObjectOrProxy();
     Preconditions.checkArgument(!object.eIsProxy());
 
-    final var clusterType = XsmpPackage.Literals.SERVICE;
+    final var clusterType = XsmpPackage.Literals.CATALOGUE;
     if (!clusterType.equals(description.getEClass()))
     {
       return;
@@ -83,27 +83,22 @@ public class ServiceNameAreUniqueValidationHelper extends NamesAreUniqueValidati
   @Override
   protected EClass getClusterType(IEObjectDescription description)
   {
-    return description.getEClass() == XsmpPackage.Literals.SERVICE ? XsmpPackage.Literals.SERVICE
+    return description.getEClass() == XsmpPackage.Literals.CATALOGUE
+            ? XsmpPackage.Literals.CATALOGUE
             : null;
   }
 
   @Override
   protected ImmutableSet<EClass> getClusterTypes()
   {
-    return ImmutableSet.of(XsmpPackage.Literals.SERVICE);
+    return ImmutableSet.of(XsmpPackage.Literals.CATALOGUE);
   }
 
   @Override
   public String getDuplicateNameErrorMessage(IEObjectDescription description, EClass clusterType,
           EStructuralFeature feature)
   {
-    return "Duplicate Service Name " + description.getName().getLastSegment();
-  }
-
-  @Override
-  protected String getErrorCode()
-  {
-    return XsmpcatIssueCodesProvider.DUPLICATE_SERVICE_NAME;
+    return "Duplicate Catalogue Name " + description.getName().getLastSegment();
   }
 
 }

@@ -34,7 +34,6 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -179,12 +178,18 @@ public class XsmpBuildManager
     for (final ProjectDescription description : sortedDescriptions)
     {
       final var project = workspaceManager.getProjectManager(description.getName());
-      final var dependencies = new ArrayList<IProjectConfig>();
       final var config = project.getProjectConfig();
-      IXsmpProjectConfig.collectProjectDependencies(config, dependencies);
-      projectToDependencies.put(config, dependencies);
-      final var partialresult = project.doInitialBuild(indicator, dependencies);
-      result.addAll(partialresult.getAffectedResources());
+      if (config instanceof final IXsmpProjectConfig xsmpConfig)
+      {
+        final var dependencies = xsmpConfig.getAllDependencies();
+        projectToDependencies.put(config, dependencies);
+        result.addAll(project.doInitialBuild(indicator, dependencies).getAffectedResources());
+      }
+      else
+      {
+        projectToDependencies.put(config, Collections.emptyList());
+      }
+      result.addAll(project.doInitialBuild(indicator).getAffectedResources());
     }
     // initialize depedencyToProjects
     dependencyToProjects.clear();
@@ -216,21 +221,23 @@ public class XsmpBuildManager
   {
     final List<URI> allDirty = new ArrayList<>(dirtyFiles);
     final Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
+    final Multimap<ProjectDescription, URI> dependency2dirty = HashMultimap.create();
     for (final URI dirty : allDirty)
     {
       final var projectManager = workspaceManager.getProjectManager(dirty);
+      project2dirty.put(projectManager.getProjectDescription(), dirty);
       dependencyToProjects.get(projectManager.getProjectDescription())
-              .forEach(d -> project2dirty.put(d, dirty));
-
+              .forEach(d -> dependency2dirty.put(d, dirty));
     }
+
     final Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
+    final Multimap<ProjectDescription, URI> dependency2deleted = HashMultimap.create();
     for (final URI deleted : deletedFiles)
     {
       final var projectManager = workspaceManager.getProjectManager(deleted);
-
+      project2deleted.put(projectManager.getProjectDescription(), deleted);
       dependencyToProjects.get(projectManager.getProjectDescription())
-              .forEach(d -> project2deleted.put(d, deleted));
-
+              .forEach(d -> dependency2deleted.put(d, deleted));
     }
 
     final var sortedDescriptions = sortByDependencies(
@@ -242,13 +249,30 @@ public class XsmpBuildManager
       final List<URI> projectDirty = new ArrayList<>(project2dirty.get(it));
       final List<URI> projectDeleted = new ArrayList<>(project2deleted.get(it));
       final var partialResult = projectManager.doBuild(projectDirty, projectDeleted,
-              unreportedDeltas, cancelIndicator, shouldGenerate);
-      FluentIterable.from(partialResult.getAffectedResources())
-              .transform(IResourceDescription.Delta::getUri).copyInto(allDirty);
+              unreportedDeltas, cancelIndicator, shouldGenerate, false);
       dirtyFiles.removeAll(projectDirty);
       deletedFiles.removeAll(projectDeleted);
       mergeWithUnreportedDeltas(partialResult.getAffectedResources());
     }
+
+    final var sortedDependenciesDescriptions = sortByDependencies(
+            Sets.union(dependency2dirty.keySet(), dependency2deleted.keySet()));
+
+    for (final ProjectDescription it : sortedDependenciesDescriptions)
+    {
+      final var projectManager = workspaceManager.getProjectManager(it.getName());
+      final List<URI> projectDirty = new ArrayList<>(dependency2dirty.get(it));
+      final List<URI> projectDeleted = new ArrayList<>(dependency2deleted.get(it));
+      // index only changed dependencies
+      var partialResult = projectManager.doBuild(projectDirty, projectDeleted, unreportedDeltas,
+              cancelIndicator, false, true);
+      mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+
+      // re-build local files
+      partialResult = projectManager.doInitialBuild(cancelIndicator);
+      mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+    }
+
     final var result = unreportedDeltas;
     unreportedDeltas = new ArrayList<>();
     return result;

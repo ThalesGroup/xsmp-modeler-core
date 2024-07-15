@@ -25,7 +25,7 @@ import com.google.inject.Inject;
 /**
  * check that elements are unique
  */
-public class UniqueElementValidator extends AbstractDeclarativeValidator
+public class XsmpcatUniqueElementValidator extends AbstractDeclarativeValidator
 {
 
   @Inject
@@ -39,6 +39,9 @@ public class UniqueElementValidator extends AbstractDeclarativeValidator
 
   @Inject
   private ServiceNameAreUniqueValidationHelper serviceHelper;
+
+  @Inject
+  private CatalogueNameAreUniqueValidationHelper catalogueHelper;
 
   @Inject
   private SmpNamesAreUniqueValidationHelper nameHelper;
@@ -82,10 +85,12 @@ public class UniqueElementValidator extends AbstractDeclarativeValidator
             cancelIndicator);
     if (globalValidationContext != null)
     {
-      // Check that uuids are unique in hole index
+      // Check that uuids are unique in whole index
       uuidHelper.checkUniqueNames(globalValidationContext, this);
-      // Check that service name are unique in hole index
+      // Check that service name are unique in whole index
       serviceHelper.checkUniqueNames(globalValidationContext, this);
+      // Check that catalogue name are unique in whole index
+      catalogueHelper.checkUniqueNames(globalValidationContext, this);
     }
   }
 

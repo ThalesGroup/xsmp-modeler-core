@@ -17,7 +17,7 @@ import org.eclipse.xsmp.generator.XsmpOutputConfigurationProvider;
 import org.eclipse.xsmp.naming.XsmpQualifiedNameProvider;
 import org.eclipse.xsmp.resource.XsmpcatResource;
 import org.eclipse.xsmp.resource.XsmpcatResourceDescriptionStrategy;
-import org.eclipse.xsmp.scoping.XsmpGlobalScopeProvider;
+import org.eclipse.xsmp.scoping.XsmpcatGlobalScopeProvider;
 import org.eclipse.xsmp.scoping.XsmpImportedNamespaceScopeProvider;
 import org.eclipse.xsmp.validation.XsmpcatDiagnosticConverter;
 import org.eclipse.xsmp.validation.XsmpcatIssueCodesProvider;
@@ -114,7 +114,7 @@ public class XsmpcatRuntimeModule extends AbstractXsmpcatRuntimeModule
   @Override
   public Class< ? extends IGlobalScopeProvider> bindIGlobalScopeProvider()
   {
-    return XsmpGlobalScopeProvider.class;
+    return XsmpcatGlobalScopeProvider.class;
   }
 
   public Class< ? extends IProjectConfigProvider> bindIProjectConfigProvider()

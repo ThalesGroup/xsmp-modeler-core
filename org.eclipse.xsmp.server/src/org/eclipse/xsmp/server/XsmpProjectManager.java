@@ -10,6 +10,8 @@
 ******************************************************************************/
 package org.eclipse.xsmp.server;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +27,7 @@ import org.eclipse.xtext.build.BuildRequest;
 import org.eclipse.xtext.build.IncrementalBuilder;
 import org.eclipse.xtext.build.IndexState;
 import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -63,6 +66,9 @@ public class XsmpProjectManager
   @Inject
   protected IExternalContentSupport externalContentSupport;
 
+  @Inject
+  private UriExtensions uriExtensions;
+
   private IndexState indexState = new IndexState();
 
   private URI baseDir;
@@ -81,6 +87,8 @@ public class XsmpProjectManager
 
   // list of URI defined in the project before a call to refreshProjectConfig
   private final List<URI> oldUris = new ArrayList<>();
+
+  private final List<URI> oldDependenciesUris = new ArrayList<>();
 
   public void initialize(ProjectDescription description, IProjectConfig projectConfig,
           Procedure2< ? super URI, ? super Iterable<Issue>> acceptor,
@@ -108,7 +116,12 @@ public class XsmpProjectManager
 
     if (project.getPath() != null)
     {
-      allUris.add(project.getPath().appendSegment(XsmpConstants.XSMP_PROJECT_FILENAME));
+      final var file = new File(project.getPath().toFileString());
+      final var path = Paths.get(file.getAbsoluteFile().toURI());
+
+      final var uri = uriExtensions
+              .toEmfUri(path.resolve(XsmpConstants.XSMP_PROJECT_FILENAME).toUri());
+      allUris.add(uri);
     }
 
     for (final ISourceFolder srcFolder : project.getSourceFolders())
@@ -124,14 +137,27 @@ public class XsmpProjectManager
   public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator,
           Collection<IProjectConfig> dependencies)
   {
-    // collect all uris of current project and its dependencies
+    // collect all uris of dependencies
+    final List<URI> allDependenciesUris = new ArrayList<>();
+    dependencies.forEach(d -> collectUris(d, allDependenciesUris));
+
+    // keep only URI that should be deleted
+    oldDependenciesUris.removeAll(allDependenciesUris);
+
+    return doBuild(allDependenciesUris, oldDependenciesUris, Collections.emptyList(),
+            cancelIndicator, false, true);
+  }
+
+  public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator)
+  {
+    // collect all uris of current project
     final List<URI> allUris = new ArrayList<>();
-    dependencies.forEach(d -> collectUris(d, allUris));
+    collectUris(projectConfig, allUris);
 
     // keep only URI that should be deleted
     oldUris.removeAll(allUris);
 
-    return doBuild(allUris, oldUris, Collections.emptyList(), cancelIndicator, true);
+    return doBuild(allUris, oldUris, Collections.emptyList(), cancelIndicator, false, false);
   }
 
   /**
@@ -139,9 +165,10 @@ public class XsmpProjectManager
    */
   public IncrementalBuilder.Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles,
           List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
-          boolean shouldGenerate)
+          boolean shouldGenerate, boolean indexOnly)
   {
-    final var request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+    final var request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator,
+            indexOnly);
     final var result = incrementalBuilder.build(request,
             languagesRegistry::getResourceServiceProvider, shouldGenerate);
 
@@ -155,7 +182,8 @@ public class XsmpProjectManager
    * Creates a new build request for this project.
    */
   protected BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
-          List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator)
+          List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
+          boolean indexOnly)
   {
     final var result = new BuildRequest();
     result.setBaseDir(baseDir);
@@ -170,7 +198,7 @@ public class XsmpProjectManager
       return true;
     });
     result.setCancelIndicator(cancelIndicator);
-    result.setIndexOnly(projectConfig.isIndexOnly());
+    result.setIndexOnly(indexOnly);
     return result;
   }
 
@@ -299,20 +327,23 @@ public class XsmpProjectManager
     }
   }
 
-  public void refreshProjectConfig(IProjectConfig projectConfig)
+  public void refreshProjectConfig(IProjectConfig newProjectConfig)
   {
     // store current URIs
+    oldDependenciesUris.clear();
+    if (projectConfig instanceof final IXsmpProjectConfig xsmpConfig)
+    {
+      xsmpConfig.getAllDependencies().forEach(d -> collectUris(d, oldDependenciesUris));
+    }
+
     oldUris.clear();
-    final var dependencies = new ArrayList<IProjectConfig>();
-    IXsmpProjectConfig.collectProjectDependencies(this.projectConfig, dependencies);
+    collectUris(projectConfig, oldUris);
 
-    dependencies.forEach(d -> collectUris(d, oldUris));
-
-    this.projectConfig = projectConfig;
-    baseDir = projectConfig.getPath();
+    projectConfig = newProjectConfig;
+    baseDir = newProjectConfig.getPath();
     resourceSet = null;
     // update projectDescription with updated dependencies
-    if (projectConfig instanceof final IXsmpProjectConfig cfg)
+    if (newProjectConfig instanceof final IXsmpProjectConfig cfg)
     {
       projectDescription.setDependencies(new ArrayList<>(cfg.getDependencies()));
     }

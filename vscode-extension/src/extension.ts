@@ -126,6 +126,12 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(
         workspace.createFileSystemWatcher('**/xsmp.project').onDidChange(() => {
             lc.sendNotification(`workspace/didChangeConfiguration`, undefined)
+        }),
+        workspace.createFileSystemWatcher('**/xsmp.project').onDidCreate(() => {
+            lc.sendNotification(`workspace/didChangeConfiguration`, undefined)
+        }),
+        workspace.createFileSystemWatcher('**/xsmp.project').onDidDelete(() => {
+            lc.sendNotification(`workspace/didChangeConfiguration`, undefined)
         })
     );
 

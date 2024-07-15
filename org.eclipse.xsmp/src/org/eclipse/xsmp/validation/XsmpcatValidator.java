@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -68,7 +67,6 @@ import org.eclipse.xsmp.util.PrimitiveType;
 import org.eclipse.xsmp.util.QualifiedNames;
 import org.eclipse.xsmp.util.TypeReferenceConverter;
 import org.eclipse.xsmp.util.XsmpUtil.OperatorKind;
-import org.eclipse.xsmp.workspace.IXsmpProjectConfig;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -87,7 +85,7 @@ import com.google.inject.Singleton;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @Singleton
-@ComposedChecks(validators = {UniqueElementValidator.class })
+@ComposedChecks(validators = {XsmpcatUniqueElementValidator.class })
 public class XsmpcatValidator extends AbstractXsmpcatValidator
 {
 
@@ -536,19 +534,12 @@ public class XsmpcatValidator extends AbstractXsmpcatValidator
     if (configProvider != null)
     {
       final var cfg = configProvider.getProjectConfig(resource.getResourceSet());
-      if (cfg != null && (!(cfg instanceof final IXsmpProjectConfig config)
-              || !isDocumentInProjectSourceFolders(config, uri)))
+      if (cfg == null || cfg.findSourceFolderContaining(uri) == null)
       {
         warning("This document is not contained in project source folders.",
                 XsmpPackage.Literals.NAMED_ELEMENT__NAME);
       }
     }
-  }
-
-  private boolean isDocumentInProjectSourceFolders(IXsmpProjectConfig config, URI uri)
-  {
-    final var ws = config.getWorkspaceConfig();
-    return ws.findProjectContaining(uri) != null;
   }
 
   @Check

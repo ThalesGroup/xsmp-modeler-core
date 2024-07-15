@@ -11,7 +11,8 @@
 package org.eclipse.xsmp.workspace;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -23,7 +24,14 @@ public interface IXsmpProjectConfig extends IProjectConfig
 
   Collection<String> getDependencies();
 
-  static
+  default Collection<IProjectConfig> getAllDependencies()
+  {
+    final Set<IProjectConfig> dependencies = new HashSet<>();
+    collectProjectDependencies(this, dependencies);
+    dependencies.remove(this);
+    return dependencies;
+  }
+
   /**
    * Collect all project dependencies. The root project is also included
    *
@@ -32,7 +40,8 @@ public interface IXsmpProjectConfig extends IProjectConfig
    * @param dependencies
    *          list of dependencies including root project
    */
-  void collectProjectDependencies(IProjectConfig project, List<IProjectConfig> dependencies)
+  private static void collectProjectDependencies(IProjectConfig project,
+          Set<IProjectConfig> dependencies)
   {
     if (project != null && dependencies.add(project)
             && project instanceof final IXsmpProjectConfig xsmpProject)

@@ -47,7 +47,7 @@ public class SmpNamesAreUniqueValidationHelper extends NamesAreUniqueValidationH
 
     if (first instanceof Document || second instanceof Document)
     {
-      result = first.eClass().equals(second.eClass());
+      result = false;
     }
     // 2 namespaces can have the same name except if they are in the same catalogue
     else if (first instanceof Namespace && second instanceof Namespace)
