@@ -196,9 +196,9 @@ class ADocGenerator extends AbstractGenerator {
             ....
             classDiagram
                 «IF structure instanceof Class»
-                    «IF (structure as Class).base !== null»
-                        class «(structure as Class).base.name» {
-                            <<«(structure as Class).base.eClass.name»>>
+                    «IF structure.base !== null»
+                        class «structure.base.name» {
+                            <<«structure.base.eClass.name»>>
                         }
                     «ENDIF»
                 «ENDIF»
@@ -208,8 +208,8 @@ class ADocGenerator extends AbstractGenerator {
                 }
                 
                 «IF structure instanceof Class»
-                    «IF (structure as Class).base !== null»
-                        «(structure as Class).base.name» <|-- «structure.name»
+                    «IF structure.base !== null»
+                        «structure.base.name» <|-- «structure.name»
                     «ENDIF»
                 «ENDIF»
             ....
