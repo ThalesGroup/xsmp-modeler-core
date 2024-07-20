@@ -15,7 +15,6 @@
     </picture>
 </p>
 
-## Get Started
 
 XSMP Modeler is a framework for the development of SMDL (Simulation Model Definition Language) as defined in the [ECSS SMP standard](https://ecss.nl/standard/ecss-e-st-40-07c-simulation-modelling-platform-2-march-2020/).
 
@@ -28,26 +27,26 @@ It includes:
 - Specific profiles for each framework.
 - Additional tools for extended capabilities.
 
-### Profiles
+## Profiles
 
 XSMP Modeler offers specific profiles to enhance its functionality:
 
 - **XSMP SDK Profile**: Seamlessly integrates with the [XSMP SDK](https://github.com/ThalesGroup/xsmp-sdk) framework to facilitate the development and testing of SMP components.
 - **ESA-CDK Profile**: Specific profile designed for use with the ESA Component Development Kit (ESA-CDK).
 
-### Tools
+## Tools
 
 XSMP Modeler provides additional tools to extend its functionality:
 
 - **SMP Legacy Tool**: Generates SMP legacy modeling files from XSMP textual modeling files.
 - **AsciiDoc Tool**: Generates AsciiDoc documentation from XSMP modeling files.
 
-### System Requirements
+## System Requirements
 
 - Eclipse 2024-03 or newer
 - Java SE 17
 
-### How To Install
+## How To Install
 
 Refer to the instructions provided on the [releases page](https://github.com/ThalesGroup/xsmp-modeler-core/releases) or in the [ReadTheDocs documentation](https://xsmp-modeler.readthedocs.io).
 
