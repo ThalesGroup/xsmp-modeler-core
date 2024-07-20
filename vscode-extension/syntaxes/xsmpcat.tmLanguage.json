@@ -403,6 +403,28 @@
 			],
 			"name": "meta.type.xsmp"
 		},
+		"attached-field": {
+			"begin": "\\b(->)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.right_arrow.xsmp"
+				}
+			},
+			"end": "\\b(?:[A-Za-z]\\w*\\s*(\\.)\\s*)*([A-Za-z]\\w*)\\b",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.separator.period.xsmp"
+				},
+				"2": {
+					"name": "entity.name.field.reference.xsmp"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				}
+			]
+		},
 		"type-in": {
 			"begin": "\\b(in)\\b",
 			"beginCaptures": {
@@ -579,6 +601,9 @@
 					"include": "#property"
 				},
 				{
+					"include": "#attached-field"
+				},
+				{
 					"include": "#entrypoint"
 				},
 				{
@@ -639,7 +664,7 @@
 					"name": "storage.modifier.xsmp"
 				}
 			},
-			"end": "(?=private|protected|public|\\=|\\}|\\@|input|output|transient|readOnly|writeOnly|readWrite|def|eventsink|eventsource|association|entrypoint|constant|field|property|reference|container)",
+			"end": "(?=private|protected|public|\\=|\\}|\\@|->|input|output|transient|readOnly|writeOnly|readWrite|def|eventsink|eventsource|association|entrypoint|constant|field|property|reference|container)",
 			"patterns": [
 				{
 					"begin": "\\b(get|set)\\b",
