@@ -1,0 +1,22 @@
+
+dependencies {
+	api project(':plugins:org.eclipse.xsmp.ide')
+	api project(':plugins:org.eclipse.xsmp.tool.python.ide')
+    api project(':plugins:org.eclipse.xsmp.tool.smp.ide')
+    api project(':plugins:org.eclipse.xsmp.tool.adoc.ide')
+    api project(':plugins:org.eclipse.xsmp.profile.xsmp-sdk.ide')
+    api project(':plugins:org.eclipse.xsmp.profile.esa-cdk.ide')
+    api project(':plugins:org.eclipse.xsmp.profile.esa-cdk-legacy.ide')
+	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
+}
+
+apply plugin: 'application'
+
+application {
+	mainClass = "org.eclipse.xsmp.server.XsmpServerLauncher"
+}
+
+
+//this is an eclipse plugin project
+eclipseClasspath.enabled=false
+cleanEclipseClasspath.enabled=false

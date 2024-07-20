@@ -1,9 +1,0 @@
-
-dependencies {
-	api project(':org.eclipse.xsmp')
-	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
-}
-
-//this is an eclipse plugin project
-eclipseClasspath.enabled=false
-cleanEclipseClasspath.enabled=false

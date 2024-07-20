@@ -1,0 +1,46 @@
+
+task copyApplication(type: Sync) {
+    def installDistTask = project(':plugins:org.eclipse.xsmp.server').tasks.installDist
+    dependsOn installDistTask
+    from installDistTask.outputs
+    into 'dist'
+}
+
+
+
+clean {
+    doLast {
+        delete copyApplication.outputs
+
+        delete vscodeExtension.destDir
+        delete 'out' // output of npmInstall - don't want to delete node_modules
+    }
+}
+
+npmInstall.dependsOn copyApplication
+
+task installExtension(type: Exec, dependsOn: vscodeExtension) {
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        commandLine 'code.cmd'
+    } else {
+        commandLine 'code'
+    }
+    args '--install-extension', vscodeExtension.destPath
+}
+
+task startCode(type:Exec, dependsOn: installExtension) {
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        commandLine 'code.cmd'
+    } else {
+        commandLine 'code'
+    }
+    args "$rootProject.projectDir/demo/", '--new-window'
+}
+
+task publish(dependsOn: vscodeExtension, type: NodeTask) {
+    script = file("$rootProject.projectDir/node_modules/vsce/out/vsce")
+    args = [ 'publish', '-p', System.getenv('ACCESS_TOKEN'), "--packagePath", "${project.buildDir}/vscode/xsmp-modeler-${project.version}.vsix"]
+    execOverrides {
+        workingDir = projectDir
+    }
+}

@@ -8,15 +8,13 @@ buildscript {
     dependencies {
         classpath 'org.xtext:xtext-gradle-plugin:4.0.0'
         classpath 'com.github.node-gradle:gradle-node-plugin:7.0.2'
-        //classpath 'net.researchgate:gradle-release:3.0.2'
     }
 }
 
 apply plugin: 'com.github.node-gradle.node'
-//apply plugin: 'net.researchgate.release'
 
 // Configuration for Xtext projects
-configure(subprojects.findAll { it.name.startsWith('org.eclipse.xsmp') }) {
+configure(subprojects.findAll { it.name.contains('org.eclipse.xsmp') }) {
     ext.xtextVersion = '2.34.0'
     repositories {
         mavenCentral()
