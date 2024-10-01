@@ -37,7 +37,7 @@ class CatalogueGenerator extends AbstractFileGenerator<Catalogue> {
     }
 
     protected def boolean requireFactory(Catalogue t) {
-        t.eAllContents.filter(Component).exists[!it.isAbstract]
+        t.eAllContents.filter(Model).exists[!it.isAbstract]
     }
 
     protected def dispatch CharSequence registerComponent(Model it) {

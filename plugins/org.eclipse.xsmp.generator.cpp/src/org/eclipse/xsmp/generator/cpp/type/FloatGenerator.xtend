@@ -38,10 +38,10 @@ class FloatGenerator extends AbstractTypeGenerator<Float> {
                     "«name»", //Name
                     «description()», //description
                     «uuid()», //UUID
-                «IF minimum !== null»«minimum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»>::min()«ENDIF», // Minimum
+                «IF minimum !== null»«minimum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»>::lowest()«ENDIF», // Minimum
                 «IF maximum !== null»«maximum.doGenerateExpression()»«ELSE»std::numeric_limits<«IF primitiveType !== null»«primitiveType.id»«ELSE»::Smp::Float64«ENDIF»>::max()«ENDIF», // Maximum
-                «minInclusive», // Minimm inclusive
-                «maxInclusive», // Maximim inclusive
+                «minInclusive», // Minimum inclusive
+                «maxInclusive», // Maximum inclusive
                 "«unit»", // Unit
                 «generatePrimitiveKind» // Primitive Type Kind
                 );  

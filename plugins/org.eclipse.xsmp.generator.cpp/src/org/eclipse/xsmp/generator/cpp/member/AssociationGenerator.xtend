@@ -19,7 +19,7 @@ class AssociationGenerator extends AbstractMemberGenerator<Association> {
     /** declare an association in the generated header */
     override declareGen(NamedElementWithMembers parent, Association it, boolean useGenPattern) {
 
-        '''    
+        '''
             «comment»
             «IF isConst»const «ENDIF»«IF isStatic»static «ENDIF»«IF isMutable»mutable «ENDIF»«type.id»«IF isByPointer»*«ENDIF» «name»;
         '''
