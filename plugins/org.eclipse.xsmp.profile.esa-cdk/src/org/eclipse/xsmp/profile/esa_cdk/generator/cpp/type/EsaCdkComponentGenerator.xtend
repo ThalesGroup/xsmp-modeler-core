@@ -371,15 +371,19 @@ class EsaCdkComponentGenerator extends ComponentGenerator {
             }
         '''
     }
+    protected def CharSequence type(Parameter it) {
 
+        '''«IF isConst»const «ENDIF»«type.id» «IF isByPointer»*«ENDIF»«IF isByReference»&«ENDIF»'''
+
+    }
     def protected CharSequence generatePopulateRqHandler(NamedElementWithMembers container, Operation o,
         boolean useGenPattern) {
         '''
-            Help::template AddIfMissing<«IF o.returnParameter !== null»«o.returnParameter.type.id»«ELSE»void«ENDIF»«FOR param : o.parameter BEFORE ', ' SEPARATOR ', '»«param.type.id»«ENDFOR»>(
+            Help::template AddIfMissing<«IF o.returnParameter !== null»«o.returnParameter.type()»«ELSE»void«ENDIF»«FOR param : o.parameter BEFORE ', ' SEPARATOR ', '»«param.type()»«ENDFOR»>(
                 handlers,
                 "«o.name»",
                 «IF o.returnParameter !== null»«o.returnParameter.type.generatePrimitiveKind»«ELSE»::Smp::PrimitiveTypeKind::PTK_None«ENDIF»,
-                &«container.name(useGenPattern)»::«o.name»);
+                static_cast<«IF o.returnParameter !== null»«o.returnParameter.type()»«ELSE»void«ENDIF»(«container.name(useGenPattern)»::*)(«FOR param : o.parameter SEPARATOR ', '»«param.type()»«ENDFOR»)«IF o.isConst»const«ENDIF»>(&«container.name(useGenPattern)»::«o.name»));
         '''
     }
 }
