@@ -27,7 +27,7 @@ jobs:
             - java
       steps:
       -  name: Setup Maven Action
-         uses: s4u/setup-maven-action@v1.14.0
+         uses: s4u/setup-maven-action@v1.16.0
       -  name: Set up Python
          uses: actions/setup-python@v5
          with:
