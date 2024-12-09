@@ -22,7 +22,7 @@ jobs:
 
       steps:
       -  name: Setup Maven Action
-         uses: s4u/setup-maven-action@v1.14.0
+         uses: s4u/setup-maven-action@v1.17.0
       -  name: Set up Python
          uses: actions/setup-python@v5
          with:
@@ -40,6 +40,6 @@ jobs:
       runs-on: ubuntu-latest
       steps:
       -  name: Setup Maven Action
-         uses: s4u/setup-maven-action@v1.14.0
+         uses: s4u/setup-maven-action@v1.17.0
       -  name: Submit Dependency Snapshot
          uses: advanced-security/maven-dependency-submission-action@v4
