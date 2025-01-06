@@ -8,17 +8,17 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: monthly
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: monthly
     open-pull-requests-limit: 10
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: monthly
   - package-ecosystem: "npm"
     directory: "/vscode-extension"
     schedule:
-      interval: "weekly"
+      interval: monthly
