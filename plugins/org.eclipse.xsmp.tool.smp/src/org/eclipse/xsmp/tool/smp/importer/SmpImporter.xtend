@@ -88,6 +88,7 @@ import org.eclipse.xsmp.tool.smp.core.types.Value
 import org.eclipse.xsmp.util.XsmpUtil
 import org.eclipse.xtext.generator.GeneratorDelegate
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider
 
 class SmpImporter extends GeneratorDelegate {
 
@@ -102,18 +103,17 @@ class SmpImporter extends GeneratorDelegate {
         // create result resource
         val rs = new XtextResourceSet
         val filename = resource.URI.trimFileExtension.appendFileExtension("xsmpcat").lastSegment
-        var r = rs.createResource(fsa.getURI(filename))
+        var r = rs.createResource(fsa.getURI(filename, SmpOutputConfigurationProvider.SMDL_GEN))
 
         // convert the smpcat model to xsmpcat
         var result = resource.contents.get(0).generate.toString
         val in = new ByteArrayInputStream(result.bytes);
         try {
             r.load(in, rs.getLoadOptions());
-
             // save the result with format option
             r.save(SaveOptions.newBuilder.format.options.toOptionsMap)
         } catch (Exception e) {
-            fsa.generateFile(filename, result)
+            fsa.generateFile(filename, SmpOutputConfigurationProvider.SMDL_GEN, result)
         }
     }
 

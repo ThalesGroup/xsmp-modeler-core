@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsmp.cli.XsmpCli;
 import org.eclipse.xsmp.tool.smp.SmpStandaloneSetup;
+import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider;
 import org.eclipse.xsmp.tool.smp.importer.SmpImporter;
 import org.eclipse.xsmp.tool.smp.util.SmpResourceSet;
 import org.eclipse.xsmp.validation.XsmpcatValidator;
@@ -72,7 +73,7 @@ public class SmpCli extends XsmpCli
       resourceServiceProvider = smpcatResourceServiceProvider;
       // replace the generator with the smpcat importer
       generator = importer;
-      fileAccess.setOutputPath("smdl");
+      fileAccess.setOutputPath(SmpOutputConfigurationProvider.SMDL_GEN, "smdl-gen");
       XsmpCli.LOG.info("Done.");
       return rs;
     }

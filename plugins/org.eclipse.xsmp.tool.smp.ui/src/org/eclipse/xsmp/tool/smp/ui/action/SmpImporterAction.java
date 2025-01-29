@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants2;
+import org.eclipse.xsmp.tool.smp.generator.SmpOutputConfigurationProvider;
 import org.eclipse.xsmp.tool.smp.importer.SmpImporter;
 import org.eclipse.xsmp.tool.smp.util.SmpResourceFactoryImpl;
 import org.eclipse.xsmp.tool.smp.util.SmpResourceSet;
@@ -269,7 +270,8 @@ public class SmpImporterAction extends AbstractHandler
             }
           }
 
-          fsa.setOutputPath(model.getParent().getLocation().toFile().getAbsolutePath());
+          fsa.setOutputPath(SmpOutputConfigurationProvider.SMDL_GEN,
+                  model.getParent().getLocation().toFile().getAbsolutePath());
 
           monitor.subTask("Converting the Catalogue ...");
 
