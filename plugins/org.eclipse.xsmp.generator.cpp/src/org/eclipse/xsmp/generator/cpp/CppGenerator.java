@@ -26,6 +26,7 @@ import org.eclipse.xsmp.generator.cpp.type.InterfaceGenerator;
 import org.eclipse.xsmp.generator.cpp.type.NativeTypeGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StringGenerator;
 import org.eclipse.xsmp.generator.cpp.type.StructureGenerator;
+import org.eclipse.xsmp.generator.cpp.type.ValueReferenceGenerator;
 import org.eclipse.xsmp.model.xsmp.Catalogue;
 import org.eclipse.xsmp.model.xsmp.Namespace;
 import org.eclipse.xsmp.model.xsmp.ReferenceType;
@@ -185,6 +186,9 @@ public class CppGenerator extends XsmpGenerator
   @Inject
   protected NativeTypeGenerator nativeTypeGenerator;
 
+  @Inject
+  protected ValueReferenceGenerator valueReferenceGenerator;
+
   @SuppressWarnings("rawtypes")
   protected AbstractFileGenerator getGenerator(Type t)
   {
@@ -201,6 +205,7 @@ public class CppGenerator extends XsmpGenerator
       case XsmpPackage.INTERFACE -> interfaceGenerator;
       case XsmpPackage.MODEL, XsmpPackage.SERVICE -> componentGenerator;
       case XsmpPackage.NATIVE_TYPE -> nativeTypeGenerator;
+      case XsmpPackage.VALUE_REFERENCE -> valueReferenceGenerator;
       default -> null;
     };
   }
