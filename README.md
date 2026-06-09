@@ -1,5 +1,7 @@
 # XSMP Modeler
 
+> **Notice:** This project is no longer maintained. It has moved to [ThalesGroup/xsmp-modeler](https://github.com/ThalesGroup/xsmp-modeler).
+
 [![Java Build](https://github.com/ThalesGroup/xsmp-modeler-core/actions/workflows/build.yml/badge.svg)](https://github.com/ThalesGroup/xsmp-modeler-core/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThalesGroup_xsmp-modeler-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ThalesGroup_xsmp-modeler-core)
 [![Documentation Status](https://readthedocs.org/projects/xsmp-modeler/badge/?version=latest)](https://xsmp-modeler.readthedocs.io/en/latest/?badge=latest)
